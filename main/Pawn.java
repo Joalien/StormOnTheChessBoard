@@ -1,4 +1,5 @@
 import java.util.Scanner;
+import java.util.Set;
 
 public class Pawn extends Piece {
 
@@ -7,6 +8,7 @@ public class Pawn extends Piece {
     }
 
     //Vérifie aussi que lorsqu'il avance de 2 cases, il n'y a pas de pièce au milieu
+    @Override
     public boolean reachableSquares(int x, int y) {
         //Si pion blanc
         if (this.getCouleur() == true) {
@@ -15,12 +17,12 @@ public class Pawn extends Piece {
                 //Si case d'arrivée vide
                 if (Main.getEchiquier(x, y).getType() == '-') {
                     //Avance normale
-                    if ((positionSurLigne == x) && (positionSurColonne + 1 == y)) {
+                    if ((this.x == x) && (this.y + 1 == y)) {
                         return true;
 
                     }
                     //Avance 2 cases
-                    else if ((positionSurColonne == 2) && (positionSurLigne == x) && (y == 4)) {
+                    else if ((this.y == 2) && (this.x == x) && (y == 4)) {
                         //Vérifie que la case du milieu n'est pas occupée
                         try {
                             Main.getEchiquier(x, 3).getCouleur();
@@ -37,11 +39,11 @@ public class Pawn extends Piece {
                 //Si on effectue une prise
                 else {
                     //On vérifie si la case est à gauche
-                    if ((positionSurColonne + 1 == y) && positionSurLigne - 1 == x) {
+                    if ((this.y + 1 == y) && this.x - 1 == x) {
                         return true;
                     }
                     //Puis à droite
-                    else if ((positionSurColonne + 1 == y) && positionSurLigne + 1 == x) {
+                    else if ((this.y + 1 == y) && this.x + 1 == x) {
                         return true;
                     }
                     //Sinon
@@ -51,11 +53,11 @@ public class Pawn extends Piece {
                 }
             } catch (Exception InputMismatchException) {
                 //Avance normale
-                if ((positionSurLigne == x) && (positionSurColonne + 1 == y)) {
+                if ((this.x == x) && (this.y + 1 == y)) {
                     return true;
                 }
                 //Avance 2 cases
-                else if ((positionSurColonne == 2) && (positionSurLigne == x) && (y == 4)) {
+                else if ((this.y == 2) && (this.x == x) && (y == 4)) {
                     //Vérifie que la case du milieu n'est pas occupée
                     try {
                         Main.getEchiquier(x, 3).getCouleur();
@@ -77,11 +79,11 @@ public class Pawn extends Piece {
                 //Si case d'arrivée vide
                 if (Main.getEchiquier(x, y).getType() == '-') {
                     //Avance normale
-                    if ((positionSurLigne == x) && (positionSurColonne - 1 == y)) {
+                    if ((this.x == x) && (this.y - 1 == y)) {
                         return true;
                     }
                     //Avance 2 cases
-                    else if ((positionSurColonne == 7) && (positionSurLigne == x) && (y == 5)) {
+                    else if ((this.y == 7) && (this.x == x) && (y == 5)) {
                         //Vérifie que la case du milieu n'est pas occupée
                         try {
                             Main.getEchiquier(x, 6).getCouleur();
@@ -99,11 +101,11 @@ public class Pawn extends Piece {
                 //Si on effectue une prise
                 else {
                     //On vérifie si la case est à gauche
-                    if ((positionSurColonne - 1 == y) && positionSurLigne - 1 == x) {
+                    if ((this.y - 1 == y) && this.x - 1 == x) {
                         return true;
                     }
                     //Puis à droite
-                    else if ((positionSurColonne - 1 == y) && positionSurLigne + 1 == x) {
+                    else if ((this.y - 1 == y) && this.x + 1 == x) {
                         return true;
                     }
                     //Sinon
@@ -113,11 +115,11 @@ public class Pawn extends Piece {
                 }
             } catch (Exception InputMismatchException) {
                 //Avance normale
-                if ((positionSurLigne == x) && (positionSurColonne - 1 == y)) {
+                if ((this.x == x) && (this.y - 1 == y)) {
                     return true;
                 }
                 //Avance 2 cases
-                else if ((positionSurColonne == 7) && (positionSurLigne == x) && (y == 5)) {
+                else if ((this.y == 7) && (this.x == x) && (y == 5)) {
                     //Vérifie que la case du milieu n'est pas occupée
                     try {
                         Main.getEchiquier(x, 6).getCouleur();
@@ -137,16 +139,16 @@ public class Pawn extends Piece {
         }
     }
 
+    @Override
+    public Set<String> squaresOnThePath(String squareToMoveOn) {
+        return null;
+    }
+
     //L'avance de 2 cases est gérée dans deplacementDeLaPiece
     public boolean nothingOnThePath(int x, int y) {
         return true;
     }
 
-
-
-   
-
-    
 
     public void testPromotion(int x, int y) {
         Piece piecePromue;

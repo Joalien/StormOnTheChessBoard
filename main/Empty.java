@@ -1,3 +1,5 @@
+import java.util.Set;
+
 public class Empty extends Piece {
 
     public Empty(int x, int y, char lettre) {
@@ -12,17 +14,20 @@ public class Empty extends Piece {
         return type;
     }
 
-   
 
-    
-
+    @Override
     public boolean reachableSquares(int x, int y) {
         return false;
+    }
+
+    @Override
+    public Set<String> squaresOnThePath(String squareToMoveOn) {
+        return null;
     }
 
     public boolean nothingOnThePath(int x, int y) {
         return false;
     }
 
-    
+
 }

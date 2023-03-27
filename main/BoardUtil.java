@@ -1,11 +1,15 @@
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 
 public class BoardUtil {
 
-    public static int charToInt(char c) {
+    private static int intToInt(int i) {
+        if (i < 1 || i > 8)
+            throw new IndexOutOfBoundsException(i);
+        return i;
+    }
+
+    private static int charToInt(char c) {
         return switch (c) {
             case 'a' -> 1;
             case 'b' -> 2;
@@ -18,7 +22,8 @@ public class BoardUtil {
             default -> throw new IndexOutOfBoundsException(c);
         };
     }
-     public static char intToChar(int i) {
+
+    private static char intToChar(int i) {
         return switch (i) {
             case 1 -> 'a';
             case 2 -> 'b';
@@ -35,11 +40,23 @@ public class BoardUtil {
     public static List<String> generateAllSquares() {
         List<String> allSquares = new ArrayList<>(64);
         for (int i = 1; i <= 8; i++) {
-            for (int j = 1; j <=8 ; j++) {
-                allSquares.add(Character.toString(BoardUtil.intToChar(i)) + j);
+            for (int j = 1; j <= 8; j++) {
+                allSquares.add(posToSquare(i, j));
             }
         }
         return allSquares;
+    }
+
+    public static String posToSquare(int i, int j) {
+        return Character.toString(BoardUtil.intToChar(i)) + intToInt(j);
+    }
+
+    public static int getX(String square) {
+        return BoardUtil.charToInt(square.charAt(0));
+    }
+
+    public static int getY(String square) {
+        return Integer.valueOf(Character.toString(square.charAt(1)));
     }
 
 }

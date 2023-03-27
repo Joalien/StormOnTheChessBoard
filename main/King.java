@@ -1,4 +1,6 @@
-public class King extends Piece implements Castlable{
+import java.util.Set;
+
+public class King extends Piece implements Castlable {
 
     //Variales d'instances
     private boolean hasMovedInThePast;
@@ -15,25 +17,31 @@ public class King extends Piece implements Castlable{
     }
 
     //Penser à intégrer le rock !
+    @Override
     public boolean reachableSquares(int x, int y) {
         boolean ARetourner;
-        if ((Math.abs(positionSurLigne - x) <= 1) && (Math.abs(positionSurColonne - y) <= 1)) {
+        if ((Math.abs(this.x - x) <= 1) && (Math.abs(this.y - y) <= 1)) {
             ARetourner = true;
         }
 
         // Kingside castling
-        else if (!getRoiEnEchecs() && (positionSurLigne + 2 == x) && (positionSurColonne == y) && (!hasMovedInThePast) && ((Rock) Main.getEchiquier(8, y)).getHasMovedInThePast() == false && (positionSurLigne == positionSurLigneDeDépart) && (positionSurColonne == positionSurColonneDeDépart) && (this.RegardeSiEchecs(this.getCouleur()) == false)) {
+        else if (!getRoiEnEchecs() && (this.x + 2 == x) && (this.y == y) && (!hasMovedInThePast) && ((Rock) Main.getEchiquier(8, y)).getHasMovedInThePast() == false && (this.x == positionSurLigneDeDépart) && (this.y == positionSurColonneDeDépart) && (this.RegardeSiEchecs(this.getCouleur()) == false)) {
             cestLeRock = true;
             ARetourner = true;
         }
         //Grand rock
-        else if ((!getRoiEnEchecs()) && (positionSurLigne - 2 == x) && (positionSurColonne == y) && (!hasMovedInThePast) && ((Rock) Main.getEchiquier(1, y)).getHasMovedInThePast() == false && (positionSurLigne == positionSurLigneDeDépart) && (positionSurColonne == positionSurColonneDeDépart) && (this.RegardeSiEchecs(this.getCouleur()) == false)) {
+        else if ((!getRoiEnEchecs()) && (this.x - 2 == x) && (this.y == y) && (!hasMovedInThePast) && ((Rock) Main.getEchiquier(1, y)).getHasMovedInThePast() == false && (this.x == positionSurLigneDeDépart) && (this.y == positionSurColonneDeDépart) && (this.RegardeSiEchecs(this.getCouleur()) == false)) {
             cestLeRock = true;
             ARetourner = true;
         } else {
             ARetourner = false;
         }
         return ARetourner;
+    }
+
+    @Override
+    public Set<String> squaresOnThePath(String squareToMoveOn) {
+        return null;
     }
 
     public boolean getCestLeRock() {
@@ -44,13 +52,6 @@ public class King extends Piece implements Castlable{
         cestLeRock = encoreLeRock;
     }
 
-
-
-   
-
-    
-
-    
 
     public boolean getHasMovedInThePast() {
         return hasMovedInThePast;

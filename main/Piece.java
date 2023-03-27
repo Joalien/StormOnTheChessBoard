@@ -1,25 +1,27 @@
+import java.util.Set;
+
 public abstract class Piece {
 
     private static boolean tourDes = true;
     private static boolean roiEnEchecs = false;
     //Variales d'instances
-    protected int positionSurColonne;
-    protected int positionSurLigne;
+    protected int y;
+    protected int x;
     protected boolean couleur;
     protected char type;
 
 
     //Constructeur
     public Piece(int x, int y, boolean color, char typePiece) {
-        positionSurColonne = y;
-        positionSurLigne = x;
+        this.y = y;
+        this.x = x;
         couleur = color;
         type = typePiece;
     }
 
     public Piece(int x, int y, char typePiece) {
-        positionSurColonne = y;
-        positionSurLigne = x;
+        this.y = y;
+        this.x = x;
         type = typePiece;
     }
 
@@ -68,20 +70,20 @@ public abstract class Piece {
         roiEnEchecs = trool;
     }
 
-    public int getPositionSurColonne() {
-        return positionSurColonne;
+    public int getY() {
+        return y;
     }
 
-    public void setPositionSurColonne(int y) {
-        positionSurColonne = y;
+    public void setY(int y) {
+        this.y = y;
     }
 
-    public int getPositionSurLigne() {
-        return positionSurLigne;
+    public int getX() {
+        return x;
     }
 
-    public void setPositionSurLigne(int x) {
-        positionSurLigne = x;
+    public void setX(int x) {
+        this.x = x;
     }
 
     public boolean getCouleur() {
@@ -95,12 +97,18 @@ public abstract class Piece {
     protected abstract boolean reachableSquares(int x, int y);
 
     protected boolean reachableSquares(String s) {
-        int x = BoardUtil.charToInt(s.charAt(0));
-        int y = Integer.valueOf(Character.toString(s.charAt(1)));
-        return reachableSquares(x, y);
+        return reachableSquares(BoardUtil.getX(s), BoardUtil.getY(s));
     }
 
+    public abstract Set<String> squaresOnThePath(String squareToMoveOn);
+
+    @Deprecated
     public abstract boolean nothingOnThePath(int x, int y);
+
+    @Deprecated
+    protected boolean nothingOnThePath(String s) {
+        return nothingOnThePath(BoardUtil.getX(s), BoardUtil.getY(s));
+    }
 
     //Vérifie si le déplacement est permis (ne prend pas en compte la couleur de la case d'arrivée, et si le chemin est libre et s'il n'y a pas d'échecs)
     protected boolean DeplacementPermis(int x, int y) {
@@ -165,12 +173,12 @@ public abstract class Piece {
         //Si la pièce bouge (sauf si ça entraine un échecs)
         if ((DeplacementPermis(x, y) == true) && (memeColor == false) && (nothingOnThePath(x, y) == true)) {
             //sauvegarde la position de départ
-            int yy = this.positionSurColonne;
-            int xx = this.positionSurLigne;
+            int yy = this.y;
+            int xx = this.x;
 
             //déplace l'objet
-            this.positionSurColonne = y;
-            this.positionSurLigne = x;
+            this.y = y;
+            this.x = x;
             //Sauvegarde la pièce mangée (1, 0) au cas où le coup soit impossible et qu'il faille revenir en arrière
             Main.setEchiquier(1, 0, Main.getEchiquier(x, y));
             Main.setEchiquier(x, y, Main.getEchiquier(xx, yy));
@@ -184,8 +192,8 @@ public abstract class Piece {
             if (regardeSiEchecs == true) {
                 System.out.println("Le déplacement n'est pas possible car il mettrait le roi en échecs !");
                 //Remet les pièces à leur place
-                this.positionSurColonne = yy;
-                this.positionSurLigne = xx;
+                this.y = yy;
+                this.x = xx;
                 Main.setEchiquier(xx, yy, Main.getEchiquier(x, y));
                 Main.setEchiquier(x, y, Main.getEchiquier(1, 0));
                 //Revient au tour d'avant
@@ -194,35 +202,35 @@ public abstract class Piece {
             }
             //Indique que la pièce a bougée
             else {
-				if (this instanceof Castlable)
-					((Castlable)this).setHasMovedInThePast(true);
+                if (this instanceof Castlable)
+                    ((Castlable) this).setHasMovedInThePast(true);
                 AReturn = true;
             }
             //Test promotion et rock (déplace la tour si le roi se déplace de deux cases)
             if (this instanceof Pawn) ((Pawn) this).testPromotion(x, y);
             //Petit Rock
-            if (this instanceof Castlable && ((Castlable)this).getCestLeRock() == true && (x == 7)) {
+            if (this instanceof Castlable && ((Castlable) this).getCestLeRock() == true && (x == 7)) {
                 System.out.println("Petit rock !");
                 //déplace l'objet
-                yy = Main.getEchiquier(8, y).positionSurColonne;
-                xx = Main.getEchiquier(8, y).positionSurLigne;
-                Main.getEchiquier(8, y).positionSurColonne = y;
-                Main.getEchiquier(8, y).positionSurLigne = 6;
+                yy = Main.getEchiquier(8, y).y;
+                xx = Main.getEchiquier(8, y).x;
+                Main.getEchiquier(8, y).y = y;
+                Main.getEchiquier(8, y).x = 6;
                 Main.setEchiquier(6, y, Main.getEchiquier(xx, yy));
                 Main.setEchiquier(xx, yy, Main.getEchiquier(0, 0));
-				((Castlable)this).setCestLeRock(false);
+                ((Castlable) this).setCestLeRock(false);
             }
             //Grand Rock
-            else if (this instanceof Castlable && ((Castlable)this).getCestLeRock() == true && (x == 3)) {
+            else if (this instanceof Castlable && ((Castlable) this).getCestLeRock() == true && (x == 3)) {
                 System.out.println("Grand rock !");
                 //déplace l'objet
-                yy = Main.getEchiquier(1, y).positionSurColonne;
-                xx = Main.getEchiquier(1, y).positionSurLigne;
-                Main.getEchiquier(1, y).positionSurColonne = y;
-                Main.getEchiquier(1, y).positionSurLigne = 3;
+                yy = Main.getEchiquier(1, y).y;
+                xx = Main.getEchiquier(1, y).x;
+                Main.getEchiquier(1, y).y = y;
+                Main.getEchiquier(1, y).x = 3;
                 Main.setEchiquier(4, y, Main.getEchiquier(xx, yy));
                 Main.setEchiquier(xx, yy, Main.getEchiquier(0, 0));
-				((Castlable)this).setCestLeRock(false);
+                ((Castlable) this).setCestLeRock(false);
             }
 
             //Regarde si le coup met le roi adverse en échecs

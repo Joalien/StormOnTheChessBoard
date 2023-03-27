@@ -1,53 +1,68 @@
+import java.util.HashSet;
+import java.util.Set;
+
 public class Bishop extends Piece {
 
     public Bishop(int x, int y, boolean color, char lettre) {
         super(x, y, color, lettre);
     }
 
-
+    @Override
     public boolean reachableSquares(int x, int y) {
-        if (this.positionSurLigne == x && this.positionSurColonne == y) return false;
-        return Math.abs(this.positionSurColonne - y) == Math.abs(this.positionSurLigne - x);
+        if (this.x == x && this.y == y) return false;
+        return Math.abs(this.y - y) == Math.abs(this.x - x);
     }
 
-    //ça marche !
+    @Override
+    public Set<String> squaresOnThePath(String squareToMoveOn) {
+        if (!super.reachableSquares(squareToMoveOn)) throw new IllegalArgumentException(squareToMoveOn);
+
+        Set<String> squaresOnThePath = new HashSet<>();
+        boolean signX = this.x < BoardUtil.getX(squareToMoveOn);
+        boolean signY = this.y < BoardUtil.getY(squareToMoveOn);
+        for (int i = 1; i < Math.abs(this.x - BoardUtil.getX(squareToMoveOn)); i++) {
+            squaresOnThePath.add(BoardUtil.posToSquare(this.x + i * (signX ? 1 : -1), this.y + i * (signY ? 1 : -1)));
+        }
+        return squaresOnThePath;
+    }
+
     public boolean nothingOnThePath(int x, int y) {
         boolean AReturn = true;
         //Cadran en haut à droite
-        if ((y > positionSurColonne) && (x > positionSurLigne)) {
-            for (int i = 1; x - positionSurLigne > i; i++) {
+        if ((y > this.y) && (x > this.x)) {
+            for (int i = 1; x - this.x > i; i++) {
                 try {
-                    Main.getEchiquier(positionSurLigne + i, positionSurColonne + i).getCouleur();
+                    Main.getEchiquier(this.x + i, this.y + i).getCouleur();
                     AReturn = false;
                 } catch (Exception NullPointerException) {
                 }
             }
         }
         //Cadran en haut à gauche
-        else if ((y > positionSurColonne) && (x < positionSurLigne)) {
-            for (int i = 1; positionSurLigne - x > i; i++) {
+        else if ((y > this.y) && (x < this.x)) {
+            for (int i = 1; this.x - x > i; i++) {
                 try {
-                    Main.getEchiquier(positionSurLigne - i, positionSurColonne + i).getCouleur();
+                    Main.getEchiquier(this.x - i, this.y + i).getCouleur();
                     AReturn = false;
                 } catch (Exception NullPointerException) {
                 }
             }
         }
         //Cadran en bas à gauche
-        else if ((y < positionSurColonne) && (x < positionSurLigne)) {
-            for (int i = 1; positionSurLigne - x > i; i++) {
+        else if ((y < this.y) && (x < this.x)) {
+            for (int i = 1; this.x - x > i; i++) {
                 try {
-                    Main.getEchiquier(positionSurLigne - i, positionSurColonne - i).getCouleur();
+                    Main.getEchiquier(this.x - i, this.y - i).getCouleur();
                     AReturn = false;
                 } catch (Exception NullPointerException) {
                 }
             }
         }
         //Cadran en bas à droite
-        else if ((y < positionSurColonne) && (x > positionSurLigne)) {
-            for (int i = 1; x - positionSurLigne > i; i++) {
+        else if ((y < this.y) && (x > this.x)) {
+            for (int i = 1; x - this.x > i; i++) {
                 try {
-                    Main.getEchiquier(positionSurLigne + i, positionSurColonne - i).getCouleur();
+                    Main.getEchiquier(this.x + i, this.y - i).getCouleur();
                     AReturn = false;
                 } catch (Exception NullPointerException) {
                 }
@@ -57,22 +72,4 @@ public class Bishop extends Piece {
         }
         return AReturn;
     }
-
-
-
-
-   
-
-    
-
-    
-
-    public boolean getCestLeRock() {
-        return false;
-    }
-
-    public void setCestLeRock(boolean trool) {
-    }
-
-
 }

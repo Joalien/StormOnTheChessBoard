@@ -1,4 +1,6 @@
-public class Rock extends Piece implements Castlable{
+import java.util.Set;
+
+public class Rock extends Piece implements Castlable {
 
     //Variales d'instances
     boolean ABouger;
@@ -11,9 +13,10 @@ public class Rock extends Piece implements Castlable{
         ABouger = false;
     }
 
+    @Override
     public boolean reachableSquares(int x, int y) {
         boolean ARetourner;
-        if ((positionSurColonne == y) || (positionSurLigne == x)) {
+        if ((this.y == y) || (this.x == x)) {
             ARetourner = true;
         } else {
             ARetourner = false;
@@ -21,35 +24,40 @@ public class Rock extends Piece implements Castlable{
         return ARetourner;
     }
 
+    @Override
+    public Set<String> squaresOnThePath(String squareToMoveOn) {
+        return null;
+    }
+
     //ça marche !
     public boolean nothingOnThePath(int x, int y) {
         boolean AReturn = true;
-        if ((positionSurLigne == x) && (positionSurColonne < y)) {
-            for (int i = positionSurColonne + 1; i < y; i++) {
+        if ((this.x == x) && (this.y < y)) {
+            for (int i = this.y + 1; i < y; i++) {
                 try {
                     Main.getEchiquier(x, i).getCouleur();
                     AReturn = false;
                 } catch (Exception NullPointerException) {
                 }
             }
-        } else if ((positionSurLigne == x) && (positionSurColonne > y)) {
-            for (int i = positionSurColonne - 1; i > y; i--) {
+        } else if ((this.x == x) && (this.y > y)) {
+            for (int i = this.y - 1; i > y; i--) {
                 try {
                     Main.getEchiquier(x, i).getCouleur();
                     AReturn = false;
                 } catch (Exception Exception) {
                 }
             }
-        } else if ((positionSurColonne == y) && (positionSurLigne > x)) {
-            for (int i = positionSurLigne - 1; i > x; i--) {
+        } else if ((this.y == y) && (this.x > x)) {
+            for (int i = this.x - 1; i > x; i--) {
                 try {
                     Main.getEchiquier(i, y).getCouleur();
                     AReturn = false;
                 } catch (Exception Exception) {
                 }
             }
-        } else if ((positionSurColonne == y) && (positionSurLigne < x)) {
-            for (int i = positionSurLigne + 1; i < x; i++) {
+        } else if ((this.y == y) && (this.x < x)) {
+            for (int i = this.x + 1; i < x; i++) {
                 try {
                     Main.getEchiquier(i, y).getCouleur();
                     AReturn = false;
@@ -61,15 +69,6 @@ public class Rock extends Piece implements Castlable{
         }
         return AReturn;
     }
-
-
-
-
-   
-
-    
-
-    
 
 
     public void setAbouger() {

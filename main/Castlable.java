@@ -1,5 +1,6 @@
 public interface Castlable {
     boolean getHasMovedInThePast();
+
     void setHasMovedInThePast(boolean trool);
 
     boolean getCestLeRock();

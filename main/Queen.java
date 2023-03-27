@@ -1,3 +1,5 @@
+import java.util.Set;
+
 public class Queen extends Piece {
 
     //Variales d'instances
@@ -9,9 +11,10 @@ public class Queen extends Piece {
         super(x, y, color, lettre);
     }
 
+    @Override
     public boolean reachableSquares(int x, int y) {
         boolean ARetourner;
-        if ((Math.abs(this.positionSurColonne - y) == Math.abs(this.positionSurLigne - x)) || ((positionSurColonne == y) || (positionSurLigne == x))) {
+        if ((Math.abs(this.y - y) == Math.abs(this.x - x)) || ((this.y == y) || (this.x == x))) {
             ARetourner = true;
         } else {
             ARetourner = false;
@@ -19,12 +22,17 @@ public class Queen extends Piece {
         return ARetourner;
     }
 
+    @Override
+    public Set<String> squaresOnThePath(String squareToMoveOn) {
+        return null;
+    }
+
     //ça marche !
     public boolean nothingOnThePath(int x, int y) {
         boolean AReturn = true;
         //On monte
-        if ((positionSurLigne == x) && (positionSurColonne < y)) {
-            for (int i = positionSurColonne + 1; i < y; i++) {
+        if ((this.x == x) && (this.y < y)) {
+            for (int i = this.y + 1; i < y; i++) {
                 try {
                     Main.getEchiquier(x, i).getCouleur();
                     AReturn = false;
@@ -33,8 +41,8 @@ public class Queen extends Piece {
             }
         }
         //On descend
-        else if ((positionSurLigne == x) && (positionSurColonne > y)) {
-            for (int i = positionSurColonne - 1; i > y; i--) {
+        else if ((this.x == x) && (this.y > y)) {
+            for (int i = this.y - 1; i > y; i--) {
                 try {
                     Main.getEchiquier(x, i).getCouleur();
                     AReturn = false;
@@ -43,8 +51,8 @@ public class Queen extends Piece {
             }
         }
         //On va à gauche
-        else if ((positionSurColonne == y) && (positionSurLigne > x)) {
-            for (int i = positionSurLigne - 1; i > x; i--) {
+        else if ((this.y == y) && (this.x > x)) {
+            for (int i = this.x - 1; i > x; i--) {
                 try {
                     Main.getEchiquier(i, y).getCouleur();
                     AReturn = false;
@@ -53,8 +61,8 @@ public class Queen extends Piece {
             }
         }
         //On va à droite
-        else if ((positionSurColonne == y) && (positionSurLigne < x)) {
-            for (int i = positionSurLigne + 1; i < x; i++) {
+        else if ((this.y == y) && (this.x < x)) {
+            for (int i = this.x + 1; i < x; i++) {
                 try {
                     Main.getEchiquier(i, y).getCouleur();
                     AReturn = false;
@@ -63,40 +71,40 @@ public class Queen extends Piece {
             }
         }
         //Cadran en haut à droite
-        else if ((y > positionSurColonne) && (x > positionSurLigne)) {
-            for (int i = 1; x - positionSurLigne > i; i++) {
+        else if ((y > this.y) && (x > this.x)) {
+            for (int i = 1; x - this.x > i; i++) {
                 try {
-                    Main.getEchiquier(positionSurLigne + i, positionSurColonne + i).getCouleur();
+                    Main.getEchiquier(this.x + i, this.y + i).getCouleur();
                     AReturn = false;
                 } catch (Exception NullPointerException) {
                 }
             }
         }
         //Cadran en haut à gauche
-        else if ((y > positionSurColonne) && (x < positionSurLigne)) {
-            for (int i = 1; positionSurLigne - x > i; i++) {
+        else if ((y > this.y) && (x < this.x)) {
+            for (int i = 1; this.x - x > i; i++) {
                 try {
-                    Main.getEchiquier(positionSurLigne - i, positionSurColonne + i).getCouleur();
+                    Main.getEchiquier(this.x - i, this.y + i).getCouleur();
                     AReturn = false;
                 } catch (Exception NullPointerException) {
                 }
             }
         }
         //Cadran en bas à gauche
-        else if ((y < positionSurColonne) && (x < positionSurLigne)) {
-            for (int i = 1; positionSurLigne - x > i; i++) {
+        else if ((y < this.y) && (x < this.x)) {
+            for (int i = 1; this.x - x > i; i++) {
                 try {
-                    Main.getEchiquier(positionSurLigne - i, positionSurColonne - i).getCouleur();
+                    Main.getEchiquier(this.x - i, this.y - i).getCouleur();
                     AReturn = false;
                 } catch (Exception NullPointerException) {
                 }
             }
         }
         //Cadran en bas à droite
-        else if ((y < positionSurColonne) && (x > positionSurLigne)) {
-            for (int i = 1; x - positionSurLigne > i; i++) {
+        else if ((y < this.y) && (x > this.x)) {
+            for (int i = 1; x - this.x > i; i++) {
                 try {
-                    Main.getEchiquier(positionSurLigne + i, positionSurColonne - i).getCouleur();
+                    Main.getEchiquier(this.x + i, this.y - i).getCouleur();
                     AReturn = false;
                 } catch (Exception NullPointerException) {
                 }
@@ -108,11 +116,4 @@ public class Queen extends Piece {
     }
 
 
-
-
-   
-
-    
-
-    
 }
