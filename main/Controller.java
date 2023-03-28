@@ -40,7 +40,7 @@ public class Controller {
                                 initialePièce = "" + pièceADéplacer.charAt(0);
                                 if (typeEnChar.equalsIgnoreCase(initialePièce)) {
                                     if (validMove == false) {
-                                        validMove = chessBoard.getBoard()[i][j].allerSur(lettreArrivé, chiffreArrivé);
+//                                        validMove = chessBoard.getBoard()[i][j].allerSur(lettreArrivé, chiffreArrivé);
                                     }
                                 }
                             } catch (Exception NullPointerException) {
@@ -67,7 +67,7 @@ public class Controller {
                                 initialePièce = "" + pièceADéplacer.charAt(0);
                                 if ((typeEnChar.equalsIgnoreCase(initialePièce)) && ((lettrePourDifférencier == chessBoard.getBoard()[i][j].getX()) || (chiffrePourDifférencier == chessBoard.getBoard()[i][j].getY()))) {
                                     if (validMove == false) {
-                                        validMove = chessBoard.getBoard()[i][j].allerSur(lettreArrivé, chiffreArrivé);
+//                                        validMove = chessBoard.getBoard()[i][j].allerSur(lettreArrivé, chiffreArrivé);
                                     }
                                 }
                             } catch (Exception NullPointerException) {
@@ -86,7 +86,7 @@ public class Controller {
                                 char typeEnChar = chessBoard.getBoard()[i][j].getType();
                                 if ((typeEnChar == 'P') || (typeEnChar == 'p')) {
                                     if (validMove == false) {
-                                        validMove = chessBoard.getBoard()[i][j].allerSur(lettreArrivé, chiffreArrivé);
+//                                        validMove = chessBoard.getBoard()[i][j].allerSur(lettreArrivé, chiffreArrivé);
                                     }
                                 }
                             } catch (Exception NullPointerException) {
@@ -139,10 +139,12 @@ public class Controller {
 
     }
 
+    @Deprecated
     public static Piece getEchiquier(int x, int y) {
         return chessBoard.getBoard()[x][y];
     }
 
+    @Deprecated
     public static void setEchiquier(int x, int y, Piece piece) {
         chessBoard.getBoard()[x][y] = piece;
     }

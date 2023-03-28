@@ -1,13 +1,29 @@
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 class BoardUtilTest {
+
+    @Test
+    void should_generate_all_64_positions() {
+        List<String> allPositions = BoardUtil.generateAllPositions();
+
+        assertEquals(64, allPositions.size());
+        assertTrue(allPositions.contains("a1"));
+        assertTrue(allPositions.contains("a8"));
+        assertTrue(allPositions.contains("h1"));
+        assertTrue(allPositions.contains("h8"));
+
+        assertFalse(allPositions.contains("a0"));
+        assertFalse(allPositions.contains("a9"));
+        assertFalse(allPositions.contains("i1"));
+        assertFalse(allPositions.contains("z1"));
+    }
 
     @Nested
     class MapPositionAndSquare {
@@ -28,7 +44,7 @@ class BoardUtilTest {
 
         @ParameterizedTest
         @ValueSource(strings = {"e1", "e2", "e7", "e8"})
-        public void should_get_column_number_from_square(String square) {
+        public void should_get_file_number_from_square(String square) {
             assertEquals(5, BoardUtil.getX(square));
         }
 
@@ -59,6 +75,11 @@ class BoardUtilTest {
         @Test
         void should_throw_when_position_is_after_chessboard_bis() {
             assertThrows(IndexOutOfBoundsException.class, () -> BoardUtil.posToSquare(9, 1));
+        }
+
+        @Test
+        void should_throw_if_outside_of_board_position() {
+            assertThrows(IndexOutOfBoundsException.class, () -> BoardUtil.getX("i2"));
         }
     }
 }

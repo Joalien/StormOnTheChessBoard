@@ -1,4 +1,5 @@
 import java.util.Collections;
+import java.util.Optional;
 import java.util.Set;
 
 public class King extends Piece implements Castlable {
@@ -6,14 +7,14 @@ public class King extends Piece implements Castlable {
     private boolean hasMovedInThePast;
     private boolean cestLeRock = false;
 
-    public King(String position, Color color) {
-        super(new Square(position), color, color == Color.WHITE ? 'K' : 'k');
+    public King(Color color) {
+        super(color, color == Color.WHITE ? 'K' : 'k');
     }
 
     //Penser à intégrer le rock !
     @Override
-    public boolean reachableSquares(int x, int y) {
-        if (this.x == x && this.y == y) return false;
+    public boolean reachableSquares(int x, int y, Optional<Color> color) {
+        if (getX() == x && getY() == y) return false;
 
         boolean whiteCastle = this.getPosition().equals("e1") && this.color == Color.WHITE;
         boolean blackCastle = this.getPosition().equals("e8") && this.color == Color.BLACK;
@@ -24,7 +25,7 @@ public class King extends Piece implements Castlable {
         boolean canCastle = !hasMovedInThePast && (whiteKingSideCastle || whiteQueenSideCastle || blackKingSideCastle || blackQueenSideCastle);
         if (canCastle) return true;
 
-        return (Math.abs(this.x - x) <= 1) && (Math.abs(this.y - y) <= 1);
+        return (Math.abs(getX() - x) <= 1) && (Math.abs(getY() - y) <= 1);
     }
 
     @Override

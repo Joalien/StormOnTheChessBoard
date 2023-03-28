@@ -10,7 +10,7 @@ public class BoardUtil {
     }
 
     private static int charToInt(char c) {
-        return switch (c) {
+        return switch (Character.toLowerCase(c)) {
             case 'a' -> 1;
             case 'b' -> 2;
             case 'c' -> 3;
@@ -37,7 +37,7 @@ public class BoardUtil {
         };
     }
 
-    public static List<String> generateAllSquares() {
+    public static List<String> generateAllPositions() {
         List<String> allSquares = new ArrayList<>(64);
         for (int i = 1; i <= 8; i++) {
             for (int j = 1; j <= 8; j++) {
@@ -51,12 +51,12 @@ public class BoardUtil {
         return Character.toString(BoardUtil.intToChar(i)) + intToInt(j);
     }
 
-    public static int getX(String square) {
-        return BoardUtil.charToInt(square.charAt(0));
+    public static int getX(String position) {
+        return BoardUtil.charToInt(position.charAt(0));
     }
 
-    public static int getY(String square) {
-        return Integer.valueOf(Character.toString(square.charAt(1)));
+    public static int getY(String position) {
+        return Integer.valueOf(Character.toString(position.charAt(1)));
     }
 
 }

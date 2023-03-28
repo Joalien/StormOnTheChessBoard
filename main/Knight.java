@@ -1,18 +1,19 @@
 import java.util.Collections;
+import java.util.Optional;
 import java.util.Set;
 
 public class Knight extends Piece {
 
-    public Knight(String position, Color couleur) {
-        super(new Square(position), couleur, couleur == Color.WHITE ? 'K' : 'k');
+    public Knight(Color color) {
+        super(color, color == Color.WHITE ? 'K' : 'k');
     }
 
     @Override
-    public boolean reachableSquares(int x, int y) {
-        boolean isNotOnTheSameLine = this.x != x;
-        boolean isNotOnTheSameColumn = this.y != y;
-        boolean distanceOfThree = Math.abs(this.x - x) + Math.abs(this.y - y) == 3;
-        return isNotOnTheSameLine && isNotOnTheSameColumn && distanceOfThree;
+    public boolean reachableSquares(int x, int y, Optional<Color> color) {
+        boolean isNotOnTheSameLine = getX() != x;
+        boolean isNotOnTheSameFile = getY() != y;
+        boolean distanceOfThree = Math.abs(getX() - x) + Math.abs(getY() - y) == 3;
+        return isNotOnTheSameLine && isNotOnTheSameFile && distanceOfThree;
     }
 
     @Override

@@ -1,3 +1,4 @@
+import java.util.Optional;
 import java.util.Set;
 
 public abstract class Piece {
@@ -5,20 +6,25 @@ public abstract class Piece {
     private static boolean tourDes = true;
     private static boolean roiEnEchecs = false;
     //Variales d'instances
-    protected int y;
-    protected int x;
     protected Color color;
     protected char type;
     private Square square;
 
     public String getPosition() {
-        return this.square.getPosition();
+        return this.getSquare().map(Square::getPosition).orElse(null);
+    }
+
+    public void isTaken() {
+        this.square = null;
     }
 
     public Piece(Square square, Color color, char typePiece) {
         this.square = square;
-        this.x = BoardUtil.getX(square.getPosition());
-        this.y = BoardUtil.getY(square.getPosition());
+        this.color = color;
+        this.type = typePiece;
+    }
+
+    public Piece(Color color, char typePiece) {
         this.color = color;
         this.type = typePiece;
     }
@@ -59,8 +65,8 @@ public abstract class Piece {
 
     }
 
-    public Square getSquare() {
-        return square;
+    public Optional<Square> getSquare() {
+        return Optional.ofNullable(square);
     }
 
     public void setSquare(Square square) {
@@ -77,20 +83,13 @@ public abstract class Piece {
     }
 
     public int getY() {
-        return y;
-    }
-
-    public void setY(int y) {
-        this.y = y;
+        return BoardUtil.getY(square.getPosition());
     }
 
     public int getX() {
-        return x;
+        return BoardUtil.getX(square.getPosition());
     }
 
-    public void setX(int x) {
-        this.x = x;
-    }
 
     public Color getColor() {
         return color;
@@ -100,10 +99,14 @@ public abstract class Piece {
         return this.type;
     }
 
-    protected abstract boolean reachableSquares(int x, int y);
+    protected abstract boolean reachableSquares(int x, int y, Optional<Color> color);
 
     protected boolean reachableSquares(String s) {
-        return reachableSquares(BoardUtil.getX(s), BoardUtil.getY(s));
+        return reachableSquares(BoardUtil.getX(s), BoardUtil.getY(s), Optional.empty());
+    }
+
+    protected boolean reachableSquares(String s, Optional<Color> color) {
+        return reachableSquares(BoardUtil.getX(s), BoardUtil.getY(s), color);
     }
 
     public abstract Set<String> squaresOnThePath(String squareToMoveOn);
@@ -111,30 +114,9 @@ public abstract class Piece {
     @Deprecated
     public abstract boolean nothingOnThePath(int x, int y);
 
-    @Deprecated
-    protected boolean nothingOnThePath(String s) {
-        return nothingOnThePath(BoardUtil.getX(s), BoardUtil.getY(s));
-    }
-
     //Vérifie si le déplacement est permis (ne prend pas en compte la couleur de la case d'arrivée, et si le chemin est libre et s'il n'y a pas d'échecs)
     protected boolean DeplacementPermis(int x, int y) {
-        boolean deplacementPermis;
-
-        if ((ResteDansEchiquier(x, y) == true) && (reachableSquares(x, y) == true) && (bonTour() == true)) {
-            deplacementPermis = true;
-        } else {
-            deplacementPermis = false;
-        }
-        return deplacementPermis;
-    }
-
-    //Case d'arrivée vide
-    protected boolean RegardeSiCaseVide(int x, int y) {
-        if (Controller.getEchiquier(x, y) == Controller.getEchiquier(0, 0)) {
-            return true;
-        } else {
-            return false;
-        }
+        return (ResteDansEchiquier(x, y) == true) && (reachableSquares(x, y, Optional.empty()) == true) && (bonTour() == true);
     }
 
     //Vérifie que la pièce reste bien dans l'échiquier
@@ -162,97 +144,97 @@ public abstract class Piece {
     }
 
     //méthode principale qui permet de déplacer la pièce
-    public boolean allerSur(int x, int y) {
-        boolean memeColor;
-        boolean AReturn;
-        //Empêche une pièce de prendre une pièce de sa propre couleur
-        try {
-            if (this.getColor() == Controller.getEchiquier(x, y).getColor()) {
-                memeColor = true;
-            } else {
-                memeColor = false;
-            }
-        } catch (Exception NullPointerException) {
-            memeColor = false;
-        }
-
-        //Si la pièce bouge (sauf si ça entraine un échecs)
-        if ((DeplacementPermis(x, y) == true) && (memeColor == false) && (nothingOnThePath(x, y) == true)) {
-            //sauvegarde la position de départ
-            int yy = this.y;
-            int xx = this.x;
-
-            //déplace l'objet
-            this.y = y;
-            this.x = x;
-            //Sauvegarde la pièce mangée (1, 0) au cas où le coup soit impossible et qu'il faille revenir en arrière
-            Controller.setEchiquier(1, 0, Controller.getEchiquier(x, y));
-            Controller.setEchiquier(x, y, Controller.getEchiquier(xx, yy));
-            Controller.setEchiquier(xx, yy, Controller.getEchiquier(0, 0));
-
-            //Passe au tour suivant
-            tourDes = !tourDes;
-
-            //Vérifie si le coup ne met pas le roi en échecs
-            boolean regardeSiEchecs = RegardeSiEchecs(this.getColor() == Color.WHITE);
-            if (regardeSiEchecs == true) {
-                System.out.println("Le déplacement n'est pas possible car il mettrait le roi en échecs !");
-                //Remet les pièces à leur place
-                this.y = yy;
-                this.x = xx;
-                Controller.setEchiquier(xx, yy, Controller.getEchiquier(x, y));
-                Controller.setEchiquier(x, y, Controller.getEchiquier(1, 0));
-                //Revient au tour d'avant
-                tourDes = !tourDes;
-                return false;
-            }
-            //Indique que la pièce a bougée
-            else {
-                if (this instanceof Castlable)
-                    ((Castlable) this).setHasMovedInThePast(true);
-                AReturn = true;
-            }
-            //Test promotion et rock (déplace la tour si le roi se déplace de deux cases)
-            if (this instanceof Pawn) ((Pawn) this).testPromotion(x, y);
-            //Petit Rock
-            if (this instanceof Castlable && ((Castlable) this).getCestLeRock() == true && (x == 7)) {
-                System.out.println("Petit rock !");
-                //déplace l'objet
-                yy = Controller.getEchiquier(8, y).y;
-                xx = Controller.getEchiquier(8, y).x;
-                Controller.getEchiquier(8, y).y = y;
-                Controller.getEchiquier(8, y).x = 6;
-                Controller.setEchiquier(6, y, Controller.getEchiquier(xx, yy));
-                Controller.setEchiquier(xx, yy, Controller.getEchiquier(0, 0));
-                ((Castlable) this).setCestLeRock(false);
-            }
-            //Grand Rock
-            else if (this instanceof Castlable && ((Castlable) this).getCestLeRock() == true && (x == 3)) {
-                System.out.println("Grand rock !");
-                //déplace l'objet
-                yy = Controller.getEchiquier(1, y).y;
-                xx = Controller.getEchiquier(1, y).x;
-                Controller.getEchiquier(1, y).y = y;
-                Controller.getEchiquier(1, y).x = 3;
-                Controller.setEchiquier(4, y, Controller.getEchiquier(xx, yy));
-                Controller.setEchiquier(xx, yy, Controller.getEchiquier(0, 0));
-                ((Castlable) this).setCestLeRock(false);
-            }
-
-            //Regarde si le coup met le roi adverse en échecs
-            roiEnEchecs = false;
-            if (RegardeSiEchecs(this.getColor() == Color.WHITE) == true) {
-                System.out.println("échecs !");
-                roiEnEchecs = true;
-            }
-
-            AReturn = true;
-        } else {
-            AReturn = false;
-        }
-        return AReturn;
-
-    }
+//    public boolean allerSur(int x, int y) {
+//        boolean memeColor;
+//        boolean AReturn;
+//        //Empêche une pièce de prendre une pièce de sa propre couleur
+//        try {
+//            if (this.getColor() == Controller.getEchiquier(x, y).getColor()) {
+//                memeColor = true;
+//            } else {
+//                memeColor = false;
+//            }
+//        } catch (Exception NullPointerException) {
+//            memeColor = false;
+//        }
+//
+//        //Si la pièce bouge (sauf si ça entraine un échecs)
+//        if ((DeplacementPermis(x, y) == true) && (memeColor == false) && (nothingOnThePath(x, y) == true)) {
+//            //sauvegarde la position de départ
+//            int yy = getY();
+//            int xx = getX();
+//
+//            //déplace l'objet
+//            getY() = y;
+//            getX() = x;
+//            //Sauvegarde la pièce mangée (1, 0) au cas où le coup soit impossible et qu'il faille revenir en arrière
+//            Controller.setEchiquier(1, 0, Controller.getEchiquier(x, y));
+//            Controller.setEchiquier(x, y, Controller.getEchiquier(xx, yy));
+//            Controller.setEchiquier(xx, yy, Controller.getEchiquier(0, 0));
+//
+//            //Passe au tour suivant
+//            tourDes = !tourDes;
+//
+//            //Vérifie si le coup ne met pas le roi en échecs
+//            boolean regardeSiEchecs = RegardeSiEchecs(this.getColor() == Color.WHITE);
+//            if (regardeSiEchecs == true) {
+//                System.out.println("Le déplacement n'est pas possible car il mettrait le roi en échecs !");
+//                //Remet les pièces à leur place
+//                getY() = yy;
+//                getX() = xx;
+//                Controller.setEchiquier(xx, yy, Controller.getEchiquier(x, y));
+//                Controller.setEchiquier(x, y, Controller.getEchiquier(1, 0));
+//                //Revient au tour d'avant
+//                tourDes = !tourDes;
+//                return false;
+//            }
+//            //Indique que la pièce a bougée
+//            else {
+//                if (this instanceof Castlable)
+//                    ((Castlable) this).setHasMovedInThePast(true);
+//                AReturn = true;
+//            }
+//            //Test promotion et rock (déplace la tour si le roi se déplace de deux cases)
+//            if (this instanceof Pawn) ((Pawn) this).testPromotion(x, y);
+//            //Petit Rock
+//            if (this instanceof Castlable && ((Castlable) this).getCestLeRock() == true && (x == 7)) {
+//                System.out.println("Petit rock !");
+//                //déplace l'objet
+//                yy = Controller.getEchiquier(8, y).y;
+//                xx = Controller.getEchiquier(8, y).x;
+//                Controller.getEchiquier(8, y).y = y;
+//                Controller.getEchiquier(8, y).x = 6;
+//                Controller.setEchiquier(6, y, Controller.getEchiquier(xx, yy));
+//                Controller.setEchiquier(xx, yy, Controller.getEchiquier(0, 0));
+//                ((Castlable) this).setCestLeRock(false);
+//            }
+//            //Grand Rock
+//            else if (this instanceof Castlable && ((Castlable) this).getCestLeRock() == true && (x == 3)) {
+//                System.out.println("Grand rock !");
+//                //déplace l'objet
+//                yy = Controller.getEchiquier(1, y).y;
+//                xx = Controller.getEchiquier(1, y).x;
+//                Controller.getEchiquier(1, y).y = y;
+//                Controller.getEchiquier(1, y).x = 3;
+//                Controller.setEchiquier(4, y, Controller.getEchiquier(xx, yy));
+//                Controller.setEchiquier(xx, yy, Controller.getEchiquier(0, 0));
+//                ((Castlable) this).setCestLeRock(false);
+//            }
+//
+//            //Regarde si le coup met le roi adverse en échecs
+//            roiEnEchecs = false;
+//            if (RegardeSiEchecs(this.getColor() == Color.WHITE) == true) {
+//                System.out.println("échecs !");
+//                roiEnEchecs = true;
+//            }
+//
+//            AReturn = true;
+//        } else {
+//            AReturn = false;
+//        }
+//        return AReturn;
+//
+//    }
 
     //Renvoie true si pièce blanche, false si noire
     protected boolean RegardeSiPieceBlanche(int x, int y) {
