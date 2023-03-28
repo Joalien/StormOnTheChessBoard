@@ -7,22 +7,30 @@ public abstract class Piece {
     //Variales d'instances
     protected int y;
     protected int x;
-    protected boolean couleur;
+    protected Color color;
     protected char type;
-
-
-    //Constructeur
+    private Square square;
+    @Deprecated
     public Piece(int x, int y, boolean color, char typePiece) {
         this.y = y;
         this.x = x;
-        couleur = color;
+        this.color = color ? Color.WHITE : Color.BLACK;
         type = typePiece;
     }
-
+    @Deprecated
     public Piece(int x, int y, char typePiece) {
         this.y = y;
         this.x = x;
         type = typePiece;
+    }
+
+
+    public Piece(Square square, Color color, char typePiece) {
+        this.square = square;
+        this.x = BoardUtil.getX(square.getPosition());
+        this.y = BoardUtil.getY(square.getPosition());
+        this.color = color;
+        this.type = typePiece;
     }
 
     //Test toutes les pièces Blanches de l"échiquier pour voir si un déplacement sur (x, y) est possible
@@ -31,7 +39,7 @@ public abstract class Piece {
         for (int i = 1; i <= 8; i++) {
             for (int j = 1; j <= 8; j++) {
                 try {
-                    if ((Main.getEchiquier(i, j).DeplacementPermis(x, y) == true) && (Main.getEchiquier(i, j).getCouleur() == true) && (Main.getEchiquier(i, j).nothingOnThePath(x, y) == true)) {
+                    if ((Main.getEchiquier(i, j).DeplacementPermis(x, y) == true) && (Main.getEchiquier(i, j).getColor() == Color.WHITE) && (Main.getEchiquier(i, j).nothingOnThePath(x, y) == true)) {
                         nombreDePiècesBlanchesPouvantAllerSurLaCase++;
                     }
                 } catch (Exception NullPointerException) {
@@ -49,7 +57,7 @@ public abstract class Piece {
         for (int i = 1; i <= 8; i++) {
             for (int j = 1; j <= 8; j++) {
                 try {
-                    if ((Main.getEchiquier(i, j).DeplacementPermis(x, y) == true) && (Main.getEchiquier(i, j).getCouleur() == false) && (Main.getEchiquier(i, j).nothingOnThePath(x, y) == true)) {
+                    if ((Main.getEchiquier(i, j).DeplacementPermis(x, y) == true) && (Main.getEchiquier(i, j).getColor() == Color.BLACK) && (Main.getEchiquier(i, j).nothingOnThePath(x, y) == true)) {
                         nombreDePiècesNoiresPouvantAllerSurLaCase++;
                     }
                 } catch (Exception NullPointerException) {
@@ -59,6 +67,14 @@ public abstract class Piece {
 // 		System.out.println("Il y a " + nombreDePiècesNoiresPouvantAllerSurLaCase +" pièce(s) noires pouvant aller sur "+x+", "+y);
         return nombreDePiècesNoiresPouvantAllerSurLaCase;
 
+    }
+
+    public Square getSquare() {
+        return square;
+    }
+
+    public void setSquare(Square square) {
+        this.square = square;
     }
 
     //Setters, guetter et abstract méthodes
@@ -86,8 +102,8 @@ public abstract class Piece {
         this.x = x;
     }
 
-    public boolean getCouleur() {
-        return couleur;
+    public Color getColor() {
+        return color;
     }
 
     public char getType() {
@@ -143,7 +159,7 @@ public abstract class Piece {
     //Vérifie si le joueur joue bien les pièces de sa couleur
     private boolean bonTour() {
         try {
-            if (this.getCouleur() == tourDes) {
+            if (this.getColor() == Color.WHITE == tourDes) {
                 return true;
             } else {
 // 				System.out.println("Vous ne pouvez pas jouer cette couleur");
@@ -161,7 +177,7 @@ public abstract class Piece {
         boolean AReturn;
         //Empêche une pièce de prendre une pièce de sa propre couleur
         try {
-            if (this.getCouleur() == Main.getEchiquier(x, y).getCouleur()) {
+            if (this.getColor() == Main.getEchiquier(x, y).getColor()) {
                 memeColor = true;
             } else {
                 memeColor = false;
@@ -188,7 +204,7 @@ public abstract class Piece {
             tourDes = !tourDes;
 
             //Vérifie si le coup ne met pas le roi en échecs
-            boolean regardeSiEchecs = RegardeSiEchecs(this.getCouleur());
+            boolean regardeSiEchecs = RegardeSiEchecs(this.getColor() == Color.WHITE);
             if (regardeSiEchecs == true) {
                 System.out.println("Le déplacement n'est pas possible car il mettrait le roi en échecs !");
                 //Remet les pièces à leur place
@@ -235,7 +251,7 @@ public abstract class Piece {
 
             //Regarde si le coup met le roi adverse en échecs
             roiEnEchecs = false;
-            if (RegardeSiEchecs(!this.getCouleur()) == true) {
+            if (RegardeSiEchecs(this.getColor() == Color.WHITE) == true) {
                 System.out.println("échecs !");
                 roiEnEchecs = true;
             }
@@ -252,7 +268,7 @@ public abstract class Piece {
     protected boolean RegardeSiPieceBlanche(int x, int y) {
         boolean ARetourner = false;
         try {
-            if ((Main.getEchiquier(x, y).getCouleur() == true)) {
+            if ((Main.getEchiquier(x, y).getColor() == Color.WHITE)) {
                 ARetourner = true;
             } else {
                 ARetourner = false;

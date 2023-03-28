@@ -8,7 +8,7 @@ class KnightTest {
 
     @Test
     void spawn_knight() {
-        Knight knight = new Knight(5, 4, true, 'K');
+        Knight knight = new Knight("e4", Color.WHITE);
 
         Assertions.assertEquals(5, knight.x);
         Assertions.assertEquals(4, knight.y);
@@ -16,7 +16,7 @@ class KnightTest {
 
     @Test
     void should_return_all_square_it_will_go_through() {
-        Knight knight = new Knight(1, 1, true, 'B');
+        Knight knight = new Knight("a1", Color.WHITE);
 
         Assertions.assertTrue(knight.squaresOnThePath("c2").isEmpty());
     }
@@ -26,7 +26,7 @@ class KnightTest {
         @Test
         void move_knight_in_the_middle_of_the_board() {
             List<String> validMoves = List.of("g1", "e1", "d2", "d4", "e5", "g5", "h4", "h2");
-            Knight knight = new Knight(6, 3, true, 'K');
+            Knight knight = new Knight("f3", Color.WHITE);
 
             Assertions.assertTrue(BoardUtil.generateAllSquares()
                     .stream()
@@ -37,7 +37,7 @@ class KnightTest {
         @Test
         void move_knight_in_the_corner() {
             List<String> validMoves = List.of("f2", "g3");
-            Knight knight = new Knight(8, 1, true, 'K');
+            Knight knight = new Knight("h1", Color.WHITE);
 
             Assertions.assertTrue(BoardUtil.generateAllSquares()
                     .stream()
@@ -47,7 +47,7 @@ class KnightTest {
 
         @Test
         void should_not_be_able_to_move_on_itself() {
-            Knight knight = new Knight(5, 5, true, 'B');
+            Knight knight = new Knight("e5", Color.WHITE);
 
             Assertions.assertFalse(knight.reachableSquares("e5"));
         }

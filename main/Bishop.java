@@ -3,8 +3,13 @@ import java.util.Set;
 
 public class Bishop extends Piece {
 
+    @Deprecated
     public Bishop(int x, int y, boolean color, char lettre) {
         super(x, y, color, lettre);
+    }
+
+    public Bishop(String position, Color couleur) {
+        super(new Square(position), couleur, couleur == Color.WHITE ? 'B' : 'b');
     }
 
     @Override
@@ -32,7 +37,7 @@ public class Bishop extends Piece {
         if ((y > this.y) && (x > this.x)) {
             for (int i = 1; x - this.x > i; i++) {
                 try {
-                    Main.getEchiquier(this.x + i, this.y + i).getCouleur();
+                    Main.getEchiquier(this.x + i, this.y + i).getColor();
                     AReturn = false;
                 } catch (Exception NullPointerException) {
                 }
@@ -42,7 +47,7 @@ public class Bishop extends Piece {
         else if ((y > this.y) && (x < this.x)) {
             for (int i = 1; this.x - x > i; i++) {
                 try {
-                    Main.getEchiquier(this.x - i, this.y + i).getCouleur();
+                    Main.getEchiquier(this.x - i, this.y + i).getColor();
                     AReturn = false;
                 } catch (Exception NullPointerException) {
                 }
@@ -52,7 +57,7 @@ public class Bishop extends Piece {
         else if ((y < this.y) && (x < this.x)) {
             for (int i = 1; this.x - x > i; i++) {
                 try {
-                    Main.getEchiquier(this.x - i, this.y - i).getCouleur();
+                    Main.getEchiquier(this.x - i, this.y - i).getColor();
                     AReturn = false;
                 } catch (Exception NullPointerException) {
                 }
@@ -62,7 +67,7 @@ public class Bishop extends Piece {
         else if ((y < this.y) && (x > this.x)) {
             for (int i = 1; x - this.x > i; i++) {
                 try {
-                    Main.getEchiquier(this.x + i, this.y - i).getCouleur();
+                    Main.getEchiquier(this.x + i, this.y - i).getColor();
                     AReturn = false;
                 } catch (Exception NullPointerException) {
                 }

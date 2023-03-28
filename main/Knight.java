@@ -3,8 +3,13 @@ import java.util.Set;
 
 public class Knight extends Piece {
 
+    @Deprecated
     public Knight(int x, int y, boolean color, char lettre) {
         super(x, y, color, lettre);
+    }
+
+    public Knight(String position, Color couleur) {
+        super(new Square(position), couleur, couleur == Color.WHITE ? 'K' : 'k');
     }
 
     @Override

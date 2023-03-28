@@ -4,16 +4,12 @@ public class King extends Piece implements Castlable {
 
     //Variales d'instances
     private boolean hasMovedInThePast;
-    private int positionSurLigneDeDépart;
-    private int positionSurColonneDeDépart;
     private boolean cestLeRock = false;
 
     //Constructeur
     public King(int x, int y, boolean color, char lettre) {
         super(x, y, color, lettre);
         hasMovedInThePast = false;
-        positionSurLigneDeDépart = x;
-        positionSurColonneDeDépart = y;
     }
 
     //Penser à intégrer le rock !
@@ -25,12 +21,12 @@ public class King extends Piece implements Castlable {
         }
 
         // Kingside castling
-        else if (!getRoiEnEchecs() && (this.x + 2 == x) && (this.y == y) && (!hasMovedInThePast) && ((Rock) Main.getEchiquier(8, y)).getHasMovedInThePast() == false && (this.x == positionSurLigneDeDépart) && (this.y == positionSurColonneDeDépart) && (this.RegardeSiEchecs(this.getCouleur()) == false)) {
+        else if (!getRoiEnEchecs() && (this.x + 2 == x) && (this.y == y) && (!hasMovedInThePast) && ((Rock) Main.getEchiquier(8, y)).getHasMovedInThePast() == false && (this.RegardeSiEchecs(this.getColor() == Color.WHITE) == false)) {
             cestLeRock = true;
             ARetourner = true;
         }
         //Grand rock
-        else if ((!getRoiEnEchecs()) && (this.x - 2 == x) && (this.y == y) && (!hasMovedInThePast) && ((Rock) Main.getEchiquier(1, y)).getHasMovedInThePast() == false && (this.x == positionSurLigneDeDépart) && (this.y == positionSurColonneDeDépart) && (this.RegardeSiEchecs(this.getCouleur()) == false)) {
+        else if ((!getRoiEnEchecs()) && (this.x - 2 == x) && (this.y == y) && (!hasMovedInThePast) && ((Rock) Main.getEchiquier(1, y)).getHasMovedInThePast() == false && (this.RegardeSiEchecs(this.getColor() == Color.WHITE) == false)) {
             cestLeRock = true;
             ARetourner = true;
         } else {

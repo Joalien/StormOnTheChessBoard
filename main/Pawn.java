@@ -11,7 +11,7 @@ public class Pawn extends Piece {
     @Override
     public boolean reachableSquares(int x, int y) {
         //Si pion blanc
-        if (this.getCouleur() == true) {
+        if (this.getColor() == Color.WHITE) {
             //Si case d'arrivée vide
             try {
                 //Si case d'arrivée vide
@@ -25,7 +25,7 @@ public class Pawn extends Piece {
                     else if ((this.y == 2) && (this.x == x) && (y == 4)) {
                         //Vérifie que la case du milieu n'est pas occupée
                         try {
-                            Main.getEchiquier(x, 3).getCouleur();
+                            Main.getEchiquier(x, 3).getColor();
                             return false;
                         } catch (Exception NullPointerException) {
                             return true;
@@ -60,7 +60,7 @@ public class Pawn extends Piece {
                 else if ((this.y == 2) && (this.x == x) && (y == 4)) {
                     //Vérifie que la case du milieu n'est pas occupée
                     try {
-                        Main.getEchiquier(x, 3).getCouleur();
+                        Main.getEchiquier(x, 3).getColor();
                         return false;
                     } catch (Exception NullPointerException) {
                         return true;
@@ -73,7 +73,7 @@ public class Pawn extends Piece {
             }
         }
         //Si pion noir
-        else if (this.getCouleur() == false) {
+        else if (this.getColor() == Color.BLACK) {
             //Si case d'arrivée vide
             try {
                 //Si case d'arrivée vide
@@ -86,7 +86,7 @@ public class Pawn extends Piece {
                     else if ((this.y == 7) && (this.x == x) && (y == 5)) {
                         //Vérifie que la case du milieu n'est pas occupée
                         try {
-                            Main.getEchiquier(x, 6).getCouleur();
+                            Main.getEchiquier(x, 6).getColor();
                             return false;
                         } catch (Exception NullPointerException) {
                             return true;
@@ -122,7 +122,7 @@ public class Pawn extends Piece {
                 else if ((this.y == 7) && (this.x == x) && (y == 5)) {
                     //Vérifie que la case du milieu n'est pas occupée
                     try {
-                        Main.getEchiquier(x, 6).getCouleur();
+                        Main.getEchiquier(x, 6).getColor();
                         return false;
                     } catch (Exception NullPointerException) {
                         return true;
@@ -165,7 +165,7 @@ public class Pawn extends Piece {
                 switch (promotion) {
                     case "D":
                         conditionSineQuaNon = true;
-                        if (this.getCouleur() == true) {
+                        if (this.getColor() == Color.WHITE) {
                             piecePromue = new Queen(x, y, true, 'D');
                         } else {
                             piecePromue = new Queen(x, y, false, 'd');
@@ -175,7 +175,7 @@ public class Pawn extends Piece {
 
                     case "T":
                         conditionSineQuaNon = true;
-                        if (this.getCouleur() == true) {
+                        if (this.getColor() == Color.WHITE) {
                             piecePromue = new Rock(x, y, true, 'T');
                         } else {
                             piecePromue = new Rock(x, y, false, 't');
@@ -185,7 +185,7 @@ public class Pawn extends Piece {
 
                     case "F":
                         conditionSineQuaNon = true;
-                        if (this.getCouleur() == true) {
+                        if (this.getColor() == Color.WHITE) {
                             piecePromue = new Bishop(x, y, true, 'F');
                         } else {
                             piecePromue = new Bishop(x, y, false, 'f');
@@ -195,7 +195,7 @@ public class Pawn extends Piece {
 
                     case "C":
                         conditionSineQuaNon = true;
-                        if (this.getCouleur() == true) {
+                        if (this.getColor() == Color.WHITE) {
                             piecePromue = new Knight(x, y, true, 'C');
                         } else {
                             piecePromue = new Knight(x, y, false, 'c');
