@@ -3,13 +3,8 @@ import java.util.Set;
 
 public class Bishop extends Piece {
 
-    @Deprecated
-    public Bishop(int x, int y, boolean color, char lettre) {
-        super(x, y, color, lettre);
-    }
-
-    public Bishop(String position, Color couleur) {
-        super(new Square(position), couleur, couleur == Color.WHITE ? 'B' : 'b');
+    public Bishop(String position, Color color) {
+        super(new Square(position), color, color == Color.WHITE ? 'B' : 'b');
     }
 
     @Override

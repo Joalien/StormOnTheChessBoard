@@ -2,14 +2,11 @@ import java.util.Set;
 
 public class King extends Piece implements Castlable {
 
-    //Variales d'instances
     private boolean hasMovedInThePast;
     private boolean cestLeRock = false;
 
-    //Constructeur
-    public King(int x, int y, boolean color, char lettre) {
-        super(x, y, color, lettre);
-        hasMovedInThePast = false;
+    public King(String position, Color color) {
+        super(new Square(position), color, color == Color.WHITE ? 'K' : 'k');
     }
 
     //Penser à intégrer le rock !

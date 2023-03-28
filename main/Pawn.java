@@ -3,9 +3,10 @@ import java.util.Set;
 
 public class Pawn extends Piece {
 
-    public Pawn(int x, int y, boolean color, char lettre) {
-        super(x, y, color, lettre);
+    public Pawn(String position, Color color) {
+        super(new Square(position), color, color == Color.WHITE ? 'P' : 'p');
     }
+
 
     //Vérifie aussi que lorsqu'il avance de 2 cases, il n'y a pas de pièce au milieu
     @Override
@@ -153,7 +154,7 @@ public class Pawn extends Piece {
     public void testPromotion(int x, int y) {
         Piece piecePromue;
         Scanner sc = new Scanner(System.in);
-        boolean conditionSineQuaNon = false;
+        boolean validUserInput = false;
         //Vrifie si la pion est sur la dernière ligne
         if ((y == 1) || (y == 8)) {
             //Il y a donc une promotion !
@@ -164,50 +165,34 @@ public class Pawn extends Piece {
                 //4 possibilités de promotion
                 switch (promotion) {
                     case "D":
-                        conditionSineQuaNon = true;
-                        if (this.getColor() == Color.WHITE) {
-                            piecePromue = new Queen(x, y, true, 'D');
-                        } else {
-                            piecePromue = new Queen(x, y, false, 'd');
-                        }
+                        validUserInput = true;
+                        piecePromue = new Queen(BoardUtil.posToSquare(x, y), this.getColor());
                         Main.setEchiquier(x, y, piecePromue);
                         break;
 
                     case "T":
-                        conditionSineQuaNon = true;
-                        if (this.getColor() == Color.WHITE) {
-                            piecePromue = new Rock(x, y, true, 'T');
-                        } else {
-                            piecePromue = new Rock(x, y, false, 't');
-                        }
+                        validUserInput = true;
+                        piecePromue = new Rock(BoardUtil.posToSquare(x, y), this.getColor());
                         Main.setEchiquier(x, y, piecePromue);
                         break;
 
                     case "F":
-                        conditionSineQuaNon = true;
-                        if (this.getColor() == Color.WHITE) {
-                            piecePromue = new Bishop(x, y, true, 'F');
-                        } else {
-                            piecePromue = new Bishop(x, y, false, 'f');
-                        }
+                        validUserInput = true;
+                        piecePromue = new Bishop(BoardUtil.posToSquare(x, y), this.getColor());
                         Main.setEchiquier(x, y, piecePromue);
                         break;
 
                     case "C":
-                        conditionSineQuaNon = true;
-                        if (this.getColor() == Color.WHITE) {
-                            piecePromue = new Knight(x, y, true, 'C');
-                        } else {
-                            piecePromue = new Knight(x, y, false, 'c');
-                        }
+                        validUserInput = true;
+                        piecePromue = new Knight(BoardUtil.posToSquare(x, y), this.getColor());
                         Main.setEchiquier(x, y, piecePromue);
                         break;
 
                     default: {
-                        conditionSineQuaNon = false;
+                        validUserInput = false;
                     }
                 }
-            } while (conditionSineQuaNon == false);
+            } while (validUserInput == false);
         }
     }
 }

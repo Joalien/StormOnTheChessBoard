@@ -5,11 +5,6 @@ public class Rock extends Piece implements Castlable {
 
     boolean ABouger;
 
-    public Rock(int x, int y, boolean color, char lettre) {
-        super(x, y, color, lettre);
-        ABouger = false;
-    }
-
     public Rock(String position, Color couleur) {
         super(new Square(position), couleur, couleur == Color.WHITE ? 'R' : 'r');
         ABouger = false;

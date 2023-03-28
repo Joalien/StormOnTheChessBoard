@@ -5,10 +5,10 @@ public class KnightIT {
 
     @Test
     void should_be_able_to_jump_over_pieces() {
-        Knight knight = new Knight(1, 1, true, 'B');
-        new Knight(1, 2, false, 'b');
-        new Knight(2, 1, false, 'b');
-        new Knight(2, 2, false, 'b');
+        Knight knight = new Knight("a1", Color.WHITE);
+        new Knight("a2", Color.BLACK);
+        new Knight("b2", Color.BLACK);
+        new Knight("b1", Color.BLACK);
 
         Assertions.assertTrue(knight.nothingOnThePath("c2"));
         Assertions.assertTrue(knight.nothingOnThePath("b3"));

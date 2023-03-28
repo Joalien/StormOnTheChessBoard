@@ -2,11 +2,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class Queen extends Piece {
-    @Deprecated
-    public Queen(int x, int y, boolean color, char lettre) {
-        super(x, y, color, lettre);
-    }
-
     public Queen(String position, Color couleur) {
         super(new Square(position), couleur, couleur == Color.WHITE ? 'B' : 'b');
     }

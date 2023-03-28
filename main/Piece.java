@@ -10,20 +10,10 @@ public abstract class Piece {
     protected Color color;
     protected char type;
     private Square square;
-    @Deprecated
-    public Piece(int x, int y, boolean color, char typePiece) {
-        this.y = y;
-        this.x = x;
-        this.color = color ? Color.WHITE : Color.BLACK;
-        type = typePiece;
-    }
-    @Deprecated
-    public Piece(int x, int y, char typePiece) {
-        this.y = y;
-        this.x = x;
-        type = typePiece;
-    }
 
+    public String getPosition() {
+        return this.square.getPosition();
+    }
 
     public Piece(Square square, Color color, char typePiece) {
         this.square = square;

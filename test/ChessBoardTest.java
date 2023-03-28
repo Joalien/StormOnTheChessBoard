@@ -40,7 +40,8 @@ class ChessBoardTest {
         assertEquals(Color.WHITE, chessBoard.at("h1").getPiece().get().getColor());
         assertTrue(IntStream.rangeClosed(1, 8)
                 .mapToObj(i -> BoardUtil.posToSquare(i, 2))
-                .allMatch(position -> chessBoard.at(position).getPiece().get() instanceof Pawn));
+                .map(position -> chessBoard.at(position).getPiece().get())
+                .allMatch(pawn -> pawn instanceof Pawn && pawn.getColor() == Color.WHITE));
 
         // Black pieces
         assertTrue(chessBoard.at("a8").getPiece().get() instanceof Rock);
@@ -61,7 +62,8 @@ class ChessBoardTest {
         assertEquals(Color.BLACK, chessBoard.at("h8").getPiece().get().getColor());
         assertTrue(IntStream.rangeClosed(1, 8)
                 .mapToObj(i -> BoardUtil.posToSquare(i, 7))
-                .allMatch(position -> chessBoard.at(position).getPiece().get() instanceof Pawn));
+                .map(position -> chessBoard.at(position).getPiece().get())
+                .allMatch(pawn -> pawn instanceof Pawn && pawn.getColor() == Color.BLACK));
 
 
         assertTrue(IntStream.rangeClosed(1, 8)

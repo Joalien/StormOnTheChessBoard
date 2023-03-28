@@ -13,7 +13,7 @@ class BishopTest {
 
         Assertions.assertEquals(5, bishop.x);
         Assertions.assertEquals(4, bishop.y);
-        Assertions.assertEquals("e4", bishop.getSquare().getPosition());
+        Assertions.assertEquals("e4", bishop.getPosition());
     }
 
     @Nested
