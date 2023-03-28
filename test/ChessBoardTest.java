@@ -216,15 +216,11 @@ class ChessBoardTest {
             chessBoard.add(king, e8);
             Knight knight = new Knight(Color.BLACK);
             chessBoard.add(knight, e5);
-//            assertTrue(BoardUtil.generateAllPositions().stream()
-//                    .filter(knight::reachableSquares)
-//                    .noneMatch(pos -> chessBoard.createCheck(knight, pos)));
 
             chessBoard.add(new Rock(Color.WHITE), e1);
 
             assertTrue(BoardUtil.generateAllPositions().stream()
                     .filter(knight::reachableSquares)
-                    .peek(pos -> System.out.println(pos + " " + chessBoard.createCheck(knight, pos)))
                     .allMatch(pos -> chessBoard.createCheck(knight, pos)));
         }
 

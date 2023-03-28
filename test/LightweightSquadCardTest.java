@@ -29,7 +29,6 @@ class LightweightSquadCardTest {
         }
 
         @Test
-        @Disabled
         void pawns_in_front_of_each_other() {
             ChessBoard chessBoard = ChessBoard.createEmpty();
             Pawn pawn1 = new BlackPawn();
@@ -47,13 +46,32 @@ class LightweightSquadCardTest {
             assertTrue(chessBoard.at(a4).getPiece().isEmpty());
             assertEquals(pawn2, chessBoard.at("a2").getPiece().get());
         }
+
+        @Test
+        void pawns_in_front_of_each_other_bis() {
+            ChessBoard chessBoard = ChessBoard.createEmpty();
+            Pawn pawn1 = new BlackPawn();
+            Pawn pawn2 = new BlackPawn();
+            String a5 = "a5";
+            String a4 = "a4";
+            chessBoard.add(pawn1, a5);
+            chessBoard.add(pawn2, a4);
+            LightweightSquadCard lightweightSquadCard = new LightweightSquadCard(pawn2, pawn1);
+
+            assertTrue(chessBoard.play(lightweightSquadCard));
+
+            assertTrue(chessBoard.at(a5).getPiece().isEmpty());
+            assertEquals(pawn1, chessBoard.at("a3").getPiece().get());
+            assertTrue(chessBoard.at(a4).getPiece().isEmpty());
+            assertEquals(pawn2, chessBoard.at("a2").getPiece().get());
+        }
     }
 
     @Nested
     class Failure {
 
         @Test
-        void should_not_move_pawns_of_the_same_color() {
+        void should_not_move_pawns_of_different_color() {
             ChessBoard chessBoard = ChessBoard.createEmpty();
             Pawn pawn1 = new WhitePawn();
             Pawn pawn2 = new BlackPawn();

@@ -15,8 +15,12 @@ public class LightweightSquadCard extends SCCard {
         if (pawn1.equals(pawn2)) throw new IllegalArgumentException("You should select two different pawns");
         if (pawn1.getColor() != pawn2.getColor()) throw new IllegalArgumentException("You should move pawn of the same color");
 
+        chessBoard.fakeSquare(pawn2.getPosition(), null);
         if (cannotMoveTwoSquaresForward(chessBoard, pawn1)) throw new IllegalArgumentException("You cannot move " + pawn1 + " two squares forward");
+        chessBoard.unfakeSquare(pawn2.getPosition());
+        chessBoard.fakeSquare(pawn1.getPosition(), null);
         if (cannotMoveTwoSquaresForward(chessBoard, pawn2)) throw new IllegalArgumentException("You cannot move " + pawn2 + " two squares forward");
+        chessBoard.unfakeSquare(pawn1.getPosition());
 
         chessBoard.move(pawn1, twoSquaresForward(pawn1));
         chessBoard.move(pawn2, twoSquaresForward(pawn2));

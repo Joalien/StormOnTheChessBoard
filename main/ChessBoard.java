@@ -167,7 +167,7 @@ public class ChessBoard {
         assert fakeSquares.size() == 2;
 
         Optional<Piece> optionalKing = allyPieces(piece.getColor()).stream()
-                .filter(p -> Character.toUpperCase(p.getType()) == 'N')
+                .filter(p -> Character.toUpperCase(p.getType()) == 'K')
                 .findFirst();
         boolean enemyCanCheck = optionalKing
                 .map(this::isKingUnderAttack)
