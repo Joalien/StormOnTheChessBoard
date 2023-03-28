@@ -116,7 +116,7 @@ class KingTest {
             void should_not_be_able_to_castle_if_king_has_moved() {
                 King king = new King(Color.WHITE);
                 king.setSquare(new Square("e1"));
-                king.setHasMovedInThePast(true);
+                king.cannotCastleAnymore();
 
                 assertFalse(king.reachableSquares("g1"));
             }

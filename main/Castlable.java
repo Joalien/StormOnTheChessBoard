@@ -1,10 +1,7 @@
 public interface Castlable {
-    boolean getHasMovedInThePast();
+    boolean canCastle();
 
-    void setHasMovedInThePast(boolean trool);
+    void cannotCastleAnymore();
 
-    boolean getCestLeRock();
-
-    void setCestLeRock(boolean trool);
 
 }

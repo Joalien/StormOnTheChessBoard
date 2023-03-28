@@ -12,7 +12,7 @@ public class PawnIT {
         chessBoard.add(pawn, "e2");
         String e4 = "e4";
 
-        chessBoard.move(pawn, e4);
+        chessBoard.tryToMove(pawn, e4);
 
         assertEquals(pawn, chessBoard.at(e4).getPiece().get());
     }

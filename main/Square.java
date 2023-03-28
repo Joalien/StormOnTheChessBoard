@@ -18,8 +18,11 @@ public class Square {
         this.piece = piece;
     }
 
-    public void removePiece() {
+    public Piece removePiece() {
+        Piece p = this.piece;
+        p.setSquare(null);
         this.piece = null;
+        return p;
     }
 
     public String getPosition() {

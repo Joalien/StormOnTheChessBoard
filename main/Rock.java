@@ -4,11 +4,10 @@ import java.util.Set;
 
 public class Rock extends Piece implements Castlable {
 
-    boolean ABouger;
+    private boolean canCastle = true;
 
     public Rock(Color color) {
         super(color, color == Color.WHITE ? 'R' : 'r');
-        ABouger = false;
     }
 
     @Override
@@ -34,60 +33,13 @@ public class Rock extends Piece implements Castlable {
         return squaresOnThePath;
     }
 
-    //ça marche !
-    public boolean nothingOnThePath(int x, int y) {
-        boolean AReturn = true;
-        if ((getX() == x) && (getY() < y)) {
-            for (int i = getY() + 1; i < y; i++) {
-                try {
-                    Controller.getEchiquier(x, i).getColor();
-                    AReturn = false;
-                } catch (Exception NullPointerException) {
-                }
-            }
-        } else if ((getX() == x) && (getY() > y)) {
-            for (int i = getY() - 1; i > y; i--) {
-                try {
-                    Controller.getEchiquier(x, i).getColor();
-                    AReturn = false;
-                } catch (Exception Exception) {
-                }
-            }
-        } else if ((getY() == y) && (getX() > x)) {
-            for (int i = getX() - 1; i > x; i--) {
-                try {
-                    Controller.getEchiquier(i, y).getColor();
-                    AReturn = false;
-                } catch (Exception Exception) {
-                }
-            }
-        } else if ((getY() == y) && (getX() < x)) {
-            for (int i = getX() + 1; i < x; i++) {
-                try {
-                    Controller.getEchiquier(i, y).getColor();
-                    AReturn = false;
-                } catch (Exception Exception) {
-                }
-            }
-        } else {
-            AReturn = true;
-        }
-        return AReturn;
+    @Override
+    public boolean canCastle() {
+        return canCastle;
     }
 
-
-    public boolean getHasMovedInThePast() {
-        return ABouger;
-    }
-
-    public void setHasMovedInThePast(boolean trool) {
-        ABouger = trool;
-    }
-
-    public boolean getCestLeRock() {
-        return false;
-    }
-
-    public void setCestLeRock(boolean trool) {
+    @Override
+    public void cannotCastleAnymore() {
+        canCastle = false;
     }
 }

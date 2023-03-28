@@ -21,8 +21,4 @@ public class Knight extends Piece {
         return Collections.emptySet(); // Knight can jump over pieces
     }
 
-    //easy !!!!!
-    public boolean nothingOnThePath(int x, int y) {
-        return true;
-    }
 }

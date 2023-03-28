@@ -90,7 +90,7 @@ class ChessBoardTest {
             assertEquals(bishop, chessBoard.at(a1).getPiece().get());
             assertTrue(chessBoard.at(h8).getPiece().isEmpty());
 
-            assertTrue(chessBoard.move(bishop, h8));
+            assertTrue(chessBoard.tryToMove(bishop, h8));
 
             assertTrue(chessBoard.at(a1).getPiece().isEmpty());
             assertEquals(bishop, chessBoard.at(h8).getPiece().get());
@@ -104,7 +104,7 @@ class ChessBoardTest {
             Piece knight = chessBoard.at(g1).getPiece().get();
             assertTrue(chessBoard.at(f3).getPiece().isEmpty());
 
-            assertTrue(chessBoard.move(chessBoard.at(g1).getPiece().get(), f3));
+            assertTrue(chessBoard.tryToMove(chessBoard.at(g1).getPiece().get(), f3));
 
             assertTrue(chessBoard.at(g1).getPiece().isEmpty());
             assertEquals(knight, chessBoard.at(f3).getPiece().get());
@@ -117,7 +117,7 @@ class ChessBoardTest {
             Queen queen = new Queen(Color.WHITE);
             chessBoard.add(queen, e4);
 
-            assertThrows(IllegalArgumentException.class, () -> chessBoard.move(queen, e4));
+            assertThrows(IllegalArgumentException.class, () -> chessBoard.tryToMove(queen, e4));
         }
     }
 
@@ -135,7 +135,7 @@ class ChessBoardTest {
             assertEquals(bishop, chessBoard.at(a1).getPiece().get());
             assertEquals(queen, chessBoard.at(h8).getPiece().get());
 
-            assertTrue(chessBoard.move(bishop, h8));
+            assertTrue(chessBoard.tryToMove(bishop, h8));
 
             assertTrue(chessBoard.at(a1).getPiece().isEmpty());
             assertEquals(bishop, chessBoard.at(h8).getPiece().get());
@@ -157,7 +157,7 @@ class ChessBoardTest {
             chessBoard.add(new Queen(Color.WHITE), h8);
 
             assertTrue(chessBoard.isAllyOnPosition(bishop, h8));
-            assertFalse(chessBoard.move(bishop, h8));
+            assertFalse(chessBoard.tryToMove(bishop, h8));
         }
 
         @Test
@@ -170,7 +170,7 @@ class ChessBoardTest {
             chessBoard.add(new Queen(Color.BLACK), h8);
 
             assertFalse(chessBoard.isAllyOnPosition(bishop, h8));
-            assertTrue(chessBoard.move(bishop, h8));
+            assertTrue(chessBoard.tryToMove(bishop, h8));
         }
 
         @Test
@@ -289,5 +289,38 @@ class ChessBoardTest {
             assertFalse(chessBoard.createCheck(queen, e4));
             invalidMoves.forEach(pos -> assertTrue(chessBoard.createCheck(queen, pos)));
         }
+    }
+
+    @Test
+    void play_a_sicilian_game() {
+        ChessBoard cb = ChessBoard.createWithInitialState();
+        assertTrue(cb.tryToMove("e2", "e4"));
+        assertTrue(cb.tryToMove("c7", "c5"));
+        assertTrue(cb.tryToMove("g1", "f3"));
+        assertTrue(cb.tryToMove("d7", "d6"));
+        assertTrue(cb.tryToMove("d2", "d4"));
+        assertTrue(cb.tryToMove("c5", "d4"));
+        assertTrue(cb.tryToMove("f3", "d4"));
+        assertTrue(cb.tryToMove("g8", "f6"));
+        assertTrue(cb.tryToMove("c1", "e3"));
+        assertTrue(cb.tryToMove("g7", "g6"));
+        assertTrue(cb.tryToMove("b1", "c3"));
+        assertTrue(cb.tryToMove("f8", "g7"));
+        assertTrue(cb.tryToMove("d1", "d2"));
+        assertTrue(cb.tryToMove("e8", "g8"));
+        assertTrue(cb.tryToMove("e1", "c1"));
+
+        assertTrue(cb.at("e4").getPiece().get() instanceof Pawn);
+        assertTrue(cb.at("e8").getPiece().isEmpty());
+        assertTrue(cb.at("f8").getPiece().get() instanceof Rock);
+        assertTrue(cb.at("g8").getPiece().get() instanceof King);
+        assertTrue(cb.at("h8").getPiece().isEmpty());
+        assertTrue(cb.at("e1").getPiece().isEmpty());
+        assertTrue(cb.at("d1").getPiece().get() instanceof Rock);
+        assertTrue(cb.at("c1").getPiece().get() instanceof King);
+        assertTrue(cb.at("b1").getPiece().isEmpty());
+        assertTrue(cb.at("a1").getPiece().isEmpty());
+
+        assertEquals(2, cb.getOutOfTheBoardPieces().size());
     }
 }

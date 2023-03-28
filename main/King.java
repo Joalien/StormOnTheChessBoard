@@ -4,8 +4,7 @@ import java.util.Set;
 
 public class King extends Piece implements Castlable {
 
-    private boolean hasMovedInThePast;
-    private boolean cestLeRock = false;
+    private boolean canCastle = true;
 
     public King(Color color) {
         super(color, color == Color.WHITE ? 'K' : 'k');
@@ -21,8 +20,8 @@ public class King extends Piece implements Castlable {
         boolean whiteKingSideCastle = whiteCastle && BoardUtil.posToSquare(x, y).equals("g1");
         boolean whiteQueenSideCastle = whiteCastle && BoardUtil.posToSquare(x, y).equals("c1");
         boolean blackKingSideCastle = blackCastle && BoardUtil.posToSquare(x, y).equals("g8");
-        boolean blackQueenSideCastle =blackCastle && BoardUtil.posToSquare(x, y).equals("c8");
-        boolean canCastle = !hasMovedInThePast && (whiteKingSideCastle || whiteQueenSideCastle || blackKingSideCastle || blackQueenSideCastle);
+        boolean blackQueenSideCastle = blackCastle && BoardUtil.posToSquare(x, y).equals("c8");
+        boolean canCastle = this.canCastle() && (whiteKingSideCastle || whiteQueenSideCastle || blackKingSideCastle || blackQueenSideCastle) && color.isEmpty();
         if (canCastle) return true;
 
         return (Math.abs(getX() - x) <= 1) && (Math.abs(getY() - y) <= 1);
@@ -37,7 +36,7 @@ public class King extends Piece implements Castlable {
         boolean whiteKingSideCastle = whiteCastle && squareToMoveOn.equals("g1");
         boolean whiteQueenSideCastle = whiteCastle && squareToMoveOn.equals("c1");
         boolean blackKingSideCastle = blackCastle && squareToMoveOn.equals("g8");
-        boolean blackQueenSideCastle =blackCastle && squareToMoveOn.equals("c8");
+        boolean blackQueenSideCastle = blackCastle && squareToMoveOn.equals("c8");
 
         if (whiteKingSideCastle) return Set.of("f1");
         else if (whiteQueenSideCastle) return Set.of("d1");
@@ -46,25 +45,14 @@ public class King extends Piece implements Castlable {
         else return Collections.emptySet();
     }
 
-    public boolean getCestLeRock() {
-        return cestLeRock;
+    @Override
+    public boolean canCastle() {
+        return canCastle;
     }
 
-    public void setCestLeRock(boolean encoreLeRock) {
-        cestLeRock = encoreLeRock;
-    }
-
-
-    public boolean getHasMovedInThePast() {
-        return hasMovedInThePast;
-    }
-
-    public void setHasMovedInThePast(boolean trool) {
-        hasMovedInThePast = trool;
-    }
-
-    public boolean nothingOnThePath(int x, int y) {
-        return true;
+    @Override
+    public void cannotCastleAnymore() {
+        canCastle = false;
     }
 
 

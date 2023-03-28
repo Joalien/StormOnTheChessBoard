@@ -1,13 +1,14 @@
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 public class ChessBoard {
     public static final int MIN = 1;
     public static final int MAX = 8;
+    private static final Map<String, String> CASTLE_MAP = Map.of("f1", "h1",
+            "d1", "a1",
+            "f8", "h8",
+            "d8", "a8");
     private final HashMap<String, Square> board = new HashMap<>(64);
     private final HashMap<String, Square> fakeSquares = new HashMap<>();
 
@@ -84,25 +85,54 @@ public class ChessBoard {
                 .allMatch(Optional::isEmpty);
     }
 
-    public boolean move(Piece piece, String positionToMoveOn) {
+    public boolean tryToMove(String from, String to) {
+        return tryToMove(at(from).getPiece().get(), to);
+    }
+
+    public boolean tryToMove(Piece piece, String positionToMoveOn) {
         if (piece.getPosition().equals(positionToMoveOn)) throw new IllegalArgumentException();
         if (canMove(piece, positionToMoveOn)) {
             at(positionToMoveOn).getPiece().ifPresent(this::movePieceOutOfTheBoard);
-            at(piece.getPosition()).removePiece();
-            piece.setSquare(at(positionToMoveOn));
-            at(positionToMoveOn).setPiece(piece);
+            tryToCastle(piece, positionToMoveOn);
+            if (piece instanceof Castlable) ((Castlable) piece).cannotCastleAnymore();
+            move(piece, positionToMoveOn);
+
             return true;
         }
         else return false;
     }
 
+    private void tryToCastle(Piece piece, String positionToMoveOn) {
+        if ((piece instanceof King && ((King) piece).canCastle())) {
+            if (piece.squaresOnThePath(positionToMoveOn).size() == 1) {
+                String finalPositionOfRock = piece.squaresOnThePath(positionToMoveOn).stream().findFirst().get();
+                String rockPosition = CASTLE_MAP.get(finalPositionOfRock);
+                at(rockPosition)
+                        .getPiece()
+                        .filter(r -> r instanceof Rock)
+                        .filter(r -> ((Rock) r).canCastle())
+                        .ifPresent(rock -> move(rock, finalPositionOfRock));
+            }
+        }
+    }
+
+    private void move(Piece piece, String positionToMoveOn) {
+        at(piece.getPosition()).removePiece();
+        piece.setSquare(at(positionToMoveOn));
+        at(positionToMoveOn).setPiece(piece);
+    }
+
     private void movePieceOutOfTheBoard(Piece piece) {
-        piece.isTaken();
+        piece.setSquare(null);
         outOfTheBoardPieces.add(piece);
     }
 
     boolean canMove(Piece piece, String positionToMoveOn) {
-        return piece.reachableSquares(positionToMoveOn, at(positionToMoveOn).getPiece().map(Piece::getColor)) && emptyPath(piece, positionToMoveOn) && !createCheck(piece, positionToMoveOn) && !isAllyOnPosition(piece, positionToMoveOn) && isValidCastle(piece, positionToMoveOn);
+        return piece.reachableSquares(positionToMoveOn, at(positionToMoveOn).getPiece().map(Piece::getColor))
+                && emptyPath(piece, positionToMoveOn)
+                && !createCheck(piece, positionToMoveOn)
+                && !isAllyOnPosition(piece, positionToMoveOn)
+                && isValidCastle(piece, positionToMoveOn);
     }
 
     boolean isValidCastle(Piece piece, String positionToMoveOn) {

@@ -40,11 +40,6 @@ public class Pawn extends Piece {
         return Collections.emptySet();
     }
 
-    //L'avance de 2 cases est gérée dans deplacementDeLaPiece
-    public boolean nothingOnThePath(int x, int y) {
-        return true;
-    }
-
 
     public void testPromotion(int x, int y) {
         Piece piecePromue;
