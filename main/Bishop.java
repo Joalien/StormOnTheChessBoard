@@ -32,7 +32,7 @@ public class Bishop extends Piece {
         if ((y > this.y) && (x > this.x)) {
             for (int i = 1; x - this.x > i; i++) {
                 try {
-                    Main.getEchiquier(this.x + i, this.y + i).getColor();
+                    Controller.getEchiquier(this.x + i, this.y + i).getColor();
                     AReturn = false;
                 } catch (Exception NullPointerException) {
                 }
@@ -42,7 +42,7 @@ public class Bishop extends Piece {
         else if ((y > this.y) && (x < this.x)) {
             for (int i = 1; this.x - x > i; i++) {
                 try {
-                    Main.getEchiquier(this.x - i, this.y + i).getColor();
+                    Controller.getEchiquier(this.x - i, this.y + i).getColor();
                     AReturn = false;
                 } catch (Exception NullPointerException) {
                 }
@@ -52,7 +52,7 @@ public class Bishop extends Piece {
         else if ((y < this.y) && (x < this.x)) {
             for (int i = 1; this.x - x > i; i++) {
                 try {
-                    Main.getEchiquier(this.x - i, this.y - i).getColor();
+                    Controller.getEchiquier(this.x - i, this.y - i).getColor();
                     AReturn = false;
                 } catch (Exception NullPointerException) {
                 }
@@ -62,7 +62,7 @@ public class Bishop extends Piece {
         else if ((y < this.y) && (x > this.x)) {
             for (int i = 1; x - this.x > i; i++) {
                 try {
-                    Main.getEchiquier(this.x + i, this.y - i).getColor();
+                    Controller.getEchiquier(this.x + i, this.y - i).getColor();
                     AReturn = false;
                 } catch (Exception NullPointerException) {
                 }

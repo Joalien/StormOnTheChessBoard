@@ -1,3 +1,4 @@
+import java.util.Collections;
 import java.util.Set;
 
 public class King extends Piece implements Castlable {
@@ -12,29 +13,36 @@ public class King extends Piece implements Castlable {
     //Penser à intégrer le rock !
     @Override
     public boolean reachableSquares(int x, int y) {
-        boolean ARetourner;
-        if ((Math.abs(this.x - x) <= 1) && (Math.abs(this.y - y) <= 1)) {
-            ARetourner = true;
-        }
+        if (this.x == x && this.y == y) return false;
 
-        // Kingside castling
-        else if (!getRoiEnEchecs() && (this.x + 2 == x) && (this.y == y) && (!hasMovedInThePast) && ((Rock) Main.getEchiquier(8, y)).getHasMovedInThePast() == false && (this.RegardeSiEchecs(this.getColor() == Color.WHITE) == false)) {
-            cestLeRock = true;
-            ARetourner = true;
-        }
-        //Grand rock
-        else if ((!getRoiEnEchecs()) && (this.x - 2 == x) && (this.y == y) && (!hasMovedInThePast) && ((Rock) Main.getEchiquier(1, y)).getHasMovedInThePast() == false && (this.RegardeSiEchecs(this.getColor() == Color.WHITE) == false)) {
-            cestLeRock = true;
-            ARetourner = true;
-        } else {
-            ARetourner = false;
-        }
-        return ARetourner;
+        boolean whiteCastle = this.getPosition().equals("e1") && this.color == Color.WHITE;
+        boolean blackCastle = this.getPosition().equals("e8") && this.color == Color.BLACK;
+        boolean whiteKingSideCastle = whiteCastle && BoardUtil.posToSquare(x, y).equals("g1");
+        boolean whiteQueenSideCastle = whiteCastle && BoardUtil.posToSquare(x, y).equals("c1");
+        boolean blackKingSideCastle = blackCastle && BoardUtil.posToSquare(x, y).equals("g8");
+        boolean blackQueenSideCastle =blackCastle && BoardUtil.posToSquare(x, y).equals("c8");
+        boolean canCastle = !hasMovedInThePast && (whiteKingSideCastle || whiteQueenSideCastle || blackKingSideCastle || blackQueenSideCastle);
+        if (canCastle) return true;
+
+        return (Math.abs(this.x - x) <= 1) && (Math.abs(this.y - y) <= 1);
     }
 
     @Override
     public Set<String> squaresOnThePath(String squareToMoveOn) {
-        return null;
+        if (!super.reachableSquares(squareToMoveOn)) throw new IllegalArgumentException(squareToMoveOn);
+
+        boolean whiteCastle = this.getPosition().equals("e1") && this.color == Color.WHITE;
+        boolean blackCastle = this.getPosition().equals("e8") && this.color == Color.BLACK;
+        boolean whiteKingSideCastle = whiteCastle && squareToMoveOn.equals("g1");
+        boolean whiteQueenSideCastle = whiteCastle && squareToMoveOn.equals("c1");
+        boolean blackKingSideCastle = blackCastle && squareToMoveOn.equals("g8");
+        boolean blackQueenSideCastle =blackCastle && squareToMoveOn.equals("c8");
+
+        if (whiteKingSideCastle) return Set.of("f1");
+        else if (whiteQueenSideCastle) return Set.of("d1");
+        else if (blackKingSideCastle) return Set.of("f8");
+        else if (blackQueenSideCastle) return Set.of("d8");
+        else return Collections.emptySet();
     }
 
     public boolean getCestLeRock() {

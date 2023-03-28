@@ -1,6 +1,8 @@
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 public class KnightIT {
 
     @Test
@@ -10,7 +12,7 @@ public class KnightIT {
         new Knight("b2", Color.BLACK);
         new Knight("b1", Color.BLACK);
 
-        Assertions.assertTrue(knight.nothingOnThePath("c2"));
-        Assertions.assertTrue(knight.nothingOnThePath("b3"));
+        assertTrue(knight.nothingOnThePath("c2"));
+        assertTrue(knight.nothingOnThePath("b3"));
     }
 }

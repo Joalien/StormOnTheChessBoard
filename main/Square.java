@@ -21,6 +21,10 @@ public class Square {
         this.piece = piece;
     }
 
+    public void removePiece() {
+        this.piece = null;
+    }
+
     public String getPosition() {
         return position;
     }

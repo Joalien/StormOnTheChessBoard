@@ -1,4 +1,5 @@
 import java.util.HashMap;
+import java.util.Optional;
 import java.util.stream.IntStream;
 
 public class ChessBoard {
@@ -42,7 +43,7 @@ public class ChessBoard {
         chessBoard.add(new Rock("h8", Color.BLACK), "h8");
         IntStream.rangeClosed(MIN, MAX)
                 .mapToObj(i -> BoardUtil.posToSquare(i, MIN + 1))
-                .forEach(position -> chessBoard.add(new Pawn(position, Color.WHITE), position)); // FIXME
+                .forEach(position -> chessBoard.add(new Pawn(position, Color.WHITE), position));
         IntStream.rangeClosed(MIN, MAX)
                 .mapToObj(i -> BoardUtil.posToSquare(i, MAX - 1))
                 .forEach(position -> chessBoard.add(new Pawn(position, Color.BLACK), position));
@@ -55,6 +56,7 @@ public class ChessBoard {
         return board.get(position);
     }
 
+    @Deprecated
     public Piece[][] getBoard() {
         return null;
     }
@@ -62,5 +64,27 @@ public class ChessBoard {
     public void add(Piece piece, String position) {
         piece.setSquare(at(position));
         at(position).setPiece(piece);
+    }
+
+    public boolean arePiecesOnThePath(Piece piece, String squareToGo) {
+        return piece.squaresOnThePath(squareToGo).stream()
+                .map(this::at)
+                .map(Square::getPiece)
+                .allMatch(Optional::isEmpty);
+    }
+
+    public boolean move(Piece piece, String position) {
+        if (canMove(piece, position)) {
+            at(piece.getPosition()).removePiece();
+            piece.setSquare(at(position));
+            at(position).setPiece(piece);
+
+            return true;
+        }
+        else return false;
+    }
+
+    private boolean canMove(Piece piece, String position) {
+        return true;
     }
 }

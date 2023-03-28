@@ -42,7 +42,7 @@ public class Queen extends Piece {
         if ((this.x == x) && (this.y < y)) {
             for (int i = this.y + 1; i < y; i++) {
                 try {
-                    Main.getEchiquier(x, i).getColor();
+                    Controller.getEchiquier(x, i).getColor();
                     AReturn = false;
                 } catch (Exception NullPointerException) {
                 }
@@ -52,7 +52,7 @@ public class Queen extends Piece {
         else if ((this.x == x) && (this.y > y)) {
             for (int i = this.y - 1; i > y; i--) {
                 try {
-                    Main.getEchiquier(x, i).getColor();
+                    Controller.getEchiquier(x, i).getColor();
                     AReturn = false;
                 } catch (Exception Exception) {
                 }
@@ -62,7 +62,7 @@ public class Queen extends Piece {
         else if ((this.y == y) && (this.x > x)) {
             for (int i = this.x - 1; i > x; i--) {
                 try {
-                    Main.getEchiquier(i, y).getColor();
+                    Controller.getEchiquier(i, y).getColor();
                     AReturn = false;
                 } catch (Exception Exception) {
                 }
@@ -72,7 +72,7 @@ public class Queen extends Piece {
         else if ((this.y == y) && (this.x < x)) {
             for (int i = this.x + 1; i < x; i++) {
                 try {
-                    Main.getEchiquier(i, y).getColor();
+                    Controller.getEchiquier(i, y).getColor();
                     AReturn = false;
                 } catch (Exception Exception) {
                 }
@@ -82,7 +82,7 @@ public class Queen extends Piece {
         else if ((y > this.y) && (x > this.x)) {
             for (int i = 1; x - this.x > i; i++) {
                 try {
-                    Main.getEchiquier(this.x + i, this.y + i).getColor();
+                    Controller.getEchiquier(this.x + i, this.y + i).getColor();
                     AReturn = false;
                 } catch (Exception NullPointerException) {
                 }
@@ -92,7 +92,7 @@ public class Queen extends Piece {
         else if ((y > this.y) && (x < this.x)) {
             for (int i = 1; this.x - x > i; i++) {
                 try {
-                    Main.getEchiquier(this.x - i, this.y + i).getColor();
+                    Controller.getEchiquier(this.x - i, this.y + i).getColor();
                     AReturn = false;
                 } catch (Exception NullPointerException) {
                 }
@@ -102,7 +102,7 @@ public class Queen extends Piece {
         else if ((y < this.y) && (x < this.x)) {
             for (int i = 1; this.x - x > i; i++) {
                 try {
-                    Main.getEchiquier(this.x - i, this.y - i).getColor();
+                    Controller.getEchiquier(this.x - i, this.y - i).getColor();
                     AReturn = false;
                 } catch (Exception NullPointerException) {
                 }
@@ -112,7 +112,7 @@ public class Queen extends Piece {
         else if ((y < this.y) && (x > this.x)) {
             for (int i = 1; x - this.x > i; i++) {
                 try {
-                    Main.getEchiquier(this.x + i, this.y - i).getColor();
+                    Controller.getEchiquier(this.x + i, this.y - i).getColor();
                     AReturn = false;
                 } catch (Exception NullPointerException) {
                 }

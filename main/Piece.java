@@ -29,7 +29,7 @@ public abstract class Piece {
         for (int i = 1; i <= 8; i++) {
             for (int j = 1; j <= 8; j++) {
                 try {
-                    if ((Main.getEchiquier(i, j).DeplacementPermis(x, y) == true) && (Main.getEchiquier(i, j).getColor() == Color.WHITE) && (Main.getEchiquier(i, j).nothingOnThePath(x, y) == true)) {
+                    if ((Controller.getEchiquier(i, j).DeplacementPermis(x, y) == true) && (Controller.getEchiquier(i, j).getColor() == Color.WHITE) && (Controller.getEchiquier(i, j).nothingOnThePath(x, y) == true)) {
                         nombreDePiècesBlanchesPouvantAllerSurLaCase++;
                     }
                 } catch (Exception NullPointerException) {
@@ -47,7 +47,7 @@ public abstract class Piece {
         for (int i = 1; i <= 8; i++) {
             for (int j = 1; j <= 8; j++) {
                 try {
-                    if ((Main.getEchiquier(i, j).DeplacementPermis(x, y) == true) && (Main.getEchiquier(i, j).getColor() == Color.BLACK) && (Main.getEchiquier(i, j).nothingOnThePath(x, y) == true)) {
+                    if ((Controller.getEchiquier(i, j).DeplacementPermis(x, y) == true) && (Controller.getEchiquier(i, j).getColor() == Color.BLACK) && (Controller.getEchiquier(i, j).nothingOnThePath(x, y) == true)) {
                         nombreDePiècesNoiresPouvantAllerSurLaCase++;
                     }
                 } catch (Exception NullPointerException) {
@@ -130,7 +130,7 @@ public abstract class Piece {
 
     //Case d'arrivée vide
     protected boolean RegardeSiCaseVide(int x, int y) {
-        if (Main.getEchiquier(x, y) == Main.getEchiquier(0, 0)) {
+        if (Controller.getEchiquier(x, y) == Controller.getEchiquier(0, 0)) {
             return true;
         } else {
             return false;
@@ -167,7 +167,7 @@ public abstract class Piece {
         boolean AReturn;
         //Empêche une pièce de prendre une pièce de sa propre couleur
         try {
-            if (this.getColor() == Main.getEchiquier(x, y).getColor()) {
+            if (this.getColor() == Controller.getEchiquier(x, y).getColor()) {
                 memeColor = true;
             } else {
                 memeColor = false;
@@ -186,9 +186,9 @@ public abstract class Piece {
             this.y = y;
             this.x = x;
             //Sauvegarde la pièce mangée (1, 0) au cas où le coup soit impossible et qu'il faille revenir en arrière
-            Main.setEchiquier(1, 0, Main.getEchiquier(x, y));
-            Main.setEchiquier(x, y, Main.getEchiquier(xx, yy));
-            Main.setEchiquier(xx, yy, Main.getEchiquier(0, 0));
+            Controller.setEchiquier(1, 0, Controller.getEchiquier(x, y));
+            Controller.setEchiquier(x, y, Controller.getEchiquier(xx, yy));
+            Controller.setEchiquier(xx, yy, Controller.getEchiquier(0, 0));
 
             //Passe au tour suivant
             tourDes = !tourDes;
@@ -200,8 +200,8 @@ public abstract class Piece {
                 //Remet les pièces à leur place
                 this.y = yy;
                 this.x = xx;
-                Main.setEchiquier(xx, yy, Main.getEchiquier(x, y));
-                Main.setEchiquier(x, y, Main.getEchiquier(1, 0));
+                Controller.setEchiquier(xx, yy, Controller.getEchiquier(x, y));
+                Controller.setEchiquier(x, y, Controller.getEchiquier(1, 0));
                 //Revient au tour d'avant
                 tourDes = !tourDes;
                 return false;
@@ -218,24 +218,24 @@ public abstract class Piece {
             if (this instanceof Castlable && ((Castlable) this).getCestLeRock() == true && (x == 7)) {
                 System.out.println("Petit rock !");
                 //déplace l'objet
-                yy = Main.getEchiquier(8, y).y;
-                xx = Main.getEchiquier(8, y).x;
-                Main.getEchiquier(8, y).y = y;
-                Main.getEchiquier(8, y).x = 6;
-                Main.setEchiquier(6, y, Main.getEchiquier(xx, yy));
-                Main.setEchiquier(xx, yy, Main.getEchiquier(0, 0));
+                yy = Controller.getEchiquier(8, y).y;
+                xx = Controller.getEchiquier(8, y).x;
+                Controller.getEchiquier(8, y).y = y;
+                Controller.getEchiquier(8, y).x = 6;
+                Controller.setEchiquier(6, y, Controller.getEchiquier(xx, yy));
+                Controller.setEchiquier(xx, yy, Controller.getEchiquier(0, 0));
                 ((Castlable) this).setCestLeRock(false);
             }
             //Grand Rock
             else if (this instanceof Castlable && ((Castlable) this).getCestLeRock() == true && (x == 3)) {
                 System.out.println("Grand rock !");
                 //déplace l'objet
-                yy = Main.getEchiquier(1, y).y;
-                xx = Main.getEchiquier(1, y).x;
-                Main.getEchiquier(1, y).y = y;
-                Main.getEchiquier(1, y).x = 3;
-                Main.setEchiquier(4, y, Main.getEchiquier(xx, yy));
-                Main.setEchiquier(xx, yy, Main.getEchiquier(0, 0));
+                yy = Controller.getEchiquier(1, y).y;
+                xx = Controller.getEchiquier(1, y).x;
+                Controller.getEchiquier(1, y).y = y;
+                Controller.getEchiquier(1, y).x = 3;
+                Controller.setEchiquier(4, y, Controller.getEchiquier(xx, yy));
+                Controller.setEchiquier(xx, yy, Controller.getEchiquier(0, 0));
                 ((Castlable) this).setCestLeRock(false);
             }
 
@@ -258,7 +258,7 @@ public abstract class Piece {
     protected boolean RegardeSiPieceBlanche(int x, int y) {
         boolean ARetourner = false;
         try {
-            if ((Main.getEchiquier(x, y).getColor() == Color.WHITE)) {
+            if ((Controller.getEchiquier(x, y).getColor() == Color.WHITE)) {
                 ARetourner = true;
             } else {
                 ARetourner = false;
@@ -276,18 +276,18 @@ public abstract class Piece {
         for (int i = 1; i <= 8; i++) {
             for (int j = 1; j <= 8; j++) {
                 try {
-                    if ((Main.getEchiquier(i, j).getType() == 'R') && (couleurDeLaPièce == true) && (DéplacementPossiblePièceNoire(i, j) > 0)) {
+                    if ((Controller.getEchiquier(i, j).getType() == 'R') && (couleurDeLaPièce == true) && (DéplacementPossiblePièceNoire(i, j) > 0)) {
                         System.out.println("échecs !");
                         return true;
-                    } else if ((Main.getEchiquier(i, j).getType() == 'R') && (couleurDeLaPièce == false) && (DéplacementPossiblePièceNoire(i, j) > 0)) {
+                    } else if ((Controller.getEchiquier(i, j).getType() == 'R') && (couleurDeLaPièce == false) && (DéplacementPossiblePièceNoire(i, j) > 0)) {
                         System.out.println("échecs !");
                         return false;
                     }
 
-                    if ((Main.getEchiquier(i, j).getType() == 'r') && (couleurDeLaPièce == false) && (DéplacementPossiblePièceBlanche(i, j) > 0)) {
+                    if ((Controller.getEchiquier(i, j).getType() == 'r') && (couleurDeLaPièce == false) && (DéplacementPossiblePièceBlanche(i, j) > 0)) {
                         System.out.println("échecs !");
                         return true;
-                    } else if ((Main.getEchiquier(i, j).getType() == 'r') && (couleurDeLaPièce == true) && (DéplacementPossiblePièceBlanche(i, j) > 0)) {
+                    } else if ((Controller.getEchiquier(i, j).getType() == 'r') && (couleurDeLaPièce == true) && (DéplacementPossiblePièceBlanche(i, j) > 0)) {
                         System.out.println("échecs !");
                         return false;
                     }

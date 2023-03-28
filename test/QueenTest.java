@@ -7,14 +7,16 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static org.junit.jupiter.api.Assertions.*;
+
 class QueenTest {
 
     @Test
     void spawn_queen() {
         Queen queen = new Queen("e4", Color.WHITE);
 
-        Assertions.assertEquals(5, queen.x);
-        Assertions.assertEquals(4, queen.y);
+        assertEquals(5, queen.x);
+        assertEquals(4, queen.y);
     }
 
     @Nested
@@ -23,35 +25,35 @@ class QueenTest {
         void should_return_empty_square_it_will_go_through() {
             Queen queen = new Queen("c6", Color.WHITE);
 
-            Assertions.assertEquals(Collections.emptySet(), queen.squaresOnThePath("b5"));
+            assertEquals(Collections.emptySet(), queen.squaresOnThePath("b5"));
         }
 
         @Test
         void should_return_all_square_it_will_go_through() {
             Queen queen = new Queen("a1", Color.WHITE);
 
-            Assertions.assertEquals(Set.of("b2", "c3", "d4", "e5"), queen.squaresOnThePath("f6"));
+            assertEquals(Set.of("b2", "c3", "d4", "e5"), queen.squaresOnThePath("f6"));
         }
 
         @Test
         void should_return_all_square_it_will_go_through_bis() {
             Queen queen = new Queen("e4", Color.WHITE);
 
-            Assertions.assertEquals(Set.of("d3"), queen.squaresOnThePath("c2"));
+            assertEquals(Set.of("d3"), queen.squaresOnThePath("c2"));
         }
 
         @Test
         void should_return_all_square_it_will_go_through_ter() {
             Queen queen = new Queen("e4", Color.WHITE);
 
-            Assertions.assertEquals(Set.of("b4", "c4", "d4"), queen.squaresOnThePath("a4"));
+            assertEquals(Set.of("b4", "c4", "d4"), queen.squaresOnThePath("a4"));
         }
 
         @Test
         void should_not_be_reachable() {
             Queen queen = new Queen("a1", Color.WHITE);
 
-            Assertions.assertThrows(IllegalArgumentException.class, () -> queen.squaresOnThePath("e8"));
+            assertThrows(IllegalArgumentException.class, () -> queen.squaresOnThePath("e8"));
         }
     }
 
@@ -64,7 +66,7 @@ class QueenTest {
             Set<String> validMoves = Stream.concat(bishopMovements.stream(), rockMovements.stream()).collect(Collectors.toSet());
             Queen queen = new Queen("e4", Color.WHITE);
 
-            Assertions.assertTrue(BoardUtil.generateAllSquares()
+            assertTrue(BoardUtil.generateAllSquares()
                     .stream()
                     .peek(s -> System.out.println(s + " " + validMoves.contains(s) + " " + queen.reachableSquares(s)))
                     .allMatch(s -> validMoves.contains(s) == queen.reachableSquares(s)));
@@ -77,7 +79,7 @@ class QueenTest {
             Set<String> validMoves = Stream.concat(bishopMovements.stream(), rockMovements.stream()).collect(Collectors.toSet());
             Queen queen = new Queen("a1", Color.WHITE);
 
-            Assertions.assertTrue(BoardUtil.generateAllSquares()
+            assertTrue(BoardUtil.generateAllSquares()
                     .stream()
                     .peek(s -> System.out.println(s + " " + validMoves.contains(s) + " " + queen.reachableSquares(s)))
                     .allMatch(s -> validMoves.contains(s) == queen.reachableSquares(s)));
@@ -87,7 +89,7 @@ class QueenTest {
         void should_not_be_able_to_move_on_itself() {
             Queen queen = new Queen("e5", Color.WHITE);
 
-            Assertions.assertFalse(queen.reachableSquares("e5"));
+            assertFalse(queen.reachableSquares("e5"));
         }
     }
 

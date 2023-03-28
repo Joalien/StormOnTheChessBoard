@@ -6,7 +6,7 @@ import java.util.Scanner;
  */
 
 
-public class Main {
+public class Controller {
 
     private static ChessBoard chessBoard = ChessBoard.createWithInitialState();
     private static Scanner sc = new Scanner(System.in);

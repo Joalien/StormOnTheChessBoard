@@ -16,7 +16,7 @@ public class Pawn extends Piece {
             //Si case d'arrivée vide
             try {
                 //Si case d'arrivée vide
-                if (Main.getEchiquier(x, y).getType() == '-') {
+                if (Controller.getEchiquier(x, y).getType() == '-') {
                     //Avance normale
                     if ((this.x == x) && (this.y + 1 == y)) {
                         return true;
@@ -26,7 +26,7 @@ public class Pawn extends Piece {
                     else if ((this.y == 2) && (this.x == x) && (y == 4)) {
                         //Vérifie que la case du milieu n'est pas occupée
                         try {
-                            Main.getEchiquier(x, 3).getColor();
+                            Controller.getEchiquier(x, 3).getColor();
                             return false;
                         } catch (Exception NullPointerException) {
                             return true;
@@ -61,7 +61,7 @@ public class Pawn extends Piece {
                 else if ((this.y == 2) && (this.x == x) && (y == 4)) {
                     //Vérifie que la case du milieu n'est pas occupée
                     try {
-                        Main.getEchiquier(x, 3).getColor();
+                        Controller.getEchiquier(x, 3).getColor();
                         return false;
                     } catch (Exception NullPointerException) {
                         return true;
@@ -78,7 +78,7 @@ public class Pawn extends Piece {
             //Si case d'arrivée vide
             try {
                 //Si case d'arrivée vide
-                if (Main.getEchiquier(x, y).getType() == '-') {
+                if (Controller.getEchiquier(x, y).getType() == '-') {
                     //Avance normale
                     if ((this.x == x) && (this.y - 1 == y)) {
                         return true;
@@ -87,7 +87,7 @@ public class Pawn extends Piece {
                     else if ((this.y == 7) && (this.x == x) && (y == 5)) {
                         //Vérifie que la case du milieu n'est pas occupée
                         try {
-                            Main.getEchiquier(x, 6).getColor();
+                            Controller.getEchiquier(x, 6).getColor();
                             return false;
                         } catch (Exception NullPointerException) {
                             return true;
@@ -123,7 +123,7 @@ public class Pawn extends Piece {
                 else if ((this.y == 7) && (this.x == x) && (y == 5)) {
                     //Vérifie que la case du milieu n'est pas occupée
                     try {
-                        Main.getEchiquier(x, 6).getColor();
+                        Controller.getEchiquier(x, 6).getColor();
                         return false;
                     } catch (Exception NullPointerException) {
                         return true;
@@ -167,25 +167,25 @@ public class Pawn extends Piece {
                     case "D":
                         validUserInput = true;
                         piecePromue = new Queen(BoardUtil.posToSquare(x, y), this.getColor());
-                        Main.setEchiquier(x, y, piecePromue);
+                        Controller.setEchiquier(x, y, piecePromue);
                         break;
 
                     case "T":
                         validUserInput = true;
                         piecePromue = new Rock(BoardUtil.posToSquare(x, y), this.getColor());
-                        Main.setEchiquier(x, y, piecePromue);
+                        Controller.setEchiquier(x, y, piecePromue);
                         break;
 
                     case "F":
                         validUserInput = true;
                         piecePromue = new Bishop(BoardUtil.posToSquare(x, y), this.getColor());
-                        Main.setEchiquier(x, y, piecePromue);
+                        Controller.setEchiquier(x, y, piecePromue);
                         break;
 
                     case "C":
                         validUserInput = true;
                         piecePromue = new Knight(BoardUtil.posToSquare(x, y), this.getColor());
-                        Main.setEchiquier(x, y, piecePromue);
+                        Controller.setEchiquier(x, y, piecePromue);
                         break;
 
                     default: {
