@@ -8,7 +8,7 @@ public class PawnIT {
     @Test
     void should_not_be_able_to_jump_over_pieces() {
         ChessBoard chessBoard = ChessBoard.createEmpty();
-        Pawn pawn = new Pawn(Color.WHITE);
+        Pawn pawn = new WhitePawn();
         chessBoard.add(pawn, "e2");
         String e4 = "e4";
 
@@ -22,7 +22,7 @@ public class PawnIT {
         @Test
         void should_move_white_pawn_on_empty_cell() {
             ChessBoard chessBoard = ChessBoard.createEmpty();
-            Pawn pawn = new Pawn(Color.WHITE);
+            Pawn pawn = new WhitePawn();
             chessBoard.add(pawn, "e2");
 
             assertTrue(chessBoard.canMove(pawn, "e3"));
@@ -38,7 +38,7 @@ public class PawnIT {
         @Test
         void should_not_move_white_pawn_on_white_cell() {
             ChessBoard chessBoard = ChessBoard.createEmpty();
-            Pawn pawn = new Pawn(Color.WHITE);
+            Pawn pawn = new WhitePawn();
             chessBoard.add(pawn, "e2");
             chessBoard.add(new Queen(Color.WHITE), "e3");
             chessBoard.add(new Queen(Color.WHITE), "e4");
@@ -61,7 +61,7 @@ public class PawnIT {
         @Test
         void should_move_white_pawn_on_black_cell() {
             ChessBoard chessBoard = ChessBoard.createEmpty();
-            Pawn pawn = new Pawn(Color.WHITE);
+            Pawn pawn = new WhitePawn();
             chessBoard.add(pawn, "e2");
             chessBoard.add(new Queen(Color.BLACK), "e3");
             chessBoard.add(new Queen(Color.BLACK), "e4");
@@ -84,7 +84,7 @@ public class PawnIT {
         @Test
         void should_move_black_pawn() {
             ChessBoard chessBoard = ChessBoard.createEmpty();
-            Pawn pawn = new Pawn(Color.BLACK);
+            Pawn pawn = new BlackPawn();
             chessBoard.add(pawn, "e2");
 
             chessBoard.add(new Queen(Color.WHITE), "f1");
@@ -103,7 +103,7 @@ public class PawnIT {
         @Test
         void should_not_be_able_to_move_on_itself() {
             ChessBoard chessBoard = ChessBoard.createEmpty();
-            Pawn pawn = new Pawn(Color.WHITE);
+            Pawn pawn = new WhitePawn();
             chessBoard.add(pawn, "e5");
 
             assertFalse(chessBoard.canMove(pawn, "e5"));

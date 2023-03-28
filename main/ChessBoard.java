@@ -54,17 +54,18 @@ public class ChessBoard {
         chessBoard.add(new Rock(Color.BLACK), "h8");
         IntStream.rangeClosed(MIN, MAX)
                 .mapToObj(i -> BoardUtil.posToSquare(i, MIN + 1))
-                .forEach(position -> chessBoard.add(new Pawn(Color.WHITE), position));
+                .forEach(position -> chessBoard.add(new WhitePawn(), position));
         IntStream.rangeClosed(MIN, MAX)
                 .mapToObj(i -> BoardUtil.posToSquare(i, MAX - 1))
-                .forEach(position -> chessBoard.add(new Pawn(Color.BLACK), position));
+                .forEach(position -> chessBoard.add(new BlackPawn(), position));
         return chessBoard;
     }
 
     public Square at(String position) {
         if (invalidPosition(position)) throw new IllegalArgumentException();
-        if (fakeSquares.containsKey(position)) return fakeSquares.get(position);
-        board.putIfAbsent(position, new Square(position));
+        if (fakeSquares.containsKey(position))
+            return fakeSquares.get(position);
+        board.putIfAbsent(position, new Square(position)); // TODO inline return ?
         return board.get(position);
     }
 
@@ -92,9 +93,9 @@ public class ChessBoard {
     public boolean tryToMove(Piece piece, String positionToMoveOn) {
         if (piece.getPosition().equals(positionToMoveOn)) throw new IllegalArgumentException();
         if (canMove(piece, positionToMoveOn)) {
-            at(positionToMoveOn).getPiece().ifPresent(this::movePieceOutOfTheBoard);
             tryToCastle(piece, positionToMoveOn);
             if (piece instanceof Castlable) ((Castlable) piece).cannotCastleAnymore();
+            at(positionToMoveOn).getPiece().ifPresent(this::movePieceOutOfTheBoard);
             move(piece, positionToMoveOn);
 
             return true;
@@ -116,13 +117,13 @@ public class ChessBoard {
         }
     }
 
-    private void move(Piece piece, String positionToMoveOn) {
+    public void move(Piece piece, String positionToMoveOn) {
         at(piece.getPosition()).removePiece();
         piece.setSquare(at(positionToMoveOn));
         at(positionToMoveOn).setPiece(piece);
     }
 
-    private void movePieceOutOfTheBoard(Piece piece) {
+    public void movePieceOutOfTheBoard(Piece piece) {
         piece.setSquare(null);
         outOfTheBoardPieces.add(piece);
     }
@@ -146,41 +147,50 @@ public class ChessBoard {
                 .orElse(false);
     }
 
-    // TODO refactor me
+    public void fakeSquare(String position, Piece piece) {
+        Square fakeSquare = new Square(position);
+        Optional.ofNullable(piece).ifPresent(piece1 -> fakeSquare.setPiece(new FakePiece(piece, fakeSquare)));
+        fakeSquares.put(position, fakeSquare);
+    }
+
+    public void unfakeSquare(String position) {
+        fakeSquares.remove(position);
+    }
+
+
     boolean createCheck(Piece piece, String positionToMoveOn) {
         if (piece.getPosition().equals(positionToMoveOn)) throw new IllegalArgumentException();
         String oldPosition = piece.getPosition();
-        Square fakeEmptySquare = new Square(oldPosition);
-        Square fakeMovement = new Square(positionToMoveOn);
-        fakeMovement.setPiece(piece);
-        piece.setSquare(fakeMovement);
-        fakeSquares.put(oldPosition, fakeEmptySquare);
-        fakeSquares.put(positionToMoveOn, fakeMovement);
+
+        fakeSquare(oldPosition, null);
+        fakeSquare(positionToMoveOn, piece);
         assert fakeSquares.size() == 2;
 
-        Optional<King> optionalKing = allyPieces(piece.getColor()).stream()
-                .filter(p -> p instanceof King)
-                .map(king -> (King) king)
+        Optional<Piece> optionalKing = allyPieces(piece.getColor()).stream()
+                .filter(p -> Character.toUpperCase(p.getType()) == 'N')
                 .findFirst();
         boolean enemyCanCheck = optionalKing
-                .map(this::kingIsUnderAttack)
+                .map(this::isKingUnderAttack)
                 .orElse(false);
 
         piece.setSquare(at(oldPosition));
-        fakeSquares.remove(oldPosition);
-        fakeSquares.remove(positionToMoveOn);
+        unfakeSquare(oldPosition);
+        unfakeSquare(positionToMoveOn);
         assert fakeSquares.isEmpty();
         return enemyCanCheck;
     }
 
-    private boolean kingIsUnderAttack(King king) {
+    private boolean isKingUnderAttack(Piece king) { // FIXME because of the decorator
         return enemyPieces(king.getColor()).stream()
                 .filter(piece -> !fakeSquares.containsKey(piece.getPosition()))
                 .anyMatch(enemyPiece -> enemyPiece.reachableSquares(king.getPosition(), Optional.of(king.getColor())) && emptyPath(enemyPiece, king.getPosition()));
     }
 
-    private Set<Piece> allyPieces(Color allyColor) {
-        return board.values().stream()
+    public Set<Piece> allyPieces(Color allyColor) {
+        Map<String, Square> b = new HashMap<>();
+        b.putAll(board);
+        b.putAll(fakeSquares);
+        return b.values().stream()
                 .map(Square::getPiece)
                 .filter(Optional::isPresent)
                 .map(Optional::get)
@@ -188,12 +198,21 @@ public class ChessBoard {
                 .collect(Collectors.toSet());
     }
 
-    private Set<Piece> enemyPieces(Color allyColor) {
-        return board.values().stream()
+    public Set<Piece> enemyPieces(Color allyColor) {
+        Map<String, Square> b = new HashMap<>();
+        b.putAll(board);
+        b.putAll(fakeSquares);
+        return b.values().stream()
                 .map(Square::getPiece)
                 .filter(Optional::isPresent)
                 .map(Optional::get)
                 .filter(p -> p.getColor() != allyColor)
                 .collect(Collectors.toSet());
     }
+
+    public boolean play(SCCard card) {
+        return card.play(this);
+    }
+
+
 }

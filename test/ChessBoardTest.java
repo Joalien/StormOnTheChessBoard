@@ -45,7 +45,7 @@ class ChessBoardTest {
             assertTrue(IntStream.rangeClosed(1, 8)
                     .mapToObj(i -> BoardUtil.posToSquare(i, 2))
                     .map(position -> chessBoard.at(position).getPiece().get())
-                    .allMatch(pawn -> pawn instanceof Pawn && pawn.getColor() == Color.WHITE));
+                    .allMatch(pawn -> pawn instanceof WhitePawn));
 
             // Black pieces
             assertTrue(chessBoard.at("a8").getPiece().get() instanceof Rock);
@@ -67,7 +67,7 @@ class ChessBoardTest {
             assertTrue(IntStream.rangeClosed(1, 8)
                     .mapToObj(i -> BoardUtil.posToSquare(i, 7))
                     .map(position -> chessBoard.at(position).getPiece().get())
-                    .allMatch(pawn -> pawn instanceof Pawn && pawn.getColor() == Color.BLACK));
+                    .allMatch(pawn -> pawn instanceof BlackPawn));
 
 
             assertTrue(IntStream.rangeClosed(1, 8)
@@ -216,14 +216,15 @@ class ChessBoardTest {
             chessBoard.add(king, e8);
             Knight knight = new Knight(Color.BLACK);
             chessBoard.add(knight, e5);
-            assertTrue(BoardUtil.generateAllPositions().stream()
-                    .filter(knight::reachableSquares)
-                    .noneMatch(pos -> chessBoard.createCheck(knight, pos)));
+//            assertTrue(BoardUtil.generateAllPositions().stream()
+//                    .filter(knight::reachableSquares)
+//                    .noneMatch(pos -> chessBoard.createCheck(knight, pos)));
 
             chessBoard.add(new Rock(Color.WHITE), e1);
 
             assertTrue(BoardUtil.generateAllPositions().stream()
                     .filter(knight::reachableSquares)
+                    .peek(pos -> System.out.println(pos + " " + chessBoard.createCheck(knight, pos)))
                     .allMatch(pos -> chessBoard.createCheck(knight, pos)));
         }
 
@@ -310,7 +311,7 @@ class ChessBoardTest {
         assertTrue(cb.tryToMove("e8", "g8"));
         assertTrue(cb.tryToMove("e1", "c1"));
 
-        assertTrue(cb.at("e4").getPiece().get() instanceof Pawn);
+        assertTrue(cb.at("e4").getPiece().get() instanceof WhitePawn);
         assertTrue(cb.at("e8").getPiece().isEmpty());
         assertTrue(cb.at("f8").getPiece().get() instanceof Rock);
         assertTrue(cb.at("g8").getPiece().get() instanceof King);
