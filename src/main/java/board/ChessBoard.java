@@ -1,16 +1,16 @@
 package board;
 
 import card.SCCard;
+import lombok.extern.slf4j.Slf4j;
 import piece.*;
 import position.PositionUtil;
 import position.Square;
 
-import org.
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-@Getter
+@Slf4j
 public class ChessBoard {
     public static final int MIN = 1;
     public static final int MAX = 8;
@@ -157,12 +157,14 @@ public class ChessBoard {
     }
 
     public void fakeSquare(String position, Piece piece) {
+        log.debug("fake that " + piece + " is on " + position);
         Square fakeSquare = new Square(position);
         Optional.ofNullable(piece).ifPresent(piece1 -> fakeSquare.setPiece(new FakePiece(piece, fakeSquare)));
         fakeSquares.put(position, fakeSquare);
     }
 
     public void unfakeSquare(String position) {
+        log.debug("unfake that " + fakeSquares.get(position) + " is on " + position);
         fakeSquares.remove(position);
     }
 
@@ -189,7 +191,7 @@ public class ChessBoard {
         return enemyCanCheck;
     }
 
-    private boolean isKingUnderAttack(Piece king) { // FIXME because of the decorator
+    private boolean isKingUnderAttack(Piece king) {
         return enemyPieces(king.getColor()).stream()
                 .filter(piece -> !fakeSquares.containsKey(piece.getPosition()))
                 .anyMatch(enemyPiece -> enemyPiece.reachableSquares(king.getPosition(), Optional.of(king.getColor())) && emptyPath(enemyPiece, king.getPosition()));

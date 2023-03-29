@@ -57,4 +57,9 @@ public abstract class Piece {
     public String getPosition() {
         return this.getSquare().map(Square::getPosition).orElse(null);
     }
+
+    @Override
+    public String toString() {
+        return this.getColor().toString().toLowerCase() + " " + this.getClass().getSimpleName();
+    }
 }

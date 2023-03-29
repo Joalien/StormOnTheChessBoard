@@ -13,4 +13,9 @@ public abstract class Pawn extends Piece {
 
     @Override
     public abstract Set<String> squaresOnThePath(String squareToMoveOn);
+
+    @Override
+    public String toString() {
+        return this.getColor().toString().toLowerCase() + " Pawn";
+    }
 }

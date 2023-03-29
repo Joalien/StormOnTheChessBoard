@@ -22,5 +22,4 @@ public class Knight extends Piece {
     public Set<String> squaresOnThePath(String squareToMoveOn) {
         return Collections.emptySet(); // piece.Knight can jump over pieces
     }
-
 }

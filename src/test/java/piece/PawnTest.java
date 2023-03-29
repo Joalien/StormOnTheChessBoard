@@ -137,5 +137,19 @@ class PawnTest {
         }
     }
 
+    @Test
+    void should_print_white_pawn() {
+        Pawn pawn = new WhitePawn();
+
+        assertEquals("white Pawn", pawn.toString());
+    }
+
+    @Test
+    void should_print_black_pawn() {
+        Pawn pawn = new BlackPawn();
+
+        assertEquals("black Pawn", pawn.toString());
+    }
+
 
 }

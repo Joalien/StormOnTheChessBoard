@@ -61,4 +61,10 @@ class KnightTest {
         }
     }
 
+    @Test
+    void should_print_itself() {
+        Knight knight = new Knight(Color.WHITE);
+
+        assertEquals("white Knight", knight.toString());
+    }
 }
