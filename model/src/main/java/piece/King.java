@@ -1,5 +1,8 @@
 package piece;
 
+import piece.Castlable;
+import piece.Color;
+import piece.Piece;
 import position.PositionUtil;
 
 import java.util.Collections;

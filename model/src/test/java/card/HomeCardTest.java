@@ -1,10 +1,10 @@
 package card;
 
 import board.ChessBoard;
+import piece.*;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import piece.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
