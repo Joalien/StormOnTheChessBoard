@@ -7,9 +7,12 @@ import piece.Color;
 import piece.Pawn;
 import piece.Queen;
 import piece.WhitePawn;
+import position.Square;
 
 import java.util.Collections;
+import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -22,16 +25,35 @@ class ChargeCardTest {
             ChessBoard chessBoard = ChessBoard.createEmpty();
             Pawn pawn1 = new WhitePawn();
             Pawn pawn2 = new WhitePawn();
-            String e4 = "e4";
-            String d4 = "d4";
-            chessBoard.add(pawn1, e4);
-            chessBoard.add(pawn2, d4);
+            chessBoard.add(pawn1, "e4");
+            chessBoard.add(pawn2, "d4");
             SCCard chargeCard = new ChargeCard(Set.of(pawn1, pawn2));
 
             assertTrue(chessBoard.play(chargeCard));
 
             assertEquals(pawn1, chessBoard.at("e5").getPiece().get());
             assertEquals(pawn2, chessBoard.at("d5").getPiece().get());
+        }
+
+        @Test
+        void should_move_all_movable_pawns() {
+            ChessBoard chessBoard = ChessBoard.createWithInitialState();
+            chessBoard.add(new Queen(Color.WHITE), "e6");
+            Set<Pawn> allBlackPawnsExceptE7 = chessBoard.allyPieces(Color.BLACK).stream()
+                    .filter(Pawn.class::isInstance)
+                    .map(Pawn.class::cast)
+                    .filter(pawn -> !"e7".equals(pawn.getPosition()))
+                    .collect(Collectors.toSet());
+            assertEquals(7, allBlackPawnsExceptE7.size());
+            SCCard chargeCard = new ChargeCard(allBlackPawnsExceptE7);
+
+            assertTrue(chessBoard.play(chargeCard));
+
+            assertTrue(Set.of("a6", "b6", "c6", "d6", "e7", "f6", "g6", "h6").stream()
+                .map(chessBoard::at)
+                .map(Square::getPiece)
+                .map(Optional::get)
+                .allMatch(Pawn.class::isInstance));
         }
     }
 
@@ -56,6 +78,19 @@ class ChargeCardTest {
             chessBoard.add(pawn, e4);
             chessBoard.add(queen, e5);
             SCCard chargeCard = new ChargeCard(Set.of(pawn));
+
+            assertThrows(IllegalArgumentException.class, () -> chessBoard.play(chargeCard));
+        }
+
+        @Test
+        void should_fail_if_only_one_pawn_cannot_move() {
+            ChessBoard chessBoard = ChessBoard.createWithInitialState();
+            chessBoard.add(new Queen(Color.WHITE), "e6");
+            Set<Pawn> allBlackPawns = chessBoard.allyPieces(Color.BLACK).stream()
+                    .filter(Pawn.class::isInstance)
+                    .map(Pawn.class::cast)
+                    .collect(Collectors.toSet());
+            SCCard chargeCard = new ChargeCard(allBlackPawns);
 
             assertThrows(IllegalArgumentException.class, () -> chessBoard.play(chargeCard));
         }

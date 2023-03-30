@@ -10,7 +10,7 @@ public class HomeCard extends SCCard {
     private final String positionToMoveOn;
 
     public HomeCard(Piece piece, String positionToMoveOn) {
-        super("Ramener l'une de vos pièces (pas un pion) sur l'une des cases où elle pouvait se trouver en début de partie. Vous pouvez même prendre ainsi une pièce adverse");
+        super("Maison", "Ramener l'une de vos pièces (pas un pion) sur l'une des cases où elle pouvait se trouver en début de partie. Vous pouvez même prendre ainsi une pièce adverse");
         this.piece = piece;
         this.positionToMoveOn = positionToMoveOn;
     }

@@ -185,11 +185,11 @@ class ChessBoardTest {
             String b3 = "b3";
             King king = new King(Color.WHITE);
             chessBoard.add(king, a1);
-            assertFalse(chessBoard.createCheck(king, a2));
+            assertFalse(chessBoard.doesMovingPieceCheckOurOwnKing(king, a2));
 
             chessBoard.add(new Queen(Color.BLACK), b3);
 
-            assertTrue(chessBoard.createCheck(king, a2));
+            assertTrue(chessBoard.doesMovingPieceCheckOurOwnKing(king, a2));
         }
 
         @Test
@@ -201,13 +201,13 @@ class ChessBoardTest {
             String a8 = "a8";
             King king = new King(Color.WHITE);
             chessBoard.add(king, e4);
-            validMoves.forEach(pos -> assertFalse(chessBoard.createCheck(king, pos)));
-            invalidMoves.forEach(pos -> assertFalse(chessBoard.createCheck(king, pos)));
+            validMoves.forEach(pos -> assertFalse(chessBoard.doesMovingPieceCheckOurOwnKing(king, pos)));
+            invalidMoves.forEach(pos -> assertFalse(chessBoard.doesMovingPieceCheckOurOwnKing(king, pos)));
 
             chessBoard.add(new Bishop(Color.BLACK), a8);
 
-            validMoves.forEach(pos -> assertFalse(chessBoard.createCheck(king, pos)));
-            invalidMoves.forEach(pos -> assertTrue(chessBoard.createCheck(king, pos)));
+            validMoves.forEach(pos -> assertFalse(chessBoard.doesMovingPieceCheckOurOwnKing(king, pos)));
+            invalidMoves.forEach(pos -> assertTrue(chessBoard.doesMovingPieceCheckOurOwnKing(king, pos)));
         }
 
         @Test
@@ -225,7 +225,7 @@ class ChessBoardTest {
 
             assertTrue(PositionUtil.generateAllPositions().stream()
                     .filter(knight::reachableSquares)
-                    .allMatch(pos -> chessBoard.createCheck(knight, pos)));
+                    .allMatch(pos -> chessBoard.doesMovingPieceCheckOurOwnKing(knight, pos)));
         }
 
         @Test
@@ -239,13 +239,13 @@ class ChessBoardTest {
             Bishop bishop = new Bishop(Color.WHITE);
             chessBoard.add(bishop, e5);
             chessBoard.add(new King(Color.WHITE), a1);
-            validMoves.forEach(pos -> assertFalse(chessBoard.createCheck(bishop, pos)));
-            invalidMoves.forEach(pos -> assertFalse(chessBoard.createCheck(bishop, pos)));
+            validMoves.forEach(pos -> assertFalse(chessBoard.doesMovingPieceCheckOurOwnKing(bishop, pos)));
+            invalidMoves.forEach(pos -> assertFalse(chessBoard.doesMovingPieceCheckOurOwnKing(bishop, pos)));
 
             chessBoard.add(new Bishop(Color.BLACK), h8);
 
-            validMoves.forEach(pos -> assertFalse(chessBoard.createCheck(bishop, pos)));
-            invalidMoves.forEach(pos -> assertTrue(chessBoard.createCheck(bishop, pos)));
+            validMoves.forEach(pos -> assertFalse(chessBoard.doesMovingPieceCheckOurOwnKing(bishop, pos)));
+            invalidMoves.forEach(pos -> assertTrue(chessBoard.doesMovingPieceCheckOurOwnKing(bishop, pos)));
         }
 
         @Test
@@ -266,8 +266,8 @@ class ChessBoardTest {
                     .collect(Collectors.toSet());
 
 
-            validMoves.forEach(pos -> assertFalse(chessBoard.createCheck(queen, pos)));
-            invalidMoves.forEach(pos -> assertTrue(chessBoard.createCheck(queen, pos)));
+            validMoves.forEach(pos -> assertFalse(chessBoard.doesMovingPieceCheckOurOwnKing(queen, pos)));
+            invalidMoves.forEach(pos -> assertTrue(chessBoard.doesMovingPieceCheckOurOwnKing(queen, pos)));
         }
 
         @Test
@@ -287,8 +287,8 @@ class ChessBoardTest {
                     .collect(Collectors.toSet());
 
 
-            assertFalse(chessBoard.createCheck(queen, e4));
-            invalidMoves.forEach(pos -> assertTrue(chessBoard.createCheck(queen, pos)));
+            assertFalse(chessBoard.doesMovingPieceCheckOurOwnKing(queen, e4));
+            invalidMoves.forEach(pos -> assertTrue(chessBoard.doesMovingPieceCheckOurOwnKing(queen, pos)));
         }
     }
 

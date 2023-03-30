@@ -13,7 +13,7 @@ public class ChargeCard extends SCCard {
     private final Set<Pawn> pawns;
 
     public ChargeCard(Set<Pawn> pawns) {
-        super("Avancez tous ceux de vos ppions que vous voulez, et qui le peuvent, d'une case");
+        super("Charge", "Avancez tous ceux de vos ppions que vous voulez, et qui le peuvent, d'une case");
         this.pawns = pawns;
     }
 
@@ -26,11 +26,11 @@ public class ChargeCard extends SCCard {
             .peek(pawn -> fakeOtherPawns(chessBoard, pawn))
             .map(ChessBoard::oneSquaresForward)
             .map(chessBoard::at)
+            .peek(pos -> unfakeAllPawns(chessBoard))
             .map(Square::getPiece)
             .filter(Optional::isPresent)
             .map(Optional::get)
-            .peek(ChargeCard::throwsCannotMoveOneSquareForwardException)
-            .forEach(pos -> unfakeAllPawns(chessBoard));
+            .forEach(ChargeCard::throwsCannotMoveOneSquareForwardException);
 
         pawns.forEach(p -> chessBoard.move(p, ChessBoard.oneSquaresForward(p)));
         return true;
