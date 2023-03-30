@@ -8,7 +8,7 @@ public class BlackHoleCard extends SCCard {
     private final String position;
 
     public BlackHoleCard(String position) {
-        super("Trou noir", "Désignez une case vide qui est \"retirée\" de l'échiquier juqu'à la fin de la partie. Il sera impossible pendant la suite du jeu de s'y arrêter ou de la traverser.");
+        super("Trou noir", "Désignez une case vide qui est \"retirée\" de l'échiquier juqu'à la fin de la partie. Il sera impossible pendant la suite du jeu de s'y arrêter ou de la traverser.", SCType.AFTER_TURN);
         this.position = position;
     }
 

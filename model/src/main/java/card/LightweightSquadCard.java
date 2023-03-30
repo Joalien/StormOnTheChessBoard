@@ -9,7 +9,7 @@ public class LightweightSquadCard extends SCCard {
     private final Pawn pawn2;
 
     public LightweightSquadCard(Pawn pawn1, Pawn pawn2) {
-        super("Escouade légère", "Avancez deux de vos pions, chacun de deux cases");
+        super("Escouade légère", "Avancez deux de vos pions, chacun de deux cases", SCType.REPLACE_TURN);
         this.pawn1 = pawn1;
         this.pawn2 = pawn2;
     }

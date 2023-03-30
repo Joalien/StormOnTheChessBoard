@@ -17,7 +17,7 @@ public class ChargeCard extends SCCard {
     private final Color color;
 
     public ChargeCard(Set<Pawn> pawns) {
-        super("Charge", "Avancez tous ceux de vos ppions que vous voulez, et qui le peuvent, d'une case");
+        super("Charge", "Avancez tous ceux de vos ppions que vous voulez, et qui le peuvent, d'une case", SCType.REPLACE_TURN);
         this.pawns = pawns;
         this.color = pawns.stream().findAny().map(Piece::getColor).orElse(null);
     }

@@ -19,7 +19,7 @@ public class CourtlyLoveCard extends SCCard {
     private final String positionToMoveOn;
 
     public CourtlyLoveCard(Knight knight, String positionToMoveOn) {
-        super("Amour courtois", "Amenez l'un de vos cavaliers sur une case libre adjacente à votre dame");
+        super("Amour courtois", "Amenez l'un de vos cavaliers sur une case libre adjacente à votre dame", SCType.REPLACE_TURN);
         this.knight = knight;
         this.positionToMoveOn = positionToMoveOn;
     }

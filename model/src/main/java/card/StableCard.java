@@ -12,7 +12,7 @@ public class StableCard extends SCCard {
 
 
     public StableCard(Rock rock, Knight knight) {
-        super("Écurie", "Sur l'échiquier, permutez l'un de vos cavaliers avec l'une de vos tours");
+        super("Écurie", "Sur l'échiquier, permutez l'un de vos cavaliers avec l'une de vos tours", SCType.AFTER_TURN);
         this.rock = rock;
         this.knight = knight;
     }

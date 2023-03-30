@@ -9,10 +9,12 @@ public abstract class SCCard {
 
     protected final String name;
     protected final String description;
+    protected final SCType type;
 
-    protected SCCard(String name, String description) {
+    public SCCard(String name, String description, SCType type) {
         this.name = name;
         this.description = description;
+        this.type = type;
     }
 
     public final boolean playOn(ChessBoard chessBoard) {

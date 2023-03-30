@@ -17,7 +17,7 @@ public class ReflectedBishopCard extends SCCard {
     private final String positionToMoveOn;
 
     public ReflectedBishopCard(Bishop bishop, String positionToMoveOn) {
-        super("Fou réfléchi", "Déplacez l'un de vos fous en le faisant \"rebondir\" sur les côtés de l'échiquier poursuivant son chemin en décrivnat en angle droit. Il n'y a pas de limites au nombre de rebonds au cours d'un déplacement");
+        super("Fou réfléchi", "Déplacez l'un de vos fous en le faisant \"rebondir\" sur les côtés de l'échiquier poursuivant son chemin en décrivnat en angle droit. Il n'y a pas de limites au nombre de rebonds au cours d'un déplacement", SCType.REPLACE_TURN);
         this.bishop = bishop;
         this.positionToMoveOn = positionToMoveOn;
     }
