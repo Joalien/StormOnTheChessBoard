@@ -31,32 +31,31 @@ public class QuadrilleCard extends SCCard {
 
     @Override
     protected boolean doAction(ChessBoard chessBoard) {
-        Map<String, Optional<Piece>> pieces = getCornerPieces(chessBoard);
-        removePiecesFromCorner(chessBoard, pieces);
-
-        addPiecesInNextCorner(chessBoard, pieces);
+        Map<String, Optional<Piece>> pieces = saveWhichPieceShouldGoInWhichCorner(chessBoard);
+        removeCornersFromTheBoard(chessBoard);
+        addPiecesInCorner(chessBoard, pieces);
         return true;
     }
 
-    private static Map<String, Optional<Piece>> getCornerPieces(ChessBoard chessBoard) {
-        return CORNERS.stream()
-                .map(chessBoard::at)
-                .collect(Collectors.toMap(Square::getPosition, Square::getPiece));
+    private static void addPiecesInCorner(ChessBoard chessBoard, Map<String, Optional<Piece>> pieces) {
+        pieces.entrySet().stream()
+                .filter(p -> p.getValue().isPresent())
+                .forEach(optionalStringEntry -> chessBoard.add(optionalStringEntry.getValue().get(), optionalStringEntry.getKey()));
     }
 
-    private static void removePiecesFromCorner(ChessBoard chessBoard, Map<String, Optional<Piece>> pieces) {
+    private static void removeCornersFromTheBoard(ChessBoard chessBoard) {
         CORNERS.stream()
-                .map(pieces::get)
+                .map(chessBoard::at)
+                .map(Square::getPiece)
                 .filter(Optional::isPresent)
                 .map(Optional::get)
                 .forEach(chessBoard::removePieceFromTheBoard);
     }
 
-    private void addPiecesInNextCorner(ChessBoard chessBoard, Map<String, Optional<Piece>> pieces) {
-        pieces.entrySet().stream()
-                .filter(p -> p.getValue().isPresent())
-                .map(p -> new AbstractMap.SimpleEntry<>(direction.cornersMap.get(p.getKey()), p.getValue().get()))
-                .forEach(optionalStringEntry -> chessBoard.add(optionalStringEntry.getValue(), optionalStringEntry.getKey()));
+    private Map<String, Optional<Piece>> saveWhichPieceShouldGoInWhichCorner(ChessBoard chessBoard) {
+        return CORNERS.stream()
+                .map(chessBoard::at)
+                .collect(Collectors.toMap(square -> direction.cornersMap.get(square.getPosition()), Square::getPiece));
     }
 
     enum Direction {
