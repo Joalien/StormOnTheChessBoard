@@ -2,6 +2,7 @@ package position;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class PositionUtil {
 
@@ -63,6 +64,11 @@ public class PositionUtil {
 
     public static boolean isBorder(String position) {
         return getX(position) == 1 || getX(position) == 8 || getY(position) == 1 || getY(position) == 8;
+    }
+
+    public static boolean areNearby(String pos1, String pos2) {
+        return (getX(pos1) == getX(pos2) && Math.abs(getY(pos1) - getY(pos2)) == 1)
+                || (getY(pos1) == getY(pos2) && Math.abs(getX(pos1) - getX(pos2)) == 1);
     }
 
 }
