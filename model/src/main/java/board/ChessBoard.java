@@ -184,7 +184,8 @@ public class ChessBoard {
     }
 
     public void unfakeSquare(String position) {
-        log.debug("unfake that {} is on {}", fakeSquares.get(position), position);
+        Square square = fakeSquares.get(position);
+        log.debug("unfake that {} is on {}", square == null ? "nothing" : square.getPosition(), position);
         fakeSquares.remove(position);
     }
 
@@ -256,7 +257,7 @@ public class ChessBoard {
             log.error(e.getMessage());
             throw e;
         } catch (Exception e) {
-            throw new Error("Should never throw something else than IllegalStateException | IllegalArgumentException");
+            throw new Error("Should never throw " + e);
         }
     }
 }

@@ -3,10 +3,7 @@ package card;
 import board.ChessBoard;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import piece.Color;
-import piece.Pawn;
-import piece.Queen;
-import piece.WhitePawn;
+import piece.*;
 import position.Square;
 
 import java.util.Collections;
@@ -33,6 +30,42 @@ class ChargeCardTest {
 
             assertEquals(pawn1, chessBoard.at("e5").getPiece().get());
             assertEquals(pawn2, chessBoard.at("d5").getPiece().get());
+        }
+
+        @Test
+        void should_move_three_white_pawns_in_front_of_each_other() {
+            ChessBoard chessBoard = ChessBoard.createEmpty();
+            Pawn pawn1 = new WhitePawn();
+            Pawn pawn2 = new WhitePawn();
+            Pawn pawn3 = new WhitePawn();
+            chessBoard.add(pawn1, "e4");
+            chessBoard.add(pawn2, "e5");
+            chessBoard.add(pawn3, "e6");
+            SCCard chargeCard = new ChargeCard(Set.of(pawn1, pawn2, pawn3));
+
+            assertTrue(chessBoard.playCard(chargeCard));
+
+            assertEquals(pawn1, chessBoard.at("e5").getPiece().get());
+            assertEquals(pawn2, chessBoard.at("e6").getPiece().get());
+            assertEquals(pawn3, chessBoard.at("e7").getPiece().get());
+        }
+
+        @Test
+        void should_move_three_black_pawns_in_front_of_each_other() {
+            ChessBoard chessBoard = ChessBoard.createEmpty();
+            Pawn pawn1 = new BlackPawn();
+            Pawn pawn2 = new BlackPawn();
+            Pawn pawn3 = new BlackPawn();
+            chessBoard.add(pawn1, "e4");
+            chessBoard.add(pawn2, "e5");
+            chessBoard.add(pawn3, "e6");
+            SCCard chargeCard = new ChargeCard(Set.of(pawn1, pawn2, pawn3));
+
+            assertTrue(chessBoard.playCard(chargeCard));
+
+            assertEquals(pawn1, chessBoard.at("e3").getPiece().get());
+            assertEquals(pawn2, chessBoard.at("e4").getPiece().get());
+            assertEquals(pawn3, chessBoard.at("e5").getPiece().get());
         }
 
         @Test
@@ -93,6 +126,23 @@ class ChargeCardTest {
             SCCard chargeCard = new ChargeCard(allBlackPawns);
 
             assertThrows(IllegalArgumentException.class, () -> chessBoard.playCard(chargeCard));
+        }
+
+        @Test
+        void should_not_move_pawns_of_different_color() {
+            ChessBoard chessBoard = ChessBoard.createEmpty();
+            Pawn pawn1 = new WhitePawn();
+            Pawn pawn2 = new BlackPawn();
+            String e4 = "e4";
+            String g1 = "g1";
+            chessBoard.add(pawn1, e4);
+            chessBoard.add(pawn2, g1);
+            SCCard lightweightSquadCard = new LightweightSquadCard(pawn1, pawn2);
+
+            assertThrows(IllegalArgumentException.class, () -> chessBoard.playCard(lightweightSquadCard));
+
+            assertEquals(pawn1, chessBoard.at(e4).getPiece().get());
+            assertEquals(pawn2, chessBoard.at(g1).getPiece().get());
         }
     }
 }
