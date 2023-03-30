@@ -15,7 +15,7 @@ public abstract class SCCard {
         this.description = description;
     }
 
-    public final boolean play(ChessBoard chessBoard) {
+    public final boolean playOn(ChessBoard chessBoard) {
         validInput(chessBoard);
 
         if (!doesNotCreateCheck(chessBoard)) throw new CheckException();

@@ -20,7 +20,7 @@ class BlackHoleCardTest {
             String e4 = "e4";
             SCCard blackHoleCard = new BlackHoleCard(e4);
 
-            assertTrue(blackHoleCard.play(chessBoard));
+            assertTrue(blackHoleCard.playOn(chessBoard));
 
             assertTrue(chessBoard.at(e4).getPiece().get() instanceof BlackHole);
             assertThrows(IllegalArgumentException.class, () -> chessBoard.add(new Queen(Color.WHITE), e4));
@@ -36,7 +36,7 @@ class BlackHoleCardTest {
             chessBoard.add(new Queen(Color.WHITE), e4);
             SCCard blackHoleCard = new BlackHoleCard(e4);
 
-            assertThrows(IllegalArgumentException.class, () -> blackHoleCard.play(chessBoard));
+            assertThrows(IllegalArgumentException.class, () -> blackHoleCard.playOn(chessBoard));
         }
 
         @Test
@@ -44,8 +44,8 @@ class BlackHoleCardTest {
             ChessBoard chessBoard = ChessBoard.createEmpty();
             SCCard blackHoleCard = new BlackHoleCard("e4");
 
-            assertTrue(blackHoleCard.play(chessBoard));
-            assertThrows(IllegalArgumentException.class, () -> blackHoleCard.play(chessBoard));
+            assertTrue(blackHoleCard.playOn(chessBoard));
+            assertThrows(IllegalArgumentException.class, () -> blackHoleCard.playOn(chessBoard));
         }
 
         @Test
@@ -53,7 +53,7 @@ class BlackHoleCardTest {
             ChessBoard chessBoard = ChessBoard.createEmpty();
             SCCard blackHoleCard = new BlackHoleCard("h9");
 
-            assertThrows(IllegalArgumentException.class, () -> blackHoleCard.play(chessBoard));
+            assertThrows(IllegalArgumentException.class, () -> blackHoleCard.playOn(chessBoard));
 
         }
     }

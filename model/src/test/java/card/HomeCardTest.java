@@ -21,7 +21,7 @@ class HomeCardTest {
             chessBoard.add(knight, e4);
             SCCard homeCard = new HomeCard(knight, g1);
 
-            assertTrue(homeCard.play(chessBoard));
+            assertTrue(homeCard.playOn(chessBoard));
 
             assertEquals(knight, chessBoard.at(g1).getPiece().get());
             assertTrue(chessBoard.at(e4).getPiece().isEmpty());
@@ -38,7 +38,7 @@ class HomeCardTest {
             chessBoard.add(queen, g1);
             SCCard homeCard = new HomeCard(knight, g1);
 
-            assertTrue(homeCard.play(chessBoard));
+            assertTrue(homeCard.playOn(chessBoard));
 
             assertEquals(knight, chessBoard.at(g1).getPiece().get());
             assertTrue(chessBoard.at(e4).getPiece().isEmpty());
@@ -61,7 +61,7 @@ class HomeCardTest {
             chessBoard.add(queen, g1);
             SCCard homeCard = new HomeCard(pawn, g1);
 
-            assertThrows(IllegalArgumentException.class, () -> homeCard.play(chessBoard));
+            assertThrows(IllegalArgumentException.class, () -> homeCard.playOn(chessBoard));
 
             assertEquals(pawn, chessBoard.at(e4).getPiece().get());
             assertEquals(queen, chessBoard.at(g1).getPiece().get());
@@ -80,7 +80,7 @@ class HomeCardTest {
             chessBoard.add(queen, g1);
             SCCard homeCard = new HomeCard(knight, g1);
 
-            assertThrows(IllegalArgumentException.class, () -> homeCard.play(chessBoard));
+            assertThrows(IllegalArgumentException.class, () -> homeCard.playOn(chessBoard));
 
             assertEquals(knight, chessBoard.at(e4).getPiece().get());
             assertEquals(queen, chessBoard.at(g1).getPiece().get());
@@ -97,7 +97,7 @@ class HomeCardTest {
             chessBoard.add(queen, e4);
             SCCard homeCard = new HomeCard(queen, g1);
 
-            assertThrows(IllegalArgumentException.class, () -> homeCard.play(chessBoard));
+            assertThrows(IllegalArgumentException.class, () -> homeCard.playOn(chessBoard));
 
             assertEquals(queen, chessBoard.at(e4).getPiece().get());
             assertTrue(chessBoard.at(g1).getPiece().isEmpty());
@@ -113,7 +113,7 @@ class HomeCardTest {
             chessBoard.add(queen, e4);
             SCCard homeCard = new HomeCard(queen, d1);
 
-            assertThrows(IllegalArgumentException.class, () -> homeCard.play(chessBoard));
+            assertThrows(IllegalArgumentException.class, () -> homeCard.playOn(chessBoard));
 
             assertEquals(queen, chessBoard.at(e4).getPiece().get());
             assertTrue(chessBoard.at(d1).getPiece().isEmpty());
@@ -131,7 +131,7 @@ class HomeCardTest {
             chessBoard.add(king, g1);
             SCCard homeCard = new HomeCard(knight, g1);
 
-            assertThrows(IllegalStateException.class, () -> homeCard.play(chessBoard));
+            assertThrows(IllegalStateException.class, () -> homeCard.playOn(chessBoard));
 
             assertEquals(knight, chessBoard.at(e4).getPiece().get());
             assertEquals(king, chessBoard.at(g1).getPiece().get());
