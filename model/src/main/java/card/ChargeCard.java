@@ -32,9 +32,9 @@ public class ChargeCard extends SCCard {
         assert chessBoard.getNumberOfFakeSquares() == 0;
         pawns.stream()
                 .peek(pawn -> fakeOtherPawns(chessBoard, pawn))
-                .map(ChessBoard::oneSquaresForward)
+                .map(Pawn::oneSquareForward)
                 .map(chessBoard::at)
-                .peek(pos -> unfakeAllPawns(chessBoard))
+                .peek(pos -> chessBoard.unfakeAllSquares())
                 .map(Square::getPiece)
                 .filter(Optional::isPresent)
                 .map(Optional::get)
@@ -43,8 +43,8 @@ public class ChargeCard extends SCCard {
 
     @Override
     protected boolean doesNotCreateCheck(ChessBoard chessBoard) {
-        pawns.forEach(p -> chessBoard.fakeSquare(p.getPosition(), null));
-        pawns.forEach(p -> chessBoard.fakeSquare(ChessBoard.oneSquaresForward(p), p));
+        pawns.forEach(p -> chessBoard.fakeSquare(null, p.getPosition()));
+        pawns.forEach(p -> chessBoard.fakeSquare(p, p.oneSquareForward()));
 
         boolean kingIsNotUnderAttack = !chessBoard.isKingUnderAttack(color);
 
@@ -60,20 +60,14 @@ public class ChargeCard extends SCCard {
         ).get(this.color);
         pawns.stream()
                 .sorted(startWithMoreAdvancedPawn)
-                .forEach(p -> chessBoard.move(p, ChessBoard.oneSquaresForward(p)));
+                .forEach(p -> chessBoard.move(p, p.oneSquareForward()));
         return true;
     }
 
     private void fakeOtherPawns(ChessBoard cb, Pawn pawn) {
         pawns.stream()
                 .filter(pawn1 -> !pawn1.equals(pawn))
-                .forEach(p -> cb.fakeSquare(p.getPosition(), null));
-    }
-
-    private void unfakeAllPawns(ChessBoard cb) {
-        pawns.stream()
-                .map(Piece::getPosition)
-                .forEach(cb::unfakeSquare);
+                .forEach(p -> cb.fakeSquare(null, p.getPosition()));
     }
 
     private static void throwsCannotMoveOneSquareForwardException(Piece p) {

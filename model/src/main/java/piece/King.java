@@ -16,7 +16,7 @@ public class King extends Piece implements Castlable {
 
     //Penser à intégrer le rock !
     @Override
-    public boolean reachableSquares(int x, int y, Optional<Color> color) {
+    public boolean isPositionTheoricallyReachable(int x, int y, Optional<Color> color) {
         if (getX() == x && getY() == y) return false;
 
         boolean whiteCastle = this.getPosition().equals("e1") && this.color == Color.WHITE;
@@ -33,7 +33,7 @@ public class King extends Piece implements Castlable {
 
     @Override
     public Set<String> squaresOnThePath(String squareToMoveOn) {
-        if (!super.reachableSquares(squareToMoveOn)) throw new IllegalArgumentException(squareToMoveOn);
+        if (!super.isPositionTheoricallyReachable(squareToMoveOn)) throw new IllegalArgumentException(squareToMoveOn);
 
         boolean whiteCastle = this.getPosition().equals("e1") && this.color == Color.WHITE;
         boolean blackCastle = this.getPosition().equals("e8") && this.color == Color.BLACK;

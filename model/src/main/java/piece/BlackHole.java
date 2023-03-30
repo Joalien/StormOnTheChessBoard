@@ -1,9 +1,6 @@
-package board;
+package piece;
 
 import lombok.extern.slf4j.Slf4j;
-import piece.Color;
-import piece.Piece;
-import piece.Square;
 
 import java.util.Optional;
 import java.util.Set;
@@ -21,12 +18,18 @@ public class BlackHole extends Piece {
     }
 
     @Override
-    public boolean reachableSquares(int x, int y, Optional<Color> color) {
+    public boolean isPositionTheoricallyReachable(int x, int y, Optional<Color> color) {
         return false;
     }
 
     @Override
     public Set<String> squaresOnThePath(String squareToMoveOn) {
-        throw new BlackHoleException();
+        throw new BlackHoleException("You cannot move a black hole!");
+    }
+
+    public static class BlackHoleException extends RuntimeException {
+        public BlackHoleException(String message) {
+            super(message);
+        }
     }
 }

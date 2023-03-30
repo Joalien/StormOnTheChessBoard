@@ -3,8 +3,10 @@ package piece;
 import board.ChessBoard;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import java.util.Collections;
+import java.util.Set;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 public class BishopIT {
 
@@ -19,5 +21,22 @@ public class BishopIT {
         chessBoard.add(new Bishop(Color.BLACK), "b2");
 
         assertFalse(chessBoard.emptyPath(bishop, squareToMoveOn));
+    }
+
+    @Test
+    void should_move_on_cells_from_center() {
+        ChessBoard chessBoard = ChessBoard.createWithInitialState();
+        Set<String> reachablePositions = Set.of("f3", "d5", "c6", "b7", "d3", "f5", "g6", "h7");
+        Bishop bishop = new Bishop(Color.WHITE);
+        chessBoard.add(bishop, "e4");
+
+        assertEquals(reachablePositions, chessBoard.getAllOpenToAttackPosition(bishop));
+    }
+
+    @Test
+    void should_not_be_able_to_move() {
+        ChessBoard chessBoard = ChessBoard.createWithInitialState();
+
+        assertEquals(Collections.emptySet(), chessBoard.getAllOpenToAttackPosition(chessBoard.at("f1").getPiece().get()));
     }
 }

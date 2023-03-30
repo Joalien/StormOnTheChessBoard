@@ -29,14 +29,14 @@ public abstract class Piece {
         return this.type;
     }
 
-    public boolean reachableSquares(String s) {
-        return reachableSquares(PositionUtil.getX(s), PositionUtil.getY(s), Optional.empty());
+    public boolean isPositionTheoricallyReachable(String s) {
+        return isPositionTheoricallyReachable(PositionUtil.getX(s), PositionUtil.getY(s), Optional.empty());
     }
 
-    public abstract boolean reachableSquares(int x, int y, Optional<Color> color);
+    public abstract boolean isPositionTheoricallyReachable(int x, int y, Optional<Color> color);
 
-    public boolean reachableSquares(String s, Optional<Color> color) {
-        return reachableSquares(PositionUtil.getX(s), PositionUtil.getY(s), color);
+    public boolean isPositionTheoricallyReachable(String s, Optional<Color> color) {
+        return isPositionTheoricallyReachable(PositionUtil.getX(s), PositionUtil.getY(s), color);
     }
 
     public abstract Set<String> squaresOnThePath(String squareToMoveOn);

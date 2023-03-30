@@ -8,8 +8,11 @@ public abstract class Pawn extends Piece {
         super(color, typePiece);
     }
 
+    public abstract String twoSquaresForward();
+    public abstract String oneSquareForward();
+
     @Override
-    public abstract boolean reachableSquares(int x, int y, Optional<Color> color);
+    public abstract boolean isPositionTheoricallyReachable(int x, int y, Optional<Color> color);
 
     @Override
     public abstract Set<String> squaresOnThePath(String squareToMoveOn);

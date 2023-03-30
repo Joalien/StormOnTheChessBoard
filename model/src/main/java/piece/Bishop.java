@@ -13,14 +13,14 @@ public class Bishop extends Piece {
     }
 
     @Override
-    public boolean reachableSquares(int x, int y, Optional<Color> color) {
+    public boolean isPositionTheoricallyReachable(int x, int y, Optional<Color> color) {
         if (getX() == x && getY() == y) return false;
         return Math.abs(getY() - y) == Math.abs(getX() - x);
     }
 
     @Override
     public Set<String> squaresOnThePath(String squareToMoveOn) {
-        if (!super.reachableSquares(squareToMoveOn)) throw new IllegalArgumentException(squareToMoveOn);
+        if (!super.isPositionTheoricallyReachable(squareToMoveOn)) throw new IllegalArgumentException(squareToMoveOn);
 
         Set<String> squaresOnThePath = new HashSet<>();
         boolean signX = getX() < PositionUtil.getX(squareToMoveOn);

@@ -275,7 +275,7 @@ class ChessBoardTest {
             chessBoard.add(new Rock(Color.WHITE), e1);
 
             assertTrue(PositionUtil.generateAllPositions().stream()
-                    .filter(knight::reachableSquares)
+                    .filter(knight::isPositionTheoricallyReachable)
                     .allMatch(pos -> chessBoard.doesMovingPieceCheckOurOwnKing(knight, pos)));
         }
 
@@ -313,7 +313,7 @@ class ChessBoardTest {
             Set<String> invalidMoves = PositionUtil.generateAllPositions()
                     .stream()
                     .filter(s -> !validMoves.contains(s))
-                    .filter(queen::reachableSquares)
+                    .filter(queen::isPositionTheoricallyReachable)
                     .collect(Collectors.toSet());
 
 
@@ -334,7 +334,7 @@ class ChessBoardTest {
             Set<String> invalidMoves = PositionUtil.generateAllPositions()
                     .stream()
                     .filter(s -> !s.equals(e4))
-                    .filter(queen::reachableSquares)
+                    .filter(queen::isPositionTheoricallyReachable)
                     .collect(Collectors.toSet());
 
 

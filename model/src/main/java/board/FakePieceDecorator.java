@@ -7,12 +7,12 @@ import piece.Square;
 import java.util.Optional;
 import java.util.Set;
 
-public class FakePiece extends Piece {
+public class FakePieceDecorator extends Piece {
 
     private final Piece piece;
     private final Square fakeSquare;
 
-    public FakePiece(Piece piece, Square fakeSquare) {
+    public FakePieceDecorator(Piece piece, Square fakeSquare) {
         super(piece.getColor(), piece.getType());
         this.piece = piece;
         this.fakeSquare = fakeSquare;
@@ -25,7 +25,7 @@ public class FakePiece extends Piece {
 
     @Override
     public void setSquare(Square square) {
-        throw new UnsupportedOperationException();
+        piece.setSquare(square);
     }
 
     @Override
@@ -50,18 +50,18 @@ public class FakePiece extends Piece {
     }
 
     @Override
-    public boolean reachableSquares(int x, int y, Optional<Color> color) {
-        return piece.reachableSquares(x, y, color);
+    public boolean isPositionTheoricallyReachable(int x, int y, Optional<Color> color) {
+        return piece.isPositionTheoricallyReachable(x, y, color);
     }
 
     @Override
-    public boolean reachableSquares(String s) {
-        return piece.reachableSquares(s);
+    public boolean isPositionTheoricallyReachable(String s) {
+        return piece.isPositionTheoricallyReachable(s);
     }
 
     @Override
-    public boolean reachableSquares(String s, Optional<Color> color) {
-        return piece.reachableSquares(s, color);
+    public boolean isPositionTheoricallyReachable(String s, Optional<Color> color) {
+        return piece.isPositionTheoricallyReachable(s, color);
     }
 
     @Override
@@ -72,5 +72,10 @@ public class FakePiece extends Piece {
     @Override
     public String getPosition() {
         return fakeSquare.getPosition();
+    }
+
+    @Override
+    public String toString() {
+        return String.format("Fake%s", piece.getClass().getSimpleName());
     }
 }

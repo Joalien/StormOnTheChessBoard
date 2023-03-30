@@ -1,6 +1,6 @@
 package card;
 
-import board.BlackHole;
+import piece.BlackHole;
 import board.ChessBoard;
 
 public class BlackHoleCard extends SCCard {

@@ -78,14 +78,14 @@ class PawnTest {
             pawn.setSquare(new Square("e2"));
 
 
-            assertTrue(pawn.reachableSquares("e3", Optional.empty()));
-            assertTrue(pawn.reachableSquares("e4", Optional.empty()));
-            assertFalse(pawn.reachableSquares("d3", Optional.empty()));
-            assertFalse(pawn.reachableSquares("f3", Optional.empty()));
+            assertTrue(pawn.isPositionTheoricallyReachable("e3", Optional.empty()));
+            assertTrue(pawn.isPositionTheoricallyReachable("e4", Optional.empty()));
+            assertFalse(pawn.isPositionTheoricallyReachable("d3", Optional.empty()));
+            assertFalse(pawn.isPositionTheoricallyReachable("f3", Optional.empty()));
 
-            assertFalse(pawn.reachableSquares("e1", Optional.empty()));
-            assertFalse(pawn.reachableSquares("f1", Optional.empty()));
-            assertFalse(pawn.reachableSquares("d1", Optional.empty()));
+            assertFalse(pawn.isPositionTheoricallyReachable("e1", Optional.empty()));
+            assertFalse(pawn.isPositionTheoricallyReachable("f1", Optional.empty()));
+            assertFalse(pawn.isPositionTheoricallyReachable("d1", Optional.empty()));
         }
 
         @Test
@@ -93,14 +93,14 @@ class PawnTest {
             Pawn pawn = new WhitePawn();
             pawn.setSquare(new Square("e2"));
 
-            assertFalse(pawn.reachableSquares("e3", Optional.of(Color.WHITE)));
-            assertFalse(pawn.reachableSquares("e4", Optional.of(Color.WHITE)));
-            assertFalse(pawn.reachableSquares("d3", Optional.of(Color.WHITE)));
-            assertFalse(pawn.reachableSquares("f3", Optional.of(Color.WHITE)));
+            assertFalse(pawn.isPositionTheoricallyReachable("e3", Optional.of(Color.WHITE)));
+            assertFalse(pawn.isPositionTheoricallyReachable("e4", Optional.of(Color.WHITE)));
+            assertFalse(pawn.isPositionTheoricallyReachable("d3", Optional.of(Color.WHITE)));
+            assertFalse(pawn.isPositionTheoricallyReachable("f3", Optional.of(Color.WHITE)));
 
-            assertFalse(pawn.reachableSquares("e1", Optional.of(Color.WHITE)));
-            assertFalse(pawn.reachableSquares("f1", Optional.of(Color.WHITE)));
-            assertFalse(pawn.reachableSquares("d1", Optional.of(Color.WHITE)));
+            assertFalse(pawn.isPositionTheoricallyReachable("e1", Optional.of(Color.WHITE)));
+            assertFalse(pawn.isPositionTheoricallyReachable("f1", Optional.of(Color.WHITE)));
+            assertFalse(pawn.isPositionTheoricallyReachable("d1", Optional.of(Color.WHITE)));
         }
 
         @Test
@@ -108,14 +108,14 @@ class PawnTest {
             Pawn pawn = new WhitePawn();
             pawn.setSquare(new Square("e2"));
 
-            assertFalse(pawn.reachableSquares("e3", Optional.of(Color.BLACK)));
-            assertFalse(pawn.reachableSquares("e4", Optional.of(Color.BLACK)));
-            assertTrue(pawn.reachableSquares("d3", Optional.of(Color.BLACK)));
-            assertTrue(pawn.reachableSquares("f3", Optional.of(Color.BLACK)));
+            assertFalse(pawn.isPositionTheoricallyReachable("e3", Optional.of(Color.BLACK)));
+            assertFalse(pawn.isPositionTheoricallyReachable("e4", Optional.of(Color.BLACK)));
+            assertTrue(pawn.isPositionTheoricallyReachable("d3", Optional.of(Color.BLACK)));
+            assertTrue(pawn.isPositionTheoricallyReachable("f3", Optional.of(Color.BLACK)));
 
-            assertFalse(pawn.reachableSquares("e1", Optional.of(Color.BLACK)));
-            assertFalse(pawn.reachableSquares("f1", Optional.of(Color.BLACK)));
-            assertFalse(pawn.reachableSquares("d1", Optional.of(Color.BLACK)));
+            assertFalse(pawn.isPositionTheoricallyReachable("e1", Optional.of(Color.BLACK)));
+            assertFalse(pawn.isPositionTheoricallyReachable("f1", Optional.of(Color.BLACK)));
+            assertFalse(pawn.isPositionTheoricallyReachable("d1", Optional.of(Color.BLACK)));
         }
 
         @Test
@@ -123,14 +123,14 @@ class PawnTest {
             Pawn pawn = new BlackPawn();
             pawn.setSquare(new Square("e2"));
 
-            assertFalse(pawn.reachableSquares("e3", Optional.empty()));
-            assertFalse(pawn.reachableSquares("e4", Optional.empty()));
-            assertFalse(pawn.reachableSquares("d3", Optional.empty()));
-            assertFalse(pawn.reachableSquares("f3", Optional.empty()));
+            assertFalse(pawn.isPositionTheoricallyReachable("e3", Optional.empty()));
+            assertFalse(pawn.isPositionTheoricallyReachable("e4", Optional.empty()));
+            assertFalse(pawn.isPositionTheoricallyReachable("d3", Optional.empty()));
+            assertFalse(pawn.isPositionTheoricallyReachable("f3", Optional.empty()));
 
-            assertTrue(pawn.reachableSquares("e1", Optional.empty()));
-            assertTrue(pawn.reachableSquares("f1", Optional.of(Color.WHITE)));
-            assertTrue(pawn.reachableSquares("d1", Optional.of(Color.WHITE)));
+            assertTrue(pawn.isPositionTheoricallyReachable("e1", Optional.empty()));
+            assertTrue(pawn.isPositionTheoricallyReachable("f1", Optional.of(Color.WHITE)));
+            assertTrue(pawn.isPositionTheoricallyReachable("d1", Optional.of(Color.WHITE)));
         }
 
         @Test
@@ -138,7 +138,7 @@ class PawnTest {
             Pawn pawn = new WhitePawn();
             pawn.setSquare(new Square("e2"));
 
-            assertFalse(pawn.reachableSquares("d4", Optional.empty()));
+            assertFalse(pawn.isPositionTheoricallyReachable("d4", Optional.empty()));
         }
 
         @Test
@@ -146,7 +146,7 @@ class PawnTest {
             Pawn pawn = new WhitePawn();
             pawn.setSquare(new Square("e5"));
 
-            assertFalse(pawn.reachableSquares("e5", Optional.of(Color.WHITE)));
+            assertFalse(pawn.isPositionTheoricallyReachable("e5", Optional.of(Color.WHITE)));
         }
     }
 

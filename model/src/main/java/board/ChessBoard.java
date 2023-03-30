@@ -79,18 +79,15 @@ public class ChessBoard {
         }
     }
 
-    public static String twoSquaresForward(Pawn pawn) {
-        if (pawn instanceof WhitePawn) return PositionUtil.posToSquare(pawn.getX(), pawn.getY() + 2);
-        else return PositionUtil.posToSquare(pawn.getX(), pawn.getY() - 2);
-    }
-
-    public static String oneSquaresForward(Pawn pawn) {
-        if (pawn instanceof WhitePawn) return PositionUtil.posToSquare(pawn.getX(), pawn.getY() + 1);
-        else return PositionUtil.posToSquare(pawn.getX(), pawn.getY() - 1);
-    }
-
     public Set<Piece> getOutOfTheBoardPieces() {
         return outOfTheBoardPieces;
+    }
+
+    public Set<String> getAllOpenToAttackPosition(Piece piece) {
+        return PositionUtil.generateAllPositions().stream()
+                .filter(pos -> !pos.equals(piece.getPosition()))
+                .filter(pos -> canAttack(piece, pos))
+                .collect(Collectors.toSet());
     }
 
     public boolean emptyPath(Piece piece, String squareToGo) {
@@ -144,7 +141,8 @@ public class ChessBoard {
     }
 
     public void move(Piece piece, String positionToMoveOn) {
-        log.info(piece + "{} moves from {} to {}", piece, piece.getPosition(), positionToMoveOn);
+        at(positionToMoveOn).getPiece().ifPresent(this::removePieceFromTheBoard);
+        log.info("{} moves from {} to {}", piece, piece.getPosition(), positionToMoveOn);
         at(piece.getPosition()).removePiece();
         piece.setSquare(at(positionToMoveOn));
         at(positionToMoveOn).setPiece(piece);
@@ -159,11 +157,15 @@ public class ChessBoard {
     }
 
     public boolean canMove(Piece piece, String positionToMoveOn) {
-        return piece.reachableSquares(positionToMoveOn, at(positionToMoveOn).getPiece().map(Piece::getColor))
-                && emptyPath(piece, positionToMoveOn)
+        return canAttack(piece, positionToMoveOn)
                 && !doesMovingPieceCheckOurOwnKing(piece, positionToMoveOn)
-                && isEnemyOrEmpty(piece, positionToMoveOn)
                 && isValidCastle(piece, positionToMoveOn);
+    }
+
+    public boolean canAttack(Piece piece, String positionToMoveOn) {
+        return piece.isPositionTheoricallyReachable(positionToMoveOn, at(positionToMoveOn).getPiece().map(Piece::getColor))
+                && emptyPath(piece, positionToMoveOn)
+                && isEnemyOrEmpty(piece, positionToMoveOn);
     }
 
     boolean isValidCastle(Piece piece, String positionToMoveOn) {
@@ -178,21 +180,22 @@ public class ChessBoard {
                 .orElse(false); // color is null
     }
 
-    public void fakeSquare(String position, Piece piece) {
-        log.debug("fake that {} is on {}", piece == null ? "nothing" : piece, position);
+    public void fakeSquare(Piece piece, String position) {
+        if (fakeSquares.containsKey(position) && fakeSquares.get(position) == null) throw new IllegalArgumentException("You cannot re-fake over a fake piece");
+        log.debug("fake that {} is on {}", Optional.ofNullable(piece).map(Objects::toString).orElse("nothing"), position);
         Square fakeSquare = new Square(position);
-        Optional.ofNullable(piece).ifPresent(piece1 -> fakeSquare.setPiece(new FakePiece(piece, fakeSquare)));
+        Optional.ofNullable(piece).ifPresent(p -> fakeSquare.setPiece(new FakePieceDecorator(p, fakeSquare)));
         fakeSquares.put(position, fakeSquare);
     }
 
     public void unfakeSquare(String position) {
         Square square = fakeSquares.get(position);
-        log.debug("unfake that {} is on {}", square == null ? "nothing" : square.getPosition(), position);
+        log.debug("unfake that {} is on {}", square.getPiece().map(Piece::toString).orElse("nothing"), position);
         fakeSquares.remove(position);
     }
 
     public void unfakeAllSquares() {
-        log.debug("unfake {} fake squares}", fakeSquares.size());
+        log.debug("unfake {} fake squares", fakeSquares.size());
         fakeSquares.clear();
     }
 
@@ -202,17 +205,18 @@ public class ChessBoard {
 
     boolean doesMovingPieceCheckOurOwnKing(Piece piece, String positionToMoveOn) {
         if (piece.getPosition().equals(positionToMoveOn)) throw new IllegalArgumentException();
+        if (piece instanceof FakePieceDecorator) return false;
 
-        fakeSquare(piece.getPosition(), null);
-        fakeSquare(positionToMoveOn, piece);
-        assert fakeSquares.size() == 2;
+        fakeSquare(null, piece.getPosition());
+        fakeSquare(piece, positionToMoveOn);
+//        assert fakeSquares.size() == 2;
 
         boolean enemyCanCheck = isKingUnderAttack(piece.getColor());
 
         piece.setSquare(at(piece.getPosition()));
         unfakeSquare(piece.getPosition());
         unfakeSquare(positionToMoveOn);
-        assert fakeSquares.isEmpty();
+//        assert fakeSquares.isEmpty();
         return enemyCanCheck;
     }
 
@@ -228,7 +232,7 @@ public class ChessBoard {
     private boolean isKingUnderAttack(Piece king) {
         return enemyPieces(king.getColor()).stream()
                 .filter(piece -> !fakeSquares.containsKey(piece.getPosition()))
-                .anyMatch(enemyPiece -> enemyPiece.reachableSquares(king.getPosition(), Optional.of(king.getColor())) && emptyPath(enemyPiece, king.getPosition()));
+                .anyMatch(enemyPiece -> canAttack(enemyPiece, king.getPosition()) && emptyPath(enemyPiece, king.getPosition()));
     }
 
     public Set<Piece> allyPieces(Color allyColor) {

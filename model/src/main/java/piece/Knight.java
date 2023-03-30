@@ -11,7 +11,7 @@ public class Knight extends Piece {
     }
 
     @Override
-    public boolean reachableSquares(int x, int y, Optional<Color> color) {
+    public boolean isPositionTheoricallyReachable(int x, int y, Optional<Color> color) {
         boolean isNotOnTheSameLine = getX() != x;
         boolean isNotOnTheSameFile = getY() != y;
         boolean distanceOfThree = Math.abs(getX() - x) + Math.abs(getY() - y) == 3;

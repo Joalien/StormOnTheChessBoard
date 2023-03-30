@@ -61,4 +61,8 @@ public class PositionUtil {
         return Integer.valueOf(Character.toString(position.charAt(1)));
     }
 
+    public static boolean isBorder(String position) {
+        return getX(position) == 1 || getX(position) == 8 || getY(position) == 1 || getY(position) == 8;
+    }
+
 }

@@ -15,14 +15,14 @@ public class Rock extends Piece implements Castlable {
     }
 
     @Override
-    public boolean reachableSquares(int x, int y, Optional<Color> color) {
+    public boolean isPositionTheoricallyReachable(int x, int y, Optional<Color> color) {
         if (getX() == x && getY() == y) return false;
         return (getY() == y) || (getX() == x);
     }
 
     @Override
     public Set<String> squaresOnThePath(String squareToMoveOn) {
-        if (!super.reachableSquares(squareToMoveOn)) throw new IllegalArgumentException(squareToMoveOn);
+        if (!super.isPositionTheoricallyReachable(squareToMoveOn)) throw new IllegalArgumentException(squareToMoveOn);
 
         Set<String> squaresOnThePath = new HashSet<>();
         if (getX() == PositionUtil.getX(squareToMoveOn)) {

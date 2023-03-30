@@ -4,6 +4,8 @@ import board.ChessBoard;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
+import java.util.Set;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 public class PawnIT {
@@ -101,6 +103,18 @@ public class PawnIT {
             assertTrue(chessBoard.canMove(pawn, "e1"));
             assertTrue(chessBoard.canMove(pawn, "f1"));
             assertTrue(chessBoard.canMove(pawn, "d1"));
+        }
+
+        @Test
+        void should_move_black_pawn_on_4_positions() {
+            ChessBoard chessBoard = ChessBoard.createEmpty();
+            Pawn pawn = new BlackPawn();
+            chessBoard.add(pawn, "e7");
+            chessBoard.add(new Queen(Color.WHITE), "f6");
+            chessBoard.add(new Queen(Color.WHITE), "d6");
+            Set<String> reachablePositions = Set.of("f6", "d6", "e6", "e5");
+
+            assertEquals(reachablePositions, chessBoard.getAllOpenToAttackPosition(pawn));
         }
 
         @Test

@@ -3,8 +3,11 @@ package piece;
 import board.ChessBoard;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import java.util.Collections;
+import java.util.Set;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class RockIT {
 
@@ -22,5 +25,22 @@ public class RockIT {
 
         assertFalse(chessBoard.emptyPath(rock, squareHidden));
         assertTrue(chessBoard.emptyPath(rock, squareNotHidden));
+    }
+
+    @Test
+    void should_move_on_cells_from_center() {
+        ChessBoard chessBoard = ChessBoard.createWithInitialState();
+        Set<String> reachablePositions = Set.of("e3", "e5", "e6", "e7", "a4", "b4", "c4", "d4", "f4", "g4", "h4");
+        Rock rock = new Rock(Color.WHITE);
+        chessBoard.add(rock, "e4");
+
+        assertEquals(reachablePositions, chessBoard.getAllOpenToAttackPosition(rock));
+    }
+
+    @Test
+    void should_not_be_able_to_move() {
+        ChessBoard chessBoard = ChessBoard.createWithInitialState();
+
+        assertEquals(Collections.emptySet(), chessBoard.getAllOpenToAttackPosition(chessBoard.at("h1").getPiece().get()));
     }
 }

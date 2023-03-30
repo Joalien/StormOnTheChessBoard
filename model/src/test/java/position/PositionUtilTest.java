@@ -5,7 +5,12 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -83,5 +88,19 @@ class PositionUtilTest {
         void should_throw_if_outside_of_board_position() {
             assertThrows(IndexOutOfBoundsException.class, () -> PositionUtil.getX("i2"));
         }
+    }
+
+    @Test
+    void should_be_border() {
+        Set<String> a = Set.of("a1", "a2", "a3", "a4", "a5", "a6", "a7", "a8");
+        Set<String> h = Set.of("h1", "h2", "h3", "h4", "h5", "h6", "h7", "h8");
+        Set<String> one = Set.of("a1", "b1", "c1", "d1", "e1", "f1", "g1", "h1");
+        Set<String> height = Set.of("a8", "b8", "c8", "d8", "e8", "f8", "g8", "h8");
+        Set<String> borders = Stream.of(a.stream(), h.stream(), one.stream(), height.stream())
+                .flatMap(x -> x)
+                .collect(Collectors.toSet());
+
+        assertTrue(PositionUtil.generateAllPositions().stream()
+                .allMatch(pos -> PositionUtil.isBorder(pos) == borders.contains(pos)));
     }
 }

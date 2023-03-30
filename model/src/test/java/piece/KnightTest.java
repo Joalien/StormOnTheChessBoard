@@ -44,7 +44,7 @@ class KnightTest {
 
             assertTrue(PositionUtil.generateAllPositions()
                     .stream()
-                    .allMatch(s -> validMoves.contains(s) == knight.reachableSquares(s)));
+                    .allMatch(s -> validMoves.contains(s) == knight.isPositionTheoricallyReachable(s)));
         }
 
         @Test
@@ -55,7 +55,7 @@ class KnightTest {
 
             assertTrue(PositionUtil.generateAllPositions()
                     .stream()
-                    .allMatch(s -> validMoves.contains(s) == knight.reachableSquares(s)));
+                    .allMatch(s -> validMoves.contains(s) == knight.isPositionTheoricallyReachable(s)));
         }
 
         @Test
@@ -63,7 +63,7 @@ class KnightTest {
             Knight knight = new Knight(Color.WHITE);
             knight.setSquare(new Square("e5"));
 
-            assertFalse(knight.reachableSquares("e5"));
+            assertFalse(knight.isPositionTheoricallyReachable("e5"));
         }
     }
 }

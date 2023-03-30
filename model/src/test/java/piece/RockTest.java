@@ -67,7 +67,7 @@ class RockTest {
 
             assertTrue(PositionUtil.generateAllPositions()
                     .stream()
-                    .allMatch(s -> validMoves.contains(s) == rock.reachableSquares(s)));
+                    .allMatch(s -> validMoves.contains(s) == rock.isPositionTheoricallyReachable(s)));
         }
 
         @Test
@@ -79,7 +79,7 @@ class RockTest {
 
             assertTrue(PositionUtil.generateAllPositions()
                     .stream()
-                    .allMatch(s -> validMoves.contains(s) == rock.reachableSquares(s)));
+                    .allMatch(s -> validMoves.contains(s) == rock.isPositionTheoricallyReachable(s)));
         }
 
         @Test
@@ -87,7 +87,7 @@ class RockTest {
             Rock rock = new Rock(Color.WHITE);
             rock.setSquare(new Square("e5"));
 
-            assertFalse(rock.reachableSquares("e5"));
+            assertFalse(rock.isPositionTheoricallyReachable("e5"));
         }
     }
 

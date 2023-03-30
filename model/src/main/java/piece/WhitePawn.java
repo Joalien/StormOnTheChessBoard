@@ -13,7 +13,17 @@ public class WhitePawn extends Pawn {
     }
 
     @Override
-    public boolean reachableSquares(int x, int y, Optional<Color> color) {
+    public String twoSquaresForward() {
+        return PositionUtil.posToSquare(this.getX(), this.getY() + 2);
+    }
+
+    @Override
+    public String oneSquareForward() {
+        return PositionUtil.posToSquare(this.getX(), this.getY() + 1);
+    }
+
+    @Override
+    public boolean isPositionTheoricallyReachable(int x, int y, Optional<Color> color) {
         boolean moveTwoSquaresFromStart = getY() == 2 && y == 4;
         boolean moveOneSquare = y - getY() == 1;
         boolean moveForward = color.isEmpty() && x == getX() && (moveTwoSquaresFromStart || moveOneSquare);
@@ -26,7 +36,7 @@ public class WhitePawn extends Pawn {
 
     @Override
     public Set<String> squaresOnThePath(String squareToMoveOn) {
-        boolean moveForwardTwoSquaresFromStart = reachableSquares(squareToMoveOn, Optional.empty())
+        boolean moveForwardTwoSquaresFromStart = isPositionTheoricallyReachable(squareToMoveOn, Optional.empty())
                 && getY() == 2
                 && PositionUtil.getY(squareToMoveOn) == 4;
         return moveForwardTwoSquaresFromStart ? Set.of(PositionUtil.posToSquare(getX(), 3)) : Collections.emptySet();

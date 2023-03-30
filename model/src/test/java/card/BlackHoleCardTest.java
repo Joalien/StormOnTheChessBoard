@@ -1,6 +1,6 @@
 package card;
 
-import board.BlackHole;
+import piece.BlackHole;
 import board.ChessBoard;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;

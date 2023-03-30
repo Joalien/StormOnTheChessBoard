@@ -22,11 +22,11 @@ public class LightweightSquadCard extends SCCard {
         if (pawn1.getColor() != pawn2.getColor())
             throw new IllegalArgumentException("You should move pawns of the same color");
 
-        chessBoard.fakeSquare(pawn2.getPosition(), null);
+        chessBoard.fakeSquare(null, pawn2.getPosition());
         if (cannotMoveTwoSquaresForward(chessBoard, pawn1))
             throw new IllegalArgumentException("You cannot move " + pawn1 + " two squares forward");
         chessBoard.unfakeSquare(pawn2.getPosition());
-        chessBoard.fakeSquare(pawn1.getPosition(), null);
+        chessBoard.fakeSquare(null, pawn1.getPosition());
         if (cannotMoveTwoSquaresForward(chessBoard, pawn2))
             throw new IllegalArgumentException("You cannot move " + pawn2 + " two squares forward");
         chessBoard.unfakeSquare(pawn1.getPosition());
@@ -39,12 +39,12 @@ public class LightweightSquadCard extends SCCard {
 
     @Override
     protected boolean doAction(ChessBoard chessBoard) {
-        chessBoard.move(pawn1, ChessBoard.twoSquaresForward(pawn1));
-        chessBoard.move(pawn2, ChessBoard.twoSquaresForward(pawn2));
+        chessBoard.move(pawn1, pawn1.twoSquaresForward());
+        chessBoard.move(pawn2, pawn2.twoSquaresForward());
         return true;
     }
 
     private boolean cannotMoveTwoSquaresForward(ChessBoard cb, Pawn pawn) {
-        return cb.at(ChessBoard.oneSquaresForward(pawn)).getPiece().isPresent() || cb.at(ChessBoard.twoSquaresForward(pawn)).getPiece().isPresent();
+        return cb.at(pawn.oneSquareForward()).getPiece().isPresent() || cb.at(pawn.twoSquaresForward()).getPiece().isPresent();
     }
 }
