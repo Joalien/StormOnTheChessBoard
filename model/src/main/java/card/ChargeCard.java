@@ -1,5 +1,6 @@
 package card;
 
+import board.CheckException;
 import board.ChessBoard;
 import piece.Pawn;
 import piece.Piece;
@@ -17,13 +18,10 @@ public class ChargeCard extends SCCard {
         this.pawns = pawns;
     }
 
-    private static void throwsCannotMoveOneSquareForwardException(Piece p) {
-        throw new IllegalArgumentException(p + " cannot move one square forward!");
-    }
-
     @Override
-    public boolean play(ChessBoard chessBoard) {
-        checkAttribute();
+    public void validInput(ChessBoard chessBoard) {
+        if (pawns == null) throw new IllegalStateException();
+        if (pawns.isEmpty()) throw new IllegalArgumentException("You should select at least one pawn");
 
         pawns.stream()
                 .peek(pawn -> fakeOtherPawns(chessBoard, pawn))
@@ -34,7 +32,21 @@ public class ChargeCard extends SCCard {
                 .filter(Optional::isPresent)
                 .map(Optional::get)
                 .forEach(ChargeCard::throwsCannotMoveOneSquareForwardException);
+    }
 
+    @Override
+    protected void doesNotCreateCheck(ChessBoard chessBoard) throws CheckException {
+
+        pawns.forEach(p -> chessBoard.fakeSquare(p.getPosition(), null));
+        pawns.forEach(p -> chessBoard.fakeSquare(ChessBoard.oneSquaresForward(p), p));
+
+        if (chessBoard.isKingUnderAttack(pawns.stream().findAny().get().getColor())) throw new CheckException();
+
+        chessBoard.unfakeAllSquares();
+    }
+
+    @Override
+    public boolean doAction(ChessBoard chessBoard) {
         pawns.forEach(p -> chessBoard.move(p, ChessBoard.oneSquaresForward(p)));
         return true;
     }
@@ -51,8 +63,7 @@ public class ChargeCard extends SCCard {
                 .forEach(cb::unfakeSquare);
     }
 
-    private void checkAttribute() {
-        if (pawns == null) throw new IllegalStateException();
-        if (pawns.isEmpty()) throw new IllegalArgumentException("You should select at least one pawn");
+    private static void throwsCannotMoveOneSquareForwardException(Piece p) {
+        throw new IllegalArgumentException(p + " cannot move one square forward!");
     }
 }

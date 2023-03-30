@@ -1,5 +1,6 @@
 package card;
 
+import board.CheckException;
 import board.ChessBoard;
 import piece.Pawn;
 
@@ -15,7 +16,7 @@ public class LightweightSquadCard extends SCCard {
     }
 
     @Override
-    public boolean play(ChessBoard chessBoard) {
+    protected void validInput(ChessBoard chessBoard) {
         if (pawn1 == null) throw new IllegalStateException();
         if (pawn2 == null) throw new IllegalStateException();
         if (pawn1.equals(pawn2)) throw new IllegalArgumentException("You should select two different pawns");
@@ -30,7 +31,15 @@ public class LightweightSquadCard extends SCCard {
         if (cannotMoveTwoSquaresForward(chessBoard, pawn2))
             throw new IllegalArgumentException("You cannot move " + pawn2 + " two squares forward");
         chessBoard.unfakeSquare(pawn1.getPosition());
+    }
 
+    @Override
+    protected void doesNotCreateCheck(ChessBoard chessBoard) throws CheckException {
+
+    }
+
+    @Override
+    public boolean doAction(ChessBoard chessBoard) {
         chessBoard.move(pawn1, ChessBoard.twoSquaresForward(pawn1));
         chessBoard.move(pawn2, ChessBoard.twoSquaresForward(pawn2));
         return true;

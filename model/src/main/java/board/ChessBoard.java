@@ -12,8 +12,8 @@ import java.util.stream.IntStream;
 
 @Slf4j
 public class ChessBoard {
-    public static final int MIN = 1;
-    public static final int MAX = 8;
+    private static final int MIN = 1;
+    private static final int MAX = 8;
     private static final Map<String, String> CASTLE_MAP = Map.of("f1", "h1",
             "d1", "a1",
             "f8", "h8",
@@ -21,17 +21,6 @@ public class ChessBoard {
     private final HashMap<String, Square> board = new HashMap<>(64);
     private final HashMap<String, Square> fakeSquares = new HashMap<>();
     private final Set<Piece> outOfTheBoardPieces = new HashSet<>();
-
-    private static boolean invalidPosition(String position) {
-        try {
-            boolean invalidLength = position.length() != 2;
-            boolean validX = MIN <= PositionUtil.getX(position) && PositionUtil.getX(position) <= MAX;
-            boolean validY = MIN <= PositionUtil.getY(position) && PositionUtil.getY(position) <= MAX;
-            return invalidLength || !validX || !validY;
-        } catch (IndexOutOfBoundsException e) {
-            return false;
-        }
-    }
 
     public static ChessBoard createEmpty() {
         log.debug("create empty chessboard");
@@ -67,6 +56,30 @@ public class ChessBoard {
         return chessBoard;
     }
 
+    public void add(Piece piece, String position) {
+        piece.setSquare(at(position));
+        at(position).setPiece(piece);
+    }
+
+    public Square at(String position) {
+        if (invalidPosition(position)) throw new IllegalArgumentException();
+        if (fakeSquares.containsKey(position))
+            return fakeSquares.get(position);
+        board.putIfAbsent(position, new Square(position)); // TODO inline return ?
+        return board.get(position);
+    }
+
+    private static boolean invalidPosition(String position) {
+        try {
+            boolean invalidLength = position.length() != 2;
+            boolean validX = MIN <= PositionUtil.getX(position) && PositionUtil.getX(position) <= MAX;
+            boolean validY = MIN <= PositionUtil.getY(position) && PositionUtil.getY(position) <= MAX;
+            return invalidLength || !validX || !validY;
+        } catch (IndexOutOfBoundsException e) {
+            return false;
+        }
+    }
+
     public static String twoSquaresForward(Pawn pawn) {
         if (pawn instanceof WhitePawn) return PositionUtil.posToSquare(pawn.getX(), pawn.getY() + 2);
         else return PositionUtil.posToSquare(pawn.getX(), pawn.getY() - 2);
@@ -81,19 +94,6 @@ public class ChessBoard {
         return outOfTheBoardPieces;
     }
 
-    public Square at(String position) {
-        if (invalidPosition(position)) throw new IllegalArgumentException();
-        if (fakeSquares.containsKey(position))
-            return fakeSquares.get(position);
-        board.putIfAbsent(position, new Square(position)); // TODO inline return ?
-        return board.get(position);
-    }
-
-    public void add(Piece piece, String position) {
-        piece.setSquare(at(position));
-        at(position).setPiece(piece);
-    }
-
     public boolean emptyPath(Piece piece, String squareToGo) {
         return piece.squaresOnThePath(squareToGo).stream()
                 .map(this::at)
@@ -102,7 +102,10 @@ public class ChessBoard {
     }
 
     public boolean tryToMove(String from, String to) {
-        return tryToMove(at(from).getPiece().get(), to);
+        return at(from)
+                .getPiece()
+                .map(p -> tryToMove(p, to))
+                .orElse(false);
     }
 
     public boolean tryToMove(Piece piece, String positionToMoveOn) {
@@ -119,7 +122,7 @@ public class ChessBoard {
 
             return true;
         }
-        log.debug("fail to move " + piece + " from " + piece.getPosition() + " to " + positionToMoveOn);
+        log.debug("fail to move {} from {} to {}", piece, piece.getPosition(), positionToMoveOn);
         return false;
     }
 
@@ -135,14 +138,14 @@ public class ChessBoard {
                     .map(Rock.class::cast)
                     .filter(Rock::canCastle)
                     .ifPresentOrElse(rock -> {
-                        log.info(piece + " is castling");
+                        log.info("{} is castling", piece);
                         move(rock, finalPositionOfRock);
-                    }, () -> log.debug(piece + " can castle but rock cannot"));
+                    }, () -> log.debug("{} can castle but rock cannot", piece));
         }
     }
 
     public void move(Piece piece, String positionToMoveOn) {
-        log.info(piece + " moves from " + piece.getPosition() + " to " + positionToMoveOn);
+        log.info(piece + "{} moves from {} to {}", piece, piece.getPosition(), positionToMoveOn);
         at(piece.getPosition()).removePiece();
         piece.setSquare(at(positionToMoveOn));
         at(positionToMoveOn).setPiece(piece);
@@ -151,7 +154,7 @@ public class ChessBoard {
     public void movePieceOutOfTheBoard(Piece piece) {
         piece.setSquare(null);
         outOfTheBoardPieces.add(piece);
-        log.info(piece + " has been taken");
+        log.info("{} has been taken", piece);
     }
 
     public boolean canMove(Piece piece, String positionToMoveOn) {
@@ -174,37 +177,45 @@ public class ChessBoard {
     }
 
     public void fakeSquare(String position, Piece piece) {
-        log.debug("fake that " + (piece == null ? "nothing" : piece) + " is on " + position);
+        log.debug("fake that {} is on {}", piece == null ? "nothing" : piece, position);
         Square fakeSquare = new Square(position);
         Optional.ofNullable(piece).ifPresent(piece1 -> fakeSquare.setPiece(new FakePiece(piece, fakeSquare)));
         fakeSquares.put(position, fakeSquare);
     }
 
     public void unfakeSquare(String position) {
-        log.debug("unfake that " + fakeSquares.get(position) + " is on " + position);
+        log.debug("unfake that {} is on {}", fakeSquares.get(position), position);
         fakeSquares.remove(position);
+    }
+
+    public void unfakeAllSquares() {
+        log.debug("unfake {} fake squares}", fakeSquares.size());
+        fakeSquares.clear();
     }
 
     boolean doesMovingPieceCheckOurOwnKing(Piece piece, String positionToMoveOn) {
         if (piece.getPosition().equals(positionToMoveOn)) throw new IllegalArgumentException();
-        String oldPosition = piece.getPosition();
 
-        fakeSquare(oldPosition, null);
+        fakeSquare(piece.getPosition(), null);
         fakeSquare(positionToMoveOn, piece);
         assert fakeSquares.size() == 2;
 
-        Optional<Piece> optionalKing = allyPieces(piece.getColor()).stream()
-                .filter(p -> Character.toUpperCase(p.getType()) == 'K')
-                .findFirst();
-        boolean enemyCanCheck = optionalKing
-                .map(this::isKingUnderAttack)
-                .orElse(false);
+        boolean enemyCanCheck = isKingUnderAttack(piece.getColor());
 
-        piece.setSquare(at(oldPosition));
-        unfakeSquare(oldPosition);
+        piece.setSquare(at(piece.getPosition()));
+        unfakeSquare(piece.getPosition());
         unfakeSquare(positionToMoveOn);
         assert fakeSquares.isEmpty();
         return enemyCanCheck;
+    }
+
+    public boolean isKingUnderAttack(Color color) {
+        Optional<Piece> optionalKing = allyPieces(color).stream()
+                .filter(p -> Character.toUpperCase(p.getType()) == 'K')
+                .findFirst();
+        return optionalKing
+                .map(this::isKingUnderAttack)
+                .orElse(false);
     }
 
     private boolean isKingUnderAttack(Piece king) {
@@ -237,10 +248,15 @@ public class ChessBoard {
                 .collect(Collectors.toSet());
     }
 
-    public boolean play(SCCard card) {
-        log.info(card + " is played!");
-        return card.play(this);
+    public boolean playCard(SCCard card) {
+        log.info("{} is played!", card);
+        try {
+            return card.play(this);
+        } catch (IllegalStateException | IllegalArgumentException | CheckException e) {
+            log.error(e.getMessage());
+            throw e;
+        } catch (Exception e) {
+            throw new Error("Should never throw something else than IllegalStateException | IllegalArgumentException");
+        }
     }
-
-
 }

@@ -1,5 +1,6 @@
 package card;
 
+import board.CheckException;
 import board.ChessBoard;
 import lombok.Getter;
 
@@ -14,7 +15,20 @@ public abstract class SCCard {
         this.description = description;
     }
 
-    public abstract boolean play(ChessBoard chessBoard);
+    public final boolean play(ChessBoard chessBoard) {
+        validInput(chessBoard);
+
+        doesNotCreateCheck(chessBoard);
+
+        return doAction(chessBoard);
+    }
+
+    protected abstract void validInput(ChessBoard chessBoard);
+
+    protected abstract void doesNotCreateCheck(ChessBoard chessBoard) throws CheckException;
+
+    protected abstract boolean doAction(ChessBoard chessBoard);
+
 
     @Override
     public String toString() {

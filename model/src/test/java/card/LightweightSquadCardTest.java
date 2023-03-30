@@ -26,7 +26,7 @@ class LightweightSquadCardTest {
             chessBoard.add(pawn2, e4);
             SCCard lightweightSquadCard = new LightweightSquadCard(pawn1, pawn2);
 
-            assertTrue(chessBoard.play(lightweightSquadCard));
+            assertTrue(chessBoard.playCard(lightweightSquadCard));
 
             assertTrue(chessBoard.at(g1).getPiece().isEmpty());
             assertEquals(pawn1, chessBoard.at("g3").getPiece().get());
@@ -45,7 +45,7 @@ class LightweightSquadCardTest {
             chessBoard.add(pawn2, a4);
             SCCard lightweightSquadCard = new LightweightSquadCard(pawn1, pawn2);
 
-            assertTrue(chessBoard.play(lightweightSquadCard));
+            assertTrue(chessBoard.playCard(lightweightSquadCard));
 
             assertTrue(chessBoard.at(a5).getPiece().isEmpty());
             assertEquals(pawn1, chessBoard.at("a3").getPiece().get());
@@ -64,7 +64,7 @@ class LightweightSquadCardTest {
             chessBoard.add(pawn2, a4);
             LightweightSquadCard lightweightSquadCard = new LightweightSquadCard(pawn2, pawn1);
 
-            assertTrue(chessBoard.play(lightweightSquadCard));
+            assertTrue(chessBoard.playCard(lightweightSquadCard));
 
             assertTrue(chessBoard.at(a5).getPiece().isEmpty());
             assertEquals(pawn1, chessBoard.at("a3").getPiece().get());
@@ -87,7 +87,7 @@ class LightweightSquadCardTest {
             chessBoard.add(pawn2, g1);
             SCCard lightweightSquadCard = new LightweightSquadCard(pawn1, pawn2);
 
-            assertThrows(IllegalArgumentException.class, () -> chessBoard.play(lightweightSquadCard));
+            assertThrows(IllegalArgumentException.class, () -> chessBoard.playCard(lightweightSquadCard));
 
             assertEquals(pawn1, chessBoard.at(e4).getPiece().get());
             assertEquals(pawn2, chessBoard.at(g1).getPiece().get());
@@ -101,7 +101,7 @@ class LightweightSquadCardTest {
             chessBoard.add(pawn1, e4);
             LightweightSquadCard lightweightSquadCard = new LightweightSquadCard(pawn1, pawn1);
 
-            assertThrows(IllegalArgumentException.class, () -> chessBoard.play(lightweightSquadCard));
+            assertThrows(IllegalArgumentException.class, () -> chessBoard.playCard(lightweightSquadCard));
 
             assertEquals(pawn1, chessBoard.at(e4).getPiece().get());
         }

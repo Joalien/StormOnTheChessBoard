@@ -21,7 +21,7 @@ class HomeCardTest {
             chessBoard.add(knight, e4);
             SCCard homeCard = new HomeCard(knight, g1);
 
-            assertTrue(chessBoard.play(homeCard));
+            assertTrue(chessBoard.playCard(homeCard));
 
             assertEquals(knight, chessBoard.at(g1).getPiece().get());
             assertTrue(chessBoard.at(e4).getPiece().isEmpty());
@@ -38,7 +38,7 @@ class HomeCardTest {
             chessBoard.add(queen, g1);
             SCCard homeCard = new HomeCard(knight, g1);
 
-            assertTrue(chessBoard.play(homeCard));
+            assertTrue(chessBoard.playCard(homeCard));
 
             assertEquals(knight, chessBoard.at(g1).getPiece().get());
             assertTrue(chessBoard.at(e4).getPiece().isEmpty());
@@ -49,7 +49,6 @@ class HomeCardTest {
 
     @Nested
     class Failure {
-
 
         @Test
         void should_not_be_able_to_rollback_a_pawn() {
@@ -62,7 +61,7 @@ class HomeCardTest {
             chessBoard.add(queen, g1);
             SCCard homeCard = new HomeCard(pawn, g1);
 
-            assertThrows(IllegalArgumentException.class, () -> chessBoard.play(homeCard));
+            assertThrows(IllegalArgumentException.class, () -> chessBoard.playCard(homeCard));
 
             assertEquals(pawn, chessBoard.at(e4).getPiece().get());
             assertEquals(queen, chessBoard.at(g1).getPiece().get());
@@ -81,7 +80,7 @@ class HomeCardTest {
             chessBoard.add(queen, g1);
             SCCard homeCard = new HomeCard(knight, g1);
 
-            assertThrows(IllegalArgumentException.class, () -> chessBoard.play(homeCard));
+            assertThrows(IllegalArgumentException.class, () -> chessBoard.playCard(homeCard));
 
             assertEquals(knight, chessBoard.at(e4).getPiece().get());
             assertEquals(queen, chessBoard.at(g1).getPiece().get());
@@ -98,10 +97,26 @@ class HomeCardTest {
             chessBoard.add(queen, e4);
             SCCard homeCard = new HomeCard(queen, g1);
 
-            assertThrows(IllegalArgumentException.class, () -> chessBoard.play(homeCard));
+            assertThrows(IllegalArgumentException.class, () -> chessBoard.playCard(homeCard));
 
             assertEquals(queen, chessBoard.at(e4).getPiece().get());
             assertTrue(chessBoard.at(g1).getPiece().isEmpty());
+            assertTrue(chessBoard.getOutOfTheBoardPieces().isEmpty());
+        }
+
+        @Test
+        void should_not_go_back_on_starting_square_of_enemy_piece() {
+            ChessBoard chessBoard = ChessBoard.createEmpty();
+            Queen queen = new Queen(Color.BLACK);
+            String e4 = "e4";
+            String d1 = "d1";
+            chessBoard.add(queen, e4);
+            SCCard homeCard = new HomeCard(queen, d1);
+
+            assertThrows(IllegalArgumentException.class, () -> chessBoard.playCard(homeCard));
+
+            assertEquals(queen, chessBoard.at(e4).getPiece().get());
+            assertTrue(chessBoard.at(d1).getPiece().isEmpty());
             assertTrue(chessBoard.getOutOfTheBoardPieces().isEmpty());
         }
 

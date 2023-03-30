@@ -1,5 +1,6 @@
 package card;
 
+import board.CheckException;
 import board.ChessBoard;
 import piece.Pawn;
 import piece.Piece;
@@ -16,23 +17,7 @@ public class HomeCard extends SCCard {
     }
 
     @Override
-    public boolean play(ChessBoard chessBoard) {
-        checkAttribute();
-
-        Boolean positionToMoveOnHasSameColorPiece = chessBoard.at(positionToMoveOn)
-                .getPiece()
-                .map(Piece::getColor)
-                .map(color -> color == piece.getColor())
-                .orElse(false);
-        if (positionToMoveOnHasSameColorPiece) throw new IllegalArgumentException();
-
-        chessBoard.at(positionToMoveOn).getPiece().ifPresent(chessBoard::movePieceOutOfTheBoard);
-        chessBoard.move(piece, positionToMoveOn);
-
-        return true;
-    }
-
-    private void checkAttribute() {
+    protected void validInput(ChessBoard chessBoard) {
         if (piece == null) throw new IllegalStateException();
         if (positionToMoveOn == null) throw new IllegalStateException();
         if (piece instanceof Pawn) throw new IllegalArgumentException("You cannot rollback a pawn!");
@@ -44,5 +29,25 @@ public class HomeCard extends SCCard {
                 .noneMatch(pos -> pos.equals(positionToMoveOn));
         if (positionToMoveOnIsNotStartingPositionOfPiece)
             throw new IllegalArgumentException(piece + " didn't start the game on square " + positionToMoveOn);
+
+        Boolean positionToMoveOnHasSameColorPiece = chessBoard.at(positionToMoveOn)
+                .getPiece()
+                .map(Piece::getColor)
+                .map(color -> color == piece.getColor())
+                .orElse(false);
+        if (positionToMoveOnHasSameColorPiece) throw new IllegalArgumentException("You cannot rollback on a square occupied by an ally piece");
+    }
+
+    @Override
+    protected void doesNotCreateCheck(ChessBoard chessBoard) throws CheckException {
+
+    }
+
+    @Override
+    public boolean doAction(ChessBoard chessBoard) {
+        chessBoard.at(positionToMoveOn).getPiece().ifPresent(chessBoard::movePieceOutOfTheBoard);
+        chessBoard.move(piece, positionToMoveOn);
+
+        return true;
     }
 }
