@@ -2,7 +2,6 @@ package piece;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import position.Square;
 
 import java.util.Collections;
 import java.util.Optional;

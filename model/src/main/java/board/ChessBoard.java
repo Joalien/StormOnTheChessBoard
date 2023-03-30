@@ -1,10 +1,8 @@
 package board;
 
-import card.SCCard;
 import lombok.extern.slf4j.Slf4j;
 import piece.*;
 import position.PositionUtil;
-import position.Square;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -57,14 +55,15 @@ public class ChessBoard {
     }
 
     public void add(Piece piece, String position) {
+        if (at(position).getPiece().isPresent())
+            throw new IllegalArgumentException(String.format("Cannot add %s because %s is not empty", piece, position));
         piece.setSquare(at(position));
         at(position).setPiece(piece);
     }
 
     public Square at(String position) {
-        if (invalidPosition(position)) throw new IllegalArgumentException();
-        if (fakeSquares.containsKey(position))
-            return fakeSquares.get(position);
+        if (invalidPosition(position)) throw new IllegalArgumentException("square is invalid");
+        if (fakeSquares.containsKey(position)) return fakeSquares.get(position);
         board.putIfAbsent(position, new Square(position)); // TODO inline return ?
         return board.get(position);
     }
@@ -117,7 +116,7 @@ public class ChessBoard {
                     .filter(Castlable.class::isInstance)
                     .map(Castlable.class::cast)
                     .ifPresent(Castlable::cannotCastleAnymore);
-            at(positionToMoveOn).getPiece().ifPresent(this::movePieceOutOfTheBoard);
+            at(positionToMoveOn).getPiece().ifPresent(this::removePieceFromTheBoard);
             move(piece, positionToMoveOn);
 
             return true;
@@ -151,7 +150,9 @@ public class ChessBoard {
         at(positionToMoveOn).setPiece(piece);
     }
 
-    public void movePieceOutOfTheBoard(Piece piece) {
+    public void removePieceFromTheBoard(Piece piece) {
+        if (piece instanceof King)
+            throw new IllegalStateException(String.format("You should not be able to take %s", piece));
         piece.setSquare(null);
         outOfTheBoardPieces.add(piece);
         log.info("{} has been taken", piece);
@@ -161,7 +162,7 @@ public class ChessBoard {
         return piece.reachableSquares(positionToMoveOn, at(positionToMoveOn).getPiece().map(Piece::getColor))
                 && emptyPath(piece, positionToMoveOn)
                 && !doesMovingPieceCheckOurOwnKing(piece, positionToMoveOn)
-                && !isAllyOnPosition(piece, positionToMoveOn)
+                && isEnemyOrEmpty(piece, positionToMoveOn)
                 && isValidCastle(piece, positionToMoveOn);
     }
 
@@ -169,11 +170,12 @@ public class ChessBoard {
         return true; // TODO
     }
 
-    boolean isAllyOnPosition(Piece piece, String positionToMoveOn) {
-        return at(positionToMoveOn).getPiece()
+    boolean isEnemyOrEmpty(Piece piece, String positionToMoveOn) {
+        Optional<Piece> p = at(positionToMoveOn).getPiece();
+        return p.isEmpty() || p
                 .map(Piece::getColor)
-                .map(color -> color == piece.getColor())
-                .orElse(false);
+                .map(color -> color != piece.getColor())
+                .orElse(false); // color is null
     }
 
     public void fakeSquare(String position, Piece piece) {
@@ -192,6 +194,10 @@ public class ChessBoard {
     public void unfakeAllSquares() {
         log.debug("unfake {} fake squares}", fakeSquares.size());
         fakeSquares.clear();
+    }
+
+    public int getNumberOfFakeSquares() {
+        return fakeSquares.size();
     }
 
     boolean doesMovingPieceCheckOurOwnKing(Piece piece, String positionToMoveOn) {
@@ -247,17 +253,5 @@ public class ChessBoard {
                 .map(Optional::get)
                 .filter(p -> p.getColor() != allyColor)
                 .collect(Collectors.toSet());
-    }
-
-    public boolean playCard(SCCard card) {
-        log.info("{} is played!", card);
-        try {
-            return card.play(this);
-        } catch (IllegalStateException | IllegalArgumentException | CheckException e) {
-            log.error(e.getMessage());
-            throw e;
-        } catch (Exception e) {
-            throw new Error("Should never throw " + e);
-        }
     }
 }

@@ -18,14 +18,14 @@ public abstract class SCCard {
     public final boolean play(ChessBoard chessBoard) {
         validInput(chessBoard);
 
-        doesNotCreateCheck(chessBoard);
+        if (!doesNotCreateCheck(chessBoard)) throw new CheckException();
 
         return doAction(chessBoard);
     }
 
     protected abstract void validInput(ChessBoard chessBoard);
 
-    protected abstract void doesNotCreateCheck(ChessBoard chessBoard) throws CheckException;
+    protected abstract boolean doesNotCreateCheck(ChessBoard chessBoard);
 
     protected abstract boolean doAction(ChessBoard chessBoard);
 

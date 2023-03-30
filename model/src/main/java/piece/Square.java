@@ -1,11 +1,11 @@
-package position;
+package piece;
 
-import piece.Piece;
+import lombok.ToString;
 
 import java.util.Optional;
 
+@ToString
 public class Square {
-
 
     private final String position;
     private Piece piece;
@@ -34,4 +34,5 @@ public class Square {
     public String getPosition() {
         return position;
     }
+
 }

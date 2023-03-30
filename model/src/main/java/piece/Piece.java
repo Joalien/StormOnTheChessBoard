@@ -1,8 +1,8 @@
 package piece;
 
 import position.PositionUtil;
-import position.Square;
 
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 
@@ -17,14 +17,6 @@ public abstract class Piece {
         this.type = typePiece;
     }
 
-    public Optional<Square> getSquare() {
-        return Optional.ofNullable(square);
-    }
-
-    public void setSquare(Square square) {
-        this.square = square;
-    }
-
     public int getY() {
         return PositionUtil.getY(square.getPosition());
     }
@@ -33,20 +25,15 @@ public abstract class Piece {
         return PositionUtil.getX(square.getPosition());
     }
 
-
-    public Color getColor() {
-        return color;
-    }
-
     public char getType() {
         return this.type;
     }
 
-    public abstract boolean reachableSquares(int x, int y, Optional<Color> color);
-
     public boolean reachableSquares(String s) {
         return reachableSquares(PositionUtil.getX(s), PositionUtil.getY(s), Optional.empty());
     }
+
+    public abstract boolean reachableSquares(int x, int y, Optional<Color> color);
 
     public boolean reachableSquares(String s, Optional<Color> color) {
         return reachableSquares(PositionUtil.getX(s), PositionUtil.getY(s), color);
@@ -58,8 +45,26 @@ public abstract class Piece {
         return this.getSquare().map(Square::getPosition).orElse(null);
     }
 
+    public Optional<Square> getSquare() {
+        return Optional.ofNullable(square);
+    }
+
+    public void setSquare(Square square) {
+        this.square = square;
+    }
+
     @Override
     public String toString() {
-        return this.getColor().toString().toLowerCase() + " " + this.getClass().getSimpleName();
+        String color = Optional.ofNullable(this.getColor())
+                .map(Objects::toString)
+                .map(String::toLowerCase)
+                .orElse("");
+        String pieceName = this.getClass().getSimpleName();
+        return String.format("%s %s",
+                color, pieceName);
+    }
+
+    public Color getColor() {
+        return color;
     }
 }

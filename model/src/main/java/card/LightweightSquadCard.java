@@ -1,6 +1,5 @@
 package card;
 
-import board.CheckException;
 import board.ChessBoard;
 import piece.Pawn;
 
@@ -34,12 +33,12 @@ public class LightweightSquadCard extends SCCard {
     }
 
     @Override
-    protected void doesNotCreateCheck(ChessBoard chessBoard) throws CheckException {
-
+    protected boolean doesNotCreateCheck(ChessBoard chessBoard) {
+        return true; // FIXME
     }
 
     @Override
-    public boolean doAction(ChessBoard chessBoard) {
+    protected boolean doAction(ChessBoard chessBoard) {
         chessBoard.move(pawn1, ChessBoard.twoSquaresForward(pawn1));
         chessBoard.move(pawn2, ChessBoard.twoSquaresForward(pawn2));
         return true;

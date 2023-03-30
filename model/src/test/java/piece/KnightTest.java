@@ -3,7 +3,6 @@ package piece;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import position.PositionUtil;
-import position.Square;
 
 import java.util.List;
 

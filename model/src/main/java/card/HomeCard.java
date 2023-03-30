@@ -1,6 +1,5 @@
 package card;
 
-import board.CheckException;
 import board.ChessBoard;
 import piece.Pawn;
 import piece.Piece;
@@ -35,17 +34,18 @@ public class HomeCard extends SCCard {
                 .map(Piece::getColor)
                 .map(color -> color == piece.getColor())
                 .orElse(false);
-        if (positionToMoveOnHasSameColorPiece) throw new IllegalArgumentException("You cannot rollback on a square occupied by an ally piece");
+        if (positionToMoveOnHasSameColorPiece)
+            throw new IllegalArgumentException("You cannot rollback on a square occupied by an ally piece");
     }
 
     @Override
-    protected void doesNotCreateCheck(ChessBoard chessBoard) throws CheckException {
-
+    protected boolean doesNotCreateCheck(ChessBoard chessBoard) {
+        return true; // FIXME
     }
 
     @Override
-    public boolean doAction(ChessBoard chessBoard) {
-        chessBoard.at(positionToMoveOn).getPiece().ifPresent(chessBoard::movePieceOutOfTheBoard);
+    protected boolean doAction(ChessBoard chessBoard) {
+        chessBoard.at(positionToMoveOn).getPiece().ifPresent(chessBoard::removePieceFromTheBoard);
         chessBoard.move(piece, positionToMoveOn);
 
         return true;

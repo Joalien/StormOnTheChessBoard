@@ -4,7 +4,6 @@ import board.ChessBoard;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import piece.*;
-import position.Square;
 
 import java.util.Collections;
 import java.util.Optional;
@@ -26,7 +25,7 @@ class ChargeCardTest {
             chessBoard.add(pawn2, "d4");
             SCCard chargeCard = new ChargeCard(Set.of(pawn1, pawn2));
 
-            assertTrue(chessBoard.playCard(chargeCard));
+            assertTrue(chargeCard.play(chessBoard));
 
             assertEquals(pawn1, chessBoard.at("e5").getPiece().get());
             assertEquals(pawn2, chessBoard.at("d5").getPiece().get());
@@ -43,7 +42,7 @@ class ChargeCardTest {
             chessBoard.add(pawn3, "e6");
             SCCard chargeCard = new ChargeCard(Set.of(pawn1, pawn2, pawn3));
 
-            assertTrue(chessBoard.playCard(chargeCard));
+            assertTrue(chargeCard.play(chessBoard));
 
             assertEquals(pawn1, chessBoard.at("e5").getPiece().get());
             assertEquals(pawn2, chessBoard.at("e6").getPiece().get());
@@ -61,7 +60,7 @@ class ChargeCardTest {
             chessBoard.add(pawn3, "e6");
             SCCard chargeCard = new ChargeCard(Set.of(pawn1, pawn2, pawn3));
 
-            assertTrue(chessBoard.playCard(chargeCard));
+            assertTrue(chargeCard.play(chessBoard));
 
             assertEquals(pawn1, chessBoard.at("e3").getPiece().get());
             assertEquals(pawn2, chessBoard.at("e4").getPiece().get());
@@ -80,7 +79,7 @@ class ChargeCardTest {
             assertEquals(7, allBlackPawnsExceptE7.size());
             SCCard chargeCard = new ChargeCard(allBlackPawnsExceptE7);
 
-            assertTrue(chessBoard.playCard(chargeCard));
+            assertTrue(chargeCard.play(chessBoard));
 
             assertTrue(Set.of("a6", "b6", "c6", "d6", "e7", "f6", "g6", "h6").stream()
                     .map(chessBoard::at)
@@ -98,7 +97,7 @@ class ChargeCardTest {
             ChessBoard chessBoard = ChessBoard.createEmpty();
             SCCard chargeCard = new ChargeCard(Collections.emptySet());
 
-            assertThrows(IllegalArgumentException.class, () -> chessBoard.playCard(chargeCard));
+            assertThrows(IllegalArgumentException.class, () -> chargeCard.play(chessBoard));
         }
 
         @Test
@@ -112,7 +111,7 @@ class ChargeCardTest {
             chessBoard.add(queen, e5);
             SCCard chargeCard = new ChargeCard(Set.of(pawn));
 
-            assertThrows(IllegalArgumentException.class, () -> chessBoard.playCard(chargeCard));
+            assertThrows(IllegalArgumentException.class, () -> chargeCard.play(chessBoard));
         }
 
         @Test
@@ -125,7 +124,7 @@ class ChargeCardTest {
                     .collect(Collectors.toSet());
             SCCard chargeCard = new ChargeCard(allBlackPawns);
 
-            assertThrows(IllegalArgumentException.class, () -> chessBoard.playCard(chargeCard));
+            assertThrows(IllegalArgumentException.class, () -> chargeCard.play(chessBoard));
         }
 
         @Test
@@ -139,7 +138,7 @@ class ChargeCardTest {
             chessBoard.add(pawn2, g1);
             SCCard lightweightSquadCard = new LightweightSquadCard(pawn1, pawn2);
 
-            assertThrows(IllegalArgumentException.class, () -> chessBoard.playCard(lightweightSquadCard));
+            assertThrows(IllegalArgumentException.class, () -> lightweightSquadCard.play(chessBoard));
 
             assertEquals(pawn1, chessBoard.at(e4).getPiece().get());
             assertEquals(pawn2, chessBoard.at(g1).getPiece().get());

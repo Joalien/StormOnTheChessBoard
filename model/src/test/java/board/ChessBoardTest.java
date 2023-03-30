@@ -2,6 +2,7 @@ package board;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.function.Executable;
 import piece.*;
 import position.PositionUtil;
 
@@ -44,6 +45,23 @@ class ChessBoardTest {
         assertTrue(cb.at("a1").getPiece().isEmpty());
 
         assertEquals(2, cb.getOutOfTheBoardPieces().size());
+    }
+
+    @Test
+    void should_throw_if_piece_added_outside_of_the_board() {
+        ChessBoard chessBoard = ChessBoard.createEmpty();
+
+        assertThrows(IllegalArgumentException.class, () -> chessBoard.add(new Queen(Color.WHITE), "h9"));
+    }
+
+    @Test
+    void should_not_be_able_to_add_two_pieces_on_the_same_square() {
+        ChessBoard chessBoard = ChessBoard.createEmpty();
+        String e4 = "e4";
+        Executable addQueenOnE4 = () -> chessBoard.add(new Queen(Color.WHITE), e4);
+
+        assertDoesNotThrow(addQueenOnE4);
+        assertThrows(IllegalArgumentException.class, addQueenOnE4);
     }
 
     @Nested
@@ -193,7 +211,7 @@ class ChessBoardTest {
             chessBoard.add(bishop, a1);
             chessBoard.add(new Queen(Color.WHITE), h8);
 
-            assertTrue(chessBoard.isAllyOnPosition(bishop, h8));
+            assertFalse(chessBoard.isEnemyOrEmpty(bishop, h8));
             assertFalse(chessBoard.tryToMove(bishop, h8));
         }
 
@@ -206,7 +224,7 @@ class ChessBoardTest {
             chessBoard.add(bishop, a1);
             chessBoard.add(new Queen(Color.BLACK), h8);
 
-            assertFalse(chessBoard.isAllyOnPosition(bishop, h8));
+            assertTrue(chessBoard.isEnemyOrEmpty(bishop, h8));
             assertTrue(chessBoard.tryToMove(bishop, h8));
         }
 

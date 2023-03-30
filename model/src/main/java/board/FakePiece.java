@@ -2,7 +2,7 @@ package board;
 
 import piece.Color;
 import piece.Piece;
-import position.Square;
+import piece.Square;
 
 import java.util.Optional;
 import java.util.Set;

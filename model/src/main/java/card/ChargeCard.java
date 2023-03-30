@@ -1,12 +1,10 @@
 package card;
 
-import board.CheckException;
 import board.ChessBoard;
 import piece.Color;
 import piece.Pawn;
 import piece.Piece;
-import piece.WhitePawn;
-import position.Square;
+import piece.Square;
 
 import java.util.Comparator;
 import java.util.Map;
@@ -25,11 +23,13 @@ public class ChargeCard extends SCCard {
     }
 
     @Override
-    public void validInput(ChessBoard chessBoard) {
+    protected void validInput(ChessBoard chessBoard) {
         if (pawns == null) throw new IllegalStateException();
         if (pawns.isEmpty()) throw new IllegalArgumentException("You should select at least one pawn");
-        if (pawns.stream().map(Piece::getColor).anyMatch(color1 -> color1 != color)) throw new IllegalArgumentException("You should move pawns of the same color");
+        if (pawns.stream().map(Piece::getColor).anyMatch(color1 -> color1 != color))
+            throw new IllegalArgumentException("You should move pawns of the same color");
 
+        assert chessBoard.getNumberOfFakeSquares() == 0;
         pawns.stream()
                 .peek(pawn -> fakeOtherPawns(chessBoard, pawn))
                 .map(ChessBoard::oneSquaresForward)
@@ -42,18 +42,18 @@ public class ChargeCard extends SCCard {
     }
 
     @Override
-    protected void doesNotCreateCheck(ChessBoard chessBoard) throws CheckException {
-
+    protected boolean doesNotCreateCheck(ChessBoard chessBoard) {
         pawns.forEach(p -> chessBoard.fakeSquare(p.getPosition(), null));
         pawns.forEach(p -> chessBoard.fakeSquare(ChessBoard.oneSquaresForward(p), p));
 
-        if (chessBoard.isKingUnderAttack(color)) throw new CheckException();
+        boolean kingIsNotUnderAttack = !chessBoard.isKingUnderAttack(color);
 
         chessBoard.unfakeAllSquares();
+        return kingIsNotUnderAttack;
     }
 
     @Override
-    public boolean doAction(ChessBoard chessBoard) {
+    protected boolean doAction(ChessBoard chessBoard) {
         Comparator<Pawn> startWithMoreAdvancedPawn = Map.of(
                 Color.BLACK, Comparator.comparingInt(Pawn::getY),
                 Color.WHITE, Comparator.comparingInt(Pawn::getY).reversed()
