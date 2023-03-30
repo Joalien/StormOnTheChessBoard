@@ -20,11 +20,6 @@ public class ChessBoard {
             "d8", "a8");
     private final HashMap<String, Square> board = new HashMap<>(64);
     private final HashMap<String, Square> fakeSquares = new HashMap<>();
-
-    public Set<Piece> getOutOfTheBoardPieces() {
-        return outOfTheBoardPieces;
-    }
-
     private final Set<Piece> outOfTheBoardPieces = new HashSet<>();
 
     private static boolean invalidPosition(String position) {
@@ -70,6 +65,20 @@ public class ChessBoard {
                 .mapToObj(i -> PositionUtil.posToSquare(i, MAX - 1))
                 .forEach(position -> chessBoard.add(new BlackPawn(), position));
         return chessBoard;
+    }
+
+    public static String twoSquaresForward(Pawn pawn) {
+        if (pawn instanceof WhitePawn) return PositionUtil.posToSquare(pawn.getX(), pawn.getY() + 2);
+        else return PositionUtil.posToSquare(pawn.getX(), pawn.getY() - 2);
+    }
+
+    public static String oneSquaresForward(Pawn pawn) {
+        if (pawn instanceof WhitePawn) return PositionUtil.posToSquare(pawn.getX(), pawn.getY() + 1);
+        else return PositionUtil.posToSquare(pawn.getX(), pawn.getY() - 1);
+    }
+
+    public Set<Piece> getOutOfTheBoardPieces() {
+        return outOfTheBoardPieces;
     }
 
     public Square at(String position) {
@@ -165,7 +174,7 @@ public class ChessBoard {
     }
 
     public void fakeSquare(String position, Piece piece) {
-        log.debug("fake that " + piece + " is on " + position);
+        log.debug("fake that " + (piece == null ? "nothing" : piece) + " is on " + position);
         Square fakeSquare = new Square(position);
         Optional.ofNullable(piece).ifPresent(piece1 -> fakeSquare.setPiece(new FakePiece(piece, fakeSquare)));
         fakeSquares.put(position, fakeSquare);
@@ -175,7 +184,6 @@ public class ChessBoard {
         log.debug("unfake that " + fakeSquares.get(position) + " is on " + position);
         fakeSquares.remove(position);
     }
-
 
     boolean doesMovingPieceCheckOurOwnKing(Piece piece, String positionToMoveOn) {
         if (piece.getPosition().equals(positionToMoveOn)) throw new IllegalArgumentException();
@@ -227,16 +235,6 @@ public class ChessBoard {
                 .map(Optional::get)
                 .filter(p -> p.getColor() != allyColor)
                 .collect(Collectors.toSet());
-    }
-
-    public static String twoSquaresForward(Pawn pawn) {
-        if (pawn instanceof WhitePawn) return PositionUtil.posToSquare(pawn.getX(), pawn.getY() + 2);
-        else return PositionUtil.posToSquare(pawn.getX(), pawn.getY() - 2);
-    }
-
-    public static String oneSquaresForward(Pawn pawn) {
-        if (pawn instanceof WhitePawn) return PositionUtil.posToSquare(pawn.getX(), pawn.getY() + 1);
-        else return PositionUtil.posToSquare(pawn.getX(), pawn.getY() - 1);
     }
 
     public boolean play(SCCard card) {

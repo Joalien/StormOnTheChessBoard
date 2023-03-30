@@ -42,6 +42,7 @@ public class HomeCard extends SCCard {
                 .filter(piece1 -> piece1.getType() == piece.getType())
                 .map(Piece::getPosition)
                 .noneMatch(pos -> pos.equals(positionToMoveOn));
-        if (positionToMoveOnIsNotStartingPositionOfPiece) throw new IllegalArgumentException(piece + " didn't start the game on square " + positionToMoveOn);
+        if (positionToMoveOnIsNotStartingPositionOfPiece)
+            throw new IllegalArgumentException(piece + " didn't start the game on square " + positionToMoveOn);
     }
 }

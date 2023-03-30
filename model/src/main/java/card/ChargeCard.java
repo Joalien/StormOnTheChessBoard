@@ -1,9 +1,9 @@
 package card;
 
 import board.ChessBoard;
-import position.Square;
 import piece.Pawn;
 import piece.Piece;
+import position.Square;
 
 import java.util.Optional;
 import java.util.Set;
@@ -17,20 +17,23 @@ public class ChargeCard extends SCCard {
         this.pawns = pawns;
     }
 
+    private static void throwsCannotMoveOneSquareForwardException(Piece p) {
+        throw new IllegalArgumentException(p + " cannot move one square forward!");
+    }
 
     @Override
     public boolean play(ChessBoard chessBoard) {
         checkAttribute();
 
         pawns.stream()
-            .peek(pawn -> fakeOtherPawns(chessBoard, pawn))
-            .map(ChessBoard::oneSquaresForward)
-            .map(chessBoard::at)
-            .peek(pos -> unfakeAllPawns(chessBoard))
-            .map(Square::getPiece)
-            .filter(Optional::isPresent)
-            .map(Optional::get)
-            .forEach(ChargeCard::throwsCannotMoveOneSquareForwardException);
+                .peek(pawn -> fakeOtherPawns(chessBoard, pawn))
+                .map(ChessBoard::oneSquaresForward)
+                .map(chessBoard::at)
+                .peek(pos -> unfakeAllPawns(chessBoard))
+                .map(Square::getPiece)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .forEach(ChargeCard::throwsCannotMoveOneSquareForwardException);
 
         pawns.forEach(p -> chessBoard.move(p, ChessBoard.oneSquaresForward(p)));
         return true;
@@ -38,18 +41,14 @@ public class ChargeCard extends SCCard {
 
     private void fakeOtherPawns(ChessBoard cb, Pawn pawn) {
         pawns.stream()
-            .filter(pawn1 -> !pawn1.equals(pawn))
-            .forEach(p -> cb.fakeSquare(p.getPosition(), null));
+                .filter(pawn1 -> !pawn1.equals(pawn))
+                .forEach(p -> cb.fakeSquare(p.getPosition(), null));
     }
 
     private void unfakeAllPawns(ChessBoard cb) {
         pawns.stream()
                 .map(Piece::getPosition)
                 .forEach(cb::unfakeSquare);
-    }
-
-    private static void throwsCannotMoveOneSquareForwardException(Piece p) {
-        throw new IllegalArgumentException(p + " cannot move one square forward!");
     }
 
     private void checkAttribute() {

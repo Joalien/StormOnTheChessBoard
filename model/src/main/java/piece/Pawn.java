@@ -1,8 +1,5 @@
 package piece;
 
-import piece.Color;
-import piece.Piece;
-
 import java.util.Optional;
 import java.util.Set;
 

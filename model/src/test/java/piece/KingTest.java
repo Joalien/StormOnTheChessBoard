@@ -105,7 +105,7 @@ class KingTest {
 
             assertFalse(king.reachableSquares("e5"));
         }
-        
+
         @Nested
         class Castle {
             @Test

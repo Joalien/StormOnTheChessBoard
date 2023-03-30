@@ -13,6 +13,39 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class ChessBoardTest {
 
+    @Test
+    void play_a_sicilian_game() {
+        ChessBoard cb = ChessBoard.createWithInitialState();
+        assertTrue(cb.tryToMove("e2", "e4"));
+        assertTrue(cb.tryToMove("c7", "c5"));
+        assertTrue(cb.tryToMove("g1", "f3"));
+        assertTrue(cb.tryToMove("d7", "d6"));
+        assertTrue(cb.tryToMove("d2", "d4"));
+        assertTrue(cb.tryToMove("c5", "d4"));
+        assertTrue(cb.tryToMove("f3", "d4"));
+        assertTrue(cb.tryToMove("g8", "f6"));
+        assertTrue(cb.tryToMove("c1", "e3"));
+        assertTrue(cb.tryToMove("g7", "g6"));
+        assertTrue(cb.tryToMove("b1", "c3"));
+        assertTrue(cb.tryToMove("f8", "g7"));
+        assertTrue(cb.tryToMove("d1", "d2"));
+        assertTrue(cb.tryToMove("e8", "g8"));
+        assertTrue(cb.tryToMove("e1", "c1"));
+
+        assertTrue(cb.at("e4").getPiece().get() instanceof WhitePawn);
+        assertTrue(cb.at("e8").getPiece().isEmpty());
+        assertTrue(cb.at("f8").getPiece().get() instanceof Rock);
+        assertTrue(cb.at("g8").getPiece().get() instanceof King);
+        assertTrue(cb.at("h8").getPiece().isEmpty());
+        assertTrue(cb.at("e1").getPiece().isEmpty());
+        assertTrue(cb.at("d1").getPiece().get() instanceof Rock);
+        assertTrue(cb.at("c1").getPiece().get() instanceof King);
+        assertTrue(cb.at("b1").getPiece().isEmpty());
+        assertTrue(cb.at("a1").getPiece().isEmpty());
+
+        assertEquals(2, cb.getOutOfTheBoardPieces().size());
+    }
+
     @Nested
     class CreateBoard {
         @Test
@@ -81,7 +114,7 @@ class ChessBoardTest {
             );
         }
     }
-    
+
     @Nested
     class MovePieces {
         @Test
@@ -229,7 +262,7 @@ class ChessBoardTest {
         }
 
         @Test
-        void should_not_be_able_to_move_a_pinned_piece_bis () {
+        void should_not_be_able_to_move_a_pinned_piece_bis() {
             ChessBoard chessBoard = ChessBoard.createEmpty();
             String e5 = "e5";
             String h8 = "h8";
@@ -290,38 +323,5 @@ class ChessBoardTest {
             assertFalse(chessBoard.doesMovingPieceCheckOurOwnKing(queen, e4));
             invalidMoves.forEach(pos -> assertTrue(chessBoard.doesMovingPieceCheckOurOwnKing(queen, pos)));
         }
-    }
-
-    @Test
-    void play_a_sicilian_game() {
-        ChessBoard cb = ChessBoard.createWithInitialState();
-        assertTrue(cb.tryToMove("e2", "e4"));
-        assertTrue(cb.tryToMove("c7", "c5"));
-        assertTrue(cb.tryToMove("g1", "f3"));
-        assertTrue(cb.tryToMove("d7", "d6"));
-        assertTrue(cb.tryToMove("d2", "d4"));
-        assertTrue(cb.tryToMove("c5", "d4"));
-        assertTrue(cb.tryToMove("f3", "d4"));
-        assertTrue(cb.tryToMove("g8", "f6"));
-        assertTrue(cb.tryToMove("c1", "e3"));
-        assertTrue(cb.tryToMove("g7", "g6"));
-        assertTrue(cb.tryToMove("b1", "c3"));
-        assertTrue(cb.tryToMove("f8", "g7"));
-        assertTrue(cb.tryToMove("d1", "d2"));
-        assertTrue(cb.tryToMove("e8", "g8"));
-        assertTrue(cb.tryToMove("e1", "c1"));
-
-        assertTrue(cb.at("e4").getPiece().get() instanceof WhitePawn);
-        assertTrue(cb.at("e8").getPiece().isEmpty());
-        assertTrue(cb.at("f8").getPiece().get() instanceof Rock);
-        assertTrue(cb.at("g8").getPiece().get() instanceof King);
-        assertTrue(cb.at("h8").getPiece().isEmpty());
-        assertTrue(cb.at("e1").getPiece().isEmpty());
-        assertTrue(cb.at("d1").getPiece().get() instanceof Rock);
-        assertTrue(cb.at("c1").getPiece().get() instanceof King);
-        assertTrue(cb.at("b1").getPiece().isEmpty());
-        assertTrue(cb.at("a1").getPiece().isEmpty());
-
-        assertEquals(2, cb.getOutOfTheBoardPieces().size());
     }
 }

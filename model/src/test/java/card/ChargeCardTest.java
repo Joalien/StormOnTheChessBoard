@@ -50,10 +50,10 @@ class ChargeCardTest {
             assertTrue(chessBoard.play(chargeCard));
 
             assertTrue(Set.of("a6", "b6", "c6", "d6", "e7", "f6", "g6", "h6").stream()
-                .map(chessBoard::at)
-                .map(Square::getPiece)
-                .map(Optional::get)
-                .allMatch(Pawn.class::isInstance));
+                    .map(chessBoard::at)
+                    .map(Square::getPiece)
+                    .map(Optional::get)
+                    .allMatch(Pawn.class::isInstance));
         }
     }
 

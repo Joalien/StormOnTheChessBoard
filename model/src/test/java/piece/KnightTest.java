@@ -28,6 +28,13 @@ class KnightTest {
         assertTrue(knight.squaresOnThePath("c2").isEmpty());
     }
 
+    @Test
+    void should_print_itself() {
+        Knight knight = new Knight(Color.WHITE);
+
+        assertEquals("white Knight", knight.toString());
+    }
+
     @Nested
     class Movements {
         @Test
@@ -59,12 +66,5 @@ class KnightTest {
 
             assertFalse(knight.reachableSquares("e5"));
         }
-    }
-
-    @Test
-    void should_print_itself() {
-        Knight knight = new Knight(Color.WHITE);
-
-        assertEquals("white Knight", knight.toString());
     }
 }
