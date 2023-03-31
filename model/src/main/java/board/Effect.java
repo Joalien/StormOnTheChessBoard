@@ -4,8 +4,6 @@ import piece.Piece;
 
 public abstract class Effect {
 
-    public void afterMoveHook(ChessBoard chessBoard, Piece piece, String position) {
-
-    }
+    public void afterMoveHook(ChessBoard chessBoard, Piece piece) {}
 
 }

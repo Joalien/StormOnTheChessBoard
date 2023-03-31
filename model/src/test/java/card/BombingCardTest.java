@@ -19,7 +19,7 @@ class BombingCardTest {
     @BeforeEach
     void setUp() {
         chessBoard = ChessBoard.createEmpty();
-        bombing = new BombingCard(e4, Color.WHITE);
+        bombing = new BombingCard(e4, Color.BLACK);
     }
 
     @Nested

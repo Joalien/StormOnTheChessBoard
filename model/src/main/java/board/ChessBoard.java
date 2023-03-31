@@ -4,7 +4,6 @@ import lombok.extern.slf4j.Slf4j;
 import piece.*;
 
 import java.util.*;
-import java.util.function.BiConsumer;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -64,7 +63,7 @@ public class ChessBoard {
         piece.setSquare(at(position));
         at(position).setPiece(piece);
 
-        effects.forEach(effect -> effect.afterMoveHook(this, piece, position));
+        effects.forEach(effect -> effect.afterMoveHook(this, piece));
     }
 
     public Square at(String position) {

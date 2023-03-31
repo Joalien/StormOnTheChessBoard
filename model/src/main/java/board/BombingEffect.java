@@ -8,16 +8,16 @@ import piece.Piece;
 @Slf4j
 public class BombingEffect extends Effect {
     private final String position;
-    private final Color color;
+    private final Color colorThatShouldExplode;
 
-    public BombingEffect(String position, Color color) {
+    public BombingEffect(String position, Color colorThatShouldExplode) {
         this.position = position;
-        this.color = color;
+        this.colorThatShouldExplode = colorThatShouldExplode;
     }
 
     @Override
-    public void afterMoveHook(ChessBoard chessBoard, Piece piece, String position) {
-        if (piece.getPosition().equals(this.position) && piece.getColor() != color) {
+    public void afterMoveHook(ChessBoard chessBoard, Piece piece) {
+        if (piece.getPosition().equals(this.position) && piece.getColor() == colorThatShouldExplode) {
             log.info("BOUM!");
             if (!(piece instanceof King)) {
                 chessBoard.removePieceFromTheBoard(piece);
