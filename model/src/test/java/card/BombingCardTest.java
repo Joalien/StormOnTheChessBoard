@@ -5,6 +5,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import piece.Color;
+import piece.King;
 import piece.Queen;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -36,6 +37,36 @@ class BombingCardTest {
         }
 
         @Test
+        void should_work_if_played_ally_piece_moves_on_it() {
+            assertTrue(bombing.playOn(chessBoard));
+            Queen queen = new Queen(Color.WHITE);
+
+            chessBoard.add(queen, e4);
+
+            assertEquals(queen, chessBoard.at(e4).getPiece().get());
+        }
+
+        @Test
+        void should_not_explode_if_enemy_king() {
+            assertTrue(bombing.playOn(chessBoard));
+            King king = new King(Color.BLACK);
+
+            chessBoard.add(king, e4);
+
+            assertEquals(king, chessBoard.at(e4).getPiece().get());
+        }
+
+        @Test
+        void should_not_explode_if_enemy_piece_move_nearby() {
+            assertTrue(bombing.playOn(chessBoard));
+            Queen queen = new Queen(Color.BLACK);
+
+            chessBoard.add(queen, "d4");
+
+            assertEquals(queen, chessBoard.at("d4").getPiece().get());
+        }
+
+        @Test
         void should_explode_enemy_piece() {
             assertTrue(bombing.playOn(chessBoard));
             Queen queen = new Queen(Color.BLACK);
@@ -43,6 +74,20 @@ class BombingCardTest {
             chessBoard.add(queen, e4);
 
             assertTrue(chessBoard.at(e4).getPiece().isEmpty());
+        }
+
+        @Test
+        void should_explode_enemy_piece_only_once() {
+            assertTrue(bombing.playOn(chessBoard));
+            Queen queen = new Queen(Color.BLACK);
+
+            chessBoard.add(queen, e4);
+
+            assertTrue(chessBoard.at(e4).getPiece().isEmpty());
+
+            chessBoard.add(queen, e4);
+
+            assertEquals(queen, chessBoard.at(e4).getPiece().get());
         }
     }
 
