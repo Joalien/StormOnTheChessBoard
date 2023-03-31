@@ -5,7 +5,6 @@ import piece.*;
 
 import java.util.*;
 import java.util.function.BiConsumer;
-import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -21,7 +20,7 @@ public class ChessBoard {
     private final HashMap<String, Square> board = new HashMap<>(64);
     private final HashMap<String, Square> fakeSquares = new HashMap<>();
     private final Set<Piece> outOfTheBoardPieces = new HashSet<>();
-    private final Map<Effect, Set<BiConsumer<Piece, String>>> effects = Arrays.stream(Effect.values()).collect(Collectors.toMap(effect -> effect, effect -> new HashSet<>()));
+    private final Set<Effect> effects = new HashSet<>();
 
     public static ChessBoard createEmpty() {
         log.debug("create empty chessboard");
@@ -65,13 +64,8 @@ public class ChessBoard {
         piece.setSquare(at(position));
         at(position).setPiece(piece);
 
-        
-        effects.get(Effect.AFTER_MOVE).stream()
-                .filter()
-                .forEach(t -> t.accept(piece, position));
+        effects.forEach(effect -> effect.afterMoveHook(this, piece, position));
     }
-
-    // MVC
 
     public Square at(String position) {
         if (invalidPosition(position)) throw new IllegalArgumentException("square is invalid");
@@ -263,8 +257,11 @@ public class ChessBoard {
                 .collect(Collectors.toSet());
     }
 
-    public void addEffect(Effect effect, BiConsumer<Piece, String> c) {
-        if (!effects.containsKey(effect)) throw new IllegalStateException("Effects should have all keys");
-        this.effects.get(effect).add(c);
+    public void removeEffect(Effect effect) {
+        this.effects.remove(effect);
+    }
+
+    public void addEffect(Effect effect) {
+        this.effects.add(effect);
     }
 }
