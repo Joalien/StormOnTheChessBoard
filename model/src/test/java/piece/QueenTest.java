@@ -80,7 +80,7 @@ class QueenTest {
 
             assertTrue(PositionUtil.generateAllPositions()
                     .stream()
-                    .allMatch(s -> validMoves.contains(s) == queen.isPositionTheoricallyReachable(s)));
+                    .allMatch(s -> validMoves.contains(s) == queen.isPositionTheoreticallyReachable(s)));
         }
 
         @Test
@@ -93,7 +93,7 @@ class QueenTest {
 
             assertTrue(PositionUtil.generateAllPositions()
                     .stream()
-                    .allMatch(s -> validMoves.contains(s) == queen.isPositionTheoricallyReachable(s)));
+                    .allMatch(s -> validMoves.contains(s) == queen.isPositionTheoreticallyReachable(s)));
         }
 
         @Test
@@ -101,7 +101,7 @@ class QueenTest {
             Queen queen = new Queen(Color.WHITE);
             queen.setSquare(new Square("e5"));
 
-            assertFalse(queen.isPositionTheoricallyReachable("e5"));
+            assertFalse(queen.isPositionTheoreticallyReachable("e5"));
         }
     }
 

@@ -1,7 +1,10 @@
 package piece;
 
+import lombok.Builder;
+import lombok.With;
 import position.PositionUtil;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
@@ -29,14 +32,14 @@ public abstract class Piece {
         return this.type;
     }
 
-    public boolean isPositionTheoricallyReachable(String s) {
-        return isPositionTheoricallyReachable(PositionUtil.getX(s), PositionUtil.getY(s), Optional.empty());
+    public boolean isPositionTheoreticallyReachable(String s) {
+        return isPositionTheoreticallyReachable(PositionUtil.getX(s), PositionUtil.getY(s), Optional.empty());
     }
 
-    public abstract boolean isPositionTheoricallyReachable(int x, int y, Optional<Color> color);
+    public abstract boolean isPositionTheoreticallyReachable(int x, int y, Optional<Color> color);
 
-    public boolean isPositionTheoricallyReachable(String s, Optional<Color> color) {
-        return isPositionTheoricallyReachable(PositionUtil.getX(s), PositionUtil.getY(s), color);
+    public boolean isPositionTheoreticallyReachable(String s, Optional<Color> color) {
+        return isPositionTheoreticallyReachable(PositionUtil.getX(s), PositionUtil.getY(s), color);
     }
 
     public abstract Set<String> squaresOnThePath(String squareToMoveOn);
@@ -66,5 +69,17 @@ public abstract class Piece {
 
     public Color getColor() {
         return color;
+    }
+
+    public Piece clone() {
+//        super.clone();
+        Piece p;
+        try {
+            p = this.getClass().getConstructor(Color.class).newInstance(color);
+            p.setSquare(square);
+        } catch (InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
+            throw new RuntimeException(e);
+        }
+        return p;
     }
 }

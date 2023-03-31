@@ -4,7 +4,7 @@ import java.util.Optional;
 import java.util.Set;
 
 public abstract class Pawn extends Piece {
-    public Pawn(Color color, char typePiece) {
+    protected Pawn(Color color, char typePiece) {
         super(color, typePiece);
     }
 
@@ -12,7 +12,7 @@ public abstract class Pawn extends Piece {
     public abstract String oneSquareForward();
 
     @Override
-    public abstract boolean isPositionTheoricallyReachable(int x, int y, Optional<Color> color);
+    public abstract boolean isPositionTheoreticallyReachable(int x, int y, Optional<Color> color);
 
     @Override
     public abstract Set<String> squaresOnThePath(String squareToMoveOn);

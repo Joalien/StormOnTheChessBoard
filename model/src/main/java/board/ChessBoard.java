@@ -166,7 +166,7 @@ public class ChessBoard {
     }
 
     public boolean canAttack(Piece piece, String positionToMoveOn) {
-        return piece.isPositionTheoricallyReachable(positionToMoveOn, at(positionToMoveOn).getPiece().map(Piece::getColor))
+        return piece.isPositionTheoreticallyReachable(positionToMoveOn, at(positionToMoveOn).getPiece().map(Piece::getColor))
                 && emptyPath(piece, positionToMoveOn)
                 && isEnemyOrEmpty(piece, positionToMoveOn);
     }
@@ -234,8 +234,8 @@ public class ChessBoard {
 
     private boolean isKingUnderAttack(Piece king) {
         return enemyPieces(king.getColor()).stream()
-                .filter(piece -> !fakeSquares.containsKey(piece.getPosition()))
-                .anyMatch(enemyPiece -> canAttack(enemyPiece, king.getPosition()) && emptyPath(enemyPiece, king.getPosition()));
+//                .filter(piece -> !fakeSquares.containsKey(piece.getPosition())) // Why ?
+                .anyMatch(enemyPiece -> canAttack(enemyPiece, king.getPosition()));
     }
 
     public Set<Piece> allyPieces(Color allyColor) {

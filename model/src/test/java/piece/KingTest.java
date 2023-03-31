@@ -83,7 +83,7 @@ class KingTest {
 
             assertTrue(PositionUtil.generateAllPositions()
                     .stream()
-                    .allMatch(s -> validMoves.contains(s) == king.isPositionTheoricallyReachable(s)));
+                    .allMatch(s -> validMoves.contains(s) == king.isPositionTheoreticallyReachable(s)));
         }
 
         @Test
@@ -94,7 +94,7 @@ class KingTest {
 
             assertTrue(PositionUtil.generateAllPositions()
                     .stream()
-                    .allMatch(s -> validMoves.contains(s) == king.isPositionTheoricallyReachable(s)));
+                    .allMatch(s -> validMoves.contains(s) == king.isPositionTheoreticallyReachable(s)));
         }
 
         @Test
@@ -102,7 +102,7 @@ class KingTest {
             King king = new King(Color.WHITE);
             king.setSquare(new Square("e5"));
 
-            assertFalse(king.isPositionTheoricallyReachable("e5"));
+            assertFalse(king.isPositionTheoreticallyReachable("e5"));
         }
 
         @Nested
@@ -112,7 +112,7 @@ class KingTest {
                 King king = new King(Color.WHITE);
                 king.setSquare(new Square("e1"));
 
-                assertTrue(king.isPositionTheoricallyReachable("g1"));
+                assertTrue(king.isPositionTheoreticallyReachable("g1"));
             }
 
             @Test
@@ -121,7 +121,7 @@ class KingTest {
                 king.setSquare(new Square("e1"));
                 king.cannotCastleAnymore();
 
-                assertFalse(king.isPositionTheoricallyReachable("g1"));
+                assertFalse(king.isPositionTheoreticallyReachable("g1"));
             }
         }
     }

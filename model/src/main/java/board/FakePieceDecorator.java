@@ -9,12 +9,13 @@ import java.util.Set;
 
 public class FakePieceDecorator extends Piece {
 
-    private final Piece piece;
+    private final Piece fakePiece;
     private final Square fakeSquare;
 
-    public FakePieceDecorator(Piece piece, Square fakeSquare) {
-        super(piece.getColor(), piece.getType());
-        this.piece = piece;
+    public FakePieceDecorator(Piece originalPiece, Square fakeSquare) {
+        super(originalPiece.getColor(), originalPiece.getType());
+        this.fakePiece = originalPiece.clone(); // deep copy
+        this.fakePiece.setSquare(fakeSquare);
         this.fakeSquare = fakeSquare;
     }
 
@@ -25,48 +26,48 @@ public class FakePieceDecorator extends Piece {
 
     @Override
     public void setSquare(Square square) {
-        piece.setSquare(square);
+        fakePiece.setSquare(square);
     }
 
     @Override
     public int getY() {
-        return piece.getY();
+        return fakePiece.getY();
     }
 
     @Override
     public int getX() {
-        return piece.getX();
+        return fakePiece.getX();
     }
 
 
     @Override
     public Color getColor() {
-        return piece.getColor();
+        return fakePiece.getColor();
     }
 
     @Override
     public char getType() {
-        return piece.getType();
+        return fakePiece.getType();
     }
 
     @Override
-    public boolean isPositionTheoricallyReachable(int x, int y, Optional<Color> color) {
-        return piece.isPositionTheoricallyReachable(x, y, color);
+    public boolean isPositionTheoreticallyReachable(int x, int y, Optional<Color> color) {
+        return fakePiece.isPositionTheoreticallyReachable(x, y, color);
     }
 
     @Override
-    public boolean isPositionTheoricallyReachable(String s) {
-        return piece.isPositionTheoricallyReachable(s);
+    public boolean isPositionTheoreticallyReachable(String s) {
+        return fakePiece.isPositionTheoreticallyReachable(s);
     }
 
     @Override
-    public boolean isPositionTheoricallyReachable(String s, Optional<Color> color) {
-        return piece.isPositionTheoricallyReachable(s, color);
+    public boolean isPositionTheoreticallyReachable(String s, Optional<Color> color) {
+        return super.isPositionTheoreticallyReachable(s, color);
     }
 
     @Override
     public Set<String> squaresOnThePath(String squareToMoveOn) {
-        return piece.squaresOnThePath(squareToMoveOn);
+        return fakePiece.squaresOnThePath(squareToMoveOn);
     }
 
     @Override
@@ -76,6 +77,6 @@ public class FakePieceDecorator extends Piece {
 
     @Override
     public String toString() {
-        return String.format("Fake%s", piece.getClass().getSimpleName());
+        return String.format("Fake%s", fakePiece.getClass().getSimpleName());
     }
 }

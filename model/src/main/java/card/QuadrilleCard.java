@@ -1,6 +1,7 @@
 package card;
 
 import board.ChessBoard;
+import piece.Color;
 import piece.Piece;
 import piece.Square;
 
@@ -26,7 +27,11 @@ public class QuadrilleCard extends SCCard {
 
     @Override
     protected boolean doesNotCreateCheck(ChessBoard chessBoard) {
-        return true;
+        Map<String, Optional<Piece>> pieces = saveWhichPieceShouldGoInWhichCorner(chessBoard);
+        pieces.forEach((key, value) -> chessBoard.fakeSquare(value.orElse(null), key));
+        boolean isKingUnderAttack = chessBoard.isKingUnderAttack(Color.WHITE);
+        chessBoard.unfakeAllSquares();
+        return !isKingUnderAttack; // FIXME color should depends on who plays the card
     }
 
     @Override

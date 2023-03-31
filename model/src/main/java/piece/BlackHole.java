@@ -18,7 +18,7 @@ public class BlackHole extends Piece {
     }
 
     @Override
-    public boolean isPositionTheoricallyReachable(int x, int y, Optional<Color> color) {
+    public boolean isPositionTheoreticallyReachable(int x, int y, Optional<Color> color) {
         return false;
     }
 

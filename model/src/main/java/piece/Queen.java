@@ -12,14 +12,14 @@ public class Queen extends Piece {
     }
 
     @Override
-    public boolean isPositionTheoricallyReachable(int x, int y, Optional<Color> color) {
+    public boolean isPositionTheoreticallyReachable(int x, int y, Optional<Color> color) {
         if (getX() == x && getY() == y) return false;
         return (Math.abs(getY() - y) == Math.abs(getX() - x)) || ((getY() == y) || (getX() == x));
     }
 
     @Override
     public Set<String> squaresOnThePath(String squareToMoveOn) {
-        if (!super.isPositionTheoricallyReachable(squareToMoveOn)) throw new IllegalArgumentException(squareToMoveOn);
+        if (!super.isPositionTheoreticallyReachable(squareToMoveOn)) throw new IllegalArgumentException(squareToMoveOn);
 
         Set<String> squaresOnThePath = new HashSet<>();
         if (getX() == PositionUtil.getX(squareToMoveOn)) {

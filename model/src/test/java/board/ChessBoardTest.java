@@ -275,17 +275,17 @@ class ChessBoardTest {
             chessBoard.add(new Rock(Color.WHITE), e1);
 
             assertTrue(PositionUtil.generateAllPositions().stream()
-                    .filter(knight::isPositionTheoricallyReachable)
+                    .filter(knight::isPositionTheoreticallyReachable)
                     .allMatch(pos -> chessBoard.doesMovingPieceCheckOurOwnKing(knight, pos)));
         }
 
         @Test
-        void should_not_be_able_to_move_a_pinned_piece_bis() {
+        void should_be_able_to_move_a_pinned_piece_if_it_still_block_the_chess() {
             ChessBoard chessBoard = ChessBoard.createEmpty();
             String e5 = "e5";
             String h8 = "h8";
             String a1 = "a1";
-            Set<String> validMoves = Set.of("b2", "c3", "d4", "f6", "g7");
+            Set<String> validMoves = Set.of("b2", "c3", "d4", "f6", "g7", "h8");
             Set<String> invalidMoves = Set.of("d6", "h2");
             Bishop bishop = new Bishop(Color.WHITE);
             chessBoard.add(bishop, e5);
@@ -313,7 +313,7 @@ class ChessBoardTest {
             Set<String> invalidMoves = PositionUtil.generateAllPositions()
                     .stream()
                     .filter(s -> !validMoves.contains(s))
-                    .filter(queen::isPositionTheoricallyReachable)
+                    .filter(queen::isPositionTheoreticallyReachable)
                     .collect(Collectors.toSet());
 
 
@@ -334,7 +334,7 @@ class ChessBoardTest {
             Set<String> invalidMoves = PositionUtil.generateAllPositions()
                     .stream()
                     .filter(s -> !s.equals(e4))
-                    .filter(queen::isPositionTheoricallyReachable)
+                    .filter(queen::isPositionTheoreticallyReachable)
                     .collect(Collectors.toSet());
 
 

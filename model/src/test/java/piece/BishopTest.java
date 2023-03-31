@@ -74,7 +74,7 @@ class BishopTest {
 
             assertTrue(PositionUtil.generateAllPositions()
                     .stream()
-                    .allMatch(s -> validMoves.contains(s) == bishop.isPositionTheoricallyReachable(s)));
+                    .allMatch(s -> validMoves.contains(s) == bishop.isPositionTheoreticallyReachable(s)));
         }
 
         @Test
@@ -85,7 +85,7 @@ class BishopTest {
 
             assertTrue(PositionUtil.generateAllPositions()
                     .stream()
-                    .allMatch(s -> validMoves.contains(s) == bishop.isPositionTheoricallyReachable(s)));
+                    .allMatch(s -> validMoves.contains(s) == bishop.isPositionTheoreticallyReachable(s)));
         }
 
         @Test
@@ -94,7 +94,7 @@ class BishopTest {
             bishop.setSquare(new Square("e5"));
 
 
-            assertFalse(bishop.isPositionTheoricallyReachable("e5"));
+            assertFalse(bishop.isPositionTheoreticallyReachable("e5"));
         }
     }
 
