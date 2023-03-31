@@ -30,13 +30,13 @@ public class BishopIT {
         Bishop bishop = new Bishop(Color.WHITE);
         chessBoard.add(bishop, "e4");
 
-        assertEquals(reachablePositions, chessBoard.getAllOpenToAttackPosition(bishop));
+        assertEquals(reachablePositions, chessBoard.getAllAttackablePosition(bishop));
     }
 
     @Test
     void should_not_be_able_to_move() {
         ChessBoard chessBoard = ChessBoard.createWithInitialState();
 
-        assertEquals(Collections.emptySet(), chessBoard.getAllOpenToAttackPosition(chessBoard.at("f1").getPiece().get()));
+        assertEquals(Collections.emptySet(), chessBoard.getAllAttackablePosition(chessBoard.at("f1").getPiece().get()));
     }
 }

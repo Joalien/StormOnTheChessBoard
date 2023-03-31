@@ -28,7 +28,7 @@ public class KnightIT {
         Knight knight = new Knight(Color.WHITE);
         chessBoard.add(knight, "e4");
 
-        assertEquals(reachablePositions, chessBoard.getAllOpenToAttackPosition(knight));
+        assertEquals(reachablePositions, chessBoard.getAllAttackablePosition(knight));
     }
 
     @Test
@@ -38,7 +38,7 @@ public class KnightIT {
         Knight knight = new Knight(Color.WHITE);
         chessBoard.add(knight, "e5");
 
-        assertEquals(reachablePositions, chessBoard.getAllOpenToAttackPosition(knight));
+        assertEquals(reachablePositions, chessBoard.getAllAttackablePosition(knight));
     }
 
     @Test
@@ -46,6 +46,6 @@ public class KnightIT {
         ChessBoard chessBoard = ChessBoard.createWithInitialState();
         Set<String> reachablePositions = Set.of("f3", "h3");
 
-        assertEquals(reachablePositions, chessBoard.getAllOpenToAttackPosition(chessBoard.at("g1").getPiece().get()));
+        assertEquals(reachablePositions, chessBoard.getAllAttackablePosition(chessBoard.at("g1").getPiece().get()));
     }
 }

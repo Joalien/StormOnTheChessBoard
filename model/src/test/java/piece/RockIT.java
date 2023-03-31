@@ -34,13 +34,13 @@ public class RockIT {
         Rock rock = new Rock(Color.WHITE);
         chessBoard.add(rock, "e4");
 
-        assertEquals(reachablePositions, chessBoard.getAllOpenToAttackPosition(rock));
+        assertEquals(reachablePositions, chessBoard.getAllAttackablePosition(rock));
     }
 
     @Test
     void should_not_be_able_to_move() {
         ChessBoard chessBoard = ChessBoard.createWithInitialState();
 
-        assertEquals(Collections.emptySet(), chessBoard.getAllOpenToAttackPosition(chessBoard.at("h1").getPiece().get()));
+        assertEquals(Collections.emptySet(), chessBoard.getAllAttackablePosition(chessBoard.at("h1").getPiece().get()));
     }
 }

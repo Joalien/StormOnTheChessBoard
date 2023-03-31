@@ -27,14 +27,14 @@ public class ReflectedBishopCard extends SCCard {
         if (bishop == null) throw new IllegalStateException();
         if (positionToMoveOn == null) throw new IllegalStateException();
 
-        Set<String> reachablePositions = new HashSet<>(chessBoard.getAllOpenToAttackPosition(bishop));
+        Set<String> reachablePositions = new HashSet<>(chessBoard.getAllAttackablePosition(bishop));
 
         Set<String> positionsToStart = Set.copyOf(reachablePositions);
         do {
             positionsToStart = positionsToStart.stream()
                     .filter(PositionUtil::isBorder)
                     .map(s -> createFakeBishop(chessBoard, s))
-                    .map(chessBoard::getAllOpenToAttackPosition)
+                    .map(chessBoard::getAllAttackablePosition)
                     .flatMap(Collection::stream)
                     .collect(Collectors.toSet());
         } while (reachablePositions.addAll(positionsToStart));

@@ -43,13 +43,13 @@ public class QueenIT {
         Queen queen = new Queen(Color.WHITE);
         chessBoard.add(queen, "e4");
 
-        assertEquals(reachablePositions, chessBoard.getAllOpenToAttackPosition(queen));
+        assertEquals(reachablePositions, chessBoard.getAllAttackablePosition(queen));
     }
 
     @Test
     void should_not_be_able_to_move() {
         ChessBoard chessBoard = ChessBoard.createWithInitialState();
 
-        assertEquals(Collections.emptySet(), chessBoard.getAllOpenToAttackPosition(chessBoard.at("d1").getPiece().get()));
+        assertEquals(Collections.emptySet(), chessBoard.getAllAttackablePosition(chessBoard.at("d1").getPiece().get()));
     }
 }

@@ -114,7 +114,7 @@ public class PawnIT {
             chessBoard.add(new Queen(Color.WHITE), "d6");
             Set<String> reachablePositions = Set.of("f6", "d6", "e6", "e5");
 
-            assertEquals(reachablePositions, chessBoard.getAllOpenToAttackPosition(pawn));
+            assertEquals(reachablePositions, chessBoard.getAllAttackablePosition(pawn));
         }
 
         @Test

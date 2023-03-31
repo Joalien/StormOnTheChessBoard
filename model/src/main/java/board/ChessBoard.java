@@ -2,16 +2,18 @@ package board;
 
 import lombok.extern.slf4j.Slf4j;
 import piece.*;
-import position.PositionUtil;
 
 import java.util.*;
+import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+import static position.PositionUtil.*;
+
 @Slf4j
 public class ChessBoard {
-    private static final int MIN = 1;
-    private static final int MAX = 8;
+
     private static final Map<String, String> CASTLE_MAP = Map.of("f1", "h1",
             "d1", "a1",
             "f8", "h8",
@@ -19,6 +21,7 @@ public class ChessBoard {
     private final HashMap<String, Square> board = new HashMap<>(64);
     private final HashMap<String, Square> fakeSquares = new HashMap<>();
     private final Set<Piece> outOfTheBoardPieces = new HashSet<>();
+    private final Map<Effect, Set<BiConsumer<Piece, String>>> effects = Arrays.stream(Effect.values()).collect(Collectors.toMap(effect -> effect, effect -> new HashSet<>()));
 
     public static ChessBoard createEmpty() {
         log.debug("create empty chessboard");
@@ -46,21 +49,29 @@ public class ChessBoard {
         chessBoard.add(new Rock(Color.BLACK), "a8");
         chessBoard.add(new Rock(Color.BLACK), "h8");
         IntStream.rangeClosed(MIN, MAX)
-                .mapToObj(i -> PositionUtil.posToSquare(i, MIN + 1))
+                .mapToObj(i -> posToSquare(i, MIN + 1))
                 .forEach(position -> chessBoard.add(new WhitePawn(), position));
         IntStream.rangeClosed(MIN, MAX)
-                .mapToObj(i -> PositionUtil.posToSquare(i, MAX - 1))
+                .mapToObj(i -> posToSquare(i, MAX - 1))
                 .forEach(position -> chessBoard.add(new BlackPawn(), position));
         return chessBoard;
     }
 
-    public void add(Piece piece, String position) {
+    public void add(Piece piece, String position) { // HERE
+        if (!fakeSquares.isEmpty()) throw new IllegalStateException("You cannot update board if there are fake pieces on");
         if (at(position).getPiece().isPresent())
             throw new IllegalArgumentException(String.format("Cannot add %s because %s is not empty", piece, position));
         if (outOfTheBoardPieces.remove(piece)) log.info("{} go back to the life!", piece);
         piece.setSquare(at(position));
         at(position).setPiece(piece);
+
+        
+        effects.get(Effect.AFTER_MOVE).stream()
+                .filter()
+                .forEach(t -> t.accept(piece, position));
     }
+
+    // MVC
 
     public Square at(String position) {
         if (invalidPosition(position)) throw new IllegalArgumentException("square is invalid");
@@ -69,23 +80,14 @@ public class ChessBoard {
         return board.get(position);
     }
 
-    private static boolean invalidPosition(String position) {
-        try {
-            boolean invalidLength = position.length() != 2;
-            boolean validX = MIN <= PositionUtil.getX(position) && PositionUtil.getX(position) <= MAX;
-            boolean validY = MIN <= PositionUtil.getY(position) && PositionUtil.getY(position) <= MAX;
-            return invalidLength || !validX || !validY;
-        } catch (IndexOutOfBoundsException e) {
-            return false;
-        }
-    }
+
 
     public Set<Piece> getOutOfTheBoardPieces() {
         return outOfTheBoardPieces;
     }
 
-    public Set<String> getAllOpenToAttackPosition(Piece piece) {
-        return PositionUtil.generateAllPositions().stream()
+    public Set<String> getAllAttackablePosition(Piece piece) {
+        return generateAllPositions().stream()
                 .filter(pos -> !pos.equals(piece.getPosition()))
                 .filter(pos -> canAttack(piece, pos))
                 .collect(Collectors.toSet());
@@ -145,11 +147,10 @@ public class ChessBoard {
         at(positionToMoveOn).getPiece().ifPresent(this::removePieceFromTheBoard);
         log.info("{} moves from {} to {}", piece, piece.getPosition(), positionToMoveOn);
         at(piece.getPosition()).removePiece();
-        piece.setSquare(at(positionToMoveOn));
-        at(positionToMoveOn).setPiece(piece);
+        add(piece, positionToMoveOn);
     }
 
-    public Piece removePieceFromTheBoard(Piece piece) {
+    public Piece removePieceFromTheBoard(Piece piece) { // HERE
         if (piece instanceof King)
             throw new IllegalStateException(String.format("You should not be able to take %s", piece));
         at(piece.getPosition()).setPiece(null);
@@ -260,5 +261,10 @@ public class ChessBoard {
                 .map(Optional::get)
                 .filter(p -> p.getColor() != allyColor)
                 .collect(Collectors.toSet());
+    }
+
+    public void addEffect(Effect effect, BiConsumer<Piece, String> c) {
+        if (!effects.containsKey(effect)) throw new IllegalStateException("Effects should have all keys");
+        this.effects.get(effect).add(c);
     }
 }

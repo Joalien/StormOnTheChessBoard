@@ -2,9 +2,11 @@ package position;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public class PositionUtil {
+
+    public static final int MIN = 1;
+    public static final int MAX = 8;
 
     public static List<String> generateAllPositions() {
         List<String> allSquares = new ArrayList<>(64);
@@ -71,4 +73,14 @@ public class PositionUtil {
                 || (getY(pos1) == getY(pos2) && Math.abs(getX(pos1) - getX(pos2)) == 1);
     }
 
+    public static boolean invalidPosition(String position) {
+        try {
+            boolean invalidLength = position.length() != 2;
+            boolean validX = MIN <= PositionUtil.getX(position) && PositionUtil.getX(position) <= MAX;
+            boolean validY = MIN <= PositionUtil.getY(position) && PositionUtil.getY(position) <= MAX;
+            return invalidLength || !validX || !validY;
+        } catch (IndexOutOfBoundsException e) {
+            return false;
+        }
+    }
 }
