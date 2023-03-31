@@ -1,6 +1,6 @@
 package card;
 
-import board.BombingEffect;
+import effet.BombingEffect;
 import board.ChessBoard;
 import piece.Color;
 import piece.Piece;

@@ -1,5 +1,6 @@
-package board;
+package effet;
 
+import board.ChessBoard;
 import lombok.extern.slf4j.Slf4j;
 import piece.Color;
 import piece.King;

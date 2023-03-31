@@ -1,5 +1,6 @@
 package board;
 
+import effet.Effect;
 import lombok.extern.slf4j.Slf4j;
 import piece.*;
 

@@ -73,6 +73,10 @@ public class PositionUtil {
                 || (getY(pos1) == getY(pos2) && Math.abs(getX(pos1) - getX(pos2)) == 1);
     }
 
+    public static boolean noPositionBetween(String pos1, String pos2) {
+        return Math.abs(getY(pos1) - getY(pos2)) <= 1 && getY(pos1) == getY(pos2) && Math.abs(getX(pos1) - getX(pos2)) <= 1;
+    }
+
     public static boolean invalidPosition(String position) {
         try {
             boolean invalidLength = position.length() != 2;
