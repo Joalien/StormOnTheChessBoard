@@ -12,11 +12,6 @@ public class WhitePawn extends Pawn {
         super(Color.WHITE, 'P');
     }
 
-    public WhitePawn(Color color) {
-        this();
-        if (color == Color.BLACK) throw new IllegalArgumentException();
-    }
-
     @Override
     public String twoSquaresForward() {
         return PositionUtil.posToSquare(this.getX(), this.getY() + 2);

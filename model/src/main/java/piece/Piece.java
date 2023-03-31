@@ -4,6 +4,7 @@ import lombok.Builder;
 import lombok.With;
 import position.PositionUtil;
 
+import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Objects;
 import java.util.Optional;
@@ -72,14 +73,20 @@ public abstract class Piece {
     }
 
     public Piece clone() {
-//        super.clone();
-        Piece p;
         try {
-            p = this.getClass().getConstructor(Color.class).newInstance(color);
+            Piece p;
+            Constructor<? extends Piece> firstConstructor = (Constructor<? extends Piece>) this.getClass().getConstructors()[0];
+            if (firstConstructor.getParameterTypes().length == 0) {
+                p = firstConstructor.newInstance();
+            } else if (firstConstructor.getParameterTypes()[0] == Color.class) {
+                p = this.getClass().getConstructor(Color.class).newInstance(color);
+            } else {
+                throw new InstantiationException("Constructor not found");
+            }
             p.setSquare(square);
+            return p;
         } catch (InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
             throw new RuntimeException(e);
         }
-        return p;
     }
 }

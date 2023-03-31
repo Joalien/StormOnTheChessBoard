@@ -57,7 +57,7 @@ public class ChessBoard {
     public void add(Piece piece, String position) {
         if (at(position).getPiece().isPresent())
             throw new IllegalArgumentException(String.format("Cannot add %s because %s is not empty", piece, position));
-        outOfTheBoardPieces.remove(piece); // useless 99% time
+        if (outOfTheBoardPieces.remove(piece)) log.info("{} go back to the life!", piece);
         piece.setSquare(at(position));
         at(position).setPiece(piece);
     }
@@ -155,7 +155,7 @@ public class ChessBoard {
         at(piece.getPosition()).setPiece(null);
         piece.setSquare(null);
         outOfTheBoardPieces.add(piece);
-        log.info("{} has been taken", piece);
+        log.info("{} has been taken and removed out of the board", piece);
         return piece;
     }
 

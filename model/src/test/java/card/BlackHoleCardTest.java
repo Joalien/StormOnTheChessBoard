@@ -1,5 +1,6 @@
 package card;
 
+import org.junit.jupiter.api.Assertions;
 import piece.BlackHole;
 import board.ChessBoard;
 import org.junit.jupiter.api.Nested;

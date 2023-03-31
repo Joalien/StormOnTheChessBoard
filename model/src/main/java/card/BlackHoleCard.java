@@ -26,7 +26,8 @@ public class BlackHoleCard extends SCCard {
 
     @Override
     protected boolean doAction(ChessBoard chessBoard) {
-        chessBoard.add(new BlackHole(), position);
+        BlackHole piece = new BlackHole();
+        chessBoard.add(piece, position);
         return true;
     }
 }

@@ -1,5 +1,6 @@
 package card;
 
+import org.junit.jupiter.api.Assertions;
 import piece.BlackHole;
 import board.ChessBoard;
 import org.junit.jupiter.api.Test;
@@ -46,5 +47,13 @@ class BlackHoleTest {
         assertEquals(blackHole, chessBoard.at(e4).getPiece().get());
     }
 
+    @Test
+    void should_not_turn_if_black_hole_in_corner() {
+        ChessBoard chessBoard = ChessBoard.createWithInitialState();
+        String a1 = "a1";
+        chessBoard.removePieceFromTheBoard(chessBoard.at(a1).getPiece().get());
+        chessBoard.add(new BlackHole(), a1);
 
+        Assertions.assertThrows(BlackHole.BlackHoleException.class, () -> new QuadrilleCard(QuadrilleCard.Direction.CLOCKWISE).playOn(chessBoard));
+    }
 }

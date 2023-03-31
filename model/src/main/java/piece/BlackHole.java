@@ -7,14 +7,16 @@ import java.util.Set;
 
 @Slf4j
 public class BlackHole extends Piece {
+
     public BlackHole() {
         super(null, 'H');
     }
 
     @Override
     public void setSquare(Square square) {
-        if (this.getSquare().isPresent()) log.warn("You are updating the position of a black hole!");
-        super.setSquare(square);
+        if (getSquare().isEmpty()) {
+            super.setSquare(square);
+        } else throw new BlackHoleException("You cannot move a black hole!");
     }
 
     @Override
