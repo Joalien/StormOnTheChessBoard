@@ -2,7 +2,7 @@ package state;
 
 import card.SCCard;
 
-public class ReplaceRound implements State {
+public class BeforeTurnState implements State {
     @Override
     public boolean tryToMove(ChessBoardFacade chessBoardFacade, String from, String to) {
         return false;
@@ -10,6 +10,11 @@ public class ReplaceRound implements State {
 
     @Override
     public boolean tryToPlayCard(ChessBoardFacade chessBoardFacade, SCCard card) {
+        return false;
+    }
+
+    @Override
+    public boolean tryToPass() {
         return false;
     }
 }

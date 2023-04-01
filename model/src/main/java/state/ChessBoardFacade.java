@@ -3,6 +3,7 @@ package state;
 import board.ChessBoard;
 import card.*;
 import lombok.Getter;
+import lombok.Setter;
 import piece.Color;
 import player.Player;
 
@@ -20,6 +21,7 @@ public class ChessBoardFacade {
     private Player black;
     private List<Class<? extends SCCard>> cards;
     private Color currentTurn;
+    @Setter
     private State state;
 
     public ChessBoardFacade() {
@@ -35,7 +37,7 @@ public class ChessBoardFacade {
                 .peek(x -> dealCard(white))
                 .forEach(x -> dealCard(black));
         currentTurn = Color.WHITE;
-        state = new BeginningOfTheRound();
+        state = new BeginningOfTheTurnState();
     }
 
     public boolean tryToMove(String from, String to) {
@@ -44,6 +46,10 @@ public class ChessBoardFacade {
 
     public boolean tryToPlayCard(SCCard card) {
         return state.tryToPlayCard(this, card);
+    }
+
+    public boolean tryToPass() {
+        return state.tryToPass();
     }
 
 
