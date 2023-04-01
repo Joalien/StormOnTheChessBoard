@@ -103,4 +103,20 @@ class PositionUtilTest {
         assertTrue(PositionUtil.generateAllPositions().stream()
                 .allMatch(pos -> PositionUtil.isBorder(pos) == borders.contains(pos)));
     }
+
+    @Test
+    void should_not_have_position_between_c2() {
+        String c2 = "c2";
+        Set<String> noPositionBetween = Set.of("b1", "b2", "b3", "c1", "c2", "c3", "d1", "d2", "d3");
+        assertTrue(PositionUtil.generateAllPositions().stream()
+                        .allMatch(s -> PositionUtil.noPositionBetween(c2, s) == noPositionBetween.contains(s)));
+    }
+
+    @Test
+    void should_not_have_position_between_corner() {
+        String h8 = "h8";
+        Set<String> noPositionBetween = Set.of("g8", "h8", "g7", "h7");
+        assertTrue(PositionUtil.generateAllPositions().stream()
+                        .allMatch(s -> PositionUtil.noPositionBetween(h8, s) == noPositionBetween.contains(s)));
+    }
 }

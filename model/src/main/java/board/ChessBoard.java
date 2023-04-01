@@ -1,7 +1,7 @@
 package board;
 
-import effet.Effect;
 import lombok.extern.slf4j.Slf4j;
+import effet.Effect;
 import piece.*;
 
 import java.util.*;
@@ -110,7 +110,6 @@ public class ChessBoard {
                     .filter(Castlable.class::isInstance)
                     .map(Castlable.class::cast)
                     .ifPresent(Castlable::cannotCastleAnymore);
-            at(positionToMoveOn).getPiece().ifPresent(this::removePieceFromTheBoard);
             move(piece, positionToMoveOn);
 
             return true;
@@ -119,7 +118,7 @@ public class ChessBoard {
         return false;
     }
 
-    private void tryToCastle(Piece piece, String positionToMoveOn) {
+    void tryToCastle(Piece piece, String positionToMoveOn) {
         boolean kingCanCastle = piece instanceof King && ((King) piece).canCastle();
         boolean kingWantToCastle = piece.squaresOnThePath(positionToMoveOn).size() == 1;
         if (kingCanCastle && kingWantToCastle) {
@@ -138,6 +137,8 @@ public class ChessBoard {
     }
 
     public void move(Piece piece, String positionToMoveOn) {
+        effects.forEach(effect -> effect.beforeMoveHook(this, piece));
+
         at(positionToMoveOn).getPiece().ifPresent(this::removePieceFromTheBoard);
         log.info("{} moves from {} to {}", piece, piece.getPosition(), positionToMoveOn);
         at(piece.getPosition()).removePiece();
@@ -151,6 +152,8 @@ public class ChessBoard {
         piece.setSquare(null);
         outOfTheBoardPieces.add(piece);
         log.info("{} has been taken and removed out of the board", piece);
+
+        effects.forEach(effect -> effect.afterRemovingPieceHook(this, piece));
         return piece;
     }
 
@@ -263,5 +266,9 @@ public class ChessBoard {
 
     public void addEffect(Effect effect) {
         this.effects.add(effect);
+    }
+
+    public Set<Effect> getEffects() {
+        return Set.copyOf(this.effects);
     }
 }
