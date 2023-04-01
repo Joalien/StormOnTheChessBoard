@@ -12,6 +12,7 @@ public class BombingEffect extends Effect {
     private final Color colorThatShouldExplode;
 
     public BombingEffect(String position, Color colorThatShouldExplode) {
+        super("Attentat");
         this.position = position;
         this.colorThatShouldExplode = colorThatShouldExplode;
     }

@@ -1,5 +1,6 @@
 package board;
 
+import card.SCCard;
 import piece.Piece;
 
 public class ChessBoardFacade {
@@ -15,5 +16,9 @@ public class ChessBoardFacade {
 
     public boolean tryToMove(Piece piece, String positionToMoveOn) {
         return chessBoard.tryToMove(piece, positionToMoveOn);
+    }
+
+    public boolean tryToPlayCard(SCCard card) {
+        return card.playOn(chessBoard);
     }
 }

@@ -13,6 +13,7 @@ public class ManHoleEffect extends Effect {
     private final Map<String, String> holes = new HashMap<>();
 
     public ManHoleEffect(String position1, String position2) {
+        super("Bouche d'égout");
         this.holes.put(position1, position2);
         this.holes.put(position2, position1);
     }

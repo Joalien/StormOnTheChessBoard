@@ -10,6 +10,7 @@ public class MagnetismEffect extends Effect {
     private final Piece piece;
 
     public MagnetismEffect(Piece piece) {
+        super("Magnétisme");
         this.piece = piece;
     }
 

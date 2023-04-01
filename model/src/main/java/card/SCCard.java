@@ -3,8 +3,10 @@ package card;
 import board.CheckException;
 import board.ChessBoard;
 import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 
 @Getter
+@Slf4j
 public abstract class SCCard {
 
     protected final String name;
@@ -21,7 +23,7 @@ public abstract class SCCard {
         validInput(chessBoard);
 
         if (!doesNotCreateCheck(chessBoard)) throw new CheckException();
-
+        log.info("{} card is played!", this.name);
         return doAction(chessBoard);
     }
 
