@@ -4,9 +4,9 @@ import card.SCCard;
 
 public interface State {
 
-    boolean tryToMove(ChessBoardFacade chessBoardFacade, String from, String to);
+    public abstract boolean tryToMove(ChessBoardFacade chessBoardFacade, String from, String to);
 
-    boolean tryToPlayCard(ChessBoardFacade chessBoardFacade, SCCard card);
+    public abstract boolean tryToPlayCard(ChessBoardFacade chessBoardFacade, SCCard card);
 
-    boolean tryToPass();
+    public abstract boolean tryToPass(ChessBoardFacade chessBoardFacade);
 }

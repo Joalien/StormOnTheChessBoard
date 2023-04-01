@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class AfterTurnStateTest {
+class ReplaceStateTest {
     private QuadrilleCard card;
     private ChessBoardFacade chessBoardFacade;
 
@@ -14,7 +14,7 @@ class AfterTurnStateTest {
     void setUp() {
         chessBoardFacade = new ChessBoardFacade();
         chessBoardFacade.startGame();
-        chessBoardFacade.setState(StateEnum.AFTER_TURN);
+        chessBoardFacade.setState(StateEnum.REPLACE_TURN);
         card = new QuadrilleCard(QuadrilleCard.Direction.CLOCKWISE);
     }
 
@@ -27,15 +27,15 @@ class AfterTurnStateTest {
 
     @Test
     void should_not_be_able_to_play_a_move() {
-        assertThrows(AlreadyMovedException.class, () -> chessBoardFacade.tryToMove("e2", "e4"));
+        assertThrows(IllegalStateException.class, () -> chessBoardFacade.tryToMove("e2", "e4"));
 
-        assertEquals(chessBoardFacade.getState(), StateEnum.AFTER_TURN);
+        assertEquals(chessBoardFacade.getState(), StateEnum.REPLACE_TURN);
     }
 
     @Test
     void should_not_be_able_to_play_a_card() {
-        assertThrows(AlreadyPlayedACardException.class, () -> chessBoardFacade.tryToPlayCard(card));
+        assertThrows(IllegalStateException.class, () -> chessBoardFacade.tryToPlayCard(card));
 
-        assertEquals(chessBoardFacade.getState(), StateEnum.AFTER_TURN);
+        assertEquals(chessBoardFacade.getState(), StateEnum.REPLACE_TURN);
     }
 }

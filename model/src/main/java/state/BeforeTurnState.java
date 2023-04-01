@@ -14,7 +14,7 @@ public class BeforeTurnState implements State {
     }
 
     @Override
-    public boolean tryToPass() {
+    public boolean tryToPass(ChessBoardFacade chessBoardFacade) {
         return false;
     }
 }

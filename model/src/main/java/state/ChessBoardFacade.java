@@ -22,7 +22,7 @@ public class ChessBoardFacade {
     private List<Class<? extends SCCard>> cards;
     private Color currentTurn;
     @Setter
-    private State state;
+    private StateEnum state;
 
     public ChessBoardFacade() {
     }
@@ -37,7 +37,7 @@ public class ChessBoardFacade {
                 .peek(x -> dealCard(white))
                 .forEach(x -> dealCard(black));
         currentTurn = Color.WHITE;
-        state = new BeginningOfTheTurnState();
+        state = StateEnum.BEGINNING_OF_THE_TURN;
     }
 
     public boolean tryToMove(String from, String to) {
@@ -49,7 +49,7 @@ public class ChessBoardFacade {
     }
 
     public boolean tryToPass() {
-        return state.tryToPass();
+        return state.tryToPass(this);
     }
 
 

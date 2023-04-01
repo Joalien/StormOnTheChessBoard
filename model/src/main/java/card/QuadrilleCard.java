@@ -63,7 +63,7 @@ public class QuadrilleCard extends SCCard {
                 .collect(Collectors.toMap(square -> direction.cornersMap.get(square.getPosition()), Square::getPiece));
     }
 
-    enum Direction {
+    public enum Direction {
         COUNTERCLOCKWISE(Map.of(
                 "a1", "h1",
                 "h1", "h8",
