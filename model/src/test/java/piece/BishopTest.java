@@ -60,7 +60,7 @@ class BishopTest {
             Bishop bishop = new Bishop(Color.WHITE);
             bishop.setSquare(new Square("a8"));
 
-            assertThrows(IllegalArgumentException.class, () -> bishop.squaresOnThePath("a2"));
+            assertTrue(bishop.squaresOnThePath("a2").isEmpty());
         }
     }
 

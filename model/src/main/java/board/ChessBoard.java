@@ -164,9 +164,18 @@ public class ChessBoard {
     }
 
     public boolean canAttack(Piece piece, String positionToMoveOn) {
-        return piece.isPositionTheoreticallyReachable(positionToMoveOn, at(positionToMoveOn).getPiece().map(Piece::getColor))
+        return (isPositionTheoreticallyReachable(piece, positionToMoveOn) || doesEffectAllowToMove(piece, positionToMoveOn))
                 && emptyPath(piece, positionToMoveOn)
                 && isEnemyOrEmpty(piece, positionToMoveOn);
+    }
+
+    private boolean doesEffectAllowToMove(Piece piece, String positionToMoveOn) {
+        return effects.stream()
+                .anyMatch(effect -> effect.allowToMove(piece, positionToMoveOn));
+    }
+
+    private boolean isPositionTheoreticallyReachable(Piece piece, String positionToMoveOn) {
+        return piece.isPositionTheoreticallyReachable(positionToMoveOn, at(positionToMoveOn).getPiece().map(Piece::getColor));
     }
 
     boolean isValidCastle(Piece piece, String positionToMoveOn) {

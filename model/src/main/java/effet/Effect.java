@@ -10,4 +10,8 @@ public abstract class Effect {
     public void beforeMoveHook(ChessBoard chessBoard, Piece piece) {}
 
     public void afterRemovingPieceHook(ChessBoard chessBoard, Piece piece) {}
+
+    public boolean allowToMove(Piece piece, String positionToMoveOn) {
+        return false;
+    }
 }

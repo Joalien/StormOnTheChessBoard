@@ -33,7 +33,7 @@ public class King extends Piece implements Castlable {
 
     @Override
     public Set<String> squaresOnThePath(String squareToMoveOn) {
-        if (!super.isPositionTheoreticallyReachable(squareToMoveOn)) throw new IllegalArgumentException(squareToMoveOn);
+        if (!super.isPositionTheoreticallyReachable(squareToMoveOn)) return Collections.emptySet();
 
         boolean whiteCastle = this.getPosition().equals("e1") && this.color == Color.WHITE;
         boolean blackCastle = this.getPosition().equals("e8") && this.color == Color.BLACK;

@@ -2,6 +2,7 @@ package piece;
 
 import position.PositionUtil;
 
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
@@ -20,7 +21,7 @@ public class Bishop extends Piece {
 
     @Override
     public Set<String> squaresOnThePath(String squareToMoveOn) {
-        if (!super.isPositionTheoreticallyReachable(squareToMoveOn)) throw new IllegalArgumentException(squareToMoveOn);
+        if (!super.isPositionTheoreticallyReachable(squareToMoveOn)) return Collections.emptySet();
 
         Set<String> squaresOnThePath = new HashSet<>();
         boolean signX = getX() < PositionUtil.getX(squareToMoveOn);

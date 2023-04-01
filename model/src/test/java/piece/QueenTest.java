@@ -63,7 +63,7 @@ class QueenTest {
             Queen queen = new Queen(Color.WHITE);
             queen.setSquare(new Square("b7"));
 
-            assertThrows(IllegalArgumentException.class, () -> queen.squaresOnThePath("e8"));
+            assertTrue(queen.squaresOnThePath("e8").isEmpty());
         }
     }
 

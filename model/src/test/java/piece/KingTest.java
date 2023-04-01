@@ -68,7 +68,7 @@ class KingTest {
             King king = new King(Color.WHITE);
             king.setSquare(new Square("a1"));
 
-            assertThrows(IllegalArgumentException.class, () -> king.squaresOnThePath("e8"));
+            assertTrue(king.squaresOnThePath("e8").isEmpty());
         }
     }
 

@@ -52,7 +52,7 @@ class RockTest {
             Rock rock = new Rock(Color.WHITE);
             rock.setSquare(new Square("e4"));
 
-            assertThrows(IllegalArgumentException.class, () -> rock.squaresOnThePath("b2"));
+            assertTrue(rock.squaresOnThePath("b2").isEmpty());
         }
     }
 
