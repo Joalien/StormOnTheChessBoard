@@ -7,6 +7,7 @@ import piece.Piece;
 public class MagnetismCard extends SCCard {
 
     private final Piece piece;
+
     public MagnetismCard(Piece piece) {
         super("", "", SCType.REPLACE_TURN);
         this.piece = piece;
@@ -15,7 +16,8 @@ public class MagnetismCard extends SCCard {
     @Override
     protected void validInput(ChessBoard chessBoard) {
         if (piece == null) throw new IllegalStateException();
-        if (piece.getPosition() == null) throw new IllegalArgumentException(String.format("%s is not on the board!", piece));
+        if (piece.getPosition() == null)
+            throw new IllegalArgumentException(String.format("%s is not on the board!", piece));
     }
 
     @Override

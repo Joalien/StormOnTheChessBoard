@@ -1,7 +1,7 @@
 package board;
 
-import lombok.extern.slf4j.Slf4j;
 import effet.Effect;
+import lombok.extern.slf4j.Slf4j;
 import piece.*;
 
 import java.util.*;
@@ -57,7 +57,8 @@ public class ChessBoard {
     }
 
     public void add(Piece piece, String position) { // HERE
-        if (!fakeSquares.isEmpty()) throw new IllegalStateException("You cannot update board if there are fake pieces on");
+        if (!fakeSquares.isEmpty())
+            throw new IllegalStateException("You cannot update board if there are fake pieces on");
         if (at(position).getPiece().isPresent())
             throw new IllegalArgumentException(String.format("Cannot add %s because %s is not empty", piece, position));
         if (outOfTheBoardPieces.remove(piece)) log.info("{} go back to the life!", piece);
@@ -75,7 +76,6 @@ public class ChessBoard {
     }
 
 
-
     public Set<Piece> getOutOfTheBoardPieces() {
         return outOfTheBoardPieces;
     }
@@ -87,11 +87,34 @@ public class ChessBoard {
                 .collect(Collectors.toSet());
     }
 
+    public boolean canAttack(Piece piece, String positionToMoveOn) {
+        return (isPositionTheoreticallyReachable(piece, positionToMoveOn) || doesEffectAllowToMove(piece, positionToMoveOn))
+                && emptyPath(piece, positionToMoveOn)
+                && isEnemyOrEmpty(piece, positionToMoveOn);
+    }
+
+    private boolean isPositionTheoreticallyReachable(Piece piece, String positionToMoveOn) {
+        return piece.isPositionTheoreticallyReachable(positionToMoveOn, at(positionToMoveOn).getPiece().map(Piece::getColor));
+    }
+
+    private boolean doesEffectAllowToMove(Piece piece, String positionToMoveOn) {
+        return effects.stream()
+                .anyMatch(effect -> effect.allowToMove(piece, positionToMoveOn));
+    }
+
     public boolean emptyPath(Piece piece, String squareToGo) {
         return piece.squaresOnThePath(squareToGo).stream()
                 .map(this::at)
                 .map(Square::getPiece)
                 .allMatch(Optional::isEmpty);
+    }
+
+    boolean isEnemyOrEmpty(Piece piece, String positionToMoveOn) {
+        Optional<Piece> p = at(positionToMoveOn).getPiece();
+        return p.isEmpty() || p
+                .map(Piece::getColor)
+                .map(color -> color != piece.getColor())
+                .orElse(false); // color is null
     }
 
     public boolean tryToMove(String from, String to) {
@@ -163,35 +186,13 @@ public class ChessBoard {
                 && isValidCastle(piece, positionToMoveOn);
     }
 
-    public boolean canAttack(Piece piece, String positionToMoveOn) {
-        return (isPositionTheoreticallyReachable(piece, positionToMoveOn) || doesEffectAllowToMove(piece, positionToMoveOn))
-                && emptyPath(piece, positionToMoveOn)
-                && isEnemyOrEmpty(piece, positionToMoveOn);
-    }
-
-    private boolean doesEffectAllowToMove(Piece piece, String positionToMoveOn) {
-        return effects.stream()
-                .anyMatch(effect -> effect.allowToMove(piece, positionToMoveOn));
-    }
-
-    private boolean isPositionTheoreticallyReachable(Piece piece, String positionToMoveOn) {
-        return piece.isPositionTheoreticallyReachable(positionToMoveOn, at(positionToMoveOn).getPiece().map(Piece::getColor));
-    }
-
     boolean isValidCastle(Piece piece, String positionToMoveOn) {
         return true; // TODO
     }
 
-    boolean isEnemyOrEmpty(Piece piece, String positionToMoveOn) {
-        Optional<Piece> p = at(positionToMoveOn).getPiece();
-        return p.isEmpty() || p
-                .map(Piece::getColor)
-                .map(color -> color != piece.getColor())
-                .orElse(false); // color is null
-    }
-
     public void fakeSquare(Piece piece, String position) {
-        if (fakeSquares.containsKey(position) && fakeSquares.get(position) == null) throw new IllegalArgumentException("You cannot re-fake over a fake piece");
+        if (fakeSquares.containsKey(position) && fakeSquares.get(position) == null)
+            throw new IllegalArgumentException("You cannot re-fake over a fake piece");
         log.debug("fake that {} is on {}", Optional.ofNullable(piece).map(Objects::toString).orElse("nothing"), position);
         Square fakeSquare = new Square(position);
         Optional.ofNullable(piece).ifPresent(p -> fakeSquare.setPiece(new FakePieceDecorator(p, fakeSquare)));

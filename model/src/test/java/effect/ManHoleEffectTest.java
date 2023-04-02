@@ -1,16 +1,13 @@
 package effect;
 
 import board.ChessBoard;
-import effet.MagnetismEffect;
-import effet.MagnetismException;
 import effet.ManHoleEffect;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import piece.Color;
 import piece.Piece;
-import piece.Queen;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class ManHoleEffectTest {
 

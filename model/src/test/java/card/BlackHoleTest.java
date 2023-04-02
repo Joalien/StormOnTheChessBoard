@@ -1,11 +1,11 @@
 package card;
 
-import org.junit.jupiter.api.Assertions;
-import piece.extra.BlackHole;
 import board.ChessBoard;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import piece.Color;
 import piece.Rock;
+import piece.extra.BlackHole;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;

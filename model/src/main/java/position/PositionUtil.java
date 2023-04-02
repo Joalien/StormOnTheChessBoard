@@ -42,8 +42,16 @@ public class PositionUtil {
         return i;
     }
 
+    public static boolean isBorder(String position) {
+        return getX(position) == 1 || getX(position) == 8 || getY(position) == 1 || getY(position) == 8;
+    }
+
     public static int getX(String position) {
         return PositionUtil.charToInt(position.charAt(0));
+    }
+
+    public static int getY(String position) {
+        return Integer.valueOf(Character.toString(position.charAt(1)));
     }
 
     private static int charToInt(char c) {
@@ -58,14 +66,6 @@ public class PositionUtil {
             case 'h' -> 8;
             default -> throw new IndexOutOfBoundsException(c);
         };
-    }
-
-    public static int getY(String position) {
-        return Integer.valueOf(Character.toString(position.charAt(1)));
-    }
-
-    public static boolean isBorder(String position) {
-        return getX(position) == 1 || getX(position) == 8 || getY(position) == 1 || getY(position) == 8;
     }
 
     public static boolean areNearby(String pos1, String pos2) {

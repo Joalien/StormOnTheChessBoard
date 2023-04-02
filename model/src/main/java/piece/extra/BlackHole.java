@@ -16,13 +16,6 @@ public class BlackHole extends Piece {
     }
 
     @Override
-    public void setSquare(Square square) {
-        if (getSquare().isEmpty()) {
-            super.setSquare(square);
-        } else throw new BlackHoleException("You cannot move a black hole!");
-    }
-
-    @Override
     public boolean isPositionTheoreticallyReachable(int x, int y, Optional<Color> color) {
         return false;
     }
@@ -30,6 +23,13 @@ public class BlackHole extends Piece {
     @Override
     public Set<String> squaresOnThePath(String squareToMoveOn) {
         throw new BlackHoleException("You cannot move a black hole!");
+    }
+
+    @Override
+    public void setSquare(Square square) {
+        if (getSquare().isEmpty()) {
+            super.setSquare(square);
+        } else throw new BlackHoleException("You cannot move a black hole!");
     }
 
     public static class BlackHoleException extends RuntimeException {

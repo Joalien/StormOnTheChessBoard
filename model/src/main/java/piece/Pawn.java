@@ -9,6 +9,7 @@ public abstract class Pawn extends Piece {
     }
 
     public abstract String twoSquaresForward();
+
     public abstract String oneSquareForward();
 
     @Override

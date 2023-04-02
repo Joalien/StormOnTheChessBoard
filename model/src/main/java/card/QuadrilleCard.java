@@ -5,7 +5,10 @@ import piece.Color;
 import piece.Piece;
 import piece.Square;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class QuadrilleCard extends SCCard {
@@ -42,12 +45,6 @@ public class QuadrilleCard extends SCCard {
         return true;
     }
 
-    private static void addPiecesInCorner(ChessBoard chessBoard, Map<String, Optional<Piece>> pieces) {
-        pieces.entrySet().stream()
-                .filter(p -> p.getValue().isPresent())
-                .forEach(optionalStringEntry -> chessBoard.add(optionalStringEntry.getValue().get(), optionalStringEntry.getKey()));
-    }
-
     private static void removeCornersFromTheBoard(ChessBoard chessBoard) {
         CORNERS.stream()
                 .map(chessBoard::at)
@@ -55,6 +52,12 @@ public class QuadrilleCard extends SCCard {
                 .filter(Optional::isPresent)
                 .map(Optional::get)
                 .forEach(chessBoard::removePieceFromTheBoard);
+    }
+
+    private static void addPiecesInCorner(ChessBoard chessBoard, Map<String, Optional<Piece>> pieces) {
+        pieces.entrySet().stream()
+                .filter(p -> p.getValue().isPresent())
+                .forEach(optionalStringEntry -> chessBoard.add(optionalStringEntry.getValue().get(), optionalStringEntry.getKey()));
     }
 
     private Map<String, Optional<Piece>> saveWhichPieceShouldGoInWhichCorner(ChessBoard chessBoard) {

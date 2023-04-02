@@ -5,7 +5,8 @@ import piece.Color;
 import piece.Knight;
 import piece.Square;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class FakePieceDecoratorTest {
     @Test

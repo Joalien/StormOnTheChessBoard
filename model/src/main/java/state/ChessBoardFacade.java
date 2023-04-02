@@ -42,19 +42,6 @@ public class ChessBoardFacade {
         state = StateEnum.BEGINNING_OF_THE_TURN;
     }
 
-    public boolean tryToMove(String from, String to) {
-        return state.tryToMove(this, from, to);
-    }
-
-    public boolean tryToPlayCard(SCCard card) {
-        return state.tryToPlayCard(this, card);
-    }
-
-    public boolean tryToPass() {
-        return state.tryToPass(this);
-    }
-
-
     private void initDeck() {
         cards = new LinkedList<>();
         cards.add(BlackHoleCard.class);
@@ -74,5 +61,17 @@ public class ChessBoardFacade {
 
     private void dealCard(Player player) {
         player.getCards().add(cards.remove(0));
+    }
+
+    public boolean tryToMove(String from, String to) {
+        return state.tryToMove(this, from, to);
+    }
+
+    public boolean tryToPlayCard(SCCard card) {
+        return state.tryToPlayCard(this, card);
+    }
+
+    public boolean tryToPass() {
+        return state.tryToPass(this);
     }
 }

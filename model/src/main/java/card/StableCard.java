@@ -2,7 +2,6 @@ package card;
 
 import board.ChessBoard;
 import piece.Knight;
-import piece.Pawn;
 import piece.Rock;
 
 public class StableCard extends SCCard {

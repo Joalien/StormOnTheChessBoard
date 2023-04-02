@@ -1,16 +1,11 @@
 package effect;
 
 import board.ChessBoard;
-import effet.BombingEffect;
 import effet.MagnetismEffect;
 import effet.MagnetismException;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
-import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import piece.Color;
-import piece.King;
-import piece.Piece;
 import piece.Queen;
 
 import static org.junit.jupiter.api.Assertions.*;

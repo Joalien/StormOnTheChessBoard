@@ -34,6 +34,13 @@ class MoveWithoutCardPlayedStateTest {
         assertEquals(StateEnum.MOVE_WITHOUT_CARD_PLAYED, chessBoardFacade.getState());
     }
 
+    @Test
+    void should_be_able_to_pass() {
+        assertTrue(chessBoardFacade.tryToPass());
+
+        assertEquals(StateEnum.END_OF_THE_TURN, chessBoardFacade.getState());
+    }
+
     @Nested
     class PlayCard {
         @Test
@@ -63,12 +70,5 @@ class MoveWithoutCardPlayedStateTest {
 
             assertEquals(StateEnum.MOVE_WITHOUT_CARD_PLAYED, chessBoardFacade.getState());
         }
-    }
-
-    @Test
-    void should_be_able_to_pass() {
-        assertTrue(chessBoardFacade.tryToPass());
-
-        assertEquals(StateEnum.END_OF_THE_TURN, chessBoardFacade.getState());
     }
 }

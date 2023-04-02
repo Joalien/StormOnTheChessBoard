@@ -1,12 +1,9 @@
 package piece;
 
-import lombok.Builder;
-import lombok.With;
 import position.PositionUtil;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.util.Collections;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
@@ -58,21 +55,6 @@ public abstract class Piece {
         this.square = square;
     }
 
-    @Override
-    public String toString() {
-        String color = Optional.ofNullable(this.getColor())
-                .map(Objects::toString)
-                .map(String::toLowerCase)
-                .orElse("");
-        String pieceName = this.getClass().getSimpleName();
-        return String.format("%s %s",
-                color, pieceName);
-    }
-
-    public Color getColor() {
-        return color;
-    }
-
     public Piece clone() {
         try {
             Piece p;
@@ -86,8 +68,24 @@ public abstract class Piece {
             }
             p.setSquare(square);
             return p;
-        } catch (InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
+        } catch (InstantiationException | IllegalAccessException | NoSuchMethodException |
+                 InvocationTargetException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    @Override
+    public String toString() {
+        String color = Optional.ofNullable(this.getColor())
+                .map(Objects::toString)
+                .map(String::toLowerCase)
+                .orElse("");
+        String pieceName = this.getClass().getSimpleName();
+        return String.format("%s %s",
+                color, pieceName);
+    }
+
+    public Color getColor() {
+        return color;
     }
 }

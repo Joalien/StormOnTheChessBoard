@@ -41,6 +41,13 @@ class BeginningOfTheTurnStateTest {
         assertEquals(StateEnum.BEGINNING_OF_THE_TURN, chessBoardFacade.getState());
     }
 
+    @Test
+    void should_not_be_able_to_pass() {
+        assertFalse(chessBoardFacade.tryToPass());
+
+        assertEquals(StateEnum.BEGINNING_OF_THE_TURN, chessBoardFacade.getState());
+    }
+
     @Nested
     class PlayCard {
         @Test
@@ -76,12 +83,5 @@ class BeginningOfTheTurnStateTest {
 
             assertEquals(StateEnum.BEGINNING_OF_THE_TURN, chessBoardFacade.getState());
         }
-    }
-
-    @Test
-    void should_not_be_able_to_pass() {
-        assertFalse(chessBoardFacade.tryToPass());
-
-        assertEquals(StateEnum.BEGINNING_OF_THE_TURN, chessBoardFacade.getState());
     }
 }

@@ -5,16 +5,15 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import piece.Color;
-import piece.King;
 import piece.Queen;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class BombingCardTest {
 
+    private final String e4 = "e4";
     private ChessBoard chessBoard;
     private SCCard bombing;
-    private final String e4 = "e4";
 
     @BeforeEach
     void setUp() {

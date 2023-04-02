@@ -1,8 +1,6 @@
 package effect;
 
 import board.ChessBoard;
-import card.BombingCard;
-import card.SCCard;
 import effet.BombingEffect;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
@@ -11,12 +9,13 @@ import piece.Color;
 import piece.King;
 import piece.Queen;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class BombingEffectTest {
 
-    private ChessBoard chessBoard;
     private final String e4 = "e4";
+    private ChessBoard chessBoard;
 
     @BeforeEach
     void setUp() {

@@ -20,16 +20,6 @@ public class FakePieceDecorator extends Piece {
     }
 
     @Override
-    public Optional<Square> getSquare() {
-        return Optional.of(fakeSquare);
-    }
-
-    @Override
-    public void setSquare(Square square) {
-        fakePiece.setSquare(square);
-    }
-
-    @Override
     public int getY() {
         return fakePiece.getY();
     }
@@ -39,25 +29,19 @@ public class FakePieceDecorator extends Piece {
         return fakePiece.getX();
     }
 
-
-    @Override
-    public Color getColor() {
-        return fakePiece.getColor();
-    }
-
     @Override
     public char getType() {
         return fakePiece.getType();
     }
 
     @Override
-    public boolean isPositionTheoreticallyReachable(int x, int y, Optional<Color> color) {
-        return fakePiece.isPositionTheoreticallyReachable(x, y, color);
+    public boolean isPositionTheoreticallyReachable(String s) {
+        return fakePiece.isPositionTheoreticallyReachable(s);
     }
 
     @Override
-    public boolean isPositionTheoreticallyReachable(String s) {
-        return fakePiece.isPositionTheoreticallyReachable(s);
+    public boolean isPositionTheoreticallyReachable(int x, int y, Optional<Color> color) {
+        return fakePiece.isPositionTheoreticallyReachable(x, y, color);
     }
 
     @Override
@@ -76,7 +60,22 @@ public class FakePieceDecorator extends Piece {
     }
 
     @Override
+    public Optional<Square> getSquare() {
+        return Optional.of(fakeSquare);
+    }
+
+    @Override
+    public void setSquare(Square square) {
+        fakePiece.setSquare(square);
+    }
+
+    @Override
     public String toString() {
         return String.format("Fake%s", fakePiece.getClass().getSimpleName());
+    }
+
+    @Override
+    public Color getColor() {
+        return fakePiece.getColor();
     }
 }

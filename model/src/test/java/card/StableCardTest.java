@@ -4,7 +4,8 @@ import board.ChessBoard;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import piece.*;
+import piece.Knight;
+import piece.Rock;
 
 import static org.junit.jupiter.api.Assertions.*;
 

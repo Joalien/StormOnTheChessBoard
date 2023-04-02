@@ -11,6 +11,7 @@ public enum StateEnum implements TurnState {
     END_OF_THE_TURN(new EndOfTheTurnState());
 
     private final TurnState turnState;
+
     StateEnum(TurnState turnState) {
         this.turnState = turnState;
     }

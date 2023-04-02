@@ -1,8 +1,8 @@
 package card;
 
 import board.ChessBoard;
-import piece.extra.Kangaroo;
 import piece.Knight;
+import piece.extra.Kangaroo;
 
 public class KangarooCard extends SCCard {
 
@@ -16,7 +16,8 @@ public class KangarooCard extends SCCard {
     @Override
     protected void validInput(ChessBoard chessBoard) {
         if (knight == null) throw new IllegalStateException();
-        if (chessBoard.getOutOfTheBoardPieces().contains(knight)) throw new IllegalArgumentException(String.format("%s should be on the board", knight));
+        if (chessBoard.getOutOfTheBoardPieces().contains(knight))
+            throw new IllegalArgumentException(String.format("%s should be on the board", knight));
     }
 
     @Override

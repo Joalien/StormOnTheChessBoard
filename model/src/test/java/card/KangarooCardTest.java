@@ -4,13 +4,14 @@ import board.ChessBoard;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import piece.extra.Kangaroo;
 import piece.Knight;
 import piece.Piece;
+import piece.extra.Kangaroo;
 
 import java.util.Set;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 
 class KangarooCardTest {

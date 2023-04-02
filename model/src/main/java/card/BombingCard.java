@@ -1,7 +1,7 @@
 package card;
 
-import effet.BombingEffect;
 import board.ChessBoard;
+import effet.BombingEffect;
 import piece.Color;
 import piece.Piece;
 
@@ -27,7 +27,8 @@ public class BombingCard extends SCCard {
                 .map(Piece::getColor)
                 .map(c -> c == colorThatShouldExplode)
                 .orElse(false);
-        if (thereIsEnemyPieceOnPosition) throw new IllegalArgumentException("You cannot select a square occupied by an enemy piece");
+        if (thereIsEnemyPieceOnPosition)
+            throw new IllegalArgumentException("You cannot select a square occupied by an enemy piece");
     }
 
     @Override
