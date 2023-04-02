@@ -5,6 +5,7 @@ import card.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 import piece.Color;
 import player.Player;
 
@@ -14,6 +15,7 @@ import java.util.List;
 import java.util.stream.IntStream;
 
 @Getter
+@Slf4j
 public class ChessBoardFacade {
 
     public static final int NUMBER_OF_CARDS_IN_HAND = 5;
@@ -22,8 +24,7 @@ public class ChessBoardFacade {
     private Player black;
     private List<Class<? extends SCCard>> cards;
     @Setter(AccessLevel.PACKAGE)
-    private Color currentMove;
-    @Setter(AccessLevel.PACKAGE)
+    private Color currentPlayer;
     private StateEnum state;
 
     public ChessBoardFacade() {
@@ -38,7 +39,7 @@ public class ChessBoardFacade {
         IntStream.range(0, NUMBER_OF_CARDS_IN_HAND)
                 .peek(x -> dealCard(white))
                 .forEach(x -> dealCard(black));
-        currentMove = Color.WHITE;
+        currentPlayer = Color.WHITE;
         state = StateEnum.BEGINNING_OF_THE_TURN;
     }
 
@@ -73,5 +74,10 @@ public class ChessBoardFacade {
 
     public boolean tryToPass() {
         return state.tryToPass(this);
+    }
+
+    void setState(StateEnum state) {
+        log.debug("{} is in state {}", this.currentPlayer, state);
+        this.state = state;
     }
 }

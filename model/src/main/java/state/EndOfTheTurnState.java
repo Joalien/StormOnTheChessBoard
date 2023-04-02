@@ -19,8 +19,8 @@ public class EndOfTheTurnState implements TurnState {
     @Override
     public boolean tryToPass(ChessBoardFacade chessBoardFacade) {
         chessBoardFacade.setState(StateEnum.BEGINNING_OF_THE_TURN);
-        if (chessBoardFacade.getCurrentMove() == Color.WHITE) chessBoardFacade.setCurrentMove(Color.BLACK);
-        else if (chessBoardFacade.getCurrentMove() == Color.BLACK) chessBoardFacade.setCurrentMove(Color.WHITE);
+        if (chessBoardFacade.getCurrentPlayer() == Color.WHITE) chessBoardFacade.setCurrentPlayer(Color.BLACK);
+        else if (chessBoardFacade.getCurrentPlayer() == Color.BLACK) chessBoardFacade.setCurrentPlayer(Color.WHITE);
         else throw new IllegalStateException("Who's turn?");
         return true;
     }

@@ -1,8 +1,10 @@
 package effet;
 
 import board.ChessBoard;
+import lombok.Getter;
 import piece.Piece;
 
+@Getter
 public abstract class Effect {
 
     private final String name;

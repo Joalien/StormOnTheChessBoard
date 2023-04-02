@@ -271,10 +271,12 @@ public class ChessBoard {
     }
 
     public void removeEffect(Effect effect) {
+        log.info("{} is no longer effective", effect.getName());
         this.effects.remove(effect);
     }
 
     public void addEffect(Effect effect) {
+        log.info("{} is now effective", effect.getName());
         this.effects.add(effect);
     }
 
