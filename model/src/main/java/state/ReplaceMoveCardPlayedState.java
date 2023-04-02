@@ -1,8 +1,10 @@
 package state;
 
 import card.SCCard;
+import state.exception.AlreadyMovedException;
+import state.exception.CardAlreadyPlayedException;
 
-public class AfterTurnState implements State {
+public class ReplaceMoveCardPlayedState implements TurnState {
     @Override
     public boolean tryToMove(ChessBoardFacade chessBoardFacade, String from, String to) {
         throw new AlreadyMovedException();
@@ -10,7 +12,7 @@ public class AfterTurnState implements State {
 
     @Override
     public boolean tryToPlayCard(ChessBoardFacade chessBoardFacade, SCCard card) {
-        throw new AlreadyPlayedACardException();
+        throw new CardAlreadyPlayedException();
     }
 
     @Override

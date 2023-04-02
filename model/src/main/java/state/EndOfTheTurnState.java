@@ -2,7 +2,7 @@ package state;
 
 import card.SCCard;
 
-public class EndOfTheTurnState implements State {
+public class EndOfTheTurnState implements TurnState {
     @Override
     public boolean tryToMove(ChessBoardFacade chessBoardFacade, String from, String to) {
         return false;
@@ -18,9 +18,9 @@ public class EndOfTheTurnState implements State {
         return false;
     }
 
-//    public void nextTurn() {
-//        if (this.currentTurn == Color.WHITE) this.currentTurn = Color.BLACK;
-//        else if (this.currentTurn == Color.BLACK) this.currentTurn = Color.WHITE;
+//    public void nextMove() {
+//        if (this.currentMove == Color.WHITE) this.currentMove = Color.BLACK;
+//        else if (this.currentMove == Color.BLACK) this.currentMove = Color.WHITE;
 //        else throw new IllegalStateException("Who's turn?");
 //    }
 }

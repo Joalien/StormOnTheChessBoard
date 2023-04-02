@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class ReplaceStateTest {
+class ReplaceMoveCardPlayedStateTest {
     private QuadrilleCard card;
     private ChessBoardFacade chessBoardFacade;
 
@@ -14,7 +14,7 @@ class ReplaceStateTest {
     void setUp() {
         chessBoardFacade = new ChessBoardFacade();
         chessBoardFacade.startGame();
-        chessBoardFacade.setState(StateEnum.REPLACE_TURN);
+        chessBoardFacade.setState(StateEnum.REPLACE_MOVE);
         card = new QuadrilleCard(QuadrilleCard.Direction.CLOCKWISE);
     }
 
@@ -29,13 +29,13 @@ class ReplaceStateTest {
     void should_not_be_able_to_play_a_move() {
         assertThrows(IllegalStateException.class, () -> chessBoardFacade.tryToMove("e2", "e4"));
 
-        assertEquals(chessBoardFacade.getState(), StateEnum.REPLACE_TURN);
+        assertEquals(chessBoardFacade.getState(), StateEnum.REPLACE_MOVE);
     }
 
     @Test
     void should_not_be_able_to_play_a_card() {
         assertThrows(IllegalStateException.class, () -> chessBoardFacade.tryToPlayCard(card));
 
-        assertEquals(chessBoardFacade.getState(), StateEnum.REPLACE_TURN);
+        assertEquals(chessBoardFacade.getState(), StateEnum.REPLACE_MOVE);
     }
 }

@@ -14,8 +14,8 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class BeginningOfTheTurnStateTest {
 
-    private SCCard beforeTurnCard;
-    private SCCard replaceTurnCard;
+    private SCCard beforeMoveCard;
+    private SCCard replaceMoveCard;
     private ChessBoardFacade chessBoardFacade;
 
     @BeforeEach
@@ -23,15 +23,15 @@ class BeginningOfTheTurnStateTest {
         chessBoardFacade = new ChessBoardFacade();
         chessBoardFacade.startGame();
         chessBoardFacade.setState(StateEnum.BEGINNING_OF_THE_TURN);
-        beforeTurnCard = new BombingCard("e4", Color.BLACK);
-        replaceTurnCard = new LightweightSquadCard((Pawn) chessBoardFacade.getChessBoard().at("e2").getPiece().get(), (Pawn) chessBoardFacade.getChessBoard().at("d2").getPiece().get());
+        beforeMoveCard = new BombingCard("e4", Color.BLACK);
+        replaceMoveCard = new LightweightSquadCard((Pawn) chessBoardFacade.getChessBoard().at("e2").getPiece().get(), (Pawn) chessBoardFacade.getChessBoard().at("d2").getPiece().get());
     }
 
     @Test
     void should_be_able_to_play_valid_move() {
         assertTrue(chessBoardFacade.tryToMove("e2", "e4"));
 
-        assertEquals(StateEnum.SIMPLE_TURN, chessBoardFacade.getState());
+        assertEquals(StateEnum.MOVE_WITHOUT_CARD_PLAYED, chessBoardFacade.getState());
     }
 
     @Test
@@ -44,23 +44,23 @@ class BeginningOfTheTurnStateTest {
     @Nested
     class PlayCard {
         @Test
-        void should_be_able_to_play_valid_before_turn_card() {
-            assertTrue(chessBoardFacade.tryToPlayCard(beforeTurnCard));
+        void should_be_able_to_play_valid_before_move_card() {
+            assertTrue(chessBoardFacade.tryToPlayCard(beforeMoveCard));
 
-            assertEquals(StateEnum.BEFORE_TURN, chessBoardFacade.getState());
+            assertEquals(StateEnum.BEFORE_MOVE, chessBoardFacade.getState());
         }
 
         @Test
-        void should_be_able_to_play_valid_replace_turn_card() {
-            assertTrue(chessBoardFacade.tryToPlayCard(replaceTurnCard));
+        void should_be_able_to_play_valid_replace_move_card() {
+            assertTrue(chessBoardFacade.tryToPlayCard(replaceMoveCard));
 
-            assertEquals(StateEnum.REPLACE_TURN, chessBoardFacade.getState());
+            assertEquals(StateEnum.REPLACE_MOVE, chessBoardFacade.getState());
         }
 
         @Test
-        void should_not_be_able_to_play_after_turn_card() {
-            SCCard afterTurnCard = new QuadrilleCard(QuadrilleCard.Direction.CLOCKWISE);
-            assertThrows(IllegalStateException.class, () -> chessBoardFacade.tryToPlayCard(afterTurnCard));
+        void should_not_be_able_to_play_after_move_card() {
+            SCCard afterMoveCard = new QuadrilleCard(QuadrilleCard.Direction.CLOCKWISE);
+            assertThrows(IllegalStateException.class, () -> chessBoardFacade.tryToPlayCard(afterMoveCard));
 
             assertEquals(StateEnum.BEGINNING_OF_THE_TURN, chessBoardFacade.getState());
         }

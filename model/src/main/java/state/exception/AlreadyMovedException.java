@@ -1,4 +1,4 @@
-package state;
+package state.exception;
 
 public class AlreadyMovedException extends IllegalStateException{
     public AlreadyMovedException() {
