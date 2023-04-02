@@ -23,21 +23,21 @@ class EndOfTheTurnStateTest {
 
     @Test
     void should_go_to_end_of_the_turn() {
-        assertEquals(Color.WHITE, chessBoardFacade.getCurrentPlayer());
+        assertEquals(chessBoardFacade.getWhite(), chessBoardFacade.getCurrentPlayer());
         assertTrue(chessBoardFacade.tryToPass());
 
         assertEquals(StateEnum.BEGINNING_OF_THE_TURN, chessBoardFacade.getState());
-        assertEquals(Color.BLACK, chessBoardFacade.getCurrentPlayer());
+        assertEquals(chessBoardFacade.getBlack(), chessBoardFacade.getCurrentPlayer());
     }
 
     @Test
     void should_change_color() {
-        chessBoardFacade.setCurrentPlayer(Color.BLACK);
+        chessBoardFacade.setCurrentPlayer(chessBoardFacade.getBlack());
 
         assertTrue(chessBoardFacade.tryToPass());
 
         assertEquals(StateEnum.BEGINNING_OF_THE_TURN, chessBoardFacade.getState());
-        assertEquals(Color.WHITE, chessBoardFacade.getCurrentPlayer());
+        assertEquals(chessBoardFacade.getWhite(), chessBoardFacade.getCurrentPlayer());
     }
 
     @Test

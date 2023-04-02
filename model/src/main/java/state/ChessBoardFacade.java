@@ -24,7 +24,7 @@ public class ChessBoardFacade {
     private Player black;
     private List<Class<? extends SCCard>> cards;
     @Setter(AccessLevel.PACKAGE)
-    private Color currentPlayer;
+    private Player currentPlayer;
     private StateEnum state;
 
     public ChessBoardFacade() {
@@ -39,7 +39,7 @@ public class ChessBoardFacade {
         IntStream.range(0, NUMBER_OF_CARDS_IN_HAND)
                 .peek(x -> dealCard(white))
                 .forEach(x -> dealCard(black));
-        currentPlayer = Color.WHITE;
+        currentPlayer = white;
         state = StateEnum.BEGINNING_OF_THE_TURN;
     }
 
