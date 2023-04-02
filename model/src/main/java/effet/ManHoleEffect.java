@@ -6,7 +6,6 @@ import piece.Piece;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Set;
 
 @Slf4j
 public class ManHoleEffect extends Effect {

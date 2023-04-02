@@ -2,6 +2,7 @@ package state;
 
 import board.ChessBoard;
 import card.*;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import piece.Color;
@@ -20,8 +21,9 @@ public class ChessBoardFacade {
     private Player white;
     private Player black;
     private List<Class<? extends SCCard>> cards;
+    @Setter(AccessLevel.PACKAGE)
     private Color currentMove;
-    @Setter
+    @Setter(AccessLevel.PACKAGE)
     private StateEnum state;
 
     public ChessBoardFacade() {

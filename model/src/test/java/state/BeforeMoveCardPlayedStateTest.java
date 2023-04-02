@@ -23,7 +23,7 @@ class BeforeMoveCardPlayedStateTest {
     void should_be_able_to_play_a_valid_move() {
         assertTrue(chessBoardFacade.tryToMove("e2", "e4"));
 
-        assertEquals(StateEnum.MOVE_WITH_CARD_PLAYED, chessBoardFacade.getState());
+        assertEquals(StateEnum.END_OF_THE_TURN, chessBoardFacade.getState());
     }
 
     @Test

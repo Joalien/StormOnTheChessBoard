@@ -40,7 +40,7 @@ class MoveWithoutCardPlayedStateTest {
         void should_be_able_to_play_valid_after_move_card() {
             assertTrue(chessBoardFacade.tryToPlayCard(afterMoveCard));
 
-            assertEquals(StateEnum.AFTER_MOVE, chessBoardFacade.getState());
+            assertEquals(StateEnum.END_OF_THE_TURN, chessBoardFacade.getState());
         }
 
         @Test

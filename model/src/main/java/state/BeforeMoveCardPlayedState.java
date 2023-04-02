@@ -7,7 +7,7 @@ public class BeforeMoveCardPlayedState implements TurnState {
     @Override
     public boolean tryToMove(ChessBoardFacade chessBoardFacade, String from, String to) {
         boolean hasMoved = chessBoardFacade.getChessBoard().tryToMove(from, to);
-        if (hasMoved) chessBoardFacade.setState(StateEnum.MOVE_WITH_CARD_PLAYED);
+        if (hasMoved) chessBoardFacade.setState(StateEnum.END_OF_THE_TURN);
         return hasMoved;
     }
 

@@ -12,14 +12,14 @@ public class BeginningOfTheTurnState implements TurnState {
 
     @Override
     public boolean tryToPlayCard(ChessBoardFacade chessBoardFacade, SCCard card) {
+        StateEnum nextState = switch (card.getType()) {
+            case BEFORE_TURN -> StateEnum.BEFORE_MOVE;
+            case REPLACE_TURN -> StateEnum.END_OF_THE_TURN;
+            default -> throw new IllegalStateException("You can only play BEFORE or REPLACE card!");
+        };
         boolean hasPlayedCard = card.playOn(chessBoardFacade.getChessBoard());
         if (hasPlayedCard) {
-            StateEnum newState = switch (card.getType()) {
-                case BEFORE_TURN -> StateEnum.BEFORE_MOVE;
-                case REPLACE_TURN -> StateEnum.REPLACE_MOVE;
-                default -> throw new IllegalStateException("You can only play BEFORE or REPLACE card!");
-            };
-            chessBoardFacade.setState(newState);
+            chessBoardFacade.setState(nextState);
         }
         return hasPlayedCard;
     }

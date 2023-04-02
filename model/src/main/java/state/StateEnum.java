@@ -7,10 +7,7 @@ import lombok.Getter;
 public enum StateEnum implements TurnState {
     BEGINNING_OF_THE_TURN(new BeginningOfTheTurnState()),
     BEFORE_MOVE(new BeforeMoveCardPlayedState()),
-    MOVE_WITH_CARD_PLAYED(new MoveWithCardPlayedState()),
     MOVE_WITHOUT_CARD_PLAYED(new MoveWithoutCardPlayedState()),
-    REPLACE_MOVE(new ReplaceMoveCardPlayedState()),
-    AFTER_MOVE(new AfterMoveCardPlayedState()),
     END_OF_THE_TURN(new EndOfTheTurnState());
 
     private final TurnState turnState;

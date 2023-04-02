@@ -54,7 +54,7 @@ class BeginningOfTheTurnStateTest {
         void should_be_able_to_play_valid_replace_move_card() {
             assertTrue(chessBoardFacade.tryToPlayCard(replaceMoveCard));
 
-            assertEquals(StateEnum.REPLACE_MOVE, chessBoardFacade.getState());
+            assertEquals(StateEnum.END_OF_THE_TURN, chessBoardFacade.getState());
         }
 
         @Test
@@ -63,6 +63,11 @@ class BeginningOfTheTurnStateTest {
             assertThrows(IllegalStateException.class, () -> chessBoardFacade.tryToPlayCard(afterMoveCard));
 
             assertEquals(StateEnum.BEGINNING_OF_THE_TURN, chessBoardFacade.getState());
+            // assert card effect has not been done
+            assertEquals(Color.BLACK, chessBoardFacade.getChessBoard().at("a8").getPiece().get().getColor());
+            assertEquals(Color.BLACK, chessBoardFacade.getChessBoard().at("h8").getPiece().get().getColor());
+            assertEquals(Color.WHITE, chessBoardFacade.getChessBoard().at("a1").getPiece().get().getColor());
+            assertEquals(Color.WHITE, chessBoardFacade.getChessBoard().at("h1").getPiece().get().getColor());
         }
 
         @Test
