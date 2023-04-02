@@ -1,6 +1,9 @@
-package piece;
+package piece.extra;
 
 import lombok.extern.slf4j.Slf4j;
+import piece.Color;
+import piece.Piece;
+import piece.Square;
 
 import java.util.Optional;
 import java.util.Set;

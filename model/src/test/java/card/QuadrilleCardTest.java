@@ -3,7 +3,6 @@ package card;
 import board.CheckException;
 import board.ChessBoard;
 import org.junit.jupiter.api.*;
-import piece.BlackHole;
 import piece.Color;
 import piece.King;
 import piece.Rock;

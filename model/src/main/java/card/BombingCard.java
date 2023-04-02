@@ -12,7 +12,9 @@ public class BombingCard extends SCCard {
 
 
     public BombingCard(String position, Color colorThatShouldExplode) {
-        super("Attentat", "En jouant cette carte, notez les coordonnées d'une case de l'échiquier, vide ou occupée par l'une de vos pices. Dès qu'une pièce adverse s'arrrête sur cette case, une bombe explose et la pièce est retirée du jeu. S'il s'agit du roi, la bombe explose mais le roi reste en place", SCType.AFTER_TURN);
+        super("Attentat",
+                "En jouant cette carte, notez les coordonnées d'une case de l'échiquier, vide ou occupée par l'une de vos pices. Dès qu'une pièce adverse s'arrrête sur cette case, une bombe explose et la pièce est retirée du jeu. S'il s'agit du roi, la bombe explose mais le roi reste en place",
+                SCType.BEFORE_TURN); // FIXME replace with AFTER_TURN once you'll code an other card BEFORE_TURN
         this.position = position;
         this.colorThatShouldExplode = colorThatShouldExplode;
     }

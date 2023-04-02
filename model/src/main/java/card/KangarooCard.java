@@ -1,7 +1,7 @@
 package card;
 
 import board.ChessBoard;
-import piece.Kangaroo;
+import piece.extra.Kangaroo;
 import piece.Knight;
 
 public class KangarooCard extends SCCard {

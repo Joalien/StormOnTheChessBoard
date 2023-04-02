@@ -1,7 +1,7 @@
 package card;
 
 import org.junit.jupiter.api.Assertions;
-import piece.BlackHole;
+import piece.extra.BlackHole;
 import board.ChessBoard;
 import org.junit.jupiter.api.Test;
 import piece.Color;

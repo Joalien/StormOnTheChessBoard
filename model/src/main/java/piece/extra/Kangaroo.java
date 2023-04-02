@@ -1,5 +1,9 @@
-package piece;
+package piece.extra;
 
+import piece.Color;
+import piece.Knight;
+import piece.Piece;
+import piece.Square;
 import position.PositionUtil;
 
 import java.util.Collections;

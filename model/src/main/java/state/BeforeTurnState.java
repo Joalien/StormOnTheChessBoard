@@ -5,12 +5,14 @@ import card.SCCard;
 public class BeforeTurnState implements State {
     @Override
     public boolean tryToMove(ChessBoardFacade chessBoardFacade, String from, String to) {
-        return false;
+        boolean hasMoved = chessBoardFacade.getChessBoard().tryToMove(from, to);
+        if (hasMoved) chessBoardFacade.setState(StateEnum.SIMPLE_TURN);
+        return hasMoved;
     }
 
     @Override
     public boolean tryToPlayCard(ChessBoardFacade chessBoardFacade, SCCard card) {
-        return false;
+        throw new AlreadyPlayedACardException();
     }
 
     @Override
