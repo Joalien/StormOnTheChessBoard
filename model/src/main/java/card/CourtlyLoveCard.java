@@ -24,11 +24,8 @@ public class CourtlyLoveCard extends SCCard {
         if (knight == null) throw new IllegalStateException();
         if (positionToMoveOn == null) throw new IllegalStateException();
         boolean isNearbyQueen = chessBoard.allyPieces(knight.getColor()).stream()
-                .peek(System.out::println)
                 .filter(Queen.class::isInstance)
-                .peek(System.out::println)
                 .map(Piece::getPosition)
-                .peek(System.out::println)
                 .anyMatch(pos1 -> PositionUtil.areNearby(pos1, positionToMoveOn));
         if (!isNearbyQueen)
             throw new IllegalArgumentException(String.format("You should move %s nearby your queen", knight));
