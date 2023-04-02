@@ -22,7 +22,7 @@ public class MagnetismEffect extends Effect {
     @Override
     public void beforeMoveHook(ChessBoard chessBoard, Piece piece) {
         if (!this.piece.equals(piece) && PositionUtil.noPositionBetween(this.piece.getPosition(), piece.getPosition()))
-            throw new MagnetismException(String.format("%s cannot move because it is near %s", piece, this.piece));
+            throw new MagnetismException("%s cannot move because it is near %s".formatted(piece, this.piece));
     }
 
     @Override

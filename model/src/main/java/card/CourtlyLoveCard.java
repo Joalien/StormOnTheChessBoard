@@ -28,9 +28,9 @@ public class CourtlyLoveCard extends SCCard {
                 .map(Piece::getPosition)
                 .anyMatch(pos1 -> PositionUtil.areNearby(pos1, positionToMoveOn));
         if (!isNearbyQueen)
-            throw new IllegalArgumentException(String.format("You should move %s nearby your queen", knight));
+            throw new IllegalArgumentException("You should move %s nearby your queen".formatted(knight));
         if (chessBoard.at(positionToMoveOn).getPiece().isPresent())
-            throw new IllegalArgumentException(String.format("You should move %s on an empty square", knight));
+            throw new IllegalArgumentException("You should move %s on an empty square".formatted(knight));
 
     }
 

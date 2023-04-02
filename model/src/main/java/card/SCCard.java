@@ -3,7 +3,9 @@ package card;
 import board.CheckException;
 import board.ChessBoard;
 import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import piece.Color;
 
 @Getter
 @Slf4j
@@ -12,6 +14,8 @@ public abstract class SCCard {
     protected final String name;
     protected final String description;
     protected final SCType type;
+    @Setter
+    protected Color isPlayedBy;
 
     public SCCard(String name, String description, SCType type) {
         this.name = name;

@@ -81,8 +81,7 @@ public abstract class Piece {
                 .map(String::toLowerCase)
                 .orElse("");
         String pieceName = this.getClass().getSimpleName();
-        return String.format("%s %s",
-                color, pieceName);
+        return "%s %s".formatted(color, pieceName);
     }
 
     public Color getColor() {

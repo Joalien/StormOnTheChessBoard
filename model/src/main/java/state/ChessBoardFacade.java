@@ -14,7 +14,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.IntStream;
 
-@Getter
+@Getter(AccessLevel.PACKAGE)
 @Slf4j
 public class ChessBoardFacade {
 
@@ -69,7 +69,10 @@ public class ChessBoardFacade {
     }
 
     public boolean tryToPlayCard(SCCard card) {
-        return state.tryToPlayCard(this, card);
+        card.setIsPlayedBy(currentPlayer.getColor());
+        boolean isPlayed = state.tryToPlayCard(this, card);
+        if (isPlayed) dealCard(currentPlayer);
+        return isPlayed;
     }
 
     public boolean tryToPass() {
@@ -77,7 +80,7 @@ public class ChessBoardFacade {
     }
 
     void setState(StateEnum state) {
-        log.debug("{} is in state {}", this.currentPlayer, state);
+        log.debug("{} is now in state {}", this.currentPlayer, state);
         this.state = state;
     }
 }

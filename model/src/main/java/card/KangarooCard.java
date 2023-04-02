@@ -17,7 +17,7 @@ public class KangarooCard extends SCCard {
     protected void validInput(ChessBoard chessBoard) {
         if (knight == null) throw new IllegalStateException();
         if (chessBoard.getOutOfTheBoardPieces().contains(knight))
-            throw new IllegalArgumentException(String.format("%s should be on the board", knight));
+            throw new IllegalArgumentException("%s should be on the board".formatted(knight));
     }
 
     @Override

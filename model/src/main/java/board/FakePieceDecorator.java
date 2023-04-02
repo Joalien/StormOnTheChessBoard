@@ -71,7 +71,7 @@ public class FakePieceDecorator extends Piece {
 
     @Override
     public String toString() {
-        return String.format("Fake%s", fakePiece.getClass().getSimpleName());
+        return "Fake%s".formatted(fakePiece.getClass().getSimpleName());
     }
 
     @Override

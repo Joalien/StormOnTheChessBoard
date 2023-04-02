@@ -60,7 +60,7 @@ public class ChessBoard {
         if (!fakeSquares.isEmpty())
             throw new IllegalStateException("You cannot update board if there are fake pieces on");
         if (at(position).getPiece().isPresent())
-            throw new IllegalArgumentException(String.format("Cannot add %s because %s is not empty", piece, position));
+            throw new IllegalArgumentException("Cannot add %s because %s is not empty".formatted(piece, position));
         if (outOfTheBoardPieces.remove(piece)) log.info("{} go back to the life!", piece);
         piece.setSquare(at(position));
         at(position).setPiece(piece);
@@ -121,7 +121,7 @@ public class ChessBoard {
         return at(from)
                 .getPiece()
                 .map(p -> tryToMove(p, to))
-                .orElse(false);
+                .orElseThrow(() -> new IllegalArgumentException("%s is empty!".formatted(from)));
     }
 
     public boolean tryToMove(Piece piece, String positionToMoveOn) {
@@ -170,7 +170,7 @@ public class ChessBoard {
 
     public Piece removePieceFromTheBoard(Piece piece) { // HERE
         if (piece instanceof King)
-            throw new IllegalStateException(String.format("You should not be able to take %s", piece));
+            throw new IllegalStateException("You should not be able to take %s".formatted(piece));
         at(piece.getPosition()).setPiece(null);
         piece.setSquare(null);
         outOfTheBoardPieces.add(piece);

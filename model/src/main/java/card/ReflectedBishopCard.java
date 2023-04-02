@@ -43,7 +43,7 @@ public class ReflectedBishopCard extends SCCard {
         log.debug("{} can move on {}", bishop, reachablePositions);
 
         if (!reachablePositions.contains(positionToMoveOn))
-            throw new IllegalArgumentException(String.format("%s cannot reflect to %s", bishop, positionToMoveOn));
+            throw new IllegalArgumentException("%s cannot reflect to %s".formatted(bishop, positionToMoveOn));
     }
 
     private Bishop createFakeBishop(ChessBoard chessBoard, String s) {

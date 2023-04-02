@@ -24,11 +24,11 @@ public class LightweightSquadCard extends SCCard {
 
         chessBoard.fakeSquare(null, pawn2.getPosition());
         if (cannotMoveTwoSquaresForward(chessBoard, pawn1))
-            throw new IllegalArgumentException("You cannot move " + pawn1 + " two squares forward");
+            throw new IllegalArgumentException("You cannot move %s two squares forward".formatted(pawn1));
         chessBoard.unfakeSquare(pawn2.getPosition());
         chessBoard.fakeSquare(null, pawn1.getPosition());
         if (cannotMoveTwoSquaresForward(chessBoard, pawn2))
-            throw new IllegalArgumentException("You cannot move " + pawn2 + " two squares forward");
+            throw new IllegalArgumentException("You cannot move %s two squares forward".formatted(pawn2));
         chessBoard.unfakeSquare(pawn1.getPosition());
     }
 

@@ -10,13 +10,18 @@ import java.util.Set;
 @Getter
 public class Player {
 
-    private String name;
-    private Color color;
-    private Set<Class<? extends SCCard>> cards;
+    private final String name;
+    private final Color color;
+    private final Set<Class<? extends SCCard>> cards;
 
     public Player(String name, Color color) {
         this.name = name;
         this.color = color;
         this.cards = new HashSet<>();
+    }
+
+    @Override
+    public String toString() {
+        return name;
     }
 }

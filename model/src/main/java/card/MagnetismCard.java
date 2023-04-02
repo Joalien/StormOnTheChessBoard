@@ -17,7 +17,7 @@ public class MagnetismCard extends SCCard {
     protected void validInput(ChessBoard chessBoard) {
         if (piece == null) throw new IllegalStateException();
         if (piece.getPosition() == null)
-            throw new IllegalArgumentException(String.format("%s is not on the board!", piece));
+            throw new IllegalArgumentException("%s is not on the board!".formatted(piece));
     }
 
     @Override

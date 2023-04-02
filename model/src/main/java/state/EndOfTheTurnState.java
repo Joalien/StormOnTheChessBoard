@@ -16,10 +16,10 @@ public class EndOfTheTurnState implements TurnState {
     }
 
     @Override
-    public boolean tryToPass(ChessBoardFacade chessBoardFacade) {
-        chessBoardFacade.setState(StateEnum.BEGINNING_OF_THE_TURN);
-        if (chessBoardFacade.getCurrentPlayer() == chessBoardFacade.getWhite()) chessBoardFacade.setCurrentPlayer(chessBoardFacade.getBlack());
-        else if (chessBoardFacade.getCurrentPlayer() == chessBoardFacade.getBlack()) chessBoardFacade.setCurrentPlayer(chessBoardFacade.getWhite());
+    public boolean tryToPass(ChessBoardFacade cb) {
+        cb.setState(StateEnum.BEGINNING_OF_THE_TURN);
+        if (cb.getCurrentPlayer() == cb.getWhite()) cb.setCurrentPlayer(cb.getBlack());
+        else if (cb.getCurrentPlayer() == cb.getBlack()) cb.setCurrentPlayer(cb.getWhite());
         else throw new IllegalStateException("Who's turn?");
         return true;
     }

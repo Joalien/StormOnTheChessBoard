@@ -27,7 +27,7 @@ public class HomeCard extends SCCard {
                 .map(Piece::getPosition)
                 .noneMatch(pos -> pos.equals(positionToMoveOn));
         if (positionToMoveOnIsNotStartingPositionOfPiece)
-            throw new IllegalArgumentException(piece + " didn't start the game on square " + positionToMoveOn);
+            throw new IllegalArgumentException("%s didn't start the game on square %s".formatted(piece, positionToMoveOn));
 
         Boolean positionToMoveOnHasSameColorPiece = chessBoard.at(positionToMoveOn)
                 .getPiece()
