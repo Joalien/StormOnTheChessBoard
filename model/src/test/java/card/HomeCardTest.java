@@ -20,6 +20,7 @@ class HomeCardTest {
             String g1 = "g1";
             chessBoard.add(knight, e4);
             Card homeCard = new HomeCard(knight, g1);
+            homeCard.setIsPlayedBy(Color.WHITE);
 
             assertTrue(homeCard.playOn(chessBoard));
 
@@ -37,6 +38,7 @@ class HomeCardTest {
             Queen queen = new Queen(Color.BLACK);
             chessBoard.add(queen, g1);
             Card homeCard = new HomeCard(knight, g1);
+            homeCard.setIsPlayedBy(Color.WHITE);
 
             assertTrue(homeCard.playOn(chessBoard));
 
@@ -60,6 +62,7 @@ class HomeCardTest {
             Queen queen = new Queen(Color.BLACK);
             chessBoard.add(queen, g1);
             Card homeCard = new HomeCard(pawn, g1);
+            homeCard.setIsPlayedBy(Color.WHITE);
 
             assertThrows(IllegalArgumentException.class, () -> homeCard.playOn(chessBoard));
 
@@ -79,6 +82,7 @@ class HomeCardTest {
             Queen queen = new Queen(Color.WHITE);
             chessBoard.add(queen, g1);
             Card homeCard = new HomeCard(knight, g1);
+            homeCard.setIsPlayedBy(Color.WHITE);
 
             assertThrows(IllegalArgumentException.class, () -> homeCard.playOn(chessBoard));
 
@@ -96,6 +100,7 @@ class HomeCardTest {
             String g1 = "g1";
             chessBoard.add(queen, e4);
             Card homeCard = new HomeCard(queen, g1);
+            homeCard.setIsPlayedBy(Color.BLACK);
 
             assertThrows(IllegalArgumentException.class, () -> homeCard.playOn(chessBoard));
 
@@ -112,8 +117,9 @@ class HomeCardTest {
             String d1 = "d1";
             chessBoard.add(queen, e4);
             Card homeCard = new HomeCard(queen, d1);
+            homeCard.setIsPlayedBy(Color.WHITE);
 
-            assertThrows(IllegalArgumentException.class, () -> homeCard.playOn(chessBoard));
+            assertThrows(IllegalColorException.class, () -> homeCard.playOn(chessBoard));
 
             assertEquals(queen, chessBoard.at(e4).getPiece().get());
             assertTrue(chessBoard.at(d1).getPiece().isEmpty());
@@ -130,6 +136,7 @@ class HomeCardTest {
             King king = new King(Color.BLACK);
             chessBoard.add(king, g1);
             Card homeCard = new HomeCard(knight, g1);
+            homeCard.setIsPlayedBy(Color.WHITE);
 
             assertThrows(IllegalStateException.class, () -> homeCard.playOn(chessBoard));
 
