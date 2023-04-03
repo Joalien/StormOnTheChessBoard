@@ -16,15 +16,15 @@ public enum StateEnum implements TurnState {
         this.turnState = turnState;
     }
 
-    public boolean tryToMove(ChessBoardFacade chessBoardFacade, String from, String to) {
-        return this.turnState.tryToMove(chessBoardFacade, from, to);
+    public boolean tryToMove(GameStateController gameStateController, String from, String to) {
+        return this.turnState.tryToMove(gameStateController, from, to);
     }
 
-    public boolean tryToPlayCard(ChessBoardFacade chessBoardFacade, SCCard card) {
-        return this.turnState.tryToPlayCard(chessBoardFacade, card);
+    public boolean tryToPlayCard(GameStateController gameStateController, SCCard card) {
+        return this.turnState.tryToPlayCard(gameStateController, card);
     }
 
-    public boolean tryToPass(ChessBoardFacade chessBoardFacade) {
-        return this.turnState.tryToPass(chessBoardFacade);
+    public boolean tryToPass(GameStateController gameStateController) {
+        return this.turnState.tryToPass(gameStateController);
     }
 }

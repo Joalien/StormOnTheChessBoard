@@ -16,7 +16,7 @@ import java.util.stream.IntStream;
 
 @Getter(AccessLevel.PACKAGE)
 @Slf4j
-public class ChessBoardFacade {
+public class GameStateController {
 
     public static final int NUMBER_OF_CARDS_IN_HAND = 5;
     private ChessBoard chessBoard;
@@ -27,7 +27,7 @@ public class ChessBoardFacade {
     private Player currentPlayer;
     private StateEnum state;
 
-    public ChessBoardFacade() {
+    public GameStateController() {
     }
 
     public void startGame() {

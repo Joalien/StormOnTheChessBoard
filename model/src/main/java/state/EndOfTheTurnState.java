@@ -6,17 +6,17 @@ import state.exception.CardAlreadyPlayedException;
 
 public class EndOfTheTurnState implements TurnState {
     @Override
-    public boolean tryToMove(ChessBoardFacade chessBoardFacade, String from, String to) {
+    public boolean tryToMove(GameStateController gameStateController, String from, String to) {
         throw new AlreadyMovedException();
     }
 
     @Override
-    public boolean tryToPlayCard(ChessBoardFacade chessBoardFacade, SCCard card) {
+    public boolean tryToPlayCard(GameStateController gameStateController, SCCard card) {
         throw new CardAlreadyPlayedException();
     }
 
     @Override
-    public boolean tryToPass(ChessBoardFacade cb) {
+    public boolean tryToPass(GameStateController cb) {
         cb.setState(StateEnum.BEGINNING_OF_THE_TURN);
         if (cb.getCurrentPlayer() == cb.getWhite()) cb.setCurrentPlayer(cb.getBlack());
         else if (cb.getCurrentPlayer() == cb.getBlack()) cb.setCurrentPlayer(cb.getWhite());
