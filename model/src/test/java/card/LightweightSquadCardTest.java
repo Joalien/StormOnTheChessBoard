@@ -24,7 +24,7 @@ class LightweightSquadCardTest {
             String g1 = "g1";
             chessBoard.add(pawn1, g1);
             chessBoard.add(pawn2, e4);
-            SCCard lightweightSquadCard = new LightweightSquadCard(pawn1, pawn2);
+            Card lightweightSquadCard = new LightweightSquadCard(pawn1, pawn2);
 
             assertTrue(lightweightSquadCard.playOn(chessBoard));
 
@@ -43,7 +43,7 @@ class LightweightSquadCardTest {
             String a4 = "a4";
             chessBoard.add(pawn1, a5);
             chessBoard.add(pawn2, a4);
-            SCCard lightweightSquadCard = new LightweightSquadCard(pawn1, pawn2);
+            Card lightweightSquadCard = new LightweightSquadCard(pawn1, pawn2);
 
             assertTrue(lightweightSquadCard.playOn(chessBoard));
 
@@ -85,7 +85,7 @@ class LightweightSquadCardTest {
             String g1 = "g1";
             chessBoard.add(pawn1, e4);
             chessBoard.add(pawn2, g1);
-            SCCard lightweightSquadCard = new LightweightSquadCard(pawn1, pawn2);
+            Card lightweightSquadCard = new LightweightSquadCard(pawn1, pawn2);
 
             assertThrows(IllegalArgumentException.class, () -> lightweightSquadCard.playOn(chessBoard));
 

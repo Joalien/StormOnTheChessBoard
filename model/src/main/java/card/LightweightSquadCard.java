@@ -3,7 +3,7 @@ package card;
 import board.ChessBoard;
 import piece.Pawn;
 
-public class LightweightSquadCard extends SCCard {
+public class LightweightSquadCard extends Card {
 
     private final Pawn pawn1;
     private final Pawn pawn2;

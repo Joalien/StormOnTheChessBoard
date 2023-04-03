@@ -20,7 +20,7 @@ class BombingEffectTest {
     @BeforeEach
     void setUp() {
         chessBoard = ChessBoard.createEmpty();
-        chessBoard.addEffect(new BombingEffect(e4, Color.BLACK));
+        chessBoard.addEffect(new BombingEffect(e4, Color.WHITE));
     }
 
     @Nested

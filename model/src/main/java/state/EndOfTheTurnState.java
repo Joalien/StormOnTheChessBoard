@@ -1,6 +1,6 @@
 package state;
 
-import card.SCCard;
+import card.Card;
 import state.exception.AlreadyMovedException;
 import state.exception.CardAlreadyPlayedException;
 
@@ -11,17 +11,16 @@ public class EndOfTheTurnState implements TurnState {
     }
 
     @Override
-    public boolean tryToPlayCard(GameStateController gameStateController, SCCard card) {
+    public boolean tryToPlayCard(GameStateController gameStateController, Card card) {
         throw new CardAlreadyPlayedException();
     }
 
     @Override
-    public boolean tryToPass(GameStateController cb) {
-        cb.setState(StateEnum.BEGINNING_OF_THE_TURN);
-        if (cb.getCurrentPlayer() == cb.getWhite()) cb.setCurrentPlayer(cb.getBlack());
-        else if (cb.getCurrentPlayer() == cb.getBlack()) cb.setCurrentPlayer(cb.getWhite());
+    public boolean tryToPass(GameStateController gsc) {
+        gsc.setCurrentState(StateEnum.BEGINNING_OF_THE_TURN);
+        if (gsc.getCurrentPlayer() == gsc.getWhite()) gsc.setCurrentPlayer(gsc.getBlack());
+        else if (gsc.getCurrentPlayer() == gsc.getBlack()) gsc.setCurrentPlayer(gsc.getWhite());
         else throw new IllegalStateException("Who's turn?");
         return true;
     }
-
 }

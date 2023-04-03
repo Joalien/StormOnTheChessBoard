@@ -23,7 +23,8 @@ class ChargeCardTest {
             Pawn pawn2 = new WhitePawn();
             chessBoard.add(pawn1, "e4");
             chessBoard.add(pawn2, "d4");
-            SCCard chargeCard = new ChargeCard(Set.of(pawn1, pawn2));
+            Card chargeCard = new ChargeCard(Set.of(pawn1, pawn2));
+            chargeCard.setIsPlayedBy(Color.WHITE);
 
             assertTrue(chargeCard.playOn(chessBoard));
 
@@ -40,7 +41,8 @@ class ChargeCardTest {
             chessBoard.add(pawn1, "e4");
             chessBoard.add(pawn2, "e5");
             chessBoard.add(pawn3, "e6");
-            SCCard chargeCard = new ChargeCard(Set.of(pawn1, pawn2, pawn3));
+            Card chargeCard = new ChargeCard(Set.of(pawn1, pawn2, pawn3));
+            chargeCard.setIsPlayedBy(Color.WHITE);
 
             assertTrue(chargeCard.playOn(chessBoard));
 
@@ -58,7 +60,8 @@ class ChargeCardTest {
             chessBoard.add(pawn1, "e4");
             chessBoard.add(pawn2, "e5");
             chessBoard.add(pawn3, "e6");
-            SCCard chargeCard = new ChargeCard(Set.of(pawn1, pawn2, pawn3));
+            Card chargeCard = new ChargeCard(Set.of(pawn1, pawn2, pawn3));
+            chargeCard.setIsPlayedBy(Color.BLACK);
 
             assertTrue(chargeCard.playOn(chessBoard));
 
@@ -77,7 +80,8 @@ class ChargeCardTest {
                     .filter(pawn -> !"e7".equals(pawn.getPosition()))
                     .collect(Collectors.toSet());
             assertEquals(7, allBlackPawnsExceptE7.size());
-            SCCard chargeCard = new ChargeCard(allBlackPawnsExceptE7);
+            Card chargeCard = new ChargeCard(allBlackPawnsExceptE7);
+            chargeCard.setIsPlayedBy(Color.BLACK);
 
             assertTrue(chargeCard.playOn(chessBoard));
 
@@ -95,7 +99,8 @@ class ChargeCardTest {
         @Test
         void should_fail_if_no_pawn_selected() {
             ChessBoard chessBoard = ChessBoard.createEmpty();
-            SCCard chargeCard = new ChargeCard(Collections.emptySet());
+            Card chargeCard = new ChargeCard(Collections.emptySet());
+            chargeCard.setIsPlayedBy(Color.WHITE);
 
             assertThrows(IllegalArgumentException.class, () -> chargeCard.playOn(chessBoard));
         }
@@ -109,7 +114,8 @@ class ChargeCardTest {
             String e5 = "e5";
             chessBoard.add(pawn, e4);
             chessBoard.add(queen, e5);
-            SCCard chargeCard = new ChargeCard(Set.of(pawn));
+            Card chargeCard = new ChargeCard(Set.of(pawn));
+            chargeCard.setIsPlayedBy(Color.WHITE);
 
             assertThrows(IllegalArgumentException.class, () -> chargeCard.playOn(chessBoard));
         }
@@ -122,13 +128,14 @@ class ChargeCardTest {
                     .filter(Pawn.class::isInstance)
                     .map(Pawn.class::cast)
                     .collect(Collectors.toSet());
-            SCCard chargeCard = new ChargeCard(allBlackPawns);
+            Card chargeCard = new ChargeCard(allBlackPawns);
+            chargeCard.setIsPlayedBy(Color.WHITE);
 
             assertThrows(IllegalArgumentException.class, () -> chargeCard.playOn(chessBoard));
         }
 
         @Test
-        void should_not_move_pawns_of_different_color() {
+        void should_not_move_pawns_of_enemy_color() {
             ChessBoard chessBoard = ChessBoard.createEmpty();
             Pawn pawn1 = new WhitePawn();
             Pawn pawn2 = new BlackPawn();
@@ -136,12 +143,28 @@ class ChargeCardTest {
             String g1 = "g1";
             chessBoard.add(pawn1, e4);
             chessBoard.add(pawn2, g1);
-            SCCard lightweightSquadCard = new LightweightSquadCard(pawn1, pawn2);
+            Card chargeCard = new ChargeCard(Set.of(pawn1, pawn2));
+            chargeCard.setIsPlayedBy(Color.WHITE);
+            chargeCard.setIsPlayedBy(Color.WHITE);
 
-            assertThrows(IllegalArgumentException.class, () -> lightweightSquadCard.playOn(chessBoard));
+            assertThrows(IllegalArgumentException.class, () -> chargeCard.playOn(chessBoard));
 
             assertEquals(pawn1, chessBoard.at(e4).getPiece().get());
             assertEquals(pawn2, chessBoard.at(g1).getPiece().get());
+        }
+
+        @Test
+        void should_not_move_pawns_of_enemy_color_bis() {
+            ChessBoard chessBoard = ChessBoard.createEmpty();
+            Pawn pawn2 = new WhitePawn();
+            String g8 = "g8";
+            chessBoard.add(pawn2, g8);
+            Card chargeCard = new ChargeCard(Set.of(pawn2));
+            chargeCard.setIsPlayedBy(Color.BLACK);
+
+            assertThrows(IllegalArgumentException.class, () -> chargeCard.playOn(chessBoard));
+
+            assertEquals(pawn2, chessBoard.at(g8).getPiece().get());
         }
     }
 }

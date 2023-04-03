@@ -11,23 +11,21 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
-public class ChargeCard extends SCCard {
+public class ChargeCard extends Card {
 
     private final Set<Pawn> pawns;
-    private final Color color;
 
     public ChargeCard(Set<Pawn> pawns) {
         super("Charge", "Avancez tous ceux de vos ppions que vous voulez, et qui le peuvent, d'une case", SCType.REPLACE_TURN);
         this.pawns = pawns;
-        this.color = pawns.stream().findAny().map(Piece::getColor).orElse(null);
     }
 
     @Override
     protected void validInput(ChessBoard chessBoard) {
         if (pawns == null) throw new IllegalStateException();
         if (pawns.isEmpty()) throw new IllegalArgumentException("You should select at least one pawn");
-        if (pawns.stream().map(Piece::getColor).anyMatch(color1 -> color1 != color))
-            throw new IllegalArgumentException("You should move pawns of the same color");
+        if (pawns.stream().map(Piece::getColor).anyMatch(color1 -> color1 != isPlayedBy))
+            throw new IllegalArgumentException("You should move pawns of your color");
 
         assert chessBoard.getNumberOfFakeSquares() == 0;
         pawns.stream()
@@ -46,7 +44,7 @@ public class ChargeCard extends SCCard {
         pawns.forEach(p -> chessBoard.fakeSquare(null, p.getPosition()));
         pawns.forEach(p -> chessBoard.fakeSquare(p, p.oneSquareForward()));
 
-        boolean kingIsNotUnderAttack = !chessBoard.isKingUnderAttack(color);
+        boolean kingIsNotUnderAttack = !chessBoard.isKingUnderAttack(isPlayedBy);
 
         chessBoard.unfakeAllSquares();
         return kingIsNotUnderAttack;
@@ -57,7 +55,7 @@ public class ChargeCard extends SCCard {
         Comparator<Pawn> startWithMoreAdvancedPawn = Map.of(
                 Color.BLACK, Comparator.comparingInt(Pawn::getY),
                 Color.WHITE, Comparator.comparingInt(Pawn::getY).reversed()
-        ).get(this.color);
+        ).get(this.isPlayedBy);
         pawns.stream()
                 .sorted(startWithMoreAdvancedPawn)
                 .forEach(p -> chessBoard.move(p, p.oneSquareForward()));

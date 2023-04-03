@@ -9,7 +9,7 @@ import piece.Color;
 
 @Getter
 @Slf4j
-public abstract class SCCard {
+public abstract class Card {
 
     protected final String name;
     protected final String description;
@@ -17,7 +17,7 @@ public abstract class SCCard {
     @Setter
     protected Color isPlayedBy;
 
-    public SCCard(String name, String description, SCType type) {
+    protected Card(String name, String description, SCType type) {
         this.name = name;
         this.description = description;
         this.type = type;

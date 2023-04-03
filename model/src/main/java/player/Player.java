@@ -1,6 +1,6 @@
 package player;
 
-import card.SCCard;
+import card.Card;
 import lombok.Getter;
 import piece.Color;
 
@@ -12,7 +12,7 @@ public class Player {
 
     private final String name;
     private final Color color;
-    private final Set<Class<? extends SCCard>> cards;
+    private final Set<Class<? extends Card>> cards;
 
     public Player(String name, Color color) {
         this.name = name;

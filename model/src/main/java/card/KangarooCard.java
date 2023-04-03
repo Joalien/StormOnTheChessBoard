@@ -4,7 +4,7 @@ import board.ChessBoard;
 import piece.Knight;
 import piece.extra.Kangaroo;
 
-public class KangarooCard extends SCCard {
+public class KangarooCard extends Card {
 
     private Knight knight;
 

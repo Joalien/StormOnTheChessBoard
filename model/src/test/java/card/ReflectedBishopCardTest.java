@@ -14,7 +14,7 @@ class ReflectedBishopCardTest {
     public static final String e2 = "e2";
     public static final String f7 = "f7";
     private Bishop bishop;
-    private SCCard reflectedBishop;
+    private Card reflectedBishop;
     private ChessBoard chessBoard;
 
     @BeforeEach

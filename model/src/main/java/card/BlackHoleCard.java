@@ -3,7 +3,7 @@ package card;
 import board.ChessBoard;
 import piece.extra.BlackHole;
 
-public class BlackHoleCard extends SCCard {
+public class BlackHoleCard extends Card {
 
     private final String position;
 

@@ -19,7 +19,7 @@ class HomeCardTest {
             String e4 = "e4";
             String g1 = "g1";
             chessBoard.add(knight, e4);
-            SCCard homeCard = new HomeCard(knight, g1);
+            Card homeCard = new HomeCard(knight, g1);
 
             assertTrue(homeCard.playOn(chessBoard));
 
@@ -36,7 +36,7 @@ class HomeCardTest {
             chessBoard.add(knight, e4);
             Queen queen = new Queen(Color.BLACK);
             chessBoard.add(queen, g1);
-            SCCard homeCard = new HomeCard(knight, g1);
+            Card homeCard = new HomeCard(knight, g1);
 
             assertTrue(homeCard.playOn(chessBoard));
 
@@ -59,7 +59,7 @@ class HomeCardTest {
             chessBoard.add(pawn, e4);
             Queen queen = new Queen(Color.BLACK);
             chessBoard.add(queen, g1);
-            SCCard homeCard = new HomeCard(pawn, g1);
+            Card homeCard = new HomeCard(pawn, g1);
 
             assertThrows(IllegalArgumentException.class, () -> homeCard.playOn(chessBoard));
 
@@ -78,7 +78,7 @@ class HomeCardTest {
             chessBoard.add(knight, e4);
             Queen queen = new Queen(Color.WHITE);
             chessBoard.add(queen, g1);
-            SCCard homeCard = new HomeCard(knight, g1);
+            Card homeCard = new HomeCard(knight, g1);
 
             assertThrows(IllegalArgumentException.class, () -> homeCard.playOn(chessBoard));
 
@@ -95,7 +95,7 @@ class HomeCardTest {
             String e4 = "e4";
             String g1 = "g1";
             chessBoard.add(queen, e4);
-            SCCard homeCard = new HomeCard(queen, g1);
+            Card homeCard = new HomeCard(queen, g1);
 
             assertThrows(IllegalArgumentException.class, () -> homeCard.playOn(chessBoard));
 
@@ -111,7 +111,7 @@ class HomeCardTest {
             String e4 = "e4";
             String d1 = "d1";
             chessBoard.add(queen, e4);
-            SCCard homeCard = new HomeCard(queen, d1);
+            Card homeCard = new HomeCard(queen, d1);
 
             assertThrows(IllegalArgumentException.class, () -> homeCard.playOn(chessBoard));
 
@@ -129,7 +129,7 @@ class HomeCardTest {
             chessBoard.add(knight, e4);
             King king = new King(Color.BLACK);
             chessBoard.add(king, g1);
-            SCCard homeCard = new HomeCard(knight, g1);
+            Card homeCard = new HomeCard(knight, g1);
 
             assertThrows(IllegalStateException.class, () -> homeCard.playOn(chessBoard));
 

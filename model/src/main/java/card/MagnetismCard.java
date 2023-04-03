@@ -4,7 +4,7 @@ import board.ChessBoard;
 import effet.MagnetismEffect;
 import piece.Piece;
 
-public class MagnetismCard extends SCCard {
+public class MagnetismCard extends Card {
 
     private final Piece piece;
 

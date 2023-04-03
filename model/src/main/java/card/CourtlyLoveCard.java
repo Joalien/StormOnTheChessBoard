@@ -8,7 +8,7 @@ import piece.Queen;
 import position.PositionUtil;
 
 @Slf4j
-public class CourtlyLoveCard extends SCCard {
+public class CourtlyLoveCard extends Card {
 
     private final Knight knight;
     private final String positionToMoveOn;
@@ -23,6 +23,7 @@ public class CourtlyLoveCard extends SCCard {
     protected void validInput(ChessBoard chessBoard) {
         if (knight == null) throw new IllegalStateException();
         if (positionToMoveOn == null) throw new IllegalStateException();
+        if (knight.getColor() != isPlayedBy) throw new IllegalColorException(knight.getColor());
         boolean isNearbyQueen = chessBoard.allyPieces(knight.getColor()).stream()
                 .filter(Queen.class::isInstance)
                 .map(Piece::getPosition)

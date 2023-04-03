@@ -18,14 +18,14 @@ import java.util.stream.IntStream;
 @Slf4j
 public class GameStateController {
 
-    public static final int NUMBER_OF_CARDS_IN_HAND = 5;
+    private static final int NUMBER_OF_CARDS_IN_HAND = 5;
     private ChessBoard chessBoard;
     private Player white;
     private Player black;
-    private List<Class<? extends SCCard>> cards;
+    private List<Class<? extends Card>> cards;
     @Setter(AccessLevel.PACKAGE)
     private Player currentPlayer;
-    private StateEnum state;
+    private StateEnum currentState;
 
     public GameStateController() {
     }
@@ -40,7 +40,7 @@ public class GameStateController {
                 .peek(x -> dealCard(white))
                 .forEach(x -> dealCard(black));
         currentPlayer = white;
-        state = StateEnum.BEGINNING_OF_THE_TURN;
+        currentState = StateEnum.BEGINNING_OF_THE_TURN;
     }
 
     private void initDeck() {
@@ -65,22 +65,25 @@ public class GameStateController {
     }
 
     public boolean tryToMove(String from, String to) {
-        return state.tryToMove(this, from, to);
+        return currentState.getState().tryToMove(this, from, to);
     }
 
-    public boolean tryToPlayCard(SCCard card) {
+    public boolean tryToPlayCard(Card card) {
         card.setIsPlayedBy(currentPlayer.getColor());
-        boolean isPlayed = state.tryToPlayCard(this, card);
-        if (isPlayed) dealCard(currentPlayer);
+        boolean isPlayed = currentState.getState().tryToPlayCard(this, card);
+        if (isPlayed) {
+            currentPlayer.getCards().remove(card.getClass());
+            dealCard(currentPlayer);
+        }
         return isPlayed;
     }
 
     public boolean tryToPass() {
-        return state.tryToPass(this);
+        return currentState.getState().tryToPass(this);
     }
 
-    void setState(StateEnum state) {
-        log.debug("{} is now in state {}", this.currentPlayer, state);
-        this.state = state;
+    void setCurrentState(StateEnum currentState) {
+        log.debug("{} is now in state {}", this.currentPlayer, currentState);
+        this.currentState = currentState;
     }
 }

@@ -18,7 +18,7 @@ class KangarooCardTest {
 
     private ChessBoard chessBoard;
     private Knight knight;
-    private SCCard kangaroo;
+    private Card kangaroo;
 
     @BeforeEach
     void setUp() {

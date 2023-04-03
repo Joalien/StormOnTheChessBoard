@@ -16,7 +16,7 @@ class EndOfTheTurnStateTest {
     void setUp() {
         gameStateController = new GameStateController();
         gameStateController.startGame();
-        gameStateController.setState(StateEnum.END_OF_THE_TURN);
+        gameStateController.setCurrentState(StateEnum.END_OF_THE_TURN);
         card = new QuadrilleCard(QuadrilleCard.Direction.CLOCKWISE);
     }
 
@@ -25,7 +25,7 @@ class EndOfTheTurnStateTest {
         assertEquals(gameStateController.getWhite(), gameStateController.getCurrentPlayer());
         assertTrue(gameStateController.tryToPass());
 
-        assertEquals(StateEnum.BEGINNING_OF_THE_TURN, gameStateController.getState());
+        assertEquals(StateEnum.BEGINNING_OF_THE_TURN, gameStateController.getCurrentState());
         assertEquals(gameStateController.getBlack(), gameStateController.getCurrentPlayer());
     }
 
@@ -35,7 +35,7 @@ class EndOfTheTurnStateTest {
 
         assertTrue(gameStateController.tryToPass());
 
-        assertEquals(StateEnum.BEGINNING_OF_THE_TURN, gameStateController.getState());
+        assertEquals(StateEnum.BEGINNING_OF_THE_TURN, gameStateController.getCurrentState());
         assertEquals(gameStateController.getWhite(), gameStateController.getCurrentPlayer());
     }
 
@@ -43,13 +43,13 @@ class EndOfTheTurnStateTest {
     void should_not_be_able_to_play_a_move() {
         assertThrows(AlreadyMovedException.class, () -> gameStateController.tryToMove("e2", "e4"));
 
-        assertEquals(StateEnum.END_OF_THE_TURN, gameStateController.getState());
+        assertEquals(StateEnum.END_OF_THE_TURN, gameStateController.getCurrentState());
     }
 
     @Test
     void should_not_be_able_to_play_a_card() {
         assertThrows(CardAlreadyPlayedException.class, () -> gameStateController.tryToPlayCard(card));
 
-        assertEquals(StateEnum.END_OF_THE_TURN, gameStateController.getState());
+        assertEquals(StateEnum.END_OF_THE_TURN, gameStateController.getCurrentState());
     }
 }

@@ -11,7 +11,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-public class QuadrilleCard extends SCCard {
+public class QuadrilleCard extends Card {
 
     private static final List<String> CORNERS = List.of("a1", "h1", "h8", "a8");
     private final Map<String, Optional<Piece>> pieces = new HashMap<>();

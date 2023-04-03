@@ -9,17 +9,17 @@ import piece.Piece;
 @Slf4j
 public class BombingEffect extends Effect {
     private final String position;
-    private final Color colorThatShouldExplode;
+    private final Color isPlayedBy;
 
-    public BombingEffect(String position, Color colorThatShouldExplode) {
+    public BombingEffect(String position, Color isPlayedBy) {
         super("Attentat");
         this.position = position;
-        this.colorThatShouldExplode = colorThatShouldExplode;
+        this.isPlayedBy = isPlayedBy;
     }
 
     @Override
     public void afterMoveHook(ChessBoard chessBoard, Piece piece) {
-        if (piece.getPosition().equals(this.position) && piece.getColor() == colorThatShouldExplode) {
+        if (piece.getPosition().equals(this.position) && piece.getColor() != isPlayedBy) {
             log.info("BOUM!");
             if (!(piece instanceof King)) {
                 chessBoard.removePieceFromTheBoard(piece);

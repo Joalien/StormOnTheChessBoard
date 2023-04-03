@@ -1,17 +1,17 @@
 package state;
 
-import card.SCCard;
+import card.Card;
 
 public class BeginningOfTheTurnState implements TurnState {
     @Override
     public boolean tryToMove(GameStateController gameStateController, String from, String to) {
         boolean hasMoved = gameStateController.getChessBoard().tryToMove(from, to);
-        if (hasMoved) gameStateController.setState(StateEnum.MOVE_WITHOUT_CARD_PLAYED);
+        if (hasMoved) gameStateController.setCurrentState(StateEnum.MOVE_WITHOUT_CARD_PLAYED);
         return hasMoved;
     }
 
     @Override
-    public boolean tryToPlayCard(GameStateController gameStateController, SCCard card) {
+    public boolean tryToPlayCard(GameStateController gameStateController, Card card) {
         StateEnum nextState = switch (card.getType()) {
             case BEFORE_TURN -> StateEnum.BEFORE_MOVE;
             case REPLACE_TURN -> StateEnum.END_OF_THE_TURN;
@@ -19,7 +19,7 @@ public class BeginningOfTheTurnState implements TurnState {
         };
         boolean hasPlayedCard = card.playOn(gameStateController.getChessBoard());
         if (hasPlayedCard) {
-            gameStateController.setState(nextState);
+            gameStateController.setCurrentState(nextState);
         }
         return hasPlayedCard;
     }

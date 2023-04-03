@@ -11,7 +11,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Slf4j
-public class ReflectedBishopCard extends SCCard {
+public class ReflectedBishopCard extends Card {
 
     private final Bishop bishop;
     private final String positionToMoveOn;

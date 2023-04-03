@@ -14,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class MagnetismCardTest {
 
     private ChessBoard chessBoard;
-    private SCCard magnetismCard;
+    private Card magnetismCard;
     private String c2 = "c2";
     private Piece piece;
 

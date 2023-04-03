@@ -1,6 +1,7 @@
-package card;
+package piece.extra;
 
 import board.ChessBoard;
+import card.QuadrilleCard;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import piece.Color;

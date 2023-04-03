@@ -13,12 +13,13 @@ class BombingCardTest {
 
     private final String e4 = "e4";
     private ChessBoard chessBoard;
-    private SCCard bombing;
+    private Card bombing;
 
     @BeforeEach
     void setUp() {
         chessBoard = ChessBoard.createEmpty();
-        bombing = new BombingCard(e4, Color.BLACK);
+        bombing = new BombingCard(e4);
+        bombing.setIsPlayedBy(Color.WHITE);
     }
 
     @Nested

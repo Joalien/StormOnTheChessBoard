@@ -15,7 +15,7 @@ class StableCardTest {
     public static final String h1 = "h1";
     private Rock rock;
     private Knight knight;
-    private SCCard stableCard;
+    private Card stableCard;
     private ChessBoard chessBoard;
 
 

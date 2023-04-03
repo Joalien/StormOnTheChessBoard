@@ -4,7 +4,7 @@ import board.ChessBoard;
 import piece.Pawn;
 import piece.Piece;
 
-public class HomeCard extends SCCard {
+public class HomeCard extends Card {
 
     private final Piece piece;
     private final String positionToMoveOn;

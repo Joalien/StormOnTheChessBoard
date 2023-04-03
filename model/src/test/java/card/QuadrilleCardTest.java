@@ -24,8 +24,8 @@ class QuadrilleCardTest {
     private Rock h1Rock;
     private Rock a8Rock;
     private Rock h8Rock;
-    private SCCard clockwiseQuadrille;
-    private SCCard counterclockwiseQuadrille;
+    private Card clockwiseQuadrille;
+    private Card counterclockwiseQuadrille;
 
 
     @BeforeEach

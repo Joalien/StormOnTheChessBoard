@@ -5,7 +5,7 @@ import piece.Knight;
 import piece.Rock;
 
 // TODO generify me to allow other swap cards
-public class StableCard extends SCCard {
+public class StableCard extends Card {
 
     private final Rock rock;
     private final Knight knight;
