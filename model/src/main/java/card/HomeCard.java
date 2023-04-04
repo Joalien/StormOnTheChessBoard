@@ -4,15 +4,21 @@ import board.ChessBoard;
 import piece.Pawn;
 import piece.Piece;
 
+import java.util.List;
+
 public class HomeCard extends Card {
 
-    private final Piece piece;
-    private final String positionToMoveOn;
+    private Piece piece;
+    private String positionToMoveOn;
 
-    public HomeCard(Piece piece, String positionToMoveOn) {
-        super("Maison", "Ramener l'une de vos pièces (pas un pion) sur l'une des cases où elle pouvait se trouver en début de partie. Vous pouvez même prendre ainsi une pièce adverse", SCType.REPLACE_TURN);
-        this.piece = piece;
-        this.positionToMoveOn = positionToMoveOn;
+    public HomeCard() {
+        super("Maison", "Ramener l'une de vos pièces (pas un pion) sur l'une des cases où elle pouvait se trouver en début de partie. Vous pouvez même prendre ainsi une pièce adverse", CardType.REPLACE_TURN);
+    }
+
+    @Override
+    protected void setupParams(List<?> params) {
+        this.piece = (Piece) params.get(0);
+        this.positionToMoveOn = (String) params.get(1);
     }
 
     @Override

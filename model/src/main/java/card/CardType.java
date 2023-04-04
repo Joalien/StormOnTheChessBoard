@@ -1,6 +1,6 @@
 package card;
 
-public enum SCType {
+public enum CardType {
     BEFORE_TURN,
     REPLACE_TURN,
     AFTER_TURN,

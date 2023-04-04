@@ -2,11 +2,12 @@ package state;
 
 import card.Card;
 import card.LightweightSquadCard;
-import card.QuadrilleCard;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import piece.Color;
 import piece.Pawn;
+
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -24,8 +25,8 @@ class GameStateControllerTest {
     void should_set_up_correctly() {
         assertEquals(StateEnum.BEGINNING_OF_THE_TURN, gameStateController.getCurrentState());
         assertEquals(gameStateController.getWhite(), gameStateController.getCurrentPlayer());
-        assertEquals(5, gameStateController.getWhite().getCards().size());
-        assertEquals(5, gameStateController.getBlack().getCards().size());
+        assertEquals(4, gameStateController.getWhite().getCards().size());
+        assertEquals(4, gameStateController.getBlack().getCards().size());
         assertFalse(gameStateController.getCards().isEmpty());
         assertEquals(Color.WHITE, gameStateController.getWhite().getColor());
         assertEquals(Color.BLACK, gameStateController.getBlack().getColor());
@@ -33,16 +34,16 @@ class GameStateControllerTest {
 
     @Test
     void should_discard_card_and_pick_new_one() {
-        Card card = new LightweightSquadCard((Pawn) gameStateController.getChessBoard().at("e2").getPiece().get(), (Pawn) gameStateController.getChessBoard().at("d2").getPiece().get());
+        Card card = new LightweightSquadCard();
         gameStateController.getCurrentPlayer().getCards().clear();
-        gameStateController.getCurrentPlayer().getCards().add(LightweightSquadCard.class);
-        gameStateController.getCards().remove(LightweightSquadCard.class);
+        gameStateController.getCurrentPlayer().getCards().add(card);
+        gameStateController.getCards().remove(card);
         assertEquals(1, gameStateController.getCurrentPlayer().getCards().size());
-        assertTrue(gameStateController.getCurrentPlayer().getCards().contains(LightweightSquadCard.class));
+        assertTrue(gameStateController.getCurrentPlayer().getCards().contains(card));
 
-        assertTrue(gameStateController.tryToPlayCard(card));
+        assertTrue(gameStateController.tryToPlayCard(card, List.of((Pawn) gameStateController.getChessBoard().at("e2").getPiece().get(), (Pawn) gameStateController.getChessBoard().at("d2").getPiece().get())));
 
         assertEquals(1, gameStateController.getCurrentPlayer().getCards().size());
-        assertFalse(gameStateController.getCurrentPlayer().getCards().contains(LightweightSquadCard.class));
+        assertFalse(gameStateController.getCurrentPlayer().getCards().contains(card));
     }
 }

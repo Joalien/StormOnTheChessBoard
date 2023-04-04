@@ -13,10 +13,6 @@ import static position.PositionUtil.*;
 @Slf4j
 public class ChessBoard {
 
-    private static final Map<String, String> CASTLE_MAP = Map.of("f1", "h1",
-            "d1", "a1",
-            "f8", "h8",
-            "d8", "a8");
     private final HashMap<String, Square> board = new HashMap<>(64);
     private final HashMap<String, Square> fakeSquares = new HashMap<>();
     private final Set<Piece> outOfTheBoardPieces = new HashSet<>();
@@ -146,7 +142,7 @@ public class ChessBoard {
         boolean kingWantToCastle = piece.squaresOnThePath(positionToMoveOn).size() == 1;
         if (kingCanCastle && kingWantToCastle) {
             String finalPositionOfRock = piece.squaresOnThePath(positionToMoveOn).stream().findFirst().get();
-            String rockPosition = CASTLE_MAP.get(finalPositionOfRock);
+            String rockPosition = Castlable.CASTLE_MAP.get(finalPositionOfRock);
             at(rockPosition)
                     .getPiece()
                     .filter(Rock.class::isInstance)

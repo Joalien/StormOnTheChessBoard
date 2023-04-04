@@ -7,6 +7,8 @@ import org.junit.jupiter.api.Test;
 import piece.Knight;
 import piece.Rock;
 
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class StableCardTest {
@@ -24,14 +26,14 @@ class StableCardTest {
         chessBoard = ChessBoard.createWithInitialState();
         rock = (Rock) chessBoard.at(h1).getPiece().get();
         knight = (Knight) chessBoard.at(g1).getPiece().get();
-        stableCard = new StableCard(rock, knight);
+        stableCard = new StableCard();
     }
 
     @Nested
     class Success {
         @Test
         void should_swap_pieces() {
-            assertTrue(stableCard.playOn(chessBoard));
+            assertTrue(stableCard.playOn(chessBoard, List.of(rock, knight)));
 
             assertEquals(rock, chessBoard.at(g1).getPiece().get());
             assertEquals(knight, chessBoard.at(h1).getPiece().get());
@@ -44,9 +46,9 @@ class StableCardTest {
         void should_not_swap_pieces_of_different_color() {
             String g8 = "g8";
             Knight blackNight = (Knight) chessBoard.at(g8).getPiece().get();
-            stableCard = new StableCard(rock, blackNight);
+            stableCard = new StableCard();
 
-            assertThrows(IllegalArgumentException.class, () -> stableCard.playOn(chessBoard));
+            assertThrows(IllegalArgumentException.class, () -> stableCard.playOn(chessBoard, List.of(rock, blackNight)));
 
             assertEquals(rock, chessBoard.at("h1").getPiece().get());
             assertEquals(blackNight, chessBoard.at(g8).getPiece().get());

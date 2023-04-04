@@ -3,15 +3,21 @@ package card;
 import board.ChessBoard;
 import piece.Pawn;
 
+import java.util.List;
+
 public class LightweightSquadCard extends Card {
 
-    private final Pawn pawn1;
-    private final Pawn pawn2;
+    private Pawn pawn1;
+    private Pawn pawn2;
 
-    public LightweightSquadCard(Pawn pawn1, Pawn pawn2) {
-        super("Escouade légère", "Avancez deux de vos pions, chacun de deux cases", SCType.REPLACE_TURN);
-        this.pawn1 = pawn1;
-        this.pawn2 = pawn2;
+    public LightweightSquadCard() {
+        super("Escouade légère", "Avancez deux de vos pions, chacun de deux cases", CardType.REPLACE_TURN);
+    }
+
+    @Override
+    protected void setupParams(List<?> params) {
+        this. pawn1 = (Pawn) params.get(0);
+        this. pawn2 = (Pawn) params.get(1);
     }
 
     @Override

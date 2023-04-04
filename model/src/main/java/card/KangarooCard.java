@@ -4,13 +4,19 @@ import board.ChessBoard;
 import piece.Knight;
 import piece.extra.Kangaroo;
 
+import java.util.List;
+
 public class KangarooCard extends Card {
 
     private Knight knight;
 
-    public KangarooCard(Knight knight) {
-        super("Kangaroo", "Transformez définitivement l'un de vos cavaliers, ou un cavalier adverse en kangourou. Le kangourou se déplace en faisant deux sauts de cavalier consécutifs.", SCType.AFTER_TURN);
-        this.knight = knight;
+    public KangarooCard() {
+        super("Kangaroo", "Transformez définitivement l'un de vos cavaliers, ou un cavalier adverse en kangourou. Le kangourou se déplace en faisant deux sauts de cavalier consécutifs.", CardType.AFTER_TURN);
+    }
+
+    @Override
+    protected void setupParams(List<?> params) {
+        this.knight = (Knight) params.get(0);
     }
 
     @Override

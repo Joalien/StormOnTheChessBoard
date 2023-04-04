@@ -7,19 +7,24 @@ import position.PositionUtil;
 
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 @Slf4j
 public class ReflectedBishopCard extends Card {
 
-    private final Bishop bishop;
-    private final String positionToMoveOn;
+    private Bishop bishop;
+    private String positionToMoveOn;
 
-    public ReflectedBishopCard(Bishop bishop, String positionToMoveOn) {
-        super("Fou réfléchi", "Déplacez l'un de vos fous en le faisant \"rebondir\" sur les côtés de l'échiquier poursuivant son chemin en décrivnat en angle droit. Il n'y a pas de limites au nombre de rebonds au cours d'un déplacement", SCType.REPLACE_TURN);
-        this.bishop = bishop;
-        this.positionToMoveOn = positionToMoveOn;
+    public ReflectedBishopCard() {
+        super("Fou réfléchi", "Déplacez l'un de vos fous en le faisant \"rebondir\" sur les côtés de l'échiquier poursuivant son chemin en décrivnat en angle droit. Il n'y a pas de limites au nombre de rebonds au cours d'un déplacement", CardType.REPLACE_TURN);
+    }
+
+    @Override
+    protected void setupParams(List<?> params) {
+        this.bishop = (Bishop) params.get(0);
+        this.positionToMoveOn = (String) params.get(1);
     }
 
     @Override

@@ -5,6 +5,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import state.exception.CardAlreadyPlayedException;
 
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class BeforeMoveCardPlayedStateTest {
@@ -16,7 +18,7 @@ class BeforeMoveCardPlayedStateTest {
         gameStateController = new GameStateController();
         gameStateController.startGame();
         gameStateController.setCurrentState(StateEnum.BEFORE_MOVE);
-        card = new QuadrilleCard(QuadrilleCard.Direction.CLOCKWISE);
+        card = new QuadrilleCard();
     }
 
     @Test
@@ -35,7 +37,7 @@ class BeforeMoveCardPlayedStateTest {
 
     @Test
     void should_not_be_able_to_play_a_card() {
-        assertThrows(CardAlreadyPlayedException.class, () -> gameStateController.tryToPlayCard(card));
+        assertThrows(CardAlreadyPlayedException.class, () -> gameStateController.tryToPlayCard(card, List.of(QuadrilleCard.Direction.CLOCKWISE)));
 
         assertEquals(StateEnum.BEFORE_MOVE, gameStateController.getCurrentState());
     }

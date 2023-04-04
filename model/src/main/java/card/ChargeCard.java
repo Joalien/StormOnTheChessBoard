@@ -6,18 +6,20 @@ import piece.Pawn;
 import piece.Piece;
 import piece.Square;
 
-import java.util.Comparator;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class ChargeCard extends Card {
 
-    private final Set<Pawn> pawns;
+    private Set<Pawn> pawns;
 
-    public ChargeCard(Set<Pawn> pawns) {
-        super("Charge", "Avancez tous ceux de vos ppions que vous voulez, et qui le peuvent, d'une case", SCType.REPLACE_TURN);
-        this.pawns = pawns;
+    public ChargeCard() {
+        super("Charge", "Avancez tous ceux de vos ppions que vous voulez, et qui le peuvent, d'une case", CardType.REPLACE_TURN);
+    }
+
+    @Override
+    protected void setupParams(List<?> params) {
+        this.pawns = params.stream().map(p -> (Pawn) p).collect(Collectors.toSet());
     }
 
     @Override

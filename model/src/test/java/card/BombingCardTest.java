@@ -7,6 +7,8 @@ import org.junit.jupiter.api.Test;
 import piece.Color;
 import piece.Queen;
 
+import java.util.Collections;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class BombingCardTest {
@@ -18,7 +20,7 @@ class BombingCardTest {
     @BeforeEach
     void setUp() {
         chessBoard = ChessBoard.createEmpty();
-        bombing = new BombingCard(e4);
+        bombing = new BombingCard();
         bombing.setIsPlayedBy(Color.WHITE);
     }
 
@@ -28,7 +30,7 @@ class BombingCardTest {
         void should_work_if_empty_square() {
             assertTrue(chessBoard.getEffects().isEmpty());
 
-            assertTrue(bombing.playOn(chessBoard));
+            assertTrue(bombing.playOn(chessBoard, Collections.singletonList(e4)));
 
             assertEquals(1, chessBoard.getEffects().size());
         }
@@ -37,7 +39,7 @@ class BombingCardTest {
         void should_work_if_played_on_ally_piece() {
             chessBoard.add(new Queen(Color.WHITE), e4);
 
-            assertTrue(bombing.playOn(chessBoard));
+            assertTrue(bombing.playOn(chessBoard, Collections.singletonList(e4)));
         }
     }
 
@@ -48,7 +50,7 @@ class BombingCardTest {
             Queen queen = new Queen(Color.BLACK);
             chessBoard.add(queen, e4);
 
-            assertThrows(IllegalArgumentException.class, () -> bombing.playOn(chessBoard));
+            assertThrows(IllegalArgumentException.class, () -> bombing.playOn(chessBoard, Collections.singletonList(e4)));
 
             assertEquals(queen, chessBoard.at(e4).getPiece().get());
         }

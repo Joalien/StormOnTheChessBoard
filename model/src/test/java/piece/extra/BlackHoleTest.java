@@ -8,6 +8,8 @@ import piece.Color;
 import piece.Rock;
 import piece.extra.BlackHole;
 
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
@@ -55,6 +57,6 @@ class BlackHoleTest {
         chessBoard.removePieceFromTheBoard(chessBoard.at(a1).getPiece().get());
         chessBoard.add(new BlackHole(), a1);
 
-        Assertions.assertThrows(BlackHole.BlackHoleException.class, () -> new QuadrilleCard(QuadrilleCard.Direction.CLOCKWISE).playOn(chessBoard));
+        Assertions.assertThrows(BlackHole.BlackHoleException.class, () -> new QuadrilleCard().playOn(chessBoard, List.of(QuadrilleCard.Direction.CLOCKWISE)));
     }
 }

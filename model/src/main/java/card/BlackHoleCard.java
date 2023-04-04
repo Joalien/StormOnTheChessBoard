@@ -3,13 +3,20 @@ package card;
 import board.ChessBoard;
 import piece.extra.BlackHole;
 
+import java.util.List;
+
 public class BlackHoleCard extends Card {
 
-    private final String position;
+    private String position;
 
-    public BlackHoleCard(String position) {
-        super("Trou noir", "Désignez une case vide qui est \"retirée\" de l'échiquier juqu'à la fin de la partie. Il sera impossible pendant la suite du jeu de s'y arrêter ou de la traverser.", SCType.AFTER_TURN);
-        this.position = position;
+    public BlackHoleCard() {
+        super("Trou noir", "Désignez une case vide qui est \"retirée\" de l'échiquier juqu'à la fin de la partie. Il sera impossible pendant la suite du jeu de s'y arrêter ou de la traverser.", CardType.AFTER_TURN);
+    }
+
+    @Override
+    protected void setupParams(List<?> params) {
+        this.position = (String) params.get(0);
+
     }
 
     @Override

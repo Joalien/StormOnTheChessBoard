@@ -7,6 +7,8 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import piece.*;
 
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class CourtlyLoveCardTest {
@@ -28,14 +30,14 @@ class CourtlyLoveCardTest {
         chessBoard.add(new Queen(Color.WHITE), d1);
         chessBoard.add(new King(Color.WHITE), e1);
 
-        courtlyLoveCard = createCourtlyLoveCard(d2);
+        courtlyLoveCard = createCourtlyLoveCard();
     }
 
     @Nested
     class Success {
         @Test
         void should_tp_knight_to_c1() {
-            assertTrue(createCourtlyLoveCard(c1).playOn(chessBoard));
+            assertTrue(courtlyLoveCard.playOn(chessBoard, List.of(knight, c1)));
 
             assertEquals(knight, chessBoard.at(c1).getPiece().get());
             assertTrue(chessBoard.at(b4).getPiece().isEmpty());
@@ -45,7 +47,7 @@ class CourtlyLoveCardTest {
         void should_tp_knight_to_protect_from_chess() {
             chessBoard.add(new Bishop(Color.BLACK), "a5");
 
-            assertTrue(courtlyLoveCard.playOn(chessBoard));
+            assertTrue(courtlyLoveCard.playOn(chessBoard, List.of(knight, d2)));
 
             assertEquals(knight, chessBoard.at(d2).getPiece().get());
             assertTrue(chessBoard.at(b4).getPiece().isEmpty());
@@ -55,7 +57,7 @@ class CourtlyLoveCardTest {
         void should_tp_knight_to_protect_from_chess_bis() {
             chessBoard.add(new Bishop(Color.BLACK), "c3");
 
-            assertTrue(courtlyLoveCard.playOn(chessBoard));
+            assertTrue(courtlyLoveCard.playOn(chessBoard, List.of(knight, d2)));
 
             assertEquals(knight, chessBoard.at(d2).getPiece().get());
             assertTrue(chessBoard.at(b4).getPiece().isEmpty());
@@ -70,7 +72,7 @@ class CourtlyLoveCardTest {
             Bishop bishop = new Bishop(Color.BLACK);
             chessBoard.add(bishop, d2);
 
-            assertThrows(IllegalArgumentException.class, () -> courtlyLoveCard.playOn(chessBoard));
+            assertThrows(IllegalArgumentException.class, () -> courtlyLoveCard.playOn(chessBoard, List.of(knight, d2)));
 
             assertEquals(knight, chessBoard.at(b4).getPiece().get());
             assertEquals(bishop, chessBoard.at(d2).getPiece().get());
@@ -80,7 +82,7 @@ class CourtlyLoveCardTest {
         void should_not_tp_if_it_create_check() {
             chessBoard.add(new Bishop(Color.BLACK), "a5");
 
-            assertThrows(CheckException.class, () -> createCourtlyLoveCard(c1).playOn(chessBoard));
+            assertThrows(CheckException.class, () -> createCourtlyLoveCard().playOn(chessBoard, List.of(knight, c1)));
 
             assertEquals(knight, chessBoard.at(b4).getPiece().get());
             assertTrue(chessBoard.at(c1).getPiece().isEmpty());
@@ -89,7 +91,7 @@ class CourtlyLoveCardTest {
         @Test
         void should_not_tp_if_position_not_nearby_queen() {
             String h8 = "h8";
-            assertThrows(IllegalArgumentException.class, () -> createCourtlyLoveCard(h8).playOn(chessBoard));
+            assertThrows(IllegalArgumentException.class, () -> createCourtlyLoveCard().playOn(chessBoard, List.of(knight, h8)));
 
             assertEquals(knight, chessBoard.at(b4).getPiece().get());
             assertTrue(chessBoard.at(h8).getPiece().isEmpty());
@@ -97,17 +99,17 @@ class CourtlyLoveCardTest {
 
         @Test
         void should_not_move_enemy_knight() {
-            Card courtlyLoveCard = createCourtlyLoveCard(c1);
+            Card courtlyLoveCard = createCourtlyLoveCard();
             courtlyLoveCard.setIsPlayedBy(Color.BLACK);
-            assertThrows(IllegalColorException.class, () -> courtlyLoveCard.playOn(chessBoard));
+            assertThrows(IllegalColorException.class, () -> courtlyLoveCard.playOn(chessBoard, List.of(knight, c1)));
 
             assertEquals(knight, chessBoard.at(b4).getPiece().get());
             assertTrue(chessBoard.at(c1).getPiece().isEmpty());
         }
     }
 
-    private CourtlyLoveCard createCourtlyLoveCard(String position) {
-        CourtlyLoveCard courtlyLoveCard1 = new CourtlyLoveCard(knight, position);
+    private CourtlyLoveCard createCourtlyLoveCard() {
+        CourtlyLoveCard courtlyLoveCard1 = new CourtlyLoveCard();
         courtlyLoveCard1.setIsPlayedBy(Color.WHITE);
         return courtlyLoveCard1;
     }

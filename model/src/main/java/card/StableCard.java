@@ -4,17 +4,23 @@ import board.ChessBoard;
 import piece.Knight;
 import piece.Rock;
 
+import java.util.List;
+
 // TODO generify me to allow other swap cards
 public class StableCard extends Card {
 
-    private final Rock rock;
-    private final Knight knight;
+    private Rock rock;
+    private Knight knight;
 
 
-    public StableCard(Rock rock, Knight knight) {
-        super("Écurie", "Sur l'échiquier, permutez l'un de vos cavaliers avec l'une de vos tours", SCType.AFTER_TURN);
-        this.rock = rock;
-        this.knight = knight;
+    public StableCard() {
+        super("Écurie", "Sur l'échiquier, permutez l'un de vos cavaliers avec l'une de vos tours", CardType.AFTER_TURN);
+    }
+
+    @Override
+    protected void setupParams(List<?> params) {
+        this.rock = (Rock) params.get(0);
+        this.knight = (Knight) params.get(1);
     }
 
     @Override

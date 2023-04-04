@@ -12,7 +12,7 @@ public class Player {
 
     private final String name;
     private final Color color;
-    private final Set<Class<? extends Card>> cards;
+    private final Set<Card> cards;
 
     public Player(String name, Color color) {
         this.name = name;

@@ -8,6 +8,8 @@ import piece.BlackPawn;
 import piece.Pawn;
 import piece.WhitePawn;
 
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class LightweightSquadCardTest {
@@ -24,9 +26,9 @@ class LightweightSquadCardTest {
             String g1 = "g1";
             chessBoard.add(pawn1, g1);
             chessBoard.add(pawn2, e4);
-            Card lightweightSquadCard = new LightweightSquadCard(pawn1, pawn2);
+            Card lightweightSquadCard = new LightweightSquadCard();
 
-            assertTrue(lightweightSquadCard.playOn(chessBoard));
+            assertTrue(lightweightSquadCard.playOn(chessBoard, List.of(pawn1, pawn2)));
 
             assertTrue(chessBoard.at(g1).getPiece().isEmpty());
             assertEquals(pawn1, chessBoard.at("g3").getPiece().get());
@@ -43,9 +45,9 @@ class LightweightSquadCardTest {
             String a4 = "a4";
             chessBoard.add(pawn1, a5);
             chessBoard.add(pawn2, a4);
-            Card lightweightSquadCard = new LightweightSquadCard(pawn1, pawn2);
+            Card lightweightSquadCard = new LightweightSquadCard();
 
-            assertTrue(lightweightSquadCard.playOn(chessBoard));
+            assertTrue(lightweightSquadCard.playOn(chessBoard, List.of(pawn1, pawn2)));
 
             assertTrue(chessBoard.at(a5).getPiece().isEmpty());
             assertEquals(pawn1, chessBoard.at("a3").getPiece().get());
@@ -62,9 +64,9 @@ class LightweightSquadCardTest {
             String a4 = "a4";
             chessBoard.add(pawn1, a5);
             chessBoard.add(pawn2, a4);
-            LightweightSquadCard lightweightSquadCard = new LightweightSquadCard(pawn2, pawn1);
+            LightweightSquadCard lightweightSquadCard = new LightweightSquadCard();
 
-            assertTrue(lightweightSquadCard.playOn(chessBoard));
+            assertTrue(lightweightSquadCard.playOn(chessBoard, List.of(pawn1, pawn2)));
 
             assertTrue(chessBoard.at(a5).getPiece().isEmpty());
             assertEquals(pawn1, chessBoard.at("a3").getPiece().get());
@@ -85,9 +87,9 @@ class LightweightSquadCardTest {
             String g1 = "g1";
             chessBoard.add(pawn1, e4);
             chessBoard.add(pawn2, g1);
-            Card lightweightSquadCard = new LightweightSquadCard(pawn1, pawn2);
+            Card lightweightSquadCard = new LightweightSquadCard();
 
-            assertThrows(IllegalArgumentException.class, () -> lightweightSquadCard.playOn(chessBoard));
+            assertThrows(IllegalArgumentException.class, () -> lightweightSquadCard.playOn(chessBoard, List.of(pawn1, pawn2)));
 
             assertEquals(pawn1, chessBoard.at(e4).getPiece().get());
             assertEquals(pawn2, chessBoard.at(g1).getPiece().get());
@@ -99,9 +101,9 @@ class LightweightSquadCardTest {
             Pawn pawn1 = new WhitePawn();
             String e4 = "e4";
             chessBoard.add(pawn1, e4);
-            LightweightSquadCard lightweightSquadCard = new LightweightSquadCard(pawn1, pawn1);
+            LightweightSquadCard lightweightSquadCard = new LightweightSquadCard();
 
-            assertThrows(IllegalArgumentException.class, () -> lightweightSquadCard.playOn(chessBoard));
+            assertThrows(IllegalArgumentException.class, () -> lightweightSquadCard.playOn(chessBoard, List.of(pawn1, pawn1)));
 
             assertEquals(pawn1, chessBoard.at(e4).getPiece().get());
         }

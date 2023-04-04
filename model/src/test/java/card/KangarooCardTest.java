@@ -8,6 +8,7 @@ import piece.Knight;
 import piece.Piece;
 import piece.extra.Kangaroo;
 
+import java.util.List;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -24,20 +25,20 @@ class KangarooCardTest {
     void setUp() {
         chessBoard = ChessBoard.createWithInitialState();
         knight = (Knight) chessBoard.at("b1").getPiece().get();
-        kangaroo = new KangarooCard(knight);
+        kangaroo = new KangarooCard();
     }
 
     @Nested
     class Success {
         @Test
         void should_work() {
-            assertTrue(kangaroo.playOn(chessBoard));
+            assertTrue(kangaroo.playOn(chessBoard, List.of(knight)));
         }
 
         @Test
         void should_return_reachable_position() {
             Set<String> validMoves = Set.of("b5", "c4", "a4", "d5", "e4", "b3", "f3");
-            assertTrue(kangaroo.playOn(chessBoard));
+            assertTrue(kangaroo.playOn(chessBoard, List.of(knight)));
 
             Piece kangaroo = chessBoard.at("b1").getPiece().get();
             assertTrue(kangaroo instanceof Kangaroo);

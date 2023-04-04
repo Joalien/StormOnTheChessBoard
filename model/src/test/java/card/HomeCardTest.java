@@ -6,6 +6,8 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import piece.*;
 
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class HomeCardTest {
@@ -19,10 +21,10 @@ class HomeCardTest {
             String e4 = "e4";
             String g1 = "g1";
             chessBoard.add(knight, e4);
-            Card homeCard = new HomeCard(knight, g1);
+            Card homeCard = new HomeCard();
             homeCard.setIsPlayedBy(Color.WHITE);
 
-            assertTrue(homeCard.playOn(chessBoard));
+            assertTrue(homeCard.playOn(chessBoard, List.of(knight, g1)));
 
             assertEquals(knight, chessBoard.at(g1).getPiece().get());
             assertTrue(chessBoard.at(e4).getPiece().isEmpty());
@@ -37,10 +39,10 @@ class HomeCardTest {
             chessBoard.add(knight, e4);
             Queen queen = new Queen(Color.BLACK);
             chessBoard.add(queen, g1);
-            Card homeCard = new HomeCard(knight, g1);
+            Card homeCard = new HomeCard();
             homeCard.setIsPlayedBy(Color.WHITE);
 
-            assertTrue(homeCard.playOn(chessBoard));
+            assertTrue(homeCard.playOn(chessBoard, List.of(knight, g1)));
 
             assertEquals(knight, chessBoard.at(g1).getPiece().get());
             assertTrue(chessBoard.at(e4).getPiece().isEmpty());
@@ -61,10 +63,10 @@ class HomeCardTest {
             chessBoard.add(pawn, e4);
             Queen queen = new Queen(Color.BLACK);
             chessBoard.add(queen, g1);
-            Card homeCard = new HomeCard(pawn, g1);
+            Card homeCard = new HomeCard();
             homeCard.setIsPlayedBy(Color.WHITE);
 
-            assertThrows(IllegalArgumentException.class, () -> homeCard.playOn(chessBoard));
+            assertThrows(IllegalArgumentException.class, () -> homeCard.playOn(chessBoard, List.of(pawn, g1)));
 
             assertEquals(pawn, chessBoard.at(e4).getPiece().get());
             assertEquals(queen, chessBoard.at(g1).getPiece().get());
@@ -81,10 +83,10 @@ class HomeCardTest {
             chessBoard.add(knight, e4);
             Queen queen = new Queen(Color.WHITE);
             chessBoard.add(queen, g1);
-            Card homeCard = new HomeCard(knight, g1);
+            Card homeCard = new HomeCard();
             homeCard.setIsPlayedBy(Color.WHITE);
 
-            assertThrows(IllegalArgumentException.class, () -> homeCard.playOn(chessBoard));
+            assertThrows(IllegalArgumentException.class, () -> homeCard.playOn(chessBoard, List.of(knight, g1)));
 
             assertEquals(knight, chessBoard.at(e4).getPiece().get());
             assertEquals(queen, chessBoard.at(g1).getPiece().get());
@@ -99,10 +101,10 @@ class HomeCardTest {
             String e4 = "e4";
             String g1 = "g1";
             chessBoard.add(queen, e4);
-            Card homeCard = new HomeCard(queen, g1);
+            Card homeCard = new HomeCard();
             homeCard.setIsPlayedBy(Color.BLACK);
 
-            assertThrows(IllegalArgumentException.class, () -> homeCard.playOn(chessBoard));
+            assertThrows(IllegalArgumentException.class, () -> homeCard.playOn(chessBoard, List.of(queen, g1)));
 
             assertEquals(queen, chessBoard.at(e4).getPiece().get());
             assertTrue(chessBoard.at(g1).getPiece().isEmpty());
@@ -116,10 +118,10 @@ class HomeCardTest {
             String e4 = "e4";
             String d1 = "d1";
             chessBoard.add(queen, e4);
-            Card homeCard = new HomeCard(queen, d1);
+            Card homeCard = new HomeCard();
             homeCard.setIsPlayedBy(Color.WHITE);
 
-            assertThrows(IllegalColorException.class, () -> homeCard.playOn(chessBoard));
+            assertThrows(IllegalColorException.class, () -> homeCard.playOn(chessBoard, List.of(queen, d1)));
 
             assertEquals(queen, chessBoard.at(e4).getPiece().get());
             assertTrue(chessBoard.at(d1).getPiece().isEmpty());
@@ -135,10 +137,10 @@ class HomeCardTest {
             chessBoard.add(knight, e4);
             King king = new King(Color.BLACK);
             chessBoard.add(king, g1);
-            Card homeCard = new HomeCard(knight, g1);
+            Card homeCard = new HomeCard();
             homeCard.setIsPlayedBy(Color.WHITE);
 
-            assertThrows(IllegalStateException.class, () -> homeCard.playOn(chessBoard));
+            assertThrows(IllegalStateException.class, () -> homeCard.playOn(chessBoard, List.of(knight, g1)));
 
             assertEquals(knight, chessBoard.at(e4).getPiece().get());
             assertEquals(king, chessBoard.at(g1).getPiece().get());

@@ -7,6 +7,8 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import piece.*;
 
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class ReflectedBishopCardTest {
@@ -22,14 +24,14 @@ class ReflectedBishopCardTest {
         chessBoard = ChessBoard.createEmpty();
         bishop = new Bishop(Color.WHITE);
         chessBoard.add(bishop, e2);
-        reflectedBishop = new ReflectedBishopCard(bishop, f7);
+        reflectedBishop = new ReflectedBishopCard();
     }
 
     @Nested
     class Success {
         @Test
         void should_bounce_once() {
-            assertTrue(reflectedBishop.playOn(chessBoard));
+            assertTrue(reflectedBishop.playOn(chessBoard, List.of(bishop, f7)));
 
             assertEquals(bishop, chessBoard.at(f7).getPiece().get());
             assertTrue(chessBoard.at(e2).getPiece().isEmpty());
@@ -38,7 +40,7 @@ class ReflectedBishopCardTest {
         @Test
         void should_bounce_three_times() {
             chessBoard.add(new WhitePawn(), "f3");
-            assertTrue(reflectedBishop.playOn(chessBoard));
+            assertTrue(reflectedBishop.playOn(chessBoard, List.of(bishop, f7)));
 
             assertEquals(bishop, chessBoard.at(f7).getPiece().get());
             assertTrue(chessBoard.at(e2).getPiece().isEmpty());
@@ -50,8 +52,8 @@ class ReflectedBishopCardTest {
             chessBoard.add(new WhitePawn(), "f3");
             chessBoard.add(new WhitePawn(), "f5");
             String g4 = "g4";
-            reflectedBishop = new ReflectedBishopCard(bishop, g4);
-            assertTrue(reflectedBishop.playOn(chessBoard));
+            reflectedBishop = new ReflectedBishopCard();
+            assertTrue(reflectedBishop.playOn(chessBoard, List.of(bishop, g4)));
 
             assertEquals(bishop, chessBoard.at(g4).getPiece().get());
             assertTrue(chessBoard.at(e2).getPiece().isEmpty());
@@ -63,7 +65,7 @@ class ReflectedBishopCardTest {
             chessBoard.add(new Rock(Color.BLACK), "a2");
             String g2 = "g2";
 
-            assertTrue(new ReflectedBishopCard(bishop, g2).playOn(chessBoard));
+            assertTrue(new ReflectedBishopCard().playOn(chessBoard, List.of(bishop, g2)));
 
             assertEquals(bishop, chessBoard.at(g2).getPiece().get());
         }
@@ -77,7 +79,7 @@ class ReflectedBishopCardTest {
             King king = new King(Color.BLACK);
             chessBoard.add(king, f7);
 
-            assertThrows(IllegalStateException.class, () -> reflectedBishop.playOn(chessBoard));
+            assertThrows(IllegalStateException.class, () -> reflectedBishop.playOn(chessBoard, List.of(bishop, f7)));
 
             assertEquals(bishop, chessBoard.at(e2).getPiece().get());
             assertEquals(king, chessBoard.at(f7).getPiece().get());
@@ -90,7 +92,7 @@ class ReflectedBishopCardTest {
             chessBoard.add(new King(Color.WHITE), "h2");
             chessBoard.add(new Rock(Color.BLACK), "a2");
 
-            assertThrows(CheckException.class, () -> reflectedBishop.playOn(chessBoard));
+            assertThrows(CheckException.class, () -> reflectedBishop.playOn(chessBoard, List.of(bishop, f7)));
 
             assertEquals(bishop, chessBoard.at(e2).getPiece().get());
         }
@@ -100,7 +102,7 @@ class ReflectedBishopCardTest {
             chessBoard.add(new WhitePawn(), "d1");
             chessBoard.add(new WhitePawn(), "f3");
 
-            assertThrows(IllegalArgumentException.class, () -> reflectedBishop.playOn(chessBoard));
+            assertThrows(IllegalArgumentException.class, () -> reflectedBishop.playOn(chessBoard, List.of(bishop, f7)));
 
             assertTrue(chessBoard.at(f7).getPiece().isEmpty());
             assertEquals(bishop, chessBoard.at(e2).getPiece().get());
@@ -108,9 +110,9 @@ class ReflectedBishopCardTest {
 
         @Test
         void should_not_be_able_to_bounce_to_itself() {
-            reflectedBishop = new ReflectedBishopCard(bishop, e2);
+            reflectedBishop = new ReflectedBishopCard();
 
-            assertThrows(IllegalArgumentException.class, () -> reflectedBishop.playOn(chessBoard));
+            assertThrows(IllegalArgumentException.class, () -> reflectedBishop.playOn(chessBoard, List.of(bishop, e2)));
 
             assertEquals(bishop, chessBoard.at(e2).getPiece().get());
         }

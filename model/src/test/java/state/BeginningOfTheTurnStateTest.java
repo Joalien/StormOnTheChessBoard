@@ -10,6 +10,8 @@ import org.junit.jupiter.api.Test;
 import piece.Color;
 import piece.Pawn;
 
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class BeginningOfTheTurnStateTest {
@@ -23,8 +25,8 @@ class BeginningOfTheTurnStateTest {
         gameStateController = new GameStateController();
         gameStateController.startGame();
         gameStateController.setCurrentState(StateEnum.BEGINNING_OF_THE_TURN);
-        beforeMoveCard = new BombingCard("e4");
-        replaceMoveCard = new LightweightSquadCard((Pawn) gameStateController.getChessBoard().at("e2").getPiece().get(), (Pawn) gameStateController.getChessBoard().at("d2").getPiece().get());
+        beforeMoveCard = new BombingCard();
+        replaceMoveCard = new LightweightSquadCard();
     }
 
     @Test
@@ -52,22 +54,22 @@ class BeginningOfTheTurnStateTest {
     class PlayCard {
         @Test
         void should_be_able_to_play_valid_before_move_card() {
-            assertTrue(gameStateController.tryToPlayCard(beforeMoveCard));
+            assertTrue(gameStateController.tryToPlayCard(beforeMoveCard, List.of("e4")));
 
             assertEquals(StateEnum.BEFORE_MOVE, gameStateController.getCurrentState());
         }
 
         @Test
         void should_be_able_to_play_valid_replace_move_card() {
-            assertTrue(gameStateController.tryToPlayCard(replaceMoveCard));
+            assertTrue(gameStateController.tryToPlayCard(replaceMoveCard, List.of((Pawn) gameStateController.getChessBoard().at("e2").getPiece().get(), (Pawn) gameStateController.getChessBoard().at("d2").getPiece().get())));
 
             assertEquals(StateEnum.END_OF_THE_TURN, gameStateController.getCurrentState());
         }
 
         @Test
         void should_not_be_able_to_play_after_move_card() {
-            Card afterMoveCard = new QuadrilleCard(QuadrilleCard.Direction.CLOCKWISE);
-            assertThrows(IllegalStateException.class, () -> gameStateController.tryToPlayCard(afterMoveCard));
+            Card afterMoveCard = new QuadrilleCard();
+            assertThrows(IllegalStateException.class, () -> gameStateController.tryToPlayCard(afterMoveCard, List.of(QuadrilleCard.Direction.CLOCKWISE)));
 
             assertEquals(StateEnum.BEGINNING_OF_THE_TURN, gameStateController.getCurrentState());
             // assert card effect has not been done
@@ -79,7 +81,7 @@ class BeginningOfTheTurnStateTest {
 
         @Test
         void should_not_be_able_to_play_invalid_card() {
-            assertThrows(IllegalArgumentException.class, () -> gameStateController.tryToPlayCard(new BombingCard("h8")));
+            assertThrows(IllegalArgumentException.class, () -> gameStateController.tryToPlayCard(new BombingCard(), List.of("h8")));
 
             assertEquals(StateEnum.BEGINNING_OF_THE_TURN, gameStateController.getCurrentState());
         }

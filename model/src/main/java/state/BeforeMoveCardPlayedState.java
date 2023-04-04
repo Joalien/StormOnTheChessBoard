@@ -3,6 +3,8 @@ package state;
 import card.Card;
 import state.exception.CardAlreadyPlayedException;
 
+import java.util.List;
+
 public class BeforeMoveCardPlayedState implements TurnState {
     @Override
     public boolean tryToMove(GameStateController gameStateController, String from, String to) {
@@ -12,7 +14,7 @@ public class BeforeMoveCardPlayedState implements TurnState {
     }
 
     @Override
-    public boolean tryToPlayCard(GameStateController gameStateController, Card card) {
+    public boolean tryToPlayCard(GameStateController gameStateController, Card card, List<?> params) {
         throw new CardAlreadyPlayedException();
     }
 

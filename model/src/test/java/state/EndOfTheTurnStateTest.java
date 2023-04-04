@@ -6,6 +6,8 @@ import org.junit.jupiter.api.Test;
 import state.exception.AlreadyMovedException;
 import state.exception.CardAlreadyPlayedException;
 
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class EndOfTheTurnStateTest {
@@ -17,7 +19,7 @@ class EndOfTheTurnStateTest {
         gameStateController = new GameStateController();
         gameStateController.startGame();
         gameStateController.setCurrentState(StateEnum.END_OF_THE_TURN);
-        card = new QuadrilleCard(QuadrilleCard.Direction.CLOCKWISE);
+        card = new QuadrilleCard();
     }
 
     @Test
@@ -48,7 +50,7 @@ class EndOfTheTurnStateTest {
 
     @Test
     void should_not_be_able_to_play_a_card() {
-        assertThrows(CardAlreadyPlayedException.class, () -> gameStateController.tryToPlayCard(card));
+        assertThrows(CardAlreadyPlayedException.class, () -> gameStateController.tryToPlayCard(card, List.of(QuadrilleCard.Direction.CLOCKWISE)));
 
         assertEquals(StateEnum.END_OF_THE_TURN, gameStateController.getCurrentState());
     }

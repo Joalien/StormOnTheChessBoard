@@ -2,6 +2,8 @@ package state;
 
 import card.Card;
 
+import java.util.List;
+
 public class BeginningOfTheTurnState implements TurnState {
     @Override
     public boolean tryToMove(GameStateController gameStateController, String from, String to) {
@@ -11,13 +13,13 @@ public class BeginningOfTheTurnState implements TurnState {
     }
 
     @Override
-    public boolean tryToPlayCard(GameStateController gameStateController, Card card) {
+    public boolean tryToPlayCard(GameStateController gameStateController, Card card, List<?> params) {
         StateEnum nextState = switch (card.getType()) {
             case BEFORE_TURN -> StateEnum.BEFORE_MOVE;
             case REPLACE_TURN -> StateEnum.END_OF_THE_TURN;
             default -> throw new IllegalStateException("You can only play BEFORE or REPLACE card!");
         };
-        boolean hasPlayedCard = card.playOn(gameStateController.getChessBoard());
+        boolean hasPlayedCard = card.playOn(gameStateController.getChessBoard(), params);
         if (hasPlayedCard) {
             gameStateController.setCurrentState(nextState);
         }

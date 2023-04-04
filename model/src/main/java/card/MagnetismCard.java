@@ -4,13 +4,19 @@ import board.ChessBoard;
 import effet.MagnetismEffect;
 import piece.Piece;
 
+import java.util.List;
+
 public class MagnetismCard extends Card {
 
-    private final Piece piece;
+    private Piece piece;
 
-    public MagnetismCard(Piece piece) {
-        super("", "", SCType.REPLACE_TURN);
-        this.piece = piece;
+    public MagnetismCard() {
+        super("Magnetisme", "", CardType.REPLACE_TURN);
+    }
+
+    @Override
+    protected void setupParams(List<?> params) {
+        piece = (Piece) params.get(0);
     }
 
     @Override

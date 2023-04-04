@@ -16,11 +16,15 @@ public class QuadrilleCard extends Card {
     private static final List<String> CORNERS = List.of("a1", "h1", "h8", "a8");
     private final Map<String, Optional<Piece>> pieces = new HashMap<>();
 
-    private final Direction direction;
+    private Direction direction;
 
-    public QuadrilleCard(Direction direction) {
-        super("Quadrille", "Toutes les pièces se trouvant dans l'un des quatre coins de l'échiquier se déplacent d'un quart de tour dans le sens de votre choix. Les mouvements sont simultanés, il n'y a donc pas de prise.", SCType.AFTER_TURN);
-        this.direction = direction;
+    public QuadrilleCard() {
+        super("Quadrille", "Toutes les pièces se trouvant dans l'un des quatre coins de l'échiquier se déplacent d'un quart de tour dans le sens de votre choix. Les mouvements sont simultanés, il n'y a donc pas de prise.", CardType.AFTER_TURN);
+    }
+
+    @Override
+    protected void setupParams(List<?> params) {
+        direction = (Direction) params.get(0);
     }
 
     @Override

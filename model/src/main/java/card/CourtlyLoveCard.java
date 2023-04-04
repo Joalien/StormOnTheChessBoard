@@ -7,16 +7,22 @@ import piece.Piece;
 import piece.Queen;
 import position.PositionUtil;
 
+import java.util.List;
+
 @Slf4j
 public class CourtlyLoveCard extends Card {
 
-    private final Knight knight;
-    private final String positionToMoveOn;
+    private Knight knight;
+    private String positionToMoveOn;
 
-    public CourtlyLoveCard(Knight knight, String positionToMoveOn) {
-        super("Amour courtois", "Amenez l'un de vos cavaliers sur une case libre adjacente à votre dame", SCType.REPLACE_TURN);
-        this.knight = knight;
-        this.positionToMoveOn = positionToMoveOn;
+    public CourtlyLoveCard() {
+        super("Amour courtois", "Amenez l'un de vos cavaliers sur une case libre adjacente à votre dame", CardType.REPLACE_TURN);
+    }
+
+    @Override
+    protected void setupParams(List<?> params) {
+        this.knight = (Knight) params.get(0);
+        this.positionToMoveOn = (String) params.get(1);
     }
 
     @Override
