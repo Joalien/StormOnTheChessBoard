@@ -6,23 +6,22 @@ import command.Command;
 import java.util.*;
 
 public class ChessBoardRepositoryImpl implements ChessBoardRepository {
-    Map<Integer, List<Command>> store = new HashMap<>();
+    private final Map<Integer, List<Command>> store = new HashMap<>();
 
     @Override
     public boolean saveCommand(Integer gameId, Command cbs) {
         ChessBoardService gameStateController = computeChessBoard(gameId);
 
-        if (cbs.execute(gameStateController)) { // TODO simplify me
+        if (cbs.execute(gameStateController)) {
             store.putIfAbsent(gameId, new LinkedList<>());
-            List<Command> commands = store.get(gameId);
-            commands.add(cbs);
-            store.put(gameId, commands);
-            return true;
+            return store.get(gameId).add(cbs);
         } else return false;
     }
 
     @Override
     public ChessBoardReadService getChessBoardService(Integer gameId) {
+        if (!store.containsKey(gameId)) throw new IllegalArgumentException("game %s not found".formatted(gameId));
+
         return computeChessBoard(gameId);
     }
 
