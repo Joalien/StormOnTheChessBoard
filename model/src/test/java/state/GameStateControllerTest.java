@@ -46,4 +46,11 @@ class GameStateControllerTest {
         assertEquals(1, gameStateController.getCurrentPlayer().getCards().size());
         assertFalse(gameStateController.getCurrentPlayer().getCards().contains(card));
     }
+
+    @Test
+    void should_not_be_able_to_start_an_already_started_game() {
+        gameStateController = new GameStateController();
+        assertTrue(gameStateController.startGame());
+        assertFalse(gameStateController.startGame());
+    }
 }

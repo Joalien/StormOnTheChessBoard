@@ -1,7 +1,6 @@
 package state;
 
 import api.ChessBoardService;
-import api.ExposeGetters;
 import board.ChessBoard;
 import card.*;
 import effet.Effect;
@@ -23,9 +22,11 @@ import java.util.stream.Stream;
 
 @Getter(AccessLevel.PACKAGE)
 @Slf4j
-public class GameStateController implements ChessBoardService, ExposeGetters {
+public class GameStateController implements ChessBoardService {
 
     private static final int NUMBER_OF_CARDS_IN_HAND = 4;
+    @Getter
+    private Integer gameId;
     private ChessBoard chessBoard;
     @Getter
     private Player white;
@@ -41,7 +42,8 @@ public class GameStateController implements ChessBoardService, ExposeGetters {
     }
 
     @Override
-    public void startGame() {
+    public boolean startGame() {
+        if (this.chessBoard != null) return false; // Cannot restart game
         this.chessBoard = ChessBoard.createWithInitialState();
         white = new Player("Name1", Color.WHITE);
         black = new Player("Name2", Color.BLACK);
@@ -52,6 +54,7 @@ public class GameStateController implements ChessBoardService, ExposeGetters {
                 .forEach(x -> dealCard(black));
         currentPlayer = white;
         currentState = StateEnum.BEGINNING_OF_THE_TURN;
+        return true;
     }
 
     private void initDeck() {
@@ -96,22 +99,20 @@ public class GameStateController implements ChessBoardService, ExposeGetters {
         return currentState.getState().tryToPass(this);
     }
 
-    void setCurrentState(StateEnum currentState) {
-        log.debug("{} is now in state {}", this.currentPlayer, currentState);
-        this.currentState = currentState;
-    }
-
     @Override
     public Set<Piece> getPieces() {
-        return Stream.of(
-                chessBoard.allyPieces(Color.WHITE).stream(),
-                chessBoard.allyPieces(Color.BLACK).stream()
-        ).flatMap(x -> x)
-        .collect(Collectors.toSet());
+        return Stream.of(chessBoard.allyPieces(Color.WHITE).stream(), chessBoard.allyPieces(Color.BLACK).stream())
+                .flatMap(x -> x)
+                .collect(Collectors.toSet());
     }
 
     @Override
     public Set<Effect> getEffects() {
         return chessBoard.getEffects();
+    }
+
+    void setCurrentState(StateEnum currentState) {
+        log.debug("{} is now in state {}", this.currentPlayer, currentState);
+        this.currentState = currentState;
     }
 }
