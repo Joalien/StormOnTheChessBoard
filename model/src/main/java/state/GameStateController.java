@@ -25,8 +25,6 @@ import java.util.stream.Stream;
 public class GameStateController implements ChessBoardService {
 
     private static final int NUMBER_OF_CARDS_IN_HAND = 4;
-    @Getter
-    private Integer gameId;
     private ChessBoard chessBoard;
     @Getter
     private Player white;

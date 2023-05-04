@@ -1,5 +1,6 @@
 import api.ChessBoardReadService;
 import card.Card;
+import command.PlayMoveCommand;
 import command.StartGameCommand;
 import dto.*;
 import effet.Effect;
@@ -11,17 +12,27 @@ import java.util.stream.Collectors;
 public class Main {
     public static void main(String[] args) {
         ChessBoardRepository chessBoardRepository = new ChessBoardRepositoryImpl();
-        chessBoardRepository.saveCommand(1, StartGameCommand.builder().gameId(1).build());
-        ChessBoardReadService chessBoard = chessBoardRepository.getChessBoardService(1);
-        ChessBoardDto chessBoardDto = ChessBoardDto.builder()
-                .id(1)
+
+        Integer gameId = 1;
+        chessBoardRepository.saveCommand(gameId, StartGameCommand.builder().gameId(gameId).build());
+        System.out.println(mapToDto(gameId, chessBoardRepository.getChessBoardService(gameId)).toString());
+
+        chessBoardRepository.saveCommand(gameId, PlayMoveCommand.builder()
+                .gameId(gameId)
+                .from("e2")
+                .to("e4").build());
+        System.out.println(mapToDto(gameId, chessBoardRepository.getChessBoardService(gameId)).toString());
+    }
+
+    private static ChessBoardDto mapToDto(Integer gameId, ChessBoardReadService chessBoard) {
+        return ChessBoardDto.builder()
+                .id(gameId)
                 .effects(chessBoard.getEffects().stream().map(Main::map).collect(Collectors.toSet()))
                 .deck(chessBoard.getCards().stream().map(Main::map).collect(Collectors.toSet()))
                 .whitePlayer(map(chessBoard.getWhite()))
                 .blackPlayer(map(chessBoard.getBlack()))
                 .pieces(chessBoard.getPieces().stream().map(Main::map).collect(Collectors.toSet()))
                 .build();
-        System.out.println(chessBoardDto.toString());
     }
 
     private static PieceDto map(Piece p) {
