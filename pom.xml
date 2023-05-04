@@ -10,8 +10,7 @@
     <packaging>pom</packaging>
     <modules>
         <module>model</module>
-        <module>command</module>
-        <module>view</module>
+        <module>controller</module>
         <module>repository</module>
     </modules>
 

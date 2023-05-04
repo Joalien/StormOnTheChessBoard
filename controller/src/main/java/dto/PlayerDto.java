@@ -1,7 +1,10 @@
+package dto;
+
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import piece.Color;
 
 import java.util.Set;
 
@@ -9,7 +12,8 @@ import java.util.Set;
 @Setter
 @Builder
 @ToString
-public class EffectDto {
+public class PlayerDto {
     private String name;
-    private Set<String> positions;
+    private Color color;
+    private Set<Class<CardOutputDto>> cards;
 }

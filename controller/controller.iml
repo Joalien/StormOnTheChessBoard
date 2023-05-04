@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module type="JAVA_MODULE" version="4">
   <component name="AdditionalModuleElements">
-    <content url="file://$MODULE_DIR$" dumb="true">
+    <content url="file://$MODULE_DIR$/../controller" dumb="true">
       <sourceFolder url="file://$MODULE_DIR$/../command" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/../command/main" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/../command/src" isTestSource="false" />

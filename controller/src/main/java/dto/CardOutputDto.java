@@ -1,16 +1,17 @@
+package dto;
+
+import card.CardType;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import piece.Color;
 
 @Getter
 @Setter
 @Builder
 @ToString
-public class PieceDto {
+public class CardOutputDto {
     private String name;
-    private Color color;
-    private String position;
-
+    private String description;
+    private CardType type;
 }

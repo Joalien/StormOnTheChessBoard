@@ -1,6 +1,7 @@
 import api.ChessBoardReadService;
-import api.ChessBoardWriteService;
 import card.Card;
+import command.StartGameCommand;
+import dto.*;
 import effet.Effect;
 import piece.Piece;
 import player.Player;
@@ -10,6 +11,7 @@ import java.util.stream.Collectors;
 public class Main {
     public static void main(String[] args) {
         ChessBoardRepository chessBoardRepository = new ChessBoardRepositoryImpl();
+        chessBoardRepository.saveCommand(1, StartGameCommand.builder().gameId(1).build());
         ChessBoardReadService chessBoard = chessBoardRepository.getChessBoardService(1);
         ChessBoardDto chessBoardDto = ChessBoardDto.builder()
                 .id(1)
