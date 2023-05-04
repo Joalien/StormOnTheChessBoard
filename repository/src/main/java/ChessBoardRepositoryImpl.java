@@ -1,6 +1,7 @@
 import api.ChessBoardReadService;
 import api.ChessBoardService;
 import api.ChessBoardServiceFactory;
+import api.ChessBoardWriteService;
 import command.Command;
 
 import java.util.*;
@@ -10,9 +11,9 @@ public class ChessBoardRepositoryImpl implements ChessBoardRepository {
 
     @Override
     public boolean saveCommand(Integer gameId, Command cbs) {
-        ChessBoardService gameStateController = computeChessBoard(gameId);
+        ChessBoardWriteService chessBoardWriteService = computeChessBoard(gameId);
 
-        if (cbs.execute(gameStateController)) {
+        if (cbs.execute(chessBoardWriteService)) {
             store.putIfAbsent(gameId, new LinkedList<>());
             return store.get(gameId).add(cbs);
         } else return false;
@@ -23,6 +24,11 @@ public class ChessBoardRepositoryImpl implements ChessBoardRepository {
         if (!store.containsKey(gameId)) throw new IllegalArgumentException("game %s not found".formatted(gameId));
 
         return computeChessBoard(gameId);
+    }
+
+    @Override
+    public boolean undoLastCommand(Integer gameId) {
+        throw new UnsupportedOperationException("Not implemented yet but easy to do ;)");
     }
 
     private ChessBoardService computeChessBoard(Integer gameId) {
