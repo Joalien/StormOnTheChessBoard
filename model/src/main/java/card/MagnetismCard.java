@@ -24,6 +24,7 @@ public class MagnetismCard extends Card {
         if (piece == null) throw new IllegalStateException();
         if (piece.getPosition() == null)
             throw new IllegalArgumentException("%s is not on the board!".formatted(piece));
+        if (piece.getColor() != isPlayedBy) throw new CannotMoveThisColorException(isPlayedBy.opposite());
     }
 
     @Override

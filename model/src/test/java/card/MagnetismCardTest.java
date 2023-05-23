@@ -27,6 +27,7 @@ class MagnetismCardTest {
         chessBoard = ChessBoard.createWithInitialState();
         piece = chessBoard.at(c2).getPiece().get();
         magnetismCard = new MagnetismCard();
+        magnetismCard.setIsPlayedBy(Color.WHITE);
     }
 
     @Nested
@@ -42,13 +43,13 @@ class MagnetismCardTest {
     class Failure {
         @Test
         void should_throws_if_piece_not_on_the_board() {
-            assertThrows(IllegalArgumentException.class, () -> new MagnetismCard().playOn(chessBoard, List.of(new Queen(Color.WHITE))));
+            assertThrows(IllegalArgumentException.class, () -> magnetismCard.playOn(chessBoard, List.of(new Queen(Color.WHITE))));
         }
 
         @Test
-        @Disabled("fixme when concept of player will exist")
         void should_throw_if_cast_on_enemy_piece() {
-            assertThrows(IllegalArgumentException.class, () -> new MagnetismCard().playOn(chessBoard, List.of(new Queen(Color.BLACK))));
+            magnetismCard.setIsPlayedBy(Color.BLACK);
+            assertThrows(CannotMoveThisColorException.class, () -> magnetismCard.playOn(chessBoard, List.of(piece)));
         }
     }
 }
