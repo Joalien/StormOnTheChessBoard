@@ -10,10 +10,10 @@ import piece.Queen;
 import java.util.Collections;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static position.Position.e4;
 
 class BombingCardTest {
 
-    private final String e4 = "e4";
     private ChessBoard chessBoard;
     private Card bombing;
 

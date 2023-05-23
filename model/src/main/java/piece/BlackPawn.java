@@ -1,6 +1,8 @@
 package piece;
 
-import position.PositionUtil;
+import position.File;
+import position.Position;
+import position.Row;
 
 import java.util.Collections;
 import java.util.Optional;
@@ -13,33 +15,33 @@ public class BlackPawn extends Pawn {
     }
 
     @Override
-    public String twoSquaresForward() {
-        return PositionUtil.posToSquare(this.getX(), this.getY() - 2);
+    public Position twoSquaresForward() {
+        return Position.posToSquare(this.getFile(), this.getRow().previous().flatMap(Row::previous).orElseThrow());// FIXME
     }
 
     @Override
-    public String oneSquareForward() {
-        return PositionUtil.posToSquare(this.getX(), this.getY() - 1);
+    public Position oneSquareForward() {
+        return Position.posToSquare(this.getFile(),  this.getRow().previous().orElseThrow());
     }
 
     @Override
-    public boolean isPositionTheoreticallyReachable(int x, int y, Optional<Color> color) {
-        boolean moveTwoSquaresFromStart = getY() == 7 && y == 5;
-        boolean moveOneSquare = y - getY() == -1;
-        boolean moveForward = color.isEmpty() && x == getX() && (moveTwoSquaresFromStart || moveOneSquare);
+    public boolean isPositionTheoreticallyReachable(File file, Row row, Optional<Color> color) {
+        boolean moveTwoSquaresFromStart = getRow() == Row.Seven && row == Row.Five;
+        boolean moveOneSquare = getRow().previous().map(r -> r == row).orElse(false); // FIXME
+        boolean moveForward = color.isEmpty() && file == getFile() && (moveTwoSquaresFromStart || moveOneSquare);
 
-        boolean takePiece = moveOneSquare && Math.abs(x - getX()) == 1;
+        boolean takePiece = moveOneSquare && Math.abs(file.getFileNumber() - getFile().getFileNumber()) == 1;
         boolean takeBlackPiece = color.map(c -> c == Color.WHITE).orElse(false) && takePiece;
 
         return moveForward || takeBlackPiece;
     }
 
     @Override
-    public Set<String> squaresOnThePath(String squareToMoveOn) {
+    public Set<Position> squaresOnThePath(Position squareToMoveOn) {
         boolean moveForwardTwoSquaresFromStart = isPositionTheoreticallyReachable(squareToMoveOn, Optional.empty())
-                && getY() == 7
-                && PositionUtil.getY(squareToMoveOn) == 5;
-        return moveForwardTwoSquaresFromStart ? Set.of(PositionUtil.posToSquare(getX(), 6)) : Collections.emptySet();
+                && getRow() == Row.Seven
+                && squareToMoveOn.getRow() == Row.Five;
+        return moveForwardTwoSquaresFromStart ? Set.of(Position.posToSquare(getFile(), Row.Six)) : Collections.emptySet();
     }
 
 

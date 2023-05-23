@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import piece.Color;
 import piece.Piece;
 import piece.Queen;
+import position.Position;
 
 import java.util.List;
 
@@ -17,7 +18,7 @@ class MagnetismCardTest {
 
     private ChessBoard chessBoard;
     private Card magnetismCard;
-    private String c2 = "c2";
+    private final Position c2 = Position.c2;
     private Piece piece;
 
 

@@ -6,14 +6,15 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static position.Position.*;
 
 class ChessBoardRepositoryImplTest {
 
     public static final int GAME_ID = 1;
     public static final Command START_GAME_COMMAND = StartGameCommand.builder().gameId(GAME_ID).build();
     public static final Command END_TURN_COMMAND = EndTurnCommand.builder().gameId(GAME_ID).build();
-    public static final Command MOVE_GAME_COMMAND = PlayMoveCommand.builder().gameId(GAME_ID).from("e2").to("e4").build();
-    public static final Command BLACK_MOVE_COMMAND = PlayMoveCommand.builder().gameId(GAME_ID).from("e7").to("e5").build();
+    public static final Command MOVE_GAME_COMMAND = PlayMoveCommand.builder().gameId(GAME_ID).from(e2).to(e4).build();
+    public static final Command BLACK_MOVE_COMMAND = PlayMoveCommand.builder().gameId(GAME_ID).from(e7).to(e5).build();
 
     ChessBoardRepository chessBoardRepository;
 
@@ -46,7 +47,7 @@ class ChessBoardRepositoryImplTest {
         assertTrue(chessBoardRepository.saveCommand(GAME_ID, END_TURN_COMMAND));
         assertFalse(chessBoardRepository.saveCommand(GAME_ID, BLACK_MOVE_COMMAND));
 
-        assertTrue(chessBoardRepository.getChessBoardService(GAME_ID).getPieces().stream().anyMatch(piece -> piece.getPosition().equals("e4")));
+        assertTrue(chessBoardRepository.getChessBoardService(GAME_ID).getPieces().stream().anyMatch(piece -> piece.getPosition().equals(e4)));
     }
 
     @Test

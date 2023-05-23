@@ -1,10 +1,14 @@
 package piece;
 
-import position.PositionUtil;
+import position.File;
+import position.Position;
+import position.Row;
 
 import java.util.Collections;
 import java.util.Optional;
 import java.util.Set;
+
+import static position.Position.*;
 
 public class King extends Piece implements Castlable {
 
@@ -16,36 +20,36 @@ public class King extends Piece implements Castlable {
 
     //Penser à intégrer le rock !
     @Override
-    public boolean isPositionTheoreticallyReachable(int x, int y, Optional<Color> color) {
-        if (getX() == x && getY() == y) return false;
+    public boolean isPositionTheoreticallyReachable(File file, Row row, Optional<Color> color) {
+        if (getFile() == file && getRow() == row) return false;
 
-        boolean whiteCastle = this.getPosition().equals("e1") && this.color == Color.WHITE;
-        boolean blackCastle = this.getPosition().equals("e8") && this.color == Color.BLACK;
-        boolean whiteKingSideCastle = whiteCastle && PositionUtil.posToSquare(x, y).equals("g1");
-        boolean whiteQueenSideCastle = whiteCastle && PositionUtil.posToSquare(x, y).equals("c1");
-        boolean blackKingSideCastle = blackCastle && PositionUtil.posToSquare(x, y).equals("g8");
-        boolean blackQueenSideCastle = blackCastle && PositionUtil.posToSquare(x, y).equals("c8");
+        boolean whiteCastle = this.getPosition().equals(e1) && this.color == Color.WHITE;
+        boolean blackCastle = this.getPosition().equals(e8) && this.color == Color.BLACK;
+        boolean whiteKingSideCastle = whiteCastle && Position.posToSquare(file, row).equals(g1);
+        boolean whiteQueenSideCastle = whiteCastle && Position.posToSquare(file, row).equals(c1);
+        boolean blackKingSideCastle = blackCastle && Position.posToSquare(file, row).equals(g8);
+        boolean blackQueenSideCastle = blackCastle && Position.posToSquare(file, row).equals(c8);
         boolean canCastle = this.canCastle() && (whiteKingSideCastle || whiteQueenSideCastle || blackKingSideCastle || blackQueenSideCastle) && color.isEmpty();
         if (canCastle) return true;
 
-        return (Math.abs(getX() - x) <= 1) && (Math.abs(getY() - y) <= 1);
+        return (Math.abs(getFile().getFileNumber() - file.getFileNumber()) <= 1) && (Math.abs(getRow().getRowNumber() - row.getRowNumber()) <= 1);
     }
 
     @Override
-    public Set<String> squaresOnThePath(String squareToMoveOn) {
+    public Set<Position> squaresOnThePath(Position squareToMoveOn) {
         if (!super.isPositionTheoreticallyReachable(squareToMoveOn)) return Collections.emptySet();
 
-        boolean whiteCastle = this.getPosition().equals("e1") && this.color == Color.WHITE;
-        boolean blackCastle = this.getPosition().equals("e8") && this.color == Color.BLACK;
-        boolean whiteKingSideCastle = whiteCastle && squareToMoveOn.equals("g1");
-        boolean whiteQueenSideCastle = whiteCastle && squareToMoveOn.equals("c1");
-        boolean blackKingSideCastle = blackCastle && squareToMoveOn.equals("g8");
-        boolean blackQueenSideCastle = blackCastle && squareToMoveOn.equals("c8");
+        boolean whiteCastle = this.getPosition().equals(e1) && this.color == Color.WHITE;
+        boolean blackCastle = this.getPosition().equals(e8) && this.color == Color.BLACK;
+        boolean whiteKingSideCastle = whiteCastle && squareToMoveOn.equals(g1);
+        boolean whiteQueenSideCastle = whiteCastle && squareToMoveOn.equals(c1);
+        boolean blackKingSideCastle = blackCastle && squareToMoveOn.equals(g8);
+        boolean blackQueenSideCastle = blackCastle && squareToMoveOn.equals(c8);
 
-        if (whiteKingSideCastle) return Set.of("f1");
-        else if (whiteQueenSideCastle) return Set.of("d1");
-        else if (blackKingSideCastle) return Set.of("f8");
-        else if (blackQueenSideCastle) return Set.of("d8");
+        if (whiteKingSideCastle) return Set.of(f1);
+        else if (whiteQueenSideCastle) return Set.of(d1);
+        else if (blackKingSideCastle) return Set.of(f8);
+        else if (blackQueenSideCastle) return Set.of(d8);
         else return Collections.emptySet();
     }
 

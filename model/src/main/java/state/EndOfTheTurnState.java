@@ -1,6 +1,7 @@
 package state;
 
 import card.Card;
+import position.Position;
 import state.exception.AlreadyMovedException;
 import state.exception.CardAlreadyPlayedException;
 
@@ -8,7 +9,7 @@ import java.util.List;
 
 public class EndOfTheTurnState implements TurnState {
     @Override
-    public boolean tryToMove(GameStateController gameStateController, String from, String to) {
+    public boolean tryToMove(GameStateController gameStateController, Position from, Position to) {
         throw new AlreadyMovedException();
     }
 

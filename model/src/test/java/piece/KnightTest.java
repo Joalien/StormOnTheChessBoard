@@ -2,29 +2,33 @@ package piece;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import position.PositionUtil;
+import position.File;
+import position.Position;
+import position.Row;
 
 import java.util.List;
+import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static position.Position.*;
 
 class KnightTest {
 
     @Test
     void spawn_knight() {
         Knight knight = new Knight(Color.WHITE);
-        knight.setSquare(new Square("e4"));
+        knight.setSquare(new Square(e4));
 
 
-        assertEquals(5, knight.getX());
-        assertEquals(4, knight.getY());
+        assertEquals(File.E, knight.getFile());
+        assertEquals(Row.Four, knight.getRow());
     }
 
     @Test
     void should_return_all_square_it_will_go_through() {
         Knight knight = new Knight(Color.WHITE);
 
-        assertTrue(knight.squaresOnThePath("c2").isEmpty());
+        assertTrue(knight.squaresOnThePath(c2).isEmpty());
     }
 
     @Test
@@ -38,22 +42,22 @@ class KnightTest {
     class Movements {
         @Test
         void move_knight_in_the_middle_of_the_board() {
-            List<String> validMoves = List.of("g1", "e1", "d2", "d4", "e5", "g5", "h4", "h2");
+            List<Position> validMoves = Stream.of(g1, e1, d2, d4, e5, g5, h4, h2).toList();
             Knight knight = new Knight(Color.WHITE);
-            knight.setSquare(new Square("f3"));
+            knight.setSquare(new Square(f3));
 
-            assertTrue(PositionUtil.generateAllPositions()
+            assertTrue(Position.generateAllPositions()
                     .stream()
                     .allMatch(s -> validMoves.contains(s) == knight.isPositionTheoreticallyReachable(s)));
         }
 
         @Test
         void move_knight_in_the_corner() {
-            List<String> validMoves = List.of("f2", "g3");
+            List<Position> validMoves = Stream.of(f2, g3).toList();
             Knight knight = new Knight(Color.WHITE);
-            knight.setSquare(new Square("h1"));
+            knight.setSquare(new Square(h1));
 
-            assertTrue(PositionUtil.generateAllPositions()
+            assertTrue(Position.generateAllPositions()
                     .stream()
                     .allMatch(s -> validMoves.contains(s) == knight.isPositionTheoreticallyReachable(s)));
         }
@@ -61,9 +65,9 @@ class KnightTest {
         @Test
         void should_not_be_able_to_move_on_itself() {
             Knight knight = new Knight(Color.WHITE);
-            knight.setSquare(new Square("e5"));
+            knight.setSquare(new Square(e5));
 
-            assertFalse(knight.isPositionTheoreticallyReachable("e5"));
+            assertFalse(knight.isPositionTheoreticallyReachable(e5));
         }
     }
 }

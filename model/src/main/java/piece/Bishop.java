@@ -1,6 +1,8 @@
 package piece;
 
-import position.PositionUtil;
+import position.File;
+import position.Position;
+import position.Row;
 
 import java.util.Collections;
 import java.util.HashSet;
@@ -14,20 +16,20 @@ public class Bishop extends Piece {
     }
 
     @Override
-    public boolean isPositionTheoreticallyReachable(int x, int y, Optional<Color> color) {
-        if (getX() == x && getY() == y) return false;
-        return Math.abs(getY() - y) == Math.abs(getX() - x);
+    public boolean isPositionTheoreticallyReachable(File file, Row row, Optional<Color> color) {
+        if (getFile() == file && getRow() == row) return false;
+        return Math.abs(getRow().getRowNumber() - row.getRowNumber()) == Math.abs(getFile().getFileNumber() - file.getFileNumber());
     }
 
     @Override
-    public Set<String> squaresOnThePath(String squareToMoveOn) {
+    public Set<Position> squaresOnThePath(Position squareToMoveOn) {
         if (!super.isPositionTheoreticallyReachable(squareToMoveOn)) return Collections.emptySet();
 
-        Set<String> squaresOnThePath = new HashSet<>();
-        boolean signX = getX() < PositionUtil.getX(squareToMoveOn);
-        boolean signY = getY() < PositionUtil.getY(squareToMoveOn);
-        for (int i = 1; i < Math.abs(getX() - PositionUtil.getX(squareToMoveOn)); i++) {
-            squaresOnThePath.add(PositionUtil.posToSquare(getX() + i * (signX ? 1 : -1), getY() + i * (signY ? 1 : -1)));
+        Set<Position> squaresOnThePath = new HashSet<>();
+        boolean signX = getFile().getFileNumber() < squareToMoveOn.getFile().getFileNumber();
+        boolean signY = getRow().getRowNumber() < squareToMoveOn.getRow().getRowNumber();
+        for (int i = 1; i < Math.abs(getFile().getFileNumber() - squareToMoveOn.getFile().getFileNumber()); i++) {
+            squaresOnThePath.add(Position.posToSquare(getFile().getFileNumber() + i * (signX ? 1 : -1), getRow().getRowNumber() + i * (signY ? 1 : -1)));
         }
         return squaresOnThePath;
     }

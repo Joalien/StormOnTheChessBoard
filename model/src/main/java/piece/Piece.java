@@ -1,6 +1,8 @@
 package piece;
 
-import position.PositionUtil;
+import position.File;
+import position.Position;
+import position.Row;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -8,7 +10,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 
-public abstract class Piece {
+public abstract class Piece { // FIXME https://github.com/Joalien/StormOnTheChessBoard à envoyer
 
     protected Color color;
     protected char type;
@@ -19,31 +21,31 @@ public abstract class Piece {
         this.type = typePiece;
     }
 
-    public int getY() {
-        return PositionUtil.getY(square.getPosition());
+    public File getFile() {
+        return square.getPosition().getFile();
     }
 
-    public int getX() {
-        return PositionUtil.getX(square.getPosition());
+    public Row getRow() {
+        return square.getPosition().getRow();
     }
 
     public char getType() {
         return this.type;
     }
 
-    public boolean isPositionTheoreticallyReachable(String s) {
-        return isPositionTheoreticallyReachable(PositionUtil.getX(s), PositionUtil.getY(s), Optional.empty());
+    public boolean isPositionTheoreticallyReachable(Position position) {
+        return isPositionTheoreticallyReachable(position.getFile(), position.getRow(), Optional.empty());
     }
 
-    public abstract boolean isPositionTheoreticallyReachable(int x, int y, Optional<Color> color);
+    public abstract boolean isPositionTheoreticallyReachable(File file, Row row, Optional<Color> color);
 
-    public boolean isPositionTheoreticallyReachable(String s, Optional<Color> color) {
-        return isPositionTheoreticallyReachable(PositionUtil.getX(s), PositionUtil.getY(s), color);
+    public boolean isPositionTheoreticallyReachable(Position position, Optional<Color> color) {
+        return isPositionTheoreticallyReachable(position.getFile(), position.getRow(), color);
     }
 
-    public abstract Set<String> squaresOnThePath(String squareToMoveOn);
+    public abstract Set<Position> squaresOnThePath(Position squareToMoveOn);
 
-    public String getPosition() {
+    public Position getPosition() {
         return this.getSquare().map(Square::getPosition).orElse(null);
     }
 

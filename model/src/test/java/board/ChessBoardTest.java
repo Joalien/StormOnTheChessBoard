@@ -1,63 +1,65 @@
 package board;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
 import piece.*;
-import position.PositionUtil;
+import position.Position;
 
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static position.Position.*;
 
 class ChessBoardTest {
 
     @Test
     void play_a_sicilian_game() {
         ChessBoard cb = ChessBoard.createWithInitialState();
-        assertTrue(cb.tryToMove("e2", "e4"));
-        assertTrue(cb.tryToMove("c7", "c5"));
-        assertTrue(cb.tryToMove("g1", "f3"));
-        assertTrue(cb.tryToMove("d7", "d6"));
-        assertTrue(cb.tryToMove("d2", "d4"));
-        assertTrue(cb.tryToMove("c5", "d4"));
-        assertTrue(cb.tryToMove("f3", "d4"));
-        assertTrue(cb.tryToMove("g8", "f6"));
-        assertTrue(cb.tryToMove("c1", "e3"));
-        assertTrue(cb.tryToMove("g7", "g6"));
-        assertTrue(cb.tryToMove("b1", "c3"));
-        assertTrue(cb.tryToMove("f8", "g7"));
-        assertTrue(cb.tryToMove("d1", "d2"));
-        assertTrue(cb.tryToMove("e8", "g8"));
-        assertTrue(cb.tryToMove("e1", "c1"));
+        assertTrue(cb.tryToMove(e2, e4));
+        assertTrue(cb.tryToMove(c7, c5));
+        assertTrue(cb.tryToMove(g1, f3));
+        assertTrue(cb.tryToMove(d7, d6));
+        assertTrue(cb.tryToMove(d2, d4));
+        assertTrue(cb.tryToMove(c5, d4));
+        assertTrue(cb.tryToMove(f3, d4));
+        assertTrue(cb.tryToMove(g8, f6));
+        assertTrue(cb.tryToMove(c1, e3));
+        assertTrue(cb.tryToMove(g7, g6));
+        assertTrue(cb.tryToMove(b1, c3));
+        assertTrue(cb.tryToMove(f8, g7));
+        assertTrue(cb.tryToMove(d1, d2));
+        assertTrue(cb.tryToMove(e8, g8));
+        assertTrue(cb.tryToMove(e1, c1));
 
-        assertTrue(cb.at("e4").getPiece().get() instanceof WhitePawn);
-        assertTrue(cb.at("e8").getPiece().isEmpty());
-        assertTrue(cb.at("f8").getPiece().get() instanceof Rock);
-        assertTrue(cb.at("g8").getPiece().get() instanceof King);
-        assertTrue(cb.at("h8").getPiece().isEmpty());
-        assertTrue(cb.at("e1").getPiece().isEmpty());
-        assertTrue(cb.at("d1").getPiece().get() instanceof Rock);
-        assertTrue(cb.at("c1").getPiece().get() instanceof King);
-        assertTrue(cb.at("b1").getPiece().isEmpty());
-        assertTrue(cb.at("a1").getPiece().isEmpty());
+        assertTrue(cb.at(e4).getPiece().get() instanceof WhitePawn);
+        assertTrue(cb.at(e8).getPiece().isEmpty());
+        assertTrue(cb.at(f8).getPiece().get() instanceof Rock);
+        assertTrue(cb.at(g8).getPiece().get() instanceof King);
+        assertTrue(cb.at(h8).getPiece().isEmpty());
+        assertTrue(cb.at(e1).getPiece().isEmpty());
+        assertTrue(cb.at(d1).getPiece().get() instanceof Rock);
+        assertTrue(cb.at(c1).getPiece().get() instanceof King);
+        assertTrue(cb.at(b1).getPiece().isEmpty());
+        assertTrue(cb.at(a1).getPiece().isEmpty());
 
         assertEquals(2, cb.getOutOfTheBoardPieces().size());
     }
 
     @Test
+    @Disabled
     void should_throw_if_piece_added_outside_of_the_board() {
         ChessBoard chessBoard = ChessBoard.createEmpty();
 
-        assertThrows(IllegalArgumentException.class, () -> chessBoard.add(new Queen(Color.WHITE), "h9"));
+//        assertThrows(IllegalArgumentException.class, () -> chessBoard.add(new Queen(Color.WHITE), h9));
     }
 
     @Test
     void should_not_be_able_to_add_two_pieces_on_the_same_square() {
         ChessBoard chessBoard = ChessBoard.createEmpty();
-        String e4 = "e4";
         Executable addQueenOnE4 = () -> chessBoard.add(new Queen(Color.WHITE), e4);
 
         assertDoesNotThrow(addQueenOnE4);
@@ -71,7 +73,7 @@ class ChessBoardTest {
             ChessBoard chessBoard = ChessBoard.createEmpty();
 
             assertTrue(IntStream.rangeClosed(1, 8)
-                    .mapToObj(i -> IntStream.rangeClosed(1, 8).mapToObj(j -> PositionUtil.posToSquare(i, j)))
+                    .mapToObj(i -> IntStream.rangeClosed(1, 8).mapToObj(j -> Position.posToSquare(i, j)))
                     .flatMap(stringStream -> stringStream)
                     .allMatch(position -> chessBoard.at(position).getPiece().isEmpty()));
         }
@@ -81,52 +83,52 @@ class ChessBoardTest {
             ChessBoard chessBoard = ChessBoard.createWithInitialState();
 
             // White pieces
-            assertTrue(chessBoard.at("a1").getPiece().get() instanceof Rock);
-            assertEquals(Color.WHITE, chessBoard.at("a1").getPiece().get().getColor());
-            assertTrue(chessBoard.at("b1").getPiece().get() instanceof Knight);
-            assertEquals(Color.WHITE, chessBoard.at("b1").getPiece().get().getColor());
-            assertTrue(chessBoard.at("c1").getPiece().get() instanceof Bishop);
-            assertEquals(Color.WHITE, chessBoard.at("c1").getPiece().get().getColor());
-            assertTrue(chessBoard.at("d1").getPiece().get() instanceof Queen);
-            assertEquals(Color.WHITE, chessBoard.at("d1").getPiece().get().getColor());
-            assertTrue(chessBoard.at("e1").getPiece().get() instanceof King);
-            assertEquals(Color.WHITE, chessBoard.at("e1").getPiece().get().getColor());
-            assertTrue(chessBoard.at("f1").getPiece().get() instanceof Bishop);
-            assertEquals(Color.WHITE, chessBoard.at("f1").getPiece().get().getColor());
-            assertTrue(chessBoard.at("g1").getPiece().get() instanceof Knight);
-            assertEquals(Color.WHITE, chessBoard.at("g1").getPiece().get().getColor());
-            assertTrue(chessBoard.at("h1").getPiece().get() instanceof Rock);
-            assertEquals(Color.WHITE, chessBoard.at("h1").getPiece().get().getColor());
+            assertTrue(chessBoard.at(a1).getPiece().get() instanceof Rock);
+            assertEquals(Color.WHITE, chessBoard.at(a1).getPiece().get().getColor());
+            assertTrue(chessBoard.at(b1).getPiece().get() instanceof Knight);
+            assertEquals(Color.WHITE, chessBoard.at(b1).getPiece().get().getColor());
+            assertTrue(chessBoard.at(c1).getPiece().get() instanceof Bishop);
+            assertEquals(Color.WHITE, chessBoard.at(c1).getPiece().get().getColor());
+            assertTrue(chessBoard.at(d1).getPiece().get() instanceof Queen);
+            assertEquals(Color.WHITE, chessBoard.at(d1).getPiece().get().getColor());
+            assertTrue(chessBoard.at(e1).getPiece().get() instanceof King);
+            assertEquals(Color.WHITE, chessBoard.at(e1).getPiece().get().getColor());
+            assertTrue(chessBoard.at(f1).getPiece().get() instanceof Bishop);
+            assertEquals(Color.WHITE, chessBoard.at(f1).getPiece().get().getColor());
+            assertTrue(chessBoard.at(g1).getPiece().get() instanceof Knight);
+            assertEquals(Color.WHITE, chessBoard.at(g1).getPiece().get().getColor());
+            assertTrue(chessBoard.at(h1).getPiece().get() instanceof Rock);
+            assertEquals(Color.WHITE, chessBoard.at(h1).getPiece().get().getColor());
             assertTrue(IntStream.rangeClosed(1, 8)
-                    .mapToObj(i -> PositionUtil.posToSquare(i, 2))
+                    .mapToObj(i -> Position.posToSquare(i, 2))
                     .map(position -> chessBoard.at(position).getPiece().get())
                     .allMatch(pawn -> pawn instanceof WhitePawn));
 
             // Black pieces
-            assertTrue(chessBoard.at("a8").getPiece().get() instanceof Rock);
-            assertEquals(Color.BLACK, chessBoard.at("a8").getPiece().get().getColor());
-            assertTrue(chessBoard.at("b8").getPiece().get() instanceof Knight);
-            assertEquals(Color.BLACK, chessBoard.at("b8").getPiece().get().getColor());
-            assertTrue(chessBoard.at("c8").getPiece().get() instanceof Bishop);
-            assertEquals(Color.BLACK, chessBoard.at("c8").getPiece().get().getColor());
-            assertTrue(chessBoard.at("d8").getPiece().get() instanceof Queen);
-            assertEquals(Color.BLACK, chessBoard.at("d8").getPiece().get().getColor());
-            assertTrue(chessBoard.at("e8").getPiece().get() instanceof King);
-            assertEquals(Color.BLACK, chessBoard.at("e8").getPiece().get().getColor());
-            assertTrue(chessBoard.at("f8").getPiece().get() instanceof Bishop);
-            assertEquals(Color.BLACK, chessBoard.at("f8").getPiece().get().getColor());
-            assertTrue(chessBoard.at("g8").getPiece().get() instanceof Knight);
-            assertEquals(Color.BLACK, chessBoard.at("g8").getPiece().get().getColor());
-            assertTrue(chessBoard.at("h8").getPiece().get() instanceof Rock);
-            assertEquals(Color.BLACK, chessBoard.at("h8").getPiece().get().getColor());
+            assertTrue(chessBoard.at(a8).getPiece().get() instanceof Rock);
+            assertEquals(Color.BLACK, chessBoard.at(a8).getPiece().get().getColor());
+            assertTrue(chessBoard.at(b8).getPiece().get() instanceof Knight);
+            assertEquals(Color.BLACK, chessBoard.at(b8).getPiece().get().getColor());
+            assertTrue(chessBoard.at(c8).getPiece().get() instanceof Bishop);
+            assertEquals(Color.BLACK, chessBoard.at(c8).getPiece().get().getColor());
+            assertTrue(chessBoard.at(d8).getPiece().get() instanceof Queen);
+            assertEquals(Color.BLACK, chessBoard.at(d8).getPiece().get().getColor());
+            assertTrue(chessBoard.at(e8).getPiece().get() instanceof King);
+            assertEquals(Color.BLACK, chessBoard.at(e8).getPiece().get().getColor());
+            assertTrue(chessBoard.at(f8).getPiece().get() instanceof Bishop);
+            assertEquals(Color.BLACK, chessBoard.at(f8).getPiece().get().getColor());
+            assertTrue(chessBoard.at(g8).getPiece().get() instanceof Knight);
+            assertEquals(Color.BLACK, chessBoard.at(g8).getPiece().get().getColor());
+            assertTrue(chessBoard.at(h8).getPiece().get() instanceof Rock);
+            assertEquals(Color.BLACK, chessBoard.at(h8).getPiece().get().getColor());
             assertTrue(IntStream.rangeClosed(1, 8)
-                    .mapToObj(i -> PositionUtil.posToSquare(i, 7))
+                    .mapToObj(i -> Position.posToSquare(i, 7))
                     .map(position -> chessBoard.at(position).getPiece().get())
                     .allMatch(pawn -> pawn instanceof BlackPawn));
 
 
             assertTrue(IntStream.rangeClosed(1, 8)
-                    .mapToObj(i -> IntStream.rangeClosed(3, 6).mapToObj(j -> PositionUtil.posToSquare(i, j)))
+                    .mapToObj(i -> IntStream.rangeClosed(3, 6).mapToObj(j -> Position.posToSquare(i, j)))
                     .flatMap(stringStream -> stringStream)
                     .allMatch(position -> chessBoard.at(position).getPiece().isEmpty())
             );
@@ -138,8 +140,6 @@ class ChessBoardTest {
         @Test
         void move_bishop_on_empty_chessboard() {
             ChessBoard chessBoard = ChessBoard.createEmpty();
-            String a1 = "a1";
-            String h8 = "h8";
             Bishop bishop = new Bishop(Color.WHITE);
             chessBoard.add(bishop, a1);
             assertEquals(bishop, chessBoard.at(a1).getPiece().get());
@@ -154,8 +154,6 @@ class ChessBoardTest {
         @Test
         void move_knight_to_f3_on_initial_chessboard() {
             ChessBoard chessBoard = ChessBoard.createWithInitialState();
-            String g1 = "g1";
-            String f3 = "f3";
             Piece knight = chessBoard.at(g1).getPiece().get();
             assertTrue(chessBoard.at(f3).getPiece().isEmpty());
 
@@ -168,7 +166,6 @@ class ChessBoardTest {
         @Test
         void should_not_move_on_itself() {
             ChessBoard chessBoard = ChessBoard.createEmpty();
-            String e4 = "e4";
             Queen queen = new Queen(Color.WHITE);
             chessBoard.add(queen, e4);
 
@@ -181,8 +178,6 @@ class ChessBoardTest {
         @Test
         void take_piece() {
             ChessBoard chessBoard = ChessBoard.createEmpty();
-            String a1 = "a1";
-            String h8 = "h8";
             Bishop bishop = new Bishop(Color.WHITE);
             Queen queen = new Queen(Color.BLACK);
             chessBoard.add(bishop, a1);
@@ -205,8 +200,6 @@ class ChessBoardTest {
         @Test
         void should_not_be_able_to_move_on_ally_piece() {
             ChessBoard chessBoard = ChessBoard.createEmpty();
-            String a1 = "a1";
-            String h8 = "h8";
             Bishop bishop = new Bishop(Color.WHITE);
             chessBoard.add(bishop, a1);
             chessBoard.add(new Queen(Color.WHITE), h8);
@@ -218,8 +211,6 @@ class ChessBoardTest {
         @Test
         void should_be_able_to_move_on_enemy_piece() {
             ChessBoard chessBoard = ChessBoard.createEmpty();
-            String a1 = "a1";
-            String h8 = "h8";
             Bishop bishop = new Bishop(Color.WHITE);
             chessBoard.add(bishop, a1);
             chessBoard.add(new Queen(Color.BLACK), h8);
@@ -231,9 +222,6 @@ class ChessBoardTest {
         @Test
         void should_not_be_able_to_move_king_in_check() {
             ChessBoard chessBoard = ChessBoard.createEmpty();
-            String a1 = "a1";
-            String a2 = "a2";
-            String b3 = "b3";
             King king = new King(Color.WHITE);
             chessBoard.add(king, a1);
             assertFalse(chessBoard.doesMovingPieceCheckOurOwnKing(king, a2));
@@ -246,10 +234,8 @@ class ChessBoardTest {
         @Test
         void should_not_be_able_to_move_king_in_check_bis() {
             ChessBoard chessBoard = ChessBoard.createEmpty();
-            String e4 = "e4";
-            Set<String> validMoves = Set.of("e5", "d3", "f4");
-            Set<String> invalidMoves = Set.of("d5", "f3");
-            String a8 = "a8";
+            Set<Position> validMoves = Set.of(e5, d3, f4);
+            Set<Position> invalidMoves = Set.of(d5, f3);
             King king = new King(Color.WHITE);
             chessBoard.add(king, e4);
             validMoves.forEach(pos -> assertFalse(chessBoard.doesMovingPieceCheckOurOwnKing(king, pos)));
@@ -264,9 +250,6 @@ class ChessBoardTest {
         @Test
         void should_not_be_able_to_move_a_pinned_piece() {
             ChessBoard chessBoard = ChessBoard.createEmpty();
-            String e8 = "e8";
-            String e5 = "e5";
-            String e1 = "e1";
             King king = new King(Color.BLACK);
             chessBoard.add(king, e8);
             Knight knight = new Knight(Color.BLACK);
@@ -274,7 +257,7 @@ class ChessBoardTest {
 
             chessBoard.add(new Rock(Color.WHITE), e1);
 
-            assertTrue(PositionUtil.generateAllPositions().stream()
+            assertTrue(Position.generateAllPositions().stream()
                     .filter(knight::isPositionTheoreticallyReachable)
                     .allMatch(pos -> chessBoard.doesMovingPieceCheckOurOwnKing(knight, pos)));
         }
@@ -282,11 +265,8 @@ class ChessBoardTest {
         @Test
         void should_be_able_to_move_a_pinned_piece_if_it_still_block_the_chess() {
             ChessBoard chessBoard = ChessBoard.createEmpty();
-            String e5 = "e5";
-            String h8 = "h8";
-            String a1 = "a1";
-            Set<String> validMoves = Set.of("b2", "c3", "d4", "f6", "g7", "h8");
-            Set<String> invalidMoves = Set.of("d6", "h2");
+            Set<Position> validMoves = Set.of(b2, c3, d4, f6, g7, h8);
+            Set<Position> invalidMoves = Set.of(d6, h2);
             Bishop bishop = new Bishop(Color.WHITE);
             chessBoard.add(bishop, e5);
             chessBoard.add(new King(Color.WHITE), a1);
@@ -302,15 +282,12 @@ class ChessBoardTest {
         @Test
         void should_be_able_to_move_to_prevent_check() {
             ChessBoard chessBoard = ChessBoard.createEmpty();
-            String e8 = "e8";
-            String c4 = "c4";
-            String e1 = "e1";
             chessBoard.add(new King(Color.BLACK), e8);
             chessBoard.add(new Rock(Color.WHITE), e1);
             Queen queen = new Queen(Color.BLACK);
             chessBoard.add(queen, c4);
-            Set<String> validMoves = Set.of("e6", "e4", "e2");
-            Set<String> invalidMoves = PositionUtil.generateAllPositions()
+            Set<Position> validMoves = Set.of(e6, e4, e2);
+            Set<Position> invalidMoves = Position.generateAllPositions()
                     .stream()
                     .filter(s -> !validMoves.contains(s))
                     .filter(queen::isPositionTheoreticallyReachable)
@@ -324,14 +301,11 @@ class ChessBoardTest {
         @Test
         void should_be_able_to_take_the_piece_that_make_chess() {
             ChessBoard chessBoard = ChessBoard.createEmpty();
-            String e8 = "e8";
-            String e4 = "e4";
-            String h1 = "h1";
             chessBoard.add(new King(Color.BLACK), e8);
             chessBoard.add(new Rock(Color.WHITE), e4);
             Queen queen = new Queen(Color.BLACK);
             chessBoard.add(queen, h1);
-            Set<String> invalidMoves = PositionUtil.generateAllPositions()
+            Set<Position> invalidMoves = Position.generateAllPositions()
                     .stream()
                     .filter(s -> !s.equals(e4))
                     .filter(queen::isPositionTheoreticallyReachable)

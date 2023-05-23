@@ -11,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import piece.Color;
 import piece.Piece;
 import player.Player;
+import position.Position;
 
 import java.util.Collections;
 import java.util.LinkedList;
@@ -77,7 +78,7 @@ public class GameStateController implements ChessBoardService {
     }
 
     @Override
-    public boolean tryToMove(String from, String to) {
+    public boolean tryToMove(Position from, Position to) {
         return currentState.getState().tryToMove(this, from, to);
     }
 

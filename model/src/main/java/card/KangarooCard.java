@@ -3,6 +3,7 @@ package card;
 import board.ChessBoard;
 import piece.Knight;
 import piece.extra.Kangaroo;
+import position.Position;
 
 import java.util.List;
 
@@ -33,7 +34,7 @@ public class KangarooCard extends Card {
 
     @Override
     protected boolean doAction(ChessBoard chessBoard) {
-        String knightPosition = knight.getPosition();
+        Position knightPosition = knight.getPosition();
         chessBoard.removePieceFromTheBoard(knight);
         chessBoard.add(new Kangaroo(knight.getColor()), knightPosition);
         return true;

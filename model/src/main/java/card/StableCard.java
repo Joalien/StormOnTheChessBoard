@@ -3,6 +3,7 @@ package card;
 import board.ChessBoard;
 import piece.Knight;
 import piece.Rock;
+import position.Position;
 
 import java.util.List;
 
@@ -38,8 +39,8 @@ public class StableCard extends Card {
 
     @Override
     protected boolean doAction(ChessBoard chessBoard) {
-        String rockPosition = rock.getPosition();
-        String knightPosition = knight.getPosition();
+        Position rockPosition = rock.getPosition();
+        Position knightPosition = knight.getPosition();
 
         chessBoard.removePieceFromTheBoard(rock);
         chessBoard.removePieceFromTheBoard(knight);

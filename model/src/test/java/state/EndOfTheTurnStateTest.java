@@ -9,6 +9,8 @@ import state.exception.CardAlreadyPlayedException;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static position.Position.e2;
+import static position.Position.e4;
 
 class EndOfTheTurnStateTest {
     private QuadrilleCard card;
@@ -43,7 +45,7 @@ class EndOfTheTurnStateTest {
 
     @Test
     void should_not_be_able_to_play_a_move() {
-        assertThrows(AlreadyMovedException.class, () -> gameStateController.tryToMove("e2", "e4"));
+        assertThrows(AlreadyMovedException.class, () -> gameStateController.tryToMove(e2, e4));
 
         assertEquals(StateEnum.END_OF_THE_TURN, gameStateController.getCurrentState());
     }

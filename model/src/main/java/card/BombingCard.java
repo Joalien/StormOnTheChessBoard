@@ -3,12 +3,13 @@ package card;
 import board.ChessBoard;
 import effet.BombingEffect;
 import piece.Piece;
+import position.Position;
 
 import java.util.List;
 
 public class BombingCard extends Card {
 
-    private String position;
+    private Position position;
 
 
     public BombingCard() {
@@ -19,7 +20,7 @@ public class BombingCard extends Card {
 
     @Override
     protected void setupParams(List<?> params) {
-        this.position = (String) params.get(0);
+        this.position = (Position) params.get(0);
     }
 
     @Override

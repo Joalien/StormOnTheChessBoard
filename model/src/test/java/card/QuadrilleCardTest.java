@@ -14,13 +14,10 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static position.Position.*;
 
 class QuadrilleCardTest {
 
-    public static final String a1 = "a1";
-    public static final String h1 = "h1";
-    public static final String a8 = "a8";
-    public static final String h8 = "h8";
     private ChessBoard chessBoard;
     private Rock a1Rock;
     private Rock h1Rock;
@@ -47,7 +44,7 @@ class QuadrilleCardTest {
         void should_turn_clockwise() {
             assertTrue(clockwiseQuadrille.playOn(chessBoard, List.of(QuadrilleCard.Direction.CLOCKWISE)));
 
-            assertEquals(a1Rock, chessBoard.at("a8").getPiece().get());
+            assertEquals(a1Rock, chessBoard.at(a8).getPiece().get());
             assertEquals(h1Rock, chessBoard.at(a1).getPiece().get());
             assertEquals(h8Rock, chessBoard.at(h1).getPiece().get());
             assertEquals(a8Rock, chessBoard.at(h8).getPiece().get());
@@ -57,14 +54,14 @@ class QuadrilleCardTest {
         void should_turn_clockwise_with_empty_square() {
             chessBoard = ChessBoard.createEmpty();
             chessBoard.add(a1Rock, a1);
-            chessBoard.add(h8Rock, "h8");
+            chessBoard.add(h8Rock, h8);
 
             assertTrue(clockwiseQuadrille.playOn(chessBoard, List.of(QuadrilleCard.Direction.CLOCKWISE)));
 
-            assertEquals(a1Rock, chessBoard.at("a8").getPiece().get());
+            assertEquals(a1Rock, chessBoard.at(a8).getPiece().get());
             assertEquals(h8Rock, chessBoard.at(h1).getPiece().get());
             assertTrue(chessBoard.at(a1).getPiece().isEmpty());
-            assertTrue(chessBoard.at("h8").getPiece().isEmpty());
+            assertTrue(chessBoard.at(h8).getPiece().isEmpty());
         }
 
         @Test
@@ -94,7 +91,7 @@ class QuadrilleCardTest {
         @Test
         void should_not_turn_clockwise_if_it_creates_check() {
             chessBoard = ChessBoard.createEmpty();
-            chessBoard.add(new King(Color.WHITE), "e1");
+            chessBoard.add(new King(Color.WHITE), e1);
             chessBoard.add(a8Rock, h8);
 
             Assertions.assertThrows(CheckException.class, () -> clockwiseQuadrille.playOn(chessBoard, List.of(QuadrilleCard.Direction.CLOCKWISE)));
@@ -104,7 +101,7 @@ class QuadrilleCardTest {
         @Test
         void should_not_turn_counterclockwise_if_it_creates_check() {
             chessBoard = ChessBoard.createEmpty();
-            chessBoard.add(new King(Color.WHITE), "e1");
+            chessBoard.add(new King(Color.WHITE), e1);
             chessBoard.add(a8Rock, a8);
 
             Assertions.assertThrows(CheckException.class, () -> counterclockwiseQuadrille.playOn(chessBoard, List.of(QuadrilleCard.Direction.COUNTERCLOCKWISE)));

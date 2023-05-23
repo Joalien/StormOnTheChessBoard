@@ -4,7 +4,9 @@ import piece.Color;
 import piece.Knight;
 import piece.Piece;
 import piece.Square;
-import position.PositionUtil;
+import position.File;
+import position.Position;
+import position.Row;
 
 import java.util.Collections;
 import java.util.Optional;
@@ -17,18 +19,18 @@ public class Kangaroo extends Piece {
     }
 
     @Override
-    public boolean isPositionTheoreticallyReachable(int x, int y, Optional<Color> color) {
-        return PositionUtil.generateAllPositions().stream()
+    public boolean isPositionTheoreticallyReachable(File file, Row row, Optional<Color> color) {
+        return Position.generateAllPositions().stream()
                 .map(pos -> {
                     Knight knight = new Knight(this.color);
                     knight.setSquare(new Square(pos));
                     return knight;
-                }).filter(knight -> knight.isPositionTheoreticallyReachable(x, y, color))
-                .anyMatch(knight -> knight.isPositionTheoreticallyReachable(getX(), getY(), color));
+                }).filter(knight -> knight.isPositionTheoreticallyReachable(file, row, color))
+                .anyMatch(knight -> knight.isPositionTheoreticallyReachable(getFile(), getRow(), color));
     }
 
     @Override
-    public Set<String> squaresOnThePath(String squareToMoveOn) {
+    public Set<Position> squaresOnThePath(Position squareToMoveOn) {
         return Collections.emptySet(); // piece.Knight can jump over pieces
     }
 }

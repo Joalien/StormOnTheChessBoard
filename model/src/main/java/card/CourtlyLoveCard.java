@@ -5,7 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import piece.Knight;
 import piece.Piece;
 import piece.Queen;
-import position.PositionUtil;
+import position.Position;
 
 import java.util.List;
 
@@ -13,7 +13,7 @@ import java.util.List;
 public class CourtlyLoveCard extends Card {
 
     private Knight knight;
-    private String positionToMoveOn;
+    private Position positionToMoveOn;
 
     public CourtlyLoveCard() {
         super("Amour courtois", "Amenez l'un de vos cavaliers sur une case libre adjacente à votre dame", CardType.REPLACE_TURN);
@@ -22,7 +22,7 @@ public class CourtlyLoveCard extends Card {
     @Override
     protected void setupParams(List<?> params) {
         this.knight = (Knight) params.get(0);
-        this.positionToMoveOn = (String) params.get(1);
+        this.positionToMoveOn = (Position) params.get(1);
     }
 
     @Override
@@ -33,7 +33,7 @@ public class CourtlyLoveCard extends Card {
         boolean isNearbyQueen = chessBoard.allyPieces(knight.getColor()).stream()
                 .filter(Queen.class::isInstance)
                 .map(Piece::getPosition)
-                .anyMatch(pos1 -> PositionUtil.areNearby(pos1, positionToMoveOn));
+                .anyMatch(pos1 -> Position.areNearby(pos1, positionToMoveOn));
         if (!isNearbyQueen)
             throw new IllegalArgumentException("You should move %s nearby your queen".formatted(knight));
         if (chessBoard.at(positionToMoveOn).getPiece().isPresent())

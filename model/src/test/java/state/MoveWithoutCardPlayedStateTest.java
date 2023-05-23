@@ -10,6 +10,7 @@ import state.exception.AlreadyMovedException;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static position.Position.*;
 
 class MoveWithoutCardPlayedStateTest {
 
@@ -30,7 +31,7 @@ class MoveWithoutCardPlayedStateTest {
 
     @Test
     void should_not_be_able_to_play_move() {
-        assertThrows(AlreadyMovedException.class, () -> gameStateController.tryToMove("e2", "e4"));
+        assertThrows(AlreadyMovedException.class, () -> gameStateController.tryToMove(e2, e4));
 
         assertEquals(StateEnum.MOVE_WITHOUT_CARD_PLAYED, gameStateController.getCurrentState());
     }
@@ -53,21 +54,21 @@ class MoveWithoutCardPlayedStateTest {
 
         @Test
         void should_not_be_able_to_play_replace_move_card() {
-            assertThrows(IllegalStateException.class, () -> gameStateController.tryToPlayCard(replaceMoveCard, List.of((Pawn) gameStateController.getChessBoard().at("e2").getPiece().get(), (Pawn) gameStateController.getChessBoard().at("d2").getPiece().get())));
+            assertThrows(IllegalStateException.class, () -> gameStateController.tryToPlayCard(replaceMoveCard, List.of((Pawn) gameStateController.getChessBoard().at(e2).getPiece().get(), (Pawn) gameStateController.getChessBoard().at(d2).getPiece().get())));
 
             assertEquals(StateEnum.MOVE_WITHOUT_CARD_PLAYED, gameStateController.getCurrentState());
         }
 
         @Test
         void should_not_be_able_to_play_before_move_card() {
-            assertThrows(IllegalStateException.class, () -> gameStateController.tryToPlayCard(beforeMoveCard, List.of("e4")));
+            assertThrows(IllegalStateException.class, () -> gameStateController.tryToPlayCard(beforeMoveCard, List.of(e4)));
 
             assertEquals(StateEnum.MOVE_WITHOUT_CARD_PLAYED, gameStateController.getCurrentState());
         }
 
         @Test
         void should_not_be_able_to_play_invalid_card() {
-            assertThrows(IllegalArgumentException.class, () -> gameStateController.tryToPlayCard(new BlackHoleCard(), List.of("h8")));
+            assertThrows(IllegalArgumentException.class, () -> gameStateController.tryToPlayCard(new BlackHoleCard(), List.of(h8)));
 
             assertEquals(StateEnum.MOVE_WITHOUT_CARD_PLAYED, gameStateController.getCurrentState());
         }

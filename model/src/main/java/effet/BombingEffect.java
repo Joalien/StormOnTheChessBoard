@@ -5,13 +5,14 @@ import lombok.extern.slf4j.Slf4j;
 import piece.Color;
 import piece.King;
 import piece.Piece;
+import position.Position;
 
 @Slf4j
 public class BombingEffect extends Effect {
-    private final String position;
+    private final Position position;
     private final Color isPlayedBy;
 
-    public BombingEffect(String position, Color isPlayedBy) {
+    public BombingEffect(Position position, Color isPlayedBy) {
         super("Attentat");
         this.position = position;
         this.isPlayedBy = isPlayedBy;

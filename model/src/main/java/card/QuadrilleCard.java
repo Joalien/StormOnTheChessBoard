@@ -4,17 +4,21 @@ import board.ChessBoard;
 import piece.Color;
 import piece.Piece;
 import piece.Square;
+import position.Position;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import static position.Position.*;
 
 public class QuadrilleCard extends Card {
 
-    private static final List<String> CORNERS = List.of("a1", "h1", "h8", "a8");
-    private final Map<String, Optional<Piece>> pieces = new HashMap<>();
+    private static final List<Position> CORNERS = Stream.of(a1, h1, h8, a8).toList();
+    private final Map<Position, Optional<Piece>> pieces = new HashMap<>();
 
     private Direction direction;
 
@@ -34,7 +38,7 @@ public class QuadrilleCard extends Card {
 
     @Override
     protected boolean doesNotCreateCheck(ChessBoard chessBoard) {
-        Map<String, Optional<Piece>> pieces = saveWhichPieceShouldGoInWhichCorner(chessBoard);
+        Map<Position, Optional<Piece>> pieces = saveWhichPieceShouldGoInWhichCorner(chessBoard);
         pieces.forEach((key, value) -> chessBoard.fakeSquare(value.orElse(null), key));
         boolean isKingUnderAttack = chessBoard.isKingUnderAttack(Color.WHITE);
         chessBoard.unfakeAllSquares();
@@ -43,7 +47,7 @@ public class QuadrilleCard extends Card {
 
     @Override
     protected boolean doAction(ChessBoard chessBoard) {
-        Map<String, Optional<Piece>> pieces = saveWhichPieceShouldGoInWhichCorner(chessBoard);
+        Map<Position, Optional<Piece>> pieces = saveWhichPieceShouldGoInWhichCorner(chessBoard);
         removeCornersFromTheBoard(chessBoard);
         addPiecesInCorner(chessBoard, pieces);
         return true;
@@ -58,13 +62,13 @@ public class QuadrilleCard extends Card {
                 .forEach(chessBoard::removePieceFromTheBoard);
     }
 
-    private static void addPiecesInCorner(ChessBoard chessBoard, Map<String, Optional<Piece>> pieces) {
+    private static void addPiecesInCorner(ChessBoard chessBoard, Map<Position, Optional<Piece>> pieces) {
         pieces.entrySet().stream()
                 .filter(p -> p.getValue().isPresent())
                 .forEach(optionalStringEntry -> chessBoard.add(optionalStringEntry.getValue().get(), optionalStringEntry.getKey()));
     }
 
-    private Map<String, Optional<Piece>> saveWhichPieceShouldGoInWhichCorner(ChessBoard chessBoard) {
+    private Map<Position, Optional<Piece>> saveWhichPieceShouldGoInWhichCorner(ChessBoard chessBoard) {
         return CORNERS.stream()
                 .map(chessBoard::at)
                 .collect(Collectors.toMap(square -> direction.cornersMap.get(square.getPosition()), Square::getPiece));
@@ -72,19 +76,19 @@ public class QuadrilleCard extends Card {
 
     public enum Direction {
         COUNTERCLOCKWISE(Map.of(
-                "a1", "h1",
-                "h1", "h8",
-                "h8", "a8",
-                "a8", "a1")),
+                a1, h1,
+                h1, h8,
+                h8, a8,
+                a8, a1)),
         CLOCKWISE(Map.of(
-                "h1", "a1",
-                "h8", "h1",
-                "a8", "h8",
-                "a1", "a8"));
+                h1, a1,
+                h8, h1,
+                a8, h8,
+                a1, a8));
 
-        final Map<String, String> cornersMap;
+        final Map<Position, Position> cornersMap;
 
-        Direction(Map<String, String> cornersMap) {
+        Direction(Map<Position, Position> cornersMap) {
             this.cornersMap = cornersMap;
         }
     }

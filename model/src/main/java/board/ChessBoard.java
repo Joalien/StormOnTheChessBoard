@@ -3,20 +3,28 @@ package board;
 import effet.Effect;
 import lombok.extern.slf4j.Slf4j;
 import piece.*;
+import position.File;
+import position.Position;
+import position.Row;
 
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import static position.PositionUtil.*;
+import static position.Position.*;
 
 @Slf4j
 public class ChessBoard {
 
-    private final HashMap<String, Square> board = new HashMap<>(64);
-    private final HashMap<String, Square> fakeSquares = new HashMap<>();
+    private final HashMap<Position, Square> board = new HashMap<>(64);
+    private final HashMap<Position, Square> fakeSquares = new HashMap<>();
     private final Set<Piece> outOfTheBoardPieces = new HashSet<>();
     private final Set<Effect> effects = new HashSet<>();
+    // FIXME virer les types primitif
+    // remplacer Position par Value object position (responsabilité dans le board)
+    // remplacer i et j par des value object (logne et colonne)
+    // FIXME retirer les dépendances techniques
+    // ArchUnit : tester l'architecture
 
     public static ChessBoard createEmpty() {
         log.debug("create empty chessboard");
@@ -27,32 +35,32 @@ public class ChessBoard {
         log.debug("create chessboard with initial state");
         ChessBoard chessBoard = new ChessBoard();
 
-        chessBoard.add(new King(Color.WHITE), "e1");
-        chessBoard.add(new King(Color.BLACK), "e8");
-        chessBoard.add(new Queen(Color.WHITE), "d1");
-        chessBoard.add(new Queen(Color.BLACK), "d8");
-        chessBoard.add(new Bishop(Color.WHITE), "c1");
-        chessBoard.add(new Bishop(Color.WHITE), "f1");
-        chessBoard.add(new Bishop(Color.BLACK), "f8");
-        chessBoard.add(new Bishop(Color.BLACK), "c8");
-        chessBoard.add(new Knight(Color.WHITE), "b1");
-        chessBoard.add(new Knight(Color.WHITE), "g1");
-        chessBoard.add(new Knight(Color.BLACK), "b8");
-        chessBoard.add(new Knight(Color.BLACK), "g8");
-        chessBoard.add(new Rock(Color.WHITE), "a1");
-        chessBoard.add(new Rock(Color.WHITE), "h1");
-        chessBoard.add(new Rock(Color.BLACK), "a8");
-        chessBoard.add(new Rock(Color.BLACK), "h8");
-        IntStream.rangeClosed(MIN, MAX)
-                .mapToObj(i -> posToSquare(i, MIN + 1))
+        chessBoard.add(new King(Color.WHITE), e1);
+        chessBoard.add(new King(Color.BLACK), e8);
+        chessBoard.add(new Queen(Color.WHITE), d1);
+        chessBoard.add(new Queen(Color.BLACK), d8);
+        chessBoard.add(new Bishop(Color.WHITE), c1);
+        chessBoard.add(new Bishop(Color.WHITE), f1);
+        chessBoard.add(new Bishop(Color.BLACK), f8);
+        chessBoard.add(new Bishop(Color.BLACK), c8);
+        chessBoard.add(new Knight(Color.WHITE), b1);
+        chessBoard.add(new Knight(Color.WHITE), g1);
+        chessBoard.add(new Knight(Color.BLACK), b8);
+        chessBoard.add(new Knight(Color.BLACK), g8);
+        chessBoard.add(new Rock(Color.WHITE), a1);
+        chessBoard.add(new Rock(Color.WHITE), h1);
+        chessBoard.add(new Rock(Color.BLACK), a8);
+        chessBoard.add(new Rock(Color.BLACK), h8);
+        Arrays.stream(File.values())
+                .map(file -> Position.posToSquare(file, Row.Two))
                 .forEach(position -> chessBoard.add(new WhitePawn(), position));
-        IntStream.rangeClosed(MIN, MAX)
-                .mapToObj(i -> posToSquare(i, MAX - 1))
+        Arrays.stream(File.values())
+                .map(file -> Position.posToSquare(file, Row.Seven))
                 .forEach(position -> chessBoard.add(new BlackPawn(), position));
         return chessBoard;
     }
 
-    public void add(Piece piece, String position) { // HERE
+    public void add(Piece piece, Position position) { // HERE
         if (!fakeSquares.isEmpty())
             throw new IllegalStateException("You cannot update board if there are fake pieces on");
         if (at(position).getPiece().isPresent())
@@ -64,8 +72,7 @@ public class ChessBoard {
         effects.forEach(effect -> effect.afterMoveHook(this, piece));
     }
 
-    public Square at(String position) {
-        if (invalidPosition(position)) throw new IllegalArgumentException("square is invalid");
+    public Square at(Position position) {
         if (fakeSquares.containsKey(position)) return fakeSquares.get(position);
         board.putIfAbsent(position, new Square(position)); // TODO inline return ?
         return board.get(position);
@@ -76,36 +83,36 @@ public class ChessBoard {
         return outOfTheBoardPieces;
     }
 
-    public Set<String> getAllAttackablePosition(Piece piece) {
+    public Set<Position> getAllAttackablePosition(Piece piece) {
         return generateAllPositions().stream()
                 .filter(pos -> !pos.equals(piece.getPosition()))
                 .filter(pos -> canAttack(piece, pos))
                 .collect(Collectors.toSet());
     }
 
-    public boolean canAttack(Piece piece, String positionToMoveOn) {
+    public boolean canAttack(Piece piece, Position positionToMoveOn) {
         return (isPositionTheoreticallyReachable(piece, positionToMoveOn) || doesEffectAllowToMove(piece, positionToMoveOn))
                 && emptyPath(piece, positionToMoveOn)
                 && isEnemyOrEmpty(piece, positionToMoveOn);
     }
 
-    private boolean isPositionTheoreticallyReachable(Piece piece, String positionToMoveOn) {
+    private boolean isPositionTheoreticallyReachable(Piece piece, Position positionToMoveOn) {
         return piece.isPositionTheoreticallyReachable(positionToMoveOn, at(positionToMoveOn).getPiece().map(Piece::getColor));
     }
-
-    private boolean doesEffectAllowToMove(Piece piece, String positionToMoveOn) {
+// FIXME generate all ACTIOn
+    private boolean doesEffectAllowToMove(Piece piece, Position positionToMoveOn) {
         return effects.stream()
                 .anyMatch(effect -> effect.allowToMove(piece, positionToMoveOn));
     }
 
-    public boolean emptyPath(Piece piece, String squareToGo) {
+    public boolean emptyPath(Piece piece, Position squareToGo) {
         return piece.squaresOnThePath(squareToGo).stream()
                 .map(this::at)
                 .map(Square::getPiece)
                 .allMatch(Optional::isEmpty);
     }
 
-    boolean isEnemyOrEmpty(Piece piece, String positionToMoveOn) {
+    boolean isEnemyOrEmpty(Piece piece, Position positionToMoveOn) {
         Optional<Piece> p = at(positionToMoveOn).getPiece();
         return p.isEmpty() || p
                 .map(Piece::getColor)
@@ -113,14 +120,14 @@ public class ChessBoard {
                 .orElse(false); // color is null
     }
 
-    public boolean tryToMove(String from, String to) {
+    public boolean tryToMove(Position from, Position to) {
         return at(from)
                 .getPiece()
                 .map(p -> tryToMove(p, to))
                 .orElseThrow(() -> new IllegalArgumentException("%s is empty!".formatted(from)));
     }
 
-    public boolean tryToMove(Piece piece, String positionToMoveOn) {
+    public boolean tryToMove(Piece piece, Position positionToMoveOn) {
         if (piece.getPosition().equals(positionToMoveOn)) throw new IllegalArgumentException();
         if (canMove(piece, positionToMoveOn)) {
             // FIXME if rock cannot castle, it will still castle
@@ -137,12 +144,12 @@ public class ChessBoard {
         return false;
     }
 
-    void tryToCastle(Piece piece, String positionToMoveOn) {
+    void tryToCastle(Piece piece, Position positionToMoveOn) {
         boolean kingCanCastle = piece instanceof King && ((King) piece).canCastle();
         boolean kingWantToCastle = piece.squaresOnThePath(positionToMoveOn).size() == 1;
         if (kingCanCastle && kingWantToCastle) {
-            String finalPositionOfRock = piece.squaresOnThePath(positionToMoveOn).stream().findFirst().get();
-            String rockPosition = Castlable.CASTLE_MAP.get(finalPositionOfRock);
+            Position finalPositionOfRock = piece.squaresOnThePath(positionToMoveOn).stream().findFirst().get();
+            Position rockPosition = Castlable.CASTLE_MAP.get(finalPositionOfRock);
             at(rockPosition)
                     .getPiece()
                     .filter(Rock.class::isInstance)
@@ -155,7 +162,7 @@ public class ChessBoard {
         }
     }
 
-    public void move(Piece piece, String positionToMoveOn) {
+    public void move(Piece piece, Position positionToMoveOn) {
         effects.forEach(effect -> effect.beforeMoveHook(this, piece));
 
         at(positionToMoveOn).getPiece().ifPresent(this::removePieceFromTheBoard);
@@ -176,17 +183,17 @@ public class ChessBoard {
         return piece;
     }
 
-    public boolean canMove(Piece piece, String positionToMoveOn) {
+    public boolean canMove(Piece piece, Position positionToMoveOn) {
         return canAttack(piece, positionToMoveOn)
                 && !doesMovingPieceCheckOurOwnKing(piece, positionToMoveOn)
                 && isValidCastle(piece, positionToMoveOn);
     }
 
-    boolean isValidCastle(Piece piece, String positionToMoveOn) {
+    boolean isValidCastle(Piece piece, Position positionToMoveOn) {
         return true; // TODO
     }
 
-    public void fakeSquare(Piece piece, String position) {
+    public void fakeSquare(Piece piece, Position position) {
         if (fakeSquares.containsKey(position) && fakeSquares.get(position) == null)
             throw new IllegalArgumentException("You cannot re-fake over a fake piece");
         log.debug("fake that {} is on {}", Optional.ofNullable(piece).map(Objects::toString).orElse("nothing"), position);
@@ -195,7 +202,7 @@ public class ChessBoard {
         fakeSquares.put(position, fakeSquare);
     }
 
-    public void unfakeSquare(String position) {
+    public void unfakeSquare(Position position) {
         Square square = fakeSquares.get(position);
         log.debug("unfake that {} is on {}", square.getPiece().map(Piece::toString).orElse("nothing"), position);
         fakeSquares.remove(position);
@@ -210,7 +217,7 @@ public class ChessBoard {
         return fakeSquares.size();
     }
 
-    boolean doesMovingPieceCheckOurOwnKing(Piece piece, String positionToMoveOn) {
+    boolean doesMovingPieceCheckOurOwnKing(Piece piece, Position positionToMoveOn) {
         if (piece.getPosition().equals(positionToMoveOn)) throw new IllegalArgumentException();
         if (piece instanceof FakePieceDecorator) return false;
 
@@ -243,7 +250,7 @@ public class ChessBoard {
     }
 
     public Set<Piece> allyPieces(Color allyColor) {
-        Map<String, Square> allyPieces = new HashMap<>();
+        Map<Position, Square> allyPieces = new HashMap<>();
         allyPieces.putAll(board);
         allyPieces.putAll(fakeSquares);
         return allyPieces.values().stream()
@@ -255,7 +262,7 @@ public class ChessBoard {
     }
 
     public Set<Piece> enemyPieces(Color allyColor) {
-        Map<String, Square> enemyPieces = new HashMap<>();
+        Map<Position, Square> enemyPieces = new HashMap<>();
         enemyPieces.putAll(board);
         enemyPieces.putAll(fakeSquares);
         return enemyPieces.values().stream()

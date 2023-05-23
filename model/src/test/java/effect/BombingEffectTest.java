@@ -11,10 +11,11 @@ import piece.Queen;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static position.Position.d4;
+import static position.Position.e4;
 
 class BombingEffectTest {
 
-    private final String e4 = "e4";
     private ChessBoard chessBoard;
 
     @BeforeEach
@@ -78,9 +79,9 @@ class BombingEffectTest {
         void should_not_explode_if_enemy_piece_move_nearby() {
             Queen queen = new Queen(Color.BLACK);
 
-            chessBoard.add(queen, "d4");
+            chessBoard.add(queen, d4);
 
-            assertEquals(queen, chessBoard.at("d4").getPiece().get());
+            assertEquals(queen, chessBoard.at(d4).getPiece().get());
             assertEquals(1, chessBoard.getEffects().size());
         }
     }

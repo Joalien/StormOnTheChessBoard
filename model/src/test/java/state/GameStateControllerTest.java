@@ -10,6 +10,8 @@ import piece.Pawn;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static position.Position.d2;
+import static position.Position.e2;
 
 class GameStateControllerTest {
 
@@ -41,7 +43,7 @@ class GameStateControllerTest {
         assertEquals(1, gameStateController.getCurrentPlayer().getCards().size());
         assertTrue(gameStateController.getCurrentPlayer().getCards().contains(card));
 
-        assertTrue(gameStateController.tryToPlayCard(card, List.of((Pawn) gameStateController.getChessBoard().at("e2").getPiece().get(), (Pawn) gameStateController.getChessBoard().at("d2").getPiece().get())));
+        assertTrue(gameStateController.tryToPlayCard(card, List.of((Pawn) gameStateController.getChessBoard().at(e2).getPiece().get(), (Pawn) gameStateController.getChessBoard().at(d2).getPiece().get())));
 
         assertEquals(1, gameStateController.getCurrentPlayer().getCards().size());
         assertFalse(gameStateController.getCurrentPlayer().getCards().contains(card));

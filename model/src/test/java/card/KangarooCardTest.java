@@ -7,12 +7,15 @@ import org.junit.jupiter.api.Test;
 import piece.Knight;
 import piece.Piece;
 import piece.extra.Kangaroo;
+import position.Position;
 
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static position.Position.*;
 
 
 class KangarooCardTest {
@@ -24,7 +27,7 @@ class KangarooCardTest {
     @BeforeEach
     void setUp() {
         chessBoard = ChessBoard.createWithInitialState();
-        knight = (Knight) chessBoard.at("b1").getPiece().get();
+        knight = (Knight) chessBoard.at(b1).getPiece().get();
         kangaroo = new KangarooCard();
     }
 
@@ -37,10 +40,10 @@ class KangarooCardTest {
 
         @Test
         void should_return_reachable_position() {
-            Set<String> validMoves = Set.of("b5", "c4", "a4", "d5", "e4", "b3", "f3");
+            Set<Position> validMoves = Set.of(b5, c4, a4, d5, e4, b3, f3);
             assertTrue(kangaroo.playOn(chessBoard, List.of(knight)));
 
-            Piece kangaroo = chessBoard.at("b1").getPiece().get();
+            Piece kangaroo = chessBoard.at(b1).getPiece().get();
             assertTrue(kangaroo instanceof Kangaroo);
             assertEquals(validMoves, chessBoard.getAllAttackablePosition(kangaroo));
         }

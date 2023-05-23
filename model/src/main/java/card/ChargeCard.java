@@ -54,9 +54,9 @@ public class ChargeCard extends Card {
 
     @Override
     protected boolean doAction(ChessBoard chessBoard) {
-        Comparator<Pawn> startWithMoreAdvancedPawn = Map.of(
-                Color.BLACK, Comparator.comparingInt(Pawn::getY),
-                Color.WHITE, Comparator.comparingInt(Pawn::getY).reversed()
+        Comparator<Object> startWithMoreAdvancedPawn = Map.of( // FIXME
+                Color.BLACK, Comparator.comparingInt(p -> ((Pawn) p).getRow().getRowNumber()),
+                Color.WHITE, Comparator.comparingInt(p -> ((Pawn) p).getRow().getRowNumber()).reversed()
         ).get(this.isPlayedBy);
         pawns.stream()
                 .sorted(startWithMoreAdvancedPawn)

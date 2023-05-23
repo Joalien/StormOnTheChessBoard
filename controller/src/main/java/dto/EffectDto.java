@@ -4,6 +4,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import position.Position;
 
 import java.util.Set;
 
@@ -13,5 +14,5 @@ import java.util.Set;
 @ToString
 public class EffectDto {
     private String name;
-    private Set<String> positions;
+    private Set<Position> positions;
 }

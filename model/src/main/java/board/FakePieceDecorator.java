@@ -3,6 +3,9 @@ package board;
 import piece.Color;
 import piece.Piece;
 import piece.Square;
+import position.File;
+import position.Position;
+import position.Row;
 
 import java.util.Optional;
 import java.util.Set;
@@ -20,13 +23,13 @@ public class FakePieceDecorator extends Piece {
     }
 
     @Override
-    public int getY() {
-        return fakePiece.getY();
+    public Row getRow() {
+        return fakePiece.getRow();
     }
 
     @Override
-    public int getX() {
-        return fakePiece.getX();
+    public File getFile() {
+        return fakePiece.getFile();
     }
 
     @Override
@@ -35,27 +38,27 @@ public class FakePieceDecorator extends Piece {
     }
 
     @Override
-    public boolean isPositionTheoreticallyReachable(String s) {
-        return fakePiece.isPositionTheoreticallyReachable(s);
+    public boolean isPositionTheoreticallyReachable(Position position) {
+        return fakePiece.isPositionTheoreticallyReachable(position);
     }
 
     @Override
-    public boolean isPositionTheoreticallyReachable(int x, int y, Optional<Color> color) {
-        return fakePiece.isPositionTheoreticallyReachable(x, y, color);
+    public boolean isPositionTheoreticallyReachable(File file, Row row, Optional<Color> color) {
+        return fakePiece.isPositionTheoreticallyReachable(file, row, color);
     }
 
     @Override
-    public boolean isPositionTheoreticallyReachable(String s, Optional<Color> color) {
-        return super.isPositionTheoreticallyReachable(s, color);
+    public boolean isPositionTheoreticallyReachable(Position position, Optional<Color> color) {
+        return super.isPositionTheoreticallyReachable(position, color);
     }
 
     @Override
-    public Set<String> squaresOnThePath(String squareToMoveOn) {
+    public Set<Position> squaresOnThePath(Position squareToMoveOn) {
         return fakePiece.squaresOnThePath(squareToMoveOn);
     }
 
     @Override
-    public String getPosition() {
+    public Position getPosition() {
         return fakeSquare.getPosition();
     }
 

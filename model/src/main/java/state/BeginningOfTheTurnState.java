@@ -1,12 +1,13 @@
 package state;
 
 import card.Card;
+import position.Position;
 
 import java.util.List;
 
 public class BeginningOfTheTurnState implements TurnState {
     @Override
-    public boolean tryToMove(GameStateController gameStateController, String from, String to) {
+    public boolean tryToMove(GameStateController gameStateController, Position from, Position to) {
         boolean hasMoved = gameStateController.getChessBoard().tryToMove(from, to);
         if (hasMoved) gameStateController.setCurrentState(StateEnum.MOVE_WITHOUT_CARD_PLAYED);
         return hasMoved;

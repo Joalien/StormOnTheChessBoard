@@ -9,6 +9,9 @@ import player.Player;
 
 import java.util.stream.Collectors;
 
+import static position.Position.e2;
+import static position.Position.e4;
+
 public class Main {
     public static void main(String[] args) {
         ChessBoardRepository chessBoardRepository = new ChessBoardRepositoryImpl();
@@ -19,8 +22,8 @@ public class Main {
 
         chessBoardRepository.saveCommand(gameId, PlayMoveCommand.builder()
                 .gameId(gameId)
-                .from("e2")
-                .to("e4").build());
+                .from(e2)
+                .to(e4).build());
         System.out.println(mapToDto(gameId, chessBoardRepository.getChessBoardService(gameId)).toString());
     }
 

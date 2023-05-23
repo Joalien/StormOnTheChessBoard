@@ -9,11 +9,10 @@ import piece.Color;
 import piece.Queen;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static position.Position.*;
 
 class MagnetismEffectTest {
 
-    public static final String c3 = "c3";
-    private final String c2 = "c2";
     private ChessBoard chessBoard;
 
     @BeforeEach
@@ -24,24 +23,24 @@ class MagnetismEffectTest {
 
     @Test
     void should_not_be_able_to_move_pawn() {
-        assertTrue(chessBoard.canMove(chessBoard.at("b2").getPiece().get(), "b4"));
-        assertThrows(MagnetismException.class, () -> chessBoard.tryToMove(chessBoard.at("b2").getPiece().get(), "b4"));
-        assertThrows(MagnetismException.class, () -> chessBoard.move(chessBoard.at("b2").getPiece().get(), "b4"));
+        assertTrue(chessBoard.canMove(chessBoard.at(b2).getPiece().get(), b4));
+        assertThrows(MagnetismException.class, () -> chessBoard.tryToMove(chessBoard.at(b2).getPiece().get(), b4));
+        assertThrows(MagnetismException.class, () -> chessBoard.move(chessBoard.at(b2).getPiece().get(), b4));
     }
 
     @Test
     void should_not_be_able_to_move_knight() {
-        assertTrue(chessBoard.canMove(chessBoard.at("b1").getPiece().get(), c3));
-        assertThrows(MagnetismException.class, () -> chessBoard.tryToMove(chessBoard.at("b1").getPiece().get(), c3));
-        assertThrows(MagnetismException.class, () -> chessBoard.move(chessBoard.at("b1").getPiece().get(), c3));
+        assertTrue(chessBoard.canMove(chessBoard.at(b1).getPiece().get(), c3));
+        assertThrows(MagnetismException.class, () -> chessBoard.tryToMove(chessBoard.at(b1).getPiece().get(), c3));
+        assertThrows(MagnetismException.class, () -> chessBoard.move(chessBoard.at(b1).getPiece().get(), c3));
     }
 
     @Test
     void should_not_be_able_to_move_enemy_piece() {
         chessBoard.add(new Queen(Color.BLACK), c3);
-        assertTrue(chessBoard.canMove(chessBoard.at(c3).getPiece().get(), "h3"));
-        assertThrows(MagnetismException.class, () -> chessBoard.tryToMove(chessBoard.at(c3).getPiece().get(), "h3"));
-        assertThrows(MagnetismException.class, () -> chessBoard.move(chessBoard.at(c3).getPiece().get(), "h3"));
+        assertTrue(chessBoard.canMove(chessBoard.at(c3).getPiece().get(), h3));
+        assertThrows(MagnetismException.class, () -> chessBoard.tryToMove(chessBoard.at(c3).getPiece().get(), h3));
+        assertThrows(MagnetismException.class, () -> chessBoard.move(chessBoard.at(c3).getPiece().get(), h3));
     }
 
     @Test
@@ -58,8 +57,8 @@ class MagnetismEffectTest {
         chessBoard.move(chessBoard.at(c2).getPiece().get(), c3);
 
         assertTrue(chessBoard.getEffects().isEmpty());
-        assertDoesNotThrow(() -> chessBoard.tryToMove(chessBoard.at("b2").getPiece().get(), "b4"));
-        assertDoesNotThrow(() -> chessBoard.tryToMove(chessBoard.at("b1").getPiece().get(), c3));
+        assertDoesNotThrow(() -> chessBoard.tryToMove(chessBoard.at(b2).getPiece().get(), b4));
+        assertDoesNotThrow(() -> chessBoard.tryToMove(chessBoard.at(b1).getPiece().get(), c3));
     }
 
     @Test
@@ -67,14 +66,14 @@ class MagnetismEffectTest {
         chessBoard.removePieceFromTheBoard(chessBoard.at(c2).getPiece().get());
 
         assertTrue(chessBoard.getEffects().isEmpty());
-        assertDoesNotThrow(() -> chessBoard.tryToMove(chessBoard.at("b2").getPiece().get(), "b4"));
-        assertDoesNotThrow(() -> chessBoard.tryToMove(chessBoard.at("b1").getPiece().get(), c3));
+        assertDoesNotThrow(() -> chessBoard.tryToMove(chessBoard.at(b2).getPiece().get(), b4));
+        assertDoesNotThrow(() -> chessBoard.tryToMove(chessBoard.at(b1).getPiece().get(), c3));
     }
 
     @Test
     void should_remove_effect_if_piece_is_taken() {
         Queen queen = new Queen(Color.BLACK);
-        chessBoard.add(queen, "c4");
+        chessBoard.add(queen, c4);
 
         assertTrue(chessBoard.tryToMove(queen, c2));
 

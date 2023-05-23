@@ -1,17 +1,14 @@
 package api;
 
 import card.Card;
-import effet.Effect;
-import piece.Piece;
-import player.Player;
+import position.Position;
 
 import java.util.List;
-import java.util.Set;
 
 public interface ChessBoardWriteService {
     boolean startGame();
 
-    boolean tryToMove(String from, String to);
+    boolean tryToMove(Position from, Position to);
 
     boolean tryToPlayCard(Card card, List<?> params);
 

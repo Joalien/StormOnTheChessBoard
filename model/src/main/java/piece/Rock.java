@@ -1,6 +1,8 @@
 package piece;
 
-import position.PositionUtil;
+import position.File;
+import position.Position;
+import position.Row;
 
 import java.util.Collections;
 import java.util.HashSet;
@@ -16,23 +18,23 @@ public class Rock extends Piece implements Castlable {
     }
 
     @Override
-    public boolean isPositionTheoreticallyReachable(int x, int y, Optional<Color> color) {
-        if (getX() == x && getY() == y) return false; // fail
-        return (getY() == y) || (getX() == x);
+    public boolean isPositionTheoreticallyReachable(File file, Row row, Optional<Color> color) { // FIXME avoid Optional
+        if (getFile() == file && getRow() == row) return false; // fail
+        return (getRow() == row) || (getFile() == file);
     }
 
     @Override
-    public Set<String> squaresOnThePath(String squareToMoveOn) {
+    public Set<Position> squaresOnThePath(Position squareToMoveOn) {
         if (!super.isPositionTheoreticallyReachable(squareToMoveOn)) return Collections.emptySet();
 
-        Set<String> squaresOnThePath = new HashSet<>();
-        if (getX() == PositionUtil.getX(squareToMoveOn)) {
-            for (int y = Math.min(getY(), PositionUtil.getY(squareToMoveOn)) + 1; y < Math.max(getY(), PositionUtil.getY(squareToMoveOn)); y++) {
-                squaresOnThePath.add(PositionUtil.posToSquare(getX(), y));
+        Set<Position> squaresOnThePath = new HashSet<>();
+        if (getFile() == squareToMoveOn.getFile()) {
+            for (int y = Math.min(getRow().getRowNumber(), squareToMoveOn.getRow().getRowNumber()) + 1; y < Math.max(getRow().getRowNumber(), squareToMoveOn.getRow().getRowNumber()); y++) {
+                squaresOnThePath.add(Position.posToSquare(getFile(), Row.fromNumber(y)));
             }
-        } else {
-            for (int x = Math.min(getX(), PositionUtil.getX(squareToMoveOn)) + 1; x < Math.max(getX(), PositionUtil.getX(squareToMoveOn)); x++) {
-                squaresOnThePath.add(PositionUtil.posToSquare(x, getY()));
+        } else if (getRow() == squareToMoveOn.getRow()) {
+            for (int x = Math.min(getFile().getFileNumber(), squareToMoveOn.getFile().getFileNumber()) + 1; x < Math.max(getFile().getFileNumber(), squareToMoveOn.getFile().getFileNumber()); x++) {
+                squaresOnThePath.add(Position.posToSquare(File.fromNumber(x), getRow()));
             }
         }
         return squaresOnThePath;

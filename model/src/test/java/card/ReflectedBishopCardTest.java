@@ -10,11 +10,10 @@ import piece.*;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static position.Position.*;
 
 class ReflectedBishopCardTest {
 
-    public static final String e2 = "e2";
-    public static final String f7 = "f7";
     private Bishop bishop;
     private Card reflectedBishop;
     private ChessBoard chessBoard;
@@ -39,7 +38,7 @@ class ReflectedBishopCardTest {
 
         @Test
         void should_bounce_three_times() {
-            chessBoard.add(new WhitePawn(), "f3");
+            chessBoard.add(new WhitePawn(), f3);
             assertTrue(reflectedBishop.playOn(chessBoard, List.of(bishop, f7)));
 
             assertEquals(bishop, chessBoard.at(f7).getPiece().get());
@@ -48,10 +47,9 @@ class ReflectedBishopCardTest {
 
         @Test
         void should_bounce_to_g4_after_5_bounces() {
-            chessBoard.add(new WhitePawn(), "f1");
-            chessBoard.add(new WhitePawn(), "f3");
-            chessBoard.add(new WhitePawn(), "f5");
-            String g4 = "g4";
+            chessBoard.add(new WhitePawn(), f1);
+            chessBoard.add(new WhitePawn(), f3);
+            chessBoard.add(new WhitePawn(), f5);
             reflectedBishop = new ReflectedBishopCard();
             assertTrue(reflectedBishop.playOn(chessBoard, List.of(bishop, g4)));
 
@@ -61,9 +59,8 @@ class ReflectedBishopCardTest {
 
         @Test
         void should_bounce_to_block_check_even_if_pinned() {
-            chessBoard.add(new King(Color.WHITE), "h2");
-            chessBoard.add(new Rock(Color.BLACK), "a2");
-            String g2 = "g2";
+            chessBoard.add(new King(Color.WHITE), h2);
+            chessBoard.add(new Rock(Color.BLACK), a2);
 
             assertTrue(new ReflectedBishopCard().playOn(chessBoard, List.of(bishop, g2)));
 
@@ -89,8 +86,8 @@ class ReflectedBishopCardTest {
 
         @Test
         void should_not_move_if_it_check_itself() {
-            chessBoard.add(new King(Color.WHITE), "h2");
-            chessBoard.add(new Rock(Color.BLACK), "a2");
+            chessBoard.add(new King(Color.WHITE), h2);
+            chessBoard.add(new Rock(Color.BLACK), a2);
 
             assertThrows(CheckException.class, () -> reflectedBishop.playOn(chessBoard, List.of(bishop, f7)));
 
@@ -99,8 +96,8 @@ class ReflectedBishopCardTest {
 
         @Test
         void should_never_bounce_to_f7() {
-            chessBoard.add(new WhitePawn(), "d1");
-            chessBoard.add(new WhitePawn(), "f3");
+            chessBoard.add(new WhitePawn(), d1);
+            chessBoard.add(new WhitePawn(), f3);
 
             assertThrows(IllegalArgumentException.class, () -> reflectedBishop.playOn(chessBoard, List.of(bishop, f7)));
 

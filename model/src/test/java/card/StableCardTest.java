@@ -10,11 +10,10 @@ import piece.Rock;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static position.Position.*;
 
 class StableCardTest {
 
-    public static final String g1 = "g1";
-    public static final String h1 = "h1";
     private Rock rock;
     private Knight knight;
     private Card stableCard;
@@ -44,13 +43,12 @@ class StableCardTest {
     class Failure {
         @Test
         void should_not_swap_pieces_of_different_color() {
-            String g8 = "g8";
             Knight blackNight = (Knight) chessBoard.at(g8).getPiece().get();
             stableCard = new StableCard();
 
             assertThrows(IllegalArgumentException.class, () -> stableCard.playOn(chessBoard, List.of(rock, blackNight)));
 
-            assertEquals(rock, chessBoard.at("h1").getPiece().get());
+            assertEquals(rock, chessBoard.at(h1).getPiece().get());
             assertEquals(blackNight, chessBoard.at(g8).getPiece().get());
         }
     }

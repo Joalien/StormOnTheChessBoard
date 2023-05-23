@@ -8,6 +8,7 @@ import state.exception.CardAlreadyPlayedException;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static position.Position.*;
 
 class BeforeMoveCardPlayedStateTest {
     private QuadrilleCard card;
@@ -23,14 +24,14 @@ class BeforeMoveCardPlayedStateTest {
 
     @Test
     void should_be_able_to_play_a_valid_move() {
-        assertTrue(gameStateController.tryToMove("e2", "e4"));
+        assertTrue(gameStateController.tryToMove(e2, e4));
 
         assertEquals(StateEnum.END_OF_THE_TURN, gameStateController.getCurrentState());
     }
 
     @Test
     void should_not_be_able_to_play_an_invalid_move() {
-        assertFalse(gameStateController.tryToMove("e2", "e5"));
+        assertFalse(gameStateController.tryToMove(e2, e5));
 
         assertEquals(StateEnum.BEFORE_MOVE, gameStateController.getCurrentState());
     }

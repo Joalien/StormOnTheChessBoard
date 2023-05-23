@@ -10,14 +10,10 @@ import piece.*;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static position.Position.*;
 
 class CourtlyLoveCardTest {
 
-    public static final String b4 = "b4";
-    public static final String e1 = "e1";
-    public static final String d1 = "d1";
-    public static final String c1 = "c1";
-    public static final String d2 = "d2";
     private Knight knight;
     private Card courtlyLoveCard;
     private ChessBoard chessBoard;
@@ -45,7 +41,7 @@ class CourtlyLoveCardTest {
 
         @Test
         void should_tp_knight_to_protect_from_chess() {
-            chessBoard.add(new Bishop(Color.BLACK), "a5");
+            chessBoard.add(new Bishop(Color.BLACK), a5);
 
             assertTrue(courtlyLoveCard.playOn(chessBoard, List.of(knight, d2)));
 
@@ -55,7 +51,7 @@ class CourtlyLoveCardTest {
 
         @Test
         void should_tp_knight_to_protect_from_chess_bis() {
-            chessBoard.add(new Bishop(Color.BLACK), "c3");
+            chessBoard.add(new Bishop(Color.BLACK), c3);
 
             assertTrue(courtlyLoveCard.playOn(chessBoard, List.of(knight, d2)));
 
@@ -80,7 +76,7 @@ class CourtlyLoveCardTest {
 
         @Test
         void should_not_tp_if_it_create_check() {
-            chessBoard.add(new Bishop(Color.BLACK), "a5");
+            chessBoard.add(new Bishop(Color.BLACK), a5);
 
             assertThrows(CheckException.class, () -> createCourtlyLoveCard().playOn(chessBoard, List.of(knight, c1)));
 
@@ -90,7 +86,6 @@ class CourtlyLoveCardTest {
 
         @Test
         void should_not_tp_if_position_not_nearby_queen() {
-            String h8 = "h8";
             assertThrows(IllegalArgumentException.class, () -> createCourtlyLoveCard().playOn(chessBoard, List.of(knight, h8)));
 
             assertEquals(knight, chessBoard.at(b4).getPiece().get());

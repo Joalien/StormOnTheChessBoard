@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import piece.Color;
+import position.Position;
 
 @Getter
 @Setter
@@ -13,6 +14,6 @@ import piece.Color;
 public class PieceDto {
     private String name;
     private Color color;
-    private String position;
+    private Position position;
 
 }

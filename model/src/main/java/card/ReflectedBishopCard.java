@@ -3,7 +3,7 @@ package card;
 import board.ChessBoard;
 import lombok.extern.slf4j.Slf4j;
 import piece.Bishop;
-import position.PositionUtil;
+import position.Position;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 public class ReflectedBishopCard extends Card {
 
     private Bishop bishop;
-    private String positionToMoveOn;
+    private Position positionToMoveOn;
 
     public ReflectedBishopCard() {
         super("Fou réfléchi", "Déplacez l'un de vos fous en le faisant \"rebondir\" sur les côtés de l'échiquier poursuivant son chemin en décrivnat en angle droit. Il n'y a pas de limites au nombre de rebonds au cours d'un déplacement", CardType.REPLACE_TURN);
@@ -24,7 +24,7 @@ public class ReflectedBishopCard extends Card {
     @Override
     protected void setupParams(List<?> params) {
         this.bishop = (Bishop) params.get(0);
-        this.positionToMoveOn = (String) params.get(1);
+        this.positionToMoveOn = (Position) params.get(1);
     }
 
     @Override
@@ -32,12 +32,12 @@ public class ReflectedBishopCard extends Card {
         if (bishop == null) throw new IllegalStateException();
         if (positionToMoveOn == null) throw new IllegalStateException();
 
-        Set<String> reachablePositions = new HashSet<>(chessBoard.getAllAttackablePosition(bishop));
+        Set<Position> reachablePositions = new HashSet<>(chessBoard.getAllAttackablePosition(bishop));
 
-        Set<String> positionsToStart = Set.copyOf(reachablePositions);
+        Set<Position> positionsToStart = Set.copyOf(reachablePositions);
         do {
             positionsToStart = positionsToStart.stream()
-                    .filter(PositionUtil::isBorder)
+                    .filter(Position::isBorder)
                     .map(s -> createFakeBishop(chessBoard, s))
                     .map(chessBoard::getAllAttackablePosition)
                     .flatMap(Collection::stream)
@@ -51,7 +51,7 @@ public class ReflectedBishopCard extends Card {
             throw new IllegalArgumentException("%s cannot reflect to %s".formatted(bishop, positionToMoveOn));
     }
 
-    private Bishop createFakeBishop(ChessBoard chessBoard, String s) {
+    private Bishop createFakeBishop(ChessBoard chessBoard, Position s) {
         Bishop bishop = new Bishop(this.bishop.getColor());
         chessBoard.fakeSquare(bishop, s);
         bishop.setSquare(chessBoard.at(s));
