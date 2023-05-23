@@ -31,10 +31,6 @@ public enum Position {
         this.row = row;
     }
 
-    public static Position of(String position) {
-        return valueOf(position); // FIXME transform Position in singleton 
-    }
-
     public static Set<Position> generateAllPositions() {
         return Arrays.stream(Position.values()).collect(Collectors.toSet());
     }

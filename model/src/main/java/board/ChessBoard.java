@@ -96,7 +96,7 @@ public class ChessBoard {
     private boolean isPositionTheoreticallyReachable(Piece piece, Position positionToMoveOn) {
         return piece.isPositionTheoreticallyReachable(positionToMoveOn, at(positionToMoveOn).getPiece().map(Piece::getColor).orElse(null));
     }
-// FIXME generate all ACTIOn
+
     private boolean doesEffectAllowToMove(Piece piece, Position positionToMoveOn) {
         return effects.stream()
                 .anyMatch(effect -> effect.allowToMove(piece, positionToMoveOn));

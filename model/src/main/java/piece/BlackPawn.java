@@ -30,7 +30,7 @@ public class BlackPawn extends Pawn {
     @Override
     public boolean isPositionTheoreticallyReachable(File file, Row row, Color color) {
         boolean moveTwoSquaresFromStart = getRow() == Row.Seven && row == Row.Five;
-        boolean moveOneSquare = getRow().previous().map(r -> r == row).orElse(false); // FIXME
+        boolean moveOneSquare = getRow().previous().map(r -> r == row).orElse(false);
         boolean moveForward = color == null && file == getFile() && (moveTwoSquaresFromStart || moveOneSquare);
 
         boolean takePiece = moveOneSquare && Math.abs(file.getFileNumber() - getFile().getFileNumber()) == 1;

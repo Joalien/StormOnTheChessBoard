@@ -42,7 +42,7 @@ public class QuadrilleCard extends Card {
         pieces.forEach((key, value) -> chessBoard.fakeSquare(value.orElse(null), key));
         boolean isKingUnderAttack = chessBoard.isKingUnderAttack(isPlayedBy);
         chessBoard.unfakeAllSquares();
-        return !isKingUnderAttack; // FIXME color should depends on who plays the card
+        return !isKingUnderAttack;
     }
 
     @Override

@@ -14,7 +14,7 @@ public class Queen extends Piece {
     }
 
     @Override
-    public boolean isPositionTheoreticallyReachable(File file, Row row, Color color) { // FIXME Optional as parameter
+    public boolean isPositionTheoreticallyReachable(File file, Row row, Color color) {
         if (getFile() == file && getRow() == row) return false;
         return (Math.abs(getRow().getRowNumber() - row.getRowNumber()) == Math.abs(getFile().getFileNumber() - file.getFileNumber())) || ((getRow() == row) || (getFile() == file)); // FIXME clean code
     }

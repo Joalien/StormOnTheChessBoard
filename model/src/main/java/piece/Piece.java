@@ -10,7 +10,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 
-public abstract class Piece { // FIXME https://github.com/Joalien/StormOnTheChessBoard à envoyer
+public abstract class Piece {
 
     protected Color color;
     protected char type;

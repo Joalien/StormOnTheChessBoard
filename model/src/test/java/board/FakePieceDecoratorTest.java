@@ -8,7 +8,6 @@ import piece.Square;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static position.Position.*;
-import static position.Position.of;
 
 class FakePieceDecoratorTest {
     @Test

@@ -17,7 +17,7 @@ public class Rock extends Piece implements Castlable {
     }
 
     @Override
-    public boolean isPositionTheoreticallyReachable(File file, Row row, Color color) { // FIXME avoid Optional
+    public boolean isPositionTheoreticallyReachable(File file, Row row, Color color) {
         if (getFile() == file && getRow() == row) return false; // fail
         return (getRow() == row) || (getFile() == file);
     }
