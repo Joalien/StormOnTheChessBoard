@@ -20,9 +20,6 @@ public enum Position {
     b1(B, One), b2(B, Two), b3(B, Three), b4(B, Four), b5(B, Five), b6(B, Six), b7(B, Seven), b8(B, Height),
     a1(A, One), a2(A, Two), a3(A, Three), a4(A, Four), a5(A, Five), a6(A, Six), a7(A, Seven), a8(A, Height);
 
-    public static final int MIN = 1;
-    public static final int MAX = 8;
-
     private final File file;
     private final Row row;
 
@@ -43,17 +40,25 @@ public enum Position {
         return valueOf(File.fromNumber(x).getFileName() + Row.fromNumber(y).getRowName());
     }
 
-    public static boolean isBorder(Position position) {
-        return position.getFile() == A || position.getFile() == H || position.getRow() == One || position.getRow() == Height;
+    public boolean isBorder() {
+        return getFile() == A || getFile() == H || getRow() == One || getRow() == Height;
     }
 
-    public static boolean areNearby(Position pos1, Position pos2) {
-        return (pos1.getFile() == pos2.getFile() && Math.abs(pos1.getRow().getRowNumber() - pos2.getRow().getRowNumber()) == 1)
-                || (pos1.getRow() == pos2.getRow() && Math.abs(pos1.getFile().getFileNumber() - pos2.getFile().getFileNumber()) == 1);
+    public boolean areNearby(Position position) {
+        return (getFile() == position.getFile() && areNearbyRow(position))
+                || (getRow() == position.getRow() && areNearbyFile(position));
     }
 
-    public static boolean noPositionBetween(Position pos1, Position pos2) {
-        return Math.abs(pos1.getRow().getRowNumber() - pos2.getRow().getRowNumber()) <= 1 &&
-                Math.abs(pos1.getFile().getFileNumber() - pos2.getFile().getFileNumber()) <= 1;
+    private boolean areNearbyFile(Position position) {
+        return Math.abs(getFile().getFileNumber() - position.getFile().getFileNumber()) == 1;
+    }
+
+    private boolean areNearbyRow(Position position) {
+        return Math.abs(getRow().getRowNumber() - position.getRow().getRowNumber()) == 1;
+    }
+
+    public boolean hasNoPositionBetween(Position position) {
+        return Math.abs(getRow().getRowNumber() - position.getRow().getRowNumber()) <= 1 &&
+                Math.abs(getFile().getFileNumber() - position.getFile().getFileNumber()) <= 1;
     }
 }

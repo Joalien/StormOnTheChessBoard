@@ -1,6 +1,5 @@
 package position;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -37,21 +36,21 @@ class PositionTest {
                 .collect(Collectors.toSet());
 
         assertTrue(Position.generateAllPositions().stream()
-                .allMatch(pos -> Position.isBorder(pos) == borders.contains(pos)));
+                .allMatch(pos -> pos.isBorder() == borders.contains(pos)));
     }
 
     @Test
     void should_not_have_position_between_c2() {
         Set<Position> noPositionBetween = Set.of(b1, b2, b3, c1, c2, c3, d1, d2, d3);
         assertTrue(Position.generateAllPositions().stream()
-                .allMatch(s -> Position.noPositionBetween(c2, s) == noPositionBetween.contains(s)));
+                .allMatch(s -> s.hasNoPositionBetween(c2) == noPositionBetween.contains(s)));
     }
 
     @Test
     void should_not_have_position_between_corner() {
         Set<Position> noPositionBetween = Set.of(g8, h8, g7, h7);
         assertTrue(Position.generateAllPositions().stream()
-                .allMatch(s -> Position.noPositionBetween(h8, s) == noPositionBetween.contains(s)));
+                .allMatch(s -> s.hasNoPositionBetween(h8) == noPositionBetween.contains(s)));
     }
 
     @Nested

@@ -3,7 +3,6 @@ package effet;
 import board.ChessBoard;
 import lombok.extern.slf4j.Slf4j;
 import piece.Piece;
-import position.Position;
 
 @Slf4j
 public class MagnetismEffect extends Effect {
@@ -21,7 +20,7 @@ public class MagnetismEffect extends Effect {
 
     @Override
     public void beforeMoveHook(ChessBoard chessBoard, Piece piece) {
-        if (!this.piece.equals(piece) && Position.noPositionBetween(this.piece.getPosition(), piece.getPosition()))
+        if (!this.piece.equals(piece) && this.piece.getPosition().hasNoPositionBetween(piece.getPosition()))
             throw new MagnetismException("%s cannot move because it is near %s".formatted(piece, this.piece));
     }
 

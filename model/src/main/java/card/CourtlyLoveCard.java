@@ -33,7 +33,7 @@ public class CourtlyLoveCard extends Card {
         boolean isNearbyQueen = chessBoard.allyPieces(knight.getColor()).stream()
                 .filter(Queen.class::isInstance)
                 .map(Piece::getPosition)
-                .anyMatch(pos1 -> Position.areNearby(pos1, positionToMoveOn));
+                .anyMatch(position -> position.areNearby(positionToMoveOn));
         if (!isNearbyQueen)
             throw new IllegalArgumentException("You should move %s nearby your queen".formatted(knight));
         if (chessBoard.at(positionToMoveOn).getPiece().isPresent())

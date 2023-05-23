@@ -1,6 +1,5 @@
 package board;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
@@ -47,14 +46,6 @@ class ChessBoardTest {
         assertTrue(cb.at(a1).getPiece().isEmpty());
 
         assertEquals(2, cb.getOutOfTheBoardPieces().size());
-    }
-
-    @Test
-    @Disabled
-    void should_throw_if_piece_added_outside_of_the_board() {
-        ChessBoard chessBoard = ChessBoard.createEmpty();
-
-//        assertThrows(IllegalArgumentException.class, () -> chessBoard.add(new Queen(Color.WHITE), h9));
     }
 
     @Test
