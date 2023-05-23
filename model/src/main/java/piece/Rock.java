@@ -6,7 +6,6 @@ import position.Row;
 
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.Optional;
 import java.util.Set;
 
 public class Rock extends Piece implements Castlable {
@@ -18,7 +17,7 @@ public class Rock extends Piece implements Castlable {
     }
 
     @Override
-    public boolean isPositionTheoreticallyReachable(File file, Row row, Optional<Color> color) { // FIXME avoid Optional
+    public boolean isPositionTheoreticallyReachable(File file, Row row, Color color) { // FIXME avoid Optional
         if (getFile() == file && getRow() == row) return false; // fail
         return (getRow() == row) || (getFile() == file);
     }

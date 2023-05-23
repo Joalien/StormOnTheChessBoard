@@ -28,20 +28,20 @@ public class BlackPawn extends Pawn {
     }
 
     @Override
-    public boolean isPositionTheoreticallyReachable(File file, Row row, Optional<Color> color) {
+    public boolean isPositionTheoreticallyReachable(File file, Row row, Color color) {
         boolean moveTwoSquaresFromStart = getRow() == Row.Seven && row == Row.Five;
         boolean moveOneSquare = getRow().previous().map(r -> r == row).orElse(false); // FIXME
-        boolean moveForward = color.isEmpty() && file == getFile() && (moveTwoSquaresFromStart || moveOneSquare);
+        boolean moveForward = color == null && file == getFile() && (moveTwoSquaresFromStart || moveOneSquare);
 
         boolean takePiece = moveOneSquare && Math.abs(file.getFileNumber() - getFile().getFileNumber()) == 1;
-        boolean takeBlackPiece = color.map(c -> c == Color.WHITE).orElse(false) && takePiece;
+        boolean takeBlackPiece =  color == Color.WHITE && takePiece;
 
         return moveForward || takeBlackPiece;
     }
 
     @Override
     public Set<Position> squaresOnThePath(Position squareToMoveOn) {
-        boolean moveForwardTwoSquaresFromStart = isPositionTheoreticallyReachable(squareToMoveOn, Optional.empty())
+        boolean moveForwardTwoSquaresFromStart = isPositionTheoreticallyReachable(squareToMoveOn)
                 && getRow() == Row.Seven
                 && squareToMoveOn.getRow() == Row.Five;
         return moveForwardTwoSquaresFromStart ? Set.of(Position.posToSquare(getFile(), Row.Six)) : Collections.emptySet();

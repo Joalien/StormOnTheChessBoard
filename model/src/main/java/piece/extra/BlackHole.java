@@ -8,7 +8,6 @@ import position.File;
 import position.Position;
 import position.Row;
 
-import java.util.Optional;
 import java.util.Set;
 
 @Slf4j
@@ -19,7 +18,7 @@ public class BlackHole extends Piece {
     }
 
     @Override
-    public boolean isPositionTheoreticallyReachable(File file, Row row, Optional<Color> color) {
+    public boolean isPositionTheoreticallyReachable(File file, Row row, Color color) {
         return false;
     }
 

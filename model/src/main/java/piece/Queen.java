@@ -6,7 +6,6 @@ import position.Row;
 
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.Optional;
 import java.util.Set;
 
 public class Queen extends Piece {
@@ -15,7 +14,7 @@ public class Queen extends Piece {
     }
 
     @Override
-    public boolean isPositionTheoreticallyReachable(File file, Row row, Optional<Color> color) { // FIXME Optional as parameter
+    public boolean isPositionTheoreticallyReachable(File file, Row row, Color color) { // FIXME Optional as parameter
         if (getFile() == file && getRow() == row) return false;
         return (Math.abs(getRow().getRowNumber() - row.getRowNumber()) == Math.abs(getFile().getFileNumber() - file.getFileNumber())) || ((getRow() == row) || (getFile() == file)); // FIXME clean code
     }

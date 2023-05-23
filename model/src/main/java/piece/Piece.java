@@ -34,12 +34,12 @@ public abstract class Piece { // FIXME https://github.com/Joalien/StormOnTheChes
     }
 
     public boolean isPositionTheoreticallyReachable(Position position) {
-        return isPositionTheoreticallyReachable(position.getFile(), position.getRow(), Optional.empty());
+        return isPositionTheoreticallyReachable(position.getFile(), position.getRow(), null);
     }
 
-    public abstract boolean isPositionTheoreticallyReachable(File file, Row row, Optional<Color> color);
+    public abstract boolean isPositionTheoreticallyReachable(File file, Row row, Color color);
 
-    public boolean isPositionTheoreticallyReachable(Position position, Optional<Color> color) {
+    public boolean isPositionTheoreticallyReachable(Position position, Color color) {
         return isPositionTheoreticallyReachable(position.getFile(), position.getRow(), color);
     }
 

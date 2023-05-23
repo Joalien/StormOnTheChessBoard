@@ -27,20 +27,20 @@ public class WhitePawn extends Pawn {
                 .map(row -> Position.posToSquare(this.getFile(), row));
     }
     @Override
-    public boolean isPositionTheoreticallyReachable(File file, Row row, Optional<Color> color) {
+    public boolean isPositionTheoreticallyReachable(File file, Row row, Color color) {
         boolean moveTwoSquaresFromStart = getRow() == Row.Two && row == Row.Four;
         boolean moveOneSquare = getRow().next().map(r -> r == row).orElse(false);
-        boolean moveForward = color.isEmpty() && file == getFile() && (moveTwoSquaresFromStart || moveOneSquare);
+        boolean moveForward = color == null && file == getFile() && (moveTwoSquaresFromStart || moveOneSquare);
 
         boolean takePiece = moveOneSquare && Math.abs(file.getFileNumber() - getFile().getFileNumber()) == 1;
-        boolean takeBlackPiece = color.map(c -> c == Color.BLACK).orElse(false) && takePiece;
+        boolean takeBlackPiece = color == Color.BLACK && takePiece;
 
         return moveForward || takeBlackPiece;
     }
 
     @Override
     public Set<Position> squaresOnThePath(Position squareToMoveOn) {
-        boolean moveForwardTwoSquaresFromStart = isPositionTheoreticallyReachable(squareToMoveOn, Optional.empty())
+        boolean moveForwardTwoSquaresFromStart = isPositionTheoreticallyReachable(squareToMoveOn)
                 && getRow() == Row.Two
                 && squareToMoveOn.getRow() == Row.Four;
         return moveForwardTwoSquaresFromStart ? Set.of(Position.posToSquare(getFile(), Row.Three)) : Collections.emptySet();

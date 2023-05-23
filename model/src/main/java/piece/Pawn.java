@@ -17,7 +17,7 @@ public abstract class Pawn extends Piece {
     public abstract Optional<Position> oneSquareForward();
 
     @Override
-    public abstract boolean isPositionTheoreticallyReachable(File file, Row row, Optional<Color> color);
+    public abstract boolean isPositionTheoreticallyReachable(File file, Row row, Color color);
 
     @Override
     public abstract Set<Position> squaresOnThePath(Position squareToMoveOn);

@@ -43,12 +43,12 @@ public class FakePieceDecorator extends Piece {
     }
 
     @Override
-    public boolean isPositionTheoreticallyReachable(File file, Row row, Optional<Color> color) {
+    public boolean isPositionTheoreticallyReachable(File file, Row row, Color color) {
         return fakePiece.isPositionTheoreticallyReachable(file, row, color);
     }
 
     @Override
-    public boolean isPositionTheoreticallyReachable(Position position, Optional<Color> color) {
+    public boolean isPositionTheoreticallyReachable(Position position, Color color) {
         return super.isPositionTheoreticallyReachable(position, color);
     }
 

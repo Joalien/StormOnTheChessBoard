@@ -9,7 +9,6 @@ import position.Position;
 import position.Row;
 
 import java.util.Collections;
-import java.util.Optional;
 import java.util.Set;
 
 public class Kangaroo extends Piece {
@@ -19,7 +18,7 @@ public class Kangaroo extends Piece {
     }
 
     @Override
-    public boolean isPositionTheoreticallyReachable(File file, Row row, Optional<Color> color) {
+    public boolean isPositionTheoreticallyReachable(File file, Row row, Color color) {
         return Position.generateAllPositions().stream()
                 .map(pos -> {
                     Knight knight = new Knight(this.color);

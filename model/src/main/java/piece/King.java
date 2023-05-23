@@ -5,7 +5,6 @@ import position.Position;
 import position.Row;
 
 import java.util.Collections;
-import java.util.Optional;
 import java.util.Set;
 
 import static position.Position.*;
@@ -20,7 +19,7 @@ public class King extends Piece implements Castlable {
 
     //Penser à intégrer le rock !
     @Override
-    public boolean isPositionTheoreticallyReachable(File file, Row row, Optional<Color> color) {
+    public boolean isPositionTheoreticallyReachable(File file, Row row, Color color) {
         if (getFile() == file && getRow() == row) return false;
 
         boolean whiteCastle = this.getPosition().equals(e1) && this.color == Color.WHITE;
@@ -29,7 +28,7 @@ public class King extends Piece implements Castlable {
         boolean whiteQueenSideCastle = whiteCastle && Position.posToSquare(file, row).equals(c1);
         boolean blackKingSideCastle = blackCastle && Position.posToSquare(file, row).equals(g8);
         boolean blackQueenSideCastle = blackCastle && Position.posToSquare(file, row).equals(c8);
-        boolean canCastle = this.canCastle() && (whiteKingSideCastle || whiteQueenSideCastle || blackKingSideCastle || blackQueenSideCastle) && color.isEmpty();
+        boolean canCastle = this.canCastle() && (whiteKingSideCastle || whiteQueenSideCastle || blackKingSideCastle || blackQueenSideCastle) && color == null;
         if (canCastle) return true;
 
         return (Math.abs(getFile().getFileNumber() - file.getFileNumber()) <= 1) && (Math.abs(getRow().getRowNumber() - row.getRowNumber()) <= 1);
