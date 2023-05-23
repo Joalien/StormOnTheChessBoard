@@ -40,7 +40,7 @@ public class QuadrilleCard extends Card {
     protected boolean doesNotCreateCheck(ChessBoard chessBoard) {
         Map<Position, Optional<Piece>> pieces = saveWhichPieceShouldGoInWhichCorner(chessBoard);
         pieces.forEach((key, value) -> chessBoard.fakeSquare(value.orElse(null), key));
-        boolean isKingUnderAttack = chessBoard.isKingUnderAttack(Color.WHITE);
+        boolean isKingUnderAttack = chessBoard.isKingUnderAttack(isPlayedBy);
         chessBoard.unfakeAllSquares();
         return !isKingUnderAttack; // FIXME color should depends on who plays the card
     }

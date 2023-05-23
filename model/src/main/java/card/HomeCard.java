@@ -27,7 +27,7 @@ public class HomeCard extends Card {
         if (piece == null) throw new IllegalStateException();
         if (positionToMoveOn == null) throw new IllegalStateException();
         if (piece instanceof Pawn) throw new IllegalArgumentException("You cannot rollback a pawn!");
-        if (piece.getColor() != isPlayedBy) throw new IllegalColorException(piece.getColor());
+        if (piece.getColor() != isPlayedBy) throw new CannotMoveThisColorException(piece.getColor());
         boolean positionToMoveOnIsNotStartingPositionOfPiece = ChessBoard.createWithInitialState()
                 .allyPieces(piece.getColor())
                 .stream()

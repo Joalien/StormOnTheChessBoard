@@ -20,9 +20,6 @@ public class ChessBoard {
     private final HashMap<Position, Square> fakeSquares = new HashMap<>();
     private final Set<Piece> outOfTheBoardPieces = new HashSet<>();
     private final Set<Effect> effects = new HashSet<>();
-    // FIXME virer les types primitif
-    // remplacer Position par Value object position (responsabilité dans le board)
-    // remplacer i et j par des value object (logne et colonne)
     // FIXME retirer les dépendances techniques
     // ArchUnit : tester l'architecture
 

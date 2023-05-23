@@ -29,7 +29,7 @@ public class CourtlyLoveCard extends Card {
     protected void validInput(ChessBoard chessBoard) {
         if (knight == null) throw new IllegalStateException();
         if (positionToMoveOn == null) throw new IllegalStateException();
-        if (knight.getColor() != isPlayedBy) throw new IllegalColorException(knight.getColor());
+        if (knight.getColor() != isPlayedBy) throw new CannotMoveThisColorException(knight.getColor());
         boolean isNearbyQueen = chessBoard.allyPieces(knight.getColor()).stream()
                 .filter(Queen.class::isInstance)
                 .map(Piece::getPosition)

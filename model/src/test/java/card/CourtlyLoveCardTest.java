@@ -96,7 +96,7 @@ class CourtlyLoveCardTest {
         void should_not_move_enemy_knight() {
             Card courtlyLoveCard = createCourtlyLoveCard();
             courtlyLoveCard.setIsPlayedBy(Color.BLACK);
-            assertThrows(IllegalColorException.class, () -> courtlyLoveCard.playOn(chessBoard, List.of(knight, c1)));
+            assertThrows(CannotMoveThisColorException.class, () -> courtlyLoveCard.playOn(chessBoard, List.of(knight, c1)));
 
             assertEquals(knight, chessBoard.at(b4).getPiece().get());
             assertTrue(chessBoard.at(c1).getPiece().isEmpty());

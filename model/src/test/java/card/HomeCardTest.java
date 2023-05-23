@@ -110,7 +110,7 @@ class HomeCardTest {
             Card homeCard = new HomeCard();
             homeCard.setIsPlayedBy(Color.WHITE);
 
-            assertThrows(IllegalColorException.class, () -> homeCard.playOn(chessBoard, List.of(queen, d1)));
+            assertThrows(CannotMoveThisColorException.class, () -> homeCard.playOn(chessBoard, List.of(queen, d1)));
 
             assertEquals(queen, chessBoard.at(e4).getPiece().get());
             assertTrue(chessBoard.at(d1).getPiece().isEmpty());
