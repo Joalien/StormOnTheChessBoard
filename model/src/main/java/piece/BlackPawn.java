@@ -15,13 +15,16 @@ public class BlackPawn extends Pawn {
     }
 
     @Override
-    public Position twoSquaresForward() {
-        return Position.posToSquare(this.getFile(), this.getRow().previous().flatMap(Row::previous).orElseThrow());// FIXME
+    public Optional<Position> twoSquaresForward() {
+        return this.getRow().previous()
+                .flatMap(Row::previous)
+                .map(row -> Position.posToSquare(this.getFile(), row));
     }
 
     @Override
-    public Position oneSquareForward() {
-        return Position.posToSquare(this.getFile(),  this.getRow().previous().orElseThrow());
+    public Optional<Position> oneSquareForward() {
+        return this.getRow().previous()
+                .map(row -> Position.posToSquare(this.getFile(), row));
     }
 
     @Override

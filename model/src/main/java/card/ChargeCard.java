@@ -26,13 +26,14 @@ public class ChargeCard extends Card {
     protected void validInput(ChessBoard chessBoard) {
         if (pawns == null) throw new IllegalStateException();
         if (pawns.isEmpty()) throw new IllegalArgumentException("You should select at least one pawn");
-        if (pawns.stream().map(Piece::getColor).anyMatch(color1 -> color1 != isPlayedBy))
-            throw new IllegalArgumentException("You should move pawns of your color");
+        if (pawns.stream().map(Piece::getColor).anyMatch(color -> color != isPlayedBy))
+            throw new CannotMoveThisColorException(isPlayedBy.opposite());
 
         assert chessBoard.getNumberOfFakeSquares() == 0;
         pawns.stream()
                 .peek(pawn -> fakeOtherPawns(chessBoard, pawn))
                 .map(Pawn::oneSquareForward)
+                .map(Optional::get)
                 .map(chessBoard::at)
                 .peek(pos -> chessBoard.unfakeAllSquares())
                 .map(Square::getPiece)
@@ -44,7 +45,9 @@ public class ChargeCard extends Card {
     @Override
     protected boolean doesNotCreateCheck(ChessBoard chessBoard) {
         pawns.forEach(p -> chessBoard.fakeSquare(null, p.getPosition()));
-        pawns.forEach(p -> chessBoard.fakeSquare(p, p.oneSquareForward()));
+        pawns.stream()
+                .filter(p -> p.oneSquareForward().isPresent())
+                .forEach(p -> chessBoard.fakeSquare(p, p.oneSquareForward().get()));
 
         boolean kingIsNotUnderAttack = !chessBoard.isKingUnderAttack(isPlayedBy);
 
@@ -60,7 +63,7 @@ public class ChargeCard extends Card {
         ).get(this.isPlayedBy);
         pawns.stream()
                 .sorted(startWithMoreAdvancedPawn)
-                .forEach(p -> chessBoard.move(p, p.oneSquareForward()));
+                .forEach(p -> chessBoard.move(p, p.oneSquareForward().get()));
         return true;
     }
 

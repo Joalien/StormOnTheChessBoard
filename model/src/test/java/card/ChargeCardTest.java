@@ -131,7 +131,7 @@ class ChargeCardTest {
                     .map(Pawn.class::cast)
                     .collect(Collectors.toList());
             Card chargeCard = new ChargeCard();
-            chargeCard.setIsPlayedBy(Color.WHITE);
+            chargeCard.setIsPlayedBy(Color.BLACK);
 
             assertThrows(IllegalArgumentException.class, () -> chargeCard.playOn(chessBoard, allBlackPawns));
         }
@@ -145,9 +145,8 @@ class ChargeCardTest {
             chessBoard.add(pawn2, g1);
             Card chargeCard = new ChargeCard();
             chargeCard.setIsPlayedBy(Color.WHITE);
-            chargeCard.setIsPlayedBy(Color.WHITE);
 
-            assertThrows(IllegalArgumentException.class, () -> chargeCard.playOn(chessBoard, List.of(pawn1, pawn2)));
+            assertThrows(CannotMoveThisColorException.class, () -> chargeCard.playOn(chessBoard, List.of(pawn1, pawn2)));
 
             assertEquals(pawn1, chessBoard.at(e4).getPiece().get());
             assertEquals(pawn2, chessBoard.at(g1).getPiece().get());
@@ -161,7 +160,7 @@ class ChargeCardTest {
             Card chargeCard = new ChargeCard();
             chargeCard.setIsPlayedBy(Color.BLACK);
 
-            assertThrows(IllegalArgumentException.class, () -> chargeCard.playOn(chessBoard, List.of(pawn2)));
+            assertThrows(CannotMoveThisColorException.class, () -> chargeCard.playOn(chessBoard, List.of(pawn2)));
 
             assertEquals(pawn2, chessBoard.at(g8).getPiece().get());
         }

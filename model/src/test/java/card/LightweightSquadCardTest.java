@@ -89,15 +89,18 @@ class LightweightSquadCardTest {
         }
 
         @Test
-        void should_not_be_the_same_pawns() {
+        void should_not_be_on_second_to_last_row() {
             ChessBoard chessBoard = ChessBoard.createEmpty();
             Pawn pawn1 = new WhitePawn();
-            chessBoard.add(pawn1, e4);
+            Pawn pawn2 = new WhitePawn();
+            chessBoard.add(pawn1, d7);
+            chessBoard.add(pawn2, e7);
             LightweightSquadCard lightweightSquadCard = new LightweightSquadCard();
 
-            assertThrows(IllegalArgumentException.class, () -> lightweightSquadCard.playOn(chessBoard, List.of(pawn1, pawn1)));
+            assertThrows(IllegalArgumentException.class, () -> lightweightSquadCard.playOn(chessBoard, List.of(pawn1, pawn2)));
 
-            assertEquals(pawn1, chessBoard.at(e4).getPiece().get());
+            assertEquals(pawn1, chessBoard.at(d7).getPiece().get());
+            assertEquals(pawn2, chessBoard.at(e7).getPiece().get());
         }
 
         @Test

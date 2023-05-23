@@ -15,15 +15,17 @@ public class WhitePawn extends Pawn {
     }
 
     @Override
-    public Position twoSquaresForward() {
-        return Position.posToSquare(this.getFile(), this.getRow().next().flatMap(Row::next).get());
+    public Optional<Position> twoSquaresForward() {
+        return this.getRow().next()
+                .flatMap(Row::next)
+                .map(row -> Position.posToSquare(this.getFile(), row));
     }
 
     @Override
-    public Position oneSquareForward() {
-        return Position.posToSquare(this.getFile(), this.getRow().next().get());
+    public Optional<Position> oneSquareForward() {
+        return this.getRow().next()
+                .map(row -> Position.posToSquare(this.getFile(), row));
     }
-
     @Override
     public boolean isPositionTheoreticallyReachable(File file, Row row, Optional<Color> color) {
         boolean moveTwoSquaresFromStart = getRow() == Row.Two && row == Row.Four;

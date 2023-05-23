@@ -12,9 +12,9 @@ public abstract class Pawn extends Piece {
         super(color, typePiece);
     }
 
-    public abstract Position twoSquaresForward();
+    public abstract Optional<Position> twoSquaresForward();
 
-    public abstract Position oneSquareForward();
+    public abstract Optional<Position> oneSquareForward();
 
     @Override
     public abstract boolean isPositionTheoreticallyReachable(File file, Row row, Optional<Color> color);

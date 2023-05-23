@@ -62,7 +62,10 @@ class BeginningOfTheTurnStateTest {
 
         @Test
         void should_be_able_to_play_valid_replace_move_card() {
-            assertTrue(gameStateController.tryToPlayCard(replaceMoveCard, List.of((Pawn) gameStateController.getChessBoard().at(e2).getPiece().get(), (Pawn) gameStateController.getChessBoard().at(d2).getPiece().get())));
+            Pawn e2Pawn = (Pawn) gameStateController.getChessBoard().at(e2).getPiece().get();
+            Pawn d2Pawn = (Pawn) gameStateController.getChessBoard().at(d2).getPiece().get();
+
+            assertTrue(gameStateController.tryToPlayCard(replaceMoveCard, List.of(e2Pawn, d2Pawn)));
 
             assertEquals(StateEnum.END_OF_THE_TURN, gameStateController.getCurrentState());
         }
