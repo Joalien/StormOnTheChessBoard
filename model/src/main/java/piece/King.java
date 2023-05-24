@@ -31,7 +31,7 @@ public class King extends Piece implements Castlable {
         boolean canCastle = this.canCastle() && (whiteKingSideCastle || whiteQueenSideCastle || blackKingSideCastle || blackQueenSideCastle) && color == null;
         if (canCastle) return true;
 
-        return (Math.abs(getFile().getFileNumber() - file.getFileNumber()) <= 1) && (Math.abs(getRow().getRowNumber() - row.getRowNumber()) <= 1);
+        return (getFile().distanceTo(file) <= 1) && (getRow().distanceTo(row) <= 1);
     }
 
     @Override
@@ -66,6 +66,4 @@ public class King extends Piece implements Castlable {
     public void cannotCastleAnymore() {
         canCastle = false;
     }
-
-
 }

@@ -33,7 +33,7 @@ public class BlackPawn extends Pawn {
         boolean moveOneSquare = getRow().previous().map(r -> r == row).orElse(false);
         boolean moveForward = color == null && file == getFile() && (moveTwoSquaresFromStart || moveOneSquare);
 
-        boolean takePiece = moveOneSquare && Math.abs(file.getFileNumber() - getFile().getFileNumber()) == 1;
+        boolean takePiece = moveOneSquare && getFile().distanceTo(file) == 1;
         boolean takeBlackPiece =  color == Color.WHITE && takePiece;
 
         return moveForward || takeBlackPiece;

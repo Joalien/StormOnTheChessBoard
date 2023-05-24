@@ -17,18 +17,22 @@ public class Bishop extends Piece {
     @Override
     public boolean isPositionTheoreticallyReachable(File file, Row row, Color color) {
         if (getFile() == file && getRow() == row) return false;
-        return Math.abs(getRow().getRowNumber() - row.getRowNumber()) == Math.abs(getFile().getFileNumber() - file.getFileNumber());
+        return getRow().distanceTo(row) == getFile().distanceTo(file);
     }
 
     @Override
     public Set<Position> squaresOnThePath(Position squareToMoveOn) {
         if (!super.isPositionTheoreticallyReachable(squareToMoveOn)) return Collections.emptySet();
 
+        return squaresOnTheDiagonal(getPosition(), squareToMoveOn);
+    }
+
+    static Set<Position> squaresOnTheDiagonal(Position currentPosition, Position squareToMoveOn) {
         Set<Position> squaresOnThePath = new HashSet<>();
-        boolean signX = getFile().getFileNumber() < squareToMoveOn.getFile().getFileNumber();
-        boolean signY = getRow().getRowNumber() < squareToMoveOn.getRow().getRowNumber();
-        for (int i = 1; i < Math.abs(getFile().getFileNumber() - squareToMoveOn.getFile().getFileNumber()); i++) {
-            squaresOnThePath.add(Position.posToSquare(getFile().getFileNumber() + i * (signX ? 1 : -1), getRow().getRowNumber() + i * (signY ? 1 : -1)));
+        boolean fileSign = currentPosition.getFile().isBefore(squareToMoveOn.getFile());
+        boolean rowFile = currentPosition.getRow().isBefore(squareToMoveOn.getRow());
+        for (int i = 1; i < currentPosition.getFile().distanceTo(squareToMoveOn.getFile()); i++) {
+            squaresOnThePath.add(Position.posToSquare(currentPosition.getFile().getFileNumber() + i * (fileSign ? 1 : -1), currentPosition.getRow().getRowNumber() + i * (rowFile ? 1 : -1)));
         }
         return squaresOnThePath;
     }
@@ -37,5 +41,4 @@ public class Bishop extends Piece {
     public boolean isKing() {
         return false;
     }
-
 }

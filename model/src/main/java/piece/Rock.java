@@ -26,19 +26,29 @@ public class Rock extends Piece implements Castlable {
     public Set<Position> squaresOnThePath(Position squareToMoveOn) {
         if (!super.isPositionTheoreticallyReachable(squareToMoveOn)) return Collections.emptySet();
 
-        Set<Position> squaresOnThePath = new HashSet<>();
         if (getFile() == squareToMoveOn.getFile()) {
-            int firstRow = Math.min(getRow().getRowNumber(), squareToMoveOn.getRow().getRowNumber());
-            int lastRow = Math.max(getRow().getRowNumber(), squareToMoveOn.getRow().getRowNumber());
-            for (int y = firstRow + 1; y < lastRow; y++) {
-                squaresOnThePath.add(Position.posToSquare(getFile(), Row.fromNumber(y)));
-            }
+            return squaresOnTheFile(getPosition(), squareToMoveOn);
         } else if (getRow() == squareToMoveOn.getRow()) {
-            int firstFile = Math.min(getFile().getFileNumber(), squareToMoveOn.getFile().getFileNumber());
-            int lastFile = Math.max(getFile().getFileNumber(), squareToMoveOn.getFile().getFileNumber());
-            for (int x = firstFile + 1; x < lastFile; x++) {
-                squaresOnThePath.add(Position.posToSquare(File.fromNumber(x), getRow()));
-            }
+            return squaresOnTheRow(getPosition(), squareToMoveOn);
+        } else throw new IllegalStateException();
+    }
+
+    static Set<Position> squaresOnTheRow(Position currentPosition, Position squareToMoveOn) {
+        Set<Position> squaresOnThePath = new HashSet<>();
+        int firstFile = Math.min(currentPosition.getFile().getFileNumber(), squareToMoveOn.getFile().getFileNumber());
+        int lastFile = Math.max(currentPosition.getFile().getFileNumber(), squareToMoveOn.getFile().getFileNumber());
+        for (int x = firstFile + 1; x < lastFile; x++) {
+            squaresOnThePath.add(Position.posToSquare(File.fromNumber(x), currentPosition.getRow()));
+        }
+        return squaresOnThePath;
+    }
+
+    static Set<Position> squaresOnTheFile(Position currentPosition, Position squareToMoveOn) {
+        Set<Position> squaresOnThePath = new HashSet<>();
+        int firstRow = Math.min(currentPosition.getRow().getRowNumber(), squareToMoveOn.getRow().getRowNumber());
+        int lastRow = Math.max(currentPosition.getRow().getRowNumber(), squareToMoveOn.getRow().getRowNumber());
+        for (int y = firstRow + 1; y < lastRow; y++) {
+            squaresOnThePath.add(Position.posToSquare(currentPosition.getFile(), Row.fromNumber(y)));
         }
         return squaresOnThePath;
     }

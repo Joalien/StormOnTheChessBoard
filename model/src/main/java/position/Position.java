@@ -37,7 +37,7 @@ public enum Position {
     }
 
     public static Position posToSquare(int x, int y) {
-        return valueOf(File.fromNumber(x).getFileName() + Row.fromNumber(y).getRowName());
+        return posToSquare(File.fromNumber(x), Row.fromNumber(y));
     }
 
     public boolean isBorder() {
@@ -50,15 +50,15 @@ public enum Position {
     }
 
     private boolean areNearbyFile(Position position) {
-        return Math.abs(getFile().getFileNumber() - position.getFile().getFileNumber()) == 1;
+        return getFile().distanceTo(position.getFile()) == 1;
     }
 
     private boolean areNearbyRow(Position position) {
-        return Math.abs(getRow().getRowNumber() - position.getRow().getRowNumber()) == 1;
+        return getRow().distanceTo(position.getRow()) == 1;
     }
 
     public boolean hasNoPositionBetween(Position position) {
-        return Math.abs(getRow().getRowNumber() - position.getRow().getRowNumber()) <= 1 &&
-                Math.abs(getFile().getFileNumber() - position.getFile().getFileNumber()) <= 1;
+        return getRow().distanceTo(position.getRow()) <= 1 &&
+                getFile().distanceTo(position.getFile()) <= 1;
     }
 }

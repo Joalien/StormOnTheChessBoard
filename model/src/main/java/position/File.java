@@ -24,22 +24,18 @@ public enum File {
         this.fileNumber = fileNumber;
     }
 
-    public Optional<File> next() {
-        return Arrays.stream(File.values())
-                .filter(row -> row.getFileNumber() == this.getFileNumber() + 1)
-                .findFirst();
-    }
-
-    public Optional<File> previous() {
-        return Arrays.stream(File.values())
-                .filter(row -> row.getFileNumber() == this.getFileNumber() - 1)
-                .findFirst();
-    }
-
     public static File fromNumber(int fileNumber) {
         return Arrays.stream(File.values())
                 .filter(row -> row.getFileNumber() == fileNumber)
                 .findFirst()
                 .orElseThrow(IndexOutOfBoundsException::new);
+    }
+
+    public int distanceTo(File file) {
+        return Math.abs(getFileNumber() - file.getFileNumber());
+    }
+
+    public boolean isBefore(File fil) {
+        return this.compareTo(fil) < 0;
     }
 }

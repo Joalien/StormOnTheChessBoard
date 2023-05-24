@@ -42,4 +42,12 @@ public enum Row implements Comparable<Row> {
                 .findFirst()
                 .orElseThrow(IndexOutOfBoundsException::new);
     }
+
+    public int distanceTo(Row row) {
+        return Math.abs(getRowNumber() - row.getRowNumber());
+    }
+
+    public boolean isBefore(Row row) {
+        return this.compareTo(row) < 0;
+    }
 }

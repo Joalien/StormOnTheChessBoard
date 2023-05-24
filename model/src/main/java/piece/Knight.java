@@ -17,7 +17,7 @@ public class Knight extends Piece {
     public boolean isPositionTheoreticallyReachable(File file, Row row, Color color) {
         boolean isNotOnTheSameLine = getFile() != file;
         boolean isNotOnTheSameFile = getRow() != row;
-        boolean distanceOfThree = Math.abs(getFile().getFileNumber() - file.getFileNumber()) + Math.abs(getRow().getRowNumber() - row.getRowNumber()) == 3;
+        boolean distanceOfThree = getFile().distanceTo(file) + getRow().distanceTo(row) == 3;
         return isNotOnTheSameLine && isNotOnTheSameFile && distanceOfThree;
     }
 
