@@ -1,9 +1,9 @@
 package state;
 
 import card.BombingCard;
+import card.Card;
 import card.LightweightSquadCard;
 import card.QuadrilleCard;
-import card.Card;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;

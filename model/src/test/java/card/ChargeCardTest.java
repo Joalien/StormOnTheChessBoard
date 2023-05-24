@@ -4,7 +4,6 @@ import board.ChessBoard;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import piece.*;
-import position.Position;
 
 import java.util.Collections;
 import java.util.List;
@@ -89,7 +88,7 @@ class ChargeCardTest {
             assertTrue(chargeCard.playOn(chessBoard, allBlackPawnsExceptE7));
 
             assertTrue(Set.of(a6, b6, c6, d6, e7, f6, g6, h6).stream()
-                    
+
                     .map(chessBoard::at)
                     .map(Square::getPiece)
                     .map(Optional::get)

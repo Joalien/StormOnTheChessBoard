@@ -3,7 +3,6 @@ package position;
 import lombok.Getter;
 
 import java.util.Arrays;
-import java.util.Optional;
 
 @Getter
 public enum File {

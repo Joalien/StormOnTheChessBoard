@@ -28,7 +28,7 @@ class ChessBoardRepositoryImplTest {
 
         assertTrue(chessBoardRepository.saveCommand(GAME_ID, START_GAME_COMMAND));
     }
-    
+
     @Test
     void should_not_start_a_game_twice() {
         assertTrue(chessBoardRepository.saveCommand(GAME_ID, START_GAME_COMMAND));

@@ -9,7 +9,6 @@ import position.Row;
 
 import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 import static position.Position.*;
 
@@ -21,7 +20,7 @@ public class ChessBoard {
     private final Set<Piece> outOfTheBoardPieces = new HashSet<>();
     private final Set<Effect> effects = new HashSet<>();
     // FIXME retirer les dépendances techniques
-    // ArchUnit : tester l'architecture
+    // FIXME ArchUnit : tester l'architecture
 
     public static ChessBoard createEmpty() {
         log.debug("create empty chessboard");
@@ -168,7 +167,7 @@ public class ChessBoard {
         add(piece, positionToMoveOn);
     }
 
-    public Piece removePieceFromTheBoard(Piece piece) { // HERE
+    public Piece removePieceFromTheBoard(Piece piece) {
         if (piece instanceof King)
             throw new IllegalStateException("You should not be able to take %s".formatted(piece));
         at(piece.getPosition()).setPiece(null);
@@ -220,14 +219,14 @@ public class ChessBoard {
 
         fakeSquare(null, piece.getPosition());
         fakeSquare(piece, positionToMoveOn);
-//        assert fakeSquares.size() == 2;
+        assert fakeSquares.size() == 2; // is that a smell ?
 
         boolean enemyCanCheck = isKingUnderAttack(piece.getColor());
 
         piece.setSquare(at(piece.getPosition()));
         unfakeSquare(piece.getPosition());
         unfakeSquare(positionToMoveOn);
-//        assert fakeSquares.isEmpty();
+        assert fakeSquares.isEmpty();
         return enemyCanCheck;
     }
 
@@ -242,7 +241,6 @@ public class ChessBoard {
 
     private boolean isKingUnderAttack(Piece king) {
         return enemyPieces(king.getColor()).stream()
-//                .filter(piece -> !fakeSquares.containsKey(piece.getPosition())) // Why ?
                 .anyMatch(enemyPiece -> canAttack(enemyPiece, king.getPosition()));
     }
 

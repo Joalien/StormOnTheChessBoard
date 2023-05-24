@@ -6,7 +6,6 @@ import position.File;
 import position.Row;
 
 import java.util.Collections;
-import java.util.Optional;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;

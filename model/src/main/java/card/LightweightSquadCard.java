@@ -17,8 +17,8 @@ public class LightweightSquadCard extends Card {
 
     @Override
     protected void setupParams(List<?> params) {
-        this. pawn1 = (Pawn) params.get(0);
-        this. pawn2 = (Pawn) params.get(1);
+        this.pawn1 = (Pawn) params.get(0);
+        this.pawn2 = (Pawn) params.get(1);
     }
 
     @Override

@@ -24,6 +24,13 @@ public enum Row implements Comparable<Row> {
         this.rowName = rowName;
     }
 
+    public static Row fromNumber(int rowNumber) {
+        return Arrays.stream(Row.values())
+                .filter(row -> row.getRowNumber() == rowNumber)
+                .findFirst()
+                .orElseThrow(IndexOutOfBoundsException::new);
+    }
+
     public Optional<Row> next() {
         return Arrays.stream(Row.values())
                 .filter(row -> row.getRowNumber() == this.getRowNumber() + 1)
@@ -34,13 +41,6 @@ public enum Row implements Comparable<Row> {
         return Arrays.stream(Row.values())
                 .filter(row -> row.getRowNumber() == this.getRowNumber() - 1)
                 .findFirst();
-    }
-
-    public static Row fromNumber(int rowNumber) {
-        return Arrays.stream(Row.values())
-                .filter(row -> row.getRowNumber() == rowNumber)
-                .findFirst()
-                .orElseThrow(IndexOutOfBoundsException::new);
     }
 
     public int distanceTo(Row row) {

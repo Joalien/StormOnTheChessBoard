@@ -32,12 +32,12 @@ public enum Position {
         return Arrays.stream(Position.values()).collect(Collectors.toSet());
     }
 
-    public static Position posToSquare(File file, Row row) {
-        return valueOf(file.getFileName() + row.getRowName());
-    }
-
     public static Position posToSquare(int x, int y) {
         return posToSquare(File.fromNumber(x), Row.fromNumber(y));
+    }
+
+    public static Position posToSquare(File file, Row row) {
+        return valueOf(file.getFileName() + row.getRowName());
     }
 
     public boolean isBorder() {
@@ -49,12 +49,12 @@ public enum Position {
                 || (getRow() == position.getRow() && areNearbyFile(position));
     }
 
-    private boolean areNearbyFile(Position position) {
-        return getFile().distanceTo(position.getFile()) == 1;
-    }
-
     private boolean areNearbyRow(Position position) {
         return getRow().distanceTo(position.getRow()) == 1;
+    }
+
+    private boolean areNearbyFile(Position position) {
+        return getFile().distanceTo(position.getFile()) == 1;
     }
 
     public boolean hasNoPositionBetween(Position position) {

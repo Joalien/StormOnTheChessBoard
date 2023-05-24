@@ -26,6 +26,7 @@ public class WhitePawn extends Pawn {
         return this.getRow().next()
                 .map(row -> Position.posToSquare(this.getFile(), row));
     }
+
     @Override
     public boolean isPositionTheoreticallyReachable(File file, Row row, Color color) {
         boolean moveTwoSquaresFromStart = getRow() == Row.Two && row == Row.Four;

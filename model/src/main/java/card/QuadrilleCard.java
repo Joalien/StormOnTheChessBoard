@@ -1,7 +1,6 @@
 package card;
 
 import board.ChessBoard;
-import piece.Color;
 import piece.Piece;
 import piece.Square;
 import position.Position;

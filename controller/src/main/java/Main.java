@@ -38,18 +38,9 @@ public class Main {
                 .build();
     }
 
-    private static PieceDto map(Piece p) {
-        return PieceDto.builder()
-                .name(p.toString())
-                .color(p.getColor())
-                .position(p.getPosition())
-                .build();
-    }
-
-    private static PlayerDto map(Player p) {
-        return PlayerDto.builder()
-                .name(p.getName())
-                .color(p.getColor())
+    private static EffectDto map(Effect c) {
+        return EffectDto.builder()
+                .name(c.getName())
                 .build();
     }
 
@@ -61,9 +52,18 @@ public class Main {
                 .build();
     }
 
-    private static EffectDto map(Effect c) {
-        return EffectDto.builder()
-                .name(c.getName())
+    private static PlayerDto map(Player p) {
+        return PlayerDto.builder()
+                .name(p.getName())
+                .color(p.getColor())
+                .build();
+    }
+
+    private static PieceDto map(Piece p) {
+        return PieceDto.builder()
+                .name(p.toString())
+                .color(p.getColor())
+                .position(p.getPosition())
                 .build();
     }
 }

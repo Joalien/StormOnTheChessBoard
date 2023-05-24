@@ -23,13 +23,13 @@ public class FakePieceDecorator extends Piece {
     }
 
     @Override
-    public Row getRow() {
-        return fakePiece.getRow();
+    public File getFile() {
+        return fakePiece.getFile();
     }
 
     @Override
-    public File getFile() {
-        return fakePiece.getFile();
+    public Row getRow() {
+        return fakePiece.getRow();
     }
 
     @Override

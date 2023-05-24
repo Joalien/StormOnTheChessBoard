@@ -6,7 +6,6 @@ import org.junit.jupiter.api.Test;
 import position.Position;
 
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static position.Position.*;

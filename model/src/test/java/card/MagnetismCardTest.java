@@ -2,7 +2,6 @@ package card;
 
 import board.ChessBoard;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import piece.Color;
@@ -16,9 +15,9 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class MagnetismCardTest {
 
+    private final Position c2 = Position.c2;
     private ChessBoard chessBoard;
     private Card magnetismCard;
-    private final Position c2 = Position.c2;
     private Piece piece;
 
 

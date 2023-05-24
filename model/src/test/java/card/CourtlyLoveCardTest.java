@@ -29,6 +29,12 @@ class CourtlyLoveCardTest {
         courtlyLoveCard = createCourtlyLoveCard();
     }
 
+    private CourtlyLoveCard createCourtlyLoveCard() {
+        CourtlyLoveCard courtlyLoveCard1 = new CourtlyLoveCard();
+        courtlyLoveCard1.setIsPlayedBy(Color.WHITE);
+        return courtlyLoveCard1;
+    }
+
     @Nested
     class Success {
         @Test
@@ -101,11 +107,5 @@ class CourtlyLoveCardTest {
             assertEquals(knight, chessBoard.at(b4).getPiece().get());
             assertTrue(chessBoard.at(c1).getPiece().isEmpty());
         }
-    }
-
-    private CourtlyLoveCard createCourtlyLoveCard() {
-        CourtlyLoveCard courtlyLoveCard1 = new CourtlyLoveCard();
-        courtlyLoveCard1.setIsPlayedBy(Color.WHITE);
-        return courtlyLoveCard1;
     }
 }

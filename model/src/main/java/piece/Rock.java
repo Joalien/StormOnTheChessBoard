@@ -33,22 +33,22 @@ public class Rock extends Piece implements Castlable {
         } else throw new IllegalStateException();
     }
 
-    static Set<Position> squaresOnTheRow(Position currentPosition, Position squareToMoveOn) {
-        Set<Position> squaresOnThePath = new HashSet<>();
-        int firstFile = Math.min(currentPosition.getFile().getFileNumber(), squareToMoveOn.getFile().getFileNumber());
-        int lastFile = Math.max(currentPosition.getFile().getFileNumber(), squareToMoveOn.getFile().getFileNumber());
-        for (int x = firstFile + 1; x < lastFile; x++) {
-            squaresOnThePath.add(Position.posToSquare(File.fromNumber(x), currentPosition.getRow()));
-        }
-        return squaresOnThePath;
-    }
-
     static Set<Position> squaresOnTheFile(Position currentPosition, Position squareToMoveOn) {
         Set<Position> squaresOnThePath = new HashSet<>();
         int firstRow = Math.min(currentPosition.getRow().getRowNumber(), squareToMoveOn.getRow().getRowNumber());
         int lastRow = Math.max(currentPosition.getRow().getRowNumber(), squareToMoveOn.getRow().getRowNumber());
         for (int y = firstRow + 1; y < lastRow; y++) {
             squaresOnThePath.add(Position.posToSquare(currentPosition.getFile(), Row.fromNumber(y)));
+        }
+        return squaresOnThePath;
+    }
+
+    static Set<Position> squaresOnTheRow(Position currentPosition, Position squareToMoveOn) {
+        Set<Position> squaresOnThePath = new HashSet<>();
+        int firstFile = Math.min(currentPosition.getFile().getFileNumber(), squareToMoveOn.getFile().getFileNumber());
+        int lastFile = Math.max(currentPosition.getFile().getFileNumber(), squareToMoveOn.getFile().getFileNumber());
+        for (int x = firstFile + 1; x < lastFile; x++) {
+            squaresOnThePath.add(Position.posToSquare(File.fromNumber(x), currentPosition.getRow()));
         }
         return squaresOnThePath;
     }
