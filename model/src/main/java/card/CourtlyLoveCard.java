@@ -5,7 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import piece.Knight;
 import piece.Piece;
 import piece.Queen;
-import position.Position;
+import core.Position;
 
 import java.util.List;
 

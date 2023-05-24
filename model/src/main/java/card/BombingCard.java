@@ -1,9 +1,9 @@
 package card;
 
 import board.ChessBoard;
-import effet.BombingEffect;
+import board.effect.BombingEffect;
 import piece.Piece;
-import position.Position;
+import core.Position;
 
 import java.util.List;
 

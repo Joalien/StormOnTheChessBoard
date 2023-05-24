@@ -4,10 +4,10 @@ import board.ChessBoard;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import piece.Color;
+import core.Color;
 import piece.Piece;
 import piece.Queen;
-import position.Position;
+import core.Position;
 
 import java.util.List;
 

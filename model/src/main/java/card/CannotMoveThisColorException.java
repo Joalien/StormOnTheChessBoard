@@ -1,6 +1,6 @@
 package card;
 
-import piece.Color;
+import core.Color;
 
 public class CannotMoveThisColorException extends IllegalStateException {
     public CannotMoveThisColorException(Color color) {

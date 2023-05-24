@@ -1,6 +1,6 @@
 import api.ChessBoardReadService;
 import api.ChessBoardService;
-import api.ChessBoardServiceFactory;
+import game.ChessBoardServiceFactory;
 import api.ChessBoardWriteService;
 import command.Command;
 

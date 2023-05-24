@@ -1,16 +1,17 @@
 package board;
 
-import effet.Effect;
+import core.Color;
+import board.effect.Effect;
 import lombok.extern.slf4j.Slf4j;
 import piece.*;
-import position.File;
-import position.Position;
-import position.Row;
+import core.File;
+import core.Position;
+import core.Row;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static position.Position.*;
+import static core.Position.*;
 
 @Slf4j
 public class ChessBoard {

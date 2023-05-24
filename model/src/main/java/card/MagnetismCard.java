@@ -1,7 +1,7 @@
 package card;
 
 import board.ChessBoard;
-import effet.MagnetismEffect;
+import board.effect.MagnetismEffect;
 import piece.Piece;
 
 import java.util.List;

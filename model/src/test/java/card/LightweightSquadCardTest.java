@@ -11,7 +11,7 @@ import piece.WhitePawn;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static position.Position.*;
+import static core.Position.*;
 
 class LightweightSquadCardTest {
 

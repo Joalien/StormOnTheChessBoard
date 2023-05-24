@@ -3,14 +3,14 @@ import card.Card;
 import command.PlayMoveCommand;
 import command.StartGameCommand;
 import dto.*;
-import effet.Effect;
+import board.effect.Effect;
 import piece.Piece;
 import player.Player;
 
 import java.util.stream.Collectors;
 
-import static position.Position.e2;
-import static position.Position.e4;
+import static core.Position.e2;
+import static core.Position.e4;
 
 public class Main {
     public static void main(String[] args) {

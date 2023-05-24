@@ -3,7 +3,7 @@ package card;
 import board.ChessBoard;
 import piece.Piece;
 import piece.Square;
-import position.Position;
+import core.Position;
 
 import java.util.HashMap;
 import java.util.List;
@@ -12,7 +12,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static position.Position.*;
+import static core.Position.*;
 
 public class QuadrilleCard extends Card {
 

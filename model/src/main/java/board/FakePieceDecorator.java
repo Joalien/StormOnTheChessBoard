@@ -1,11 +1,11 @@
 package board;
 
-import piece.Color;
+import core.Color;
 import piece.Piece;
 import piece.Square;
-import position.File;
-import position.Position;
-import position.Row;
+import core.File;
+import core.Position;
+import core.Row;
 
 import java.util.Optional;
 import java.util.Set;

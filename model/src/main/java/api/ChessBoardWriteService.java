@@ -1,7 +1,7 @@
 package api;
 
 import card.Card;
-import position.Position;
+import core.Position;
 
 import java.util.List;
 

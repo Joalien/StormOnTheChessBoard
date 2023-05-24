@@ -1,7 +1,7 @@
 package card;
 
 import board.ChessBoard;
-import piece.Color;
+import core.Color;
 import piece.Pawn;
 import piece.Piece;
 import piece.Square;

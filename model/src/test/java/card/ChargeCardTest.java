@@ -1,6 +1,7 @@
 package card;
 
 import board.ChessBoard;
+import core.Color;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import piece.*;
@@ -12,7 +13,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static position.Position.*;
+import static core.Position.*;
 
 class ChargeCardTest {
 

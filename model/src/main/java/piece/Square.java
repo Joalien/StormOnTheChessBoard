@@ -1,7 +1,7 @@
 package piece;
 
 import lombok.ToString;
-import position.Position;
+import core.Position;
 
 import java.util.Optional;
 

@@ -3,7 +3,7 @@ package command;
 import api.ChessBoardWriteService;
 import lombok.Getter;
 import lombok.experimental.SuperBuilder;
-import position.Position;
+import core.Position;
 
 @SuperBuilder
 @Getter

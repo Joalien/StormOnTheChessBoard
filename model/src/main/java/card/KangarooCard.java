@@ -3,7 +3,7 @@ package card;
 import board.ChessBoard;
 import piece.Knight;
 import piece.extra.Kangaroo;
-import position.Position;
+import core.Position;
 
 import java.util.List;
 

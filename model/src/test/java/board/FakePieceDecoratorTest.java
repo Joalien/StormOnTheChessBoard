@@ -1,13 +1,13 @@
 package board;
 
 import org.junit.jupiter.api.Test;
-import piece.Color;
+import core.Color;
 import piece.Knight;
 import piece.Square;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static position.Position.*;
+import static core.Position.*;
 
 class FakePieceDecoratorTest {
     @Test

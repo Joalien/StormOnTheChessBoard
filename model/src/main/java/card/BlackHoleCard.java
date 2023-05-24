@@ -2,7 +2,7 @@ package card;
 
 import board.ChessBoard;
 import piece.extra.BlackHole;
-import position.Position;
+import core.Position;
 
 import java.util.List;
 

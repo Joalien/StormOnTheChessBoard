@@ -1,17 +1,18 @@
 package board;
 
+import core.Color;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
 import piece.*;
-import position.Position;
+import core.Position;
 
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static position.Position.*;
+import static core.Position.*;
 
 class ChessBoardTest {
 

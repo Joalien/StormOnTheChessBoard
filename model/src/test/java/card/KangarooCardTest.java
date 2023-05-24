@@ -7,14 +7,14 @@ import org.junit.jupiter.api.Test;
 import piece.Knight;
 import piece.Piece;
 import piece.extra.Kangaroo;
-import position.Position;
+import core.Position;
 
 import java.util.List;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static position.Position.*;
+import static core.Position.*;
 
 
 class KangarooCardTest {

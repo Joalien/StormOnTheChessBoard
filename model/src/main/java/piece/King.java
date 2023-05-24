@@ -1,13 +1,14 @@
 package piece;
 
-import position.File;
-import position.Position;
-import position.Row;
+import core.Color;
+import core.File;
+import core.Position;
+import core.Row;
 
 import java.util.Collections;
 import java.util.Set;
 
-import static position.Position.*;
+import static core.Position.*;
 
 public class King extends Piece implements Castlable {
 

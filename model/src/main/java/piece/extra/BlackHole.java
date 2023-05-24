@@ -1,16 +1,15 @@
 package piece.extra;
 
 import lombok.extern.slf4j.Slf4j;
-import piece.Color;
+import core.Color;
 import piece.Piece;
 import piece.Square;
-import position.File;
-import position.Position;
-import position.Row;
+import core.File;
+import core.Position;
+import core.Row;
 
 import java.util.Set;
 
-@Slf4j
 public class BlackHole extends Piece {
 
     public BlackHole() {

@@ -2,7 +2,7 @@ package player;
 
 import card.Card;
 import lombok.Getter;
-import piece.Color;
+import core.Color;
 
 import java.util.HashSet;
 import java.util.Set;

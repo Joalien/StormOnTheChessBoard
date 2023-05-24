@@ -4,8 +4,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import piece.Color;
-import position.Position;
+import core.Color;
+import core.Position;
 
 @Getter
 @Setter

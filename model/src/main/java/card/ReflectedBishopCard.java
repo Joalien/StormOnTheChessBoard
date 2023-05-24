@@ -3,7 +3,7 @@ package card;
 import board.ChessBoard;
 import lombok.extern.slf4j.Slf4j;
 import piece.Bishop;
-import position.Position;
+import core.Position;
 
 import java.util.Collection;
 import java.util.HashSet;

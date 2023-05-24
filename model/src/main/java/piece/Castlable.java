@@ -1,10 +1,10 @@
 package piece;
 
-import position.Position;
+import core.Position;
 
 import java.util.Map;
 
-import static position.Position.*;
+import static core.Position.*;
 
 public interface Castlable {
 

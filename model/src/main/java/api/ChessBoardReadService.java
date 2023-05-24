@@ -1,7 +1,7 @@
 package api;
 
 import card.Card;
-import effet.Effect;
+import board.effect.Effect;
 import piece.Piece;
 import player.Player;
 

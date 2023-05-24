@@ -4,13 +4,13 @@ import board.ChessBoard;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import piece.Color;
+import core.Color;
 import piece.Queen;
 
 import java.util.Collections;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static position.Position.e4;
+import static core.Position.e4;
 
 class BombingCardTest {
 
