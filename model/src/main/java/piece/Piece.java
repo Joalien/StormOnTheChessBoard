@@ -13,12 +13,10 @@ import java.util.Set;
 public abstract class Piece {
 
     protected Color color;
-    protected char type;
     private Square square;
 
-    public Piece(Color color, char typePiece) {
+    public Piece(Color color) {
         this.color = color;
-        this.type = typePiece;
     }
 
     public File getFile() {
@@ -27,10 +25,6 @@ public abstract class Piece {
 
     public Row getRow() {
         return square.getPosition().getRow();
-    }
-
-    public char getType() {
-        return this.type;
     }
 
     public boolean isPositionTheoreticallyReachable(Position position) {
@@ -88,4 +82,6 @@ public abstract class Piece {
     public Color getColor() {
         return color;
     }
+
+    public abstract boolean isKing();
 }

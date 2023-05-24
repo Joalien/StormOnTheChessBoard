@@ -11,7 +11,7 @@ import java.util.Set;
 public class BlackPawn extends Pawn {
 
     public BlackPawn() {
-        super(Color.BLACK, 'p');
+        super(Color.BLACK);
     }
 
     @Override
@@ -45,6 +45,11 @@ public class BlackPawn extends Pawn {
                 && getRow() == Row.Seven
                 && squareToMoveOn.getRow() == Row.Five;
         return moveForwardTwoSquaresFromStart ? Set.of(Position.posToSquare(getFile(), Row.Six)) : Collections.emptySet();
+    }
+
+    @Override
+    public boolean isKing() {
+        return false;
     }
 
 

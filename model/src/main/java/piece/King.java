@@ -14,7 +14,7 @@ public class King extends Piece implements Castlable {
     private boolean canCastle = true;
 
     public King(Color color) {
-        super(color, color == Color.WHITE ? 'K' : 'k');
+        super(color);
     }
 
     //Penser à intégrer le rock !
@@ -50,6 +50,11 @@ public class King extends Piece implements Castlable {
         else if (blackKingSideCastle) return Set.of(f8);
         else if (blackQueenSideCastle) return Set.of(d8);
         else return Collections.emptySet();
+    }
+
+    @Override
+    public boolean isKing() {
+        return true;
     }
 
     @Override

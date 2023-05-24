@@ -11,7 +11,7 @@ import java.util.Set;
 public class WhitePawn extends Pawn {
 
     public WhitePawn() {
-        super(Color.WHITE, 'P');
+        super(Color.WHITE);
     }
 
     @Override

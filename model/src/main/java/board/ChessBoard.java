@@ -233,7 +233,7 @@ public class ChessBoard {
 
     public boolean isKingUnderAttack(Color color) {
         Optional<Piece> optionalKing = allyPieces(color).stream()
-                .filter(p -> Character.toUpperCase(p.getType()) == 'K')
+                .filter(Piece::isKing)
                 .findFirst();
         return optionalKing
                 .map(this::isKingUnderAttack)

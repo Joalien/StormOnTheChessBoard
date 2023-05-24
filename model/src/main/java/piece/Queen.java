@@ -10,7 +10,7 @@ import java.util.Set;
 
 public class Queen extends Piece {
     public Queen(Color color) {
-        super(color, color == Color.WHITE ? 'B' : 'b');
+        super(color);
     }
 
     @Override
@@ -40,6 +40,11 @@ public class Queen extends Piece {
             }
         }
         return squaresOnThePath;
+    }
+
+    @Override
+    public boolean isKing() {
+        return false;
     }
 
 

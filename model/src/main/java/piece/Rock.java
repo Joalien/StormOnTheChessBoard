@@ -13,7 +13,7 @@ public class Rock extends Piece implements Castlable {
     private boolean canCastle = true;
 
     public Rock(Color color) {
-        super(color, color == Color.WHITE ? 'R' : 'r');
+        super(color);
     }
 
     @Override
@@ -28,15 +28,24 @@ public class Rock extends Piece implements Castlable {
 
         Set<Position> squaresOnThePath = new HashSet<>();
         if (getFile() == squareToMoveOn.getFile()) {
-            for (int y = Math.min(getRow().getRowNumber(), squareToMoveOn.getRow().getRowNumber()) + 1; y < Math.max(getRow().getRowNumber(), squareToMoveOn.getRow().getRowNumber()); y++) {
+            int firstRow = Math.min(getRow().getRowNumber(), squareToMoveOn.getRow().getRowNumber());
+            int lastRow = Math.max(getRow().getRowNumber(), squareToMoveOn.getRow().getRowNumber());
+            for (int y = firstRow + 1; y < lastRow; y++) {
                 squaresOnThePath.add(Position.posToSquare(getFile(), Row.fromNumber(y)));
             }
         } else if (getRow() == squareToMoveOn.getRow()) {
-            for (int x = Math.min(getFile().getFileNumber(), squareToMoveOn.getFile().getFileNumber()) + 1; x < Math.max(getFile().getFileNumber(), squareToMoveOn.getFile().getFileNumber()); x++) {
+            int firstFile = Math.min(getFile().getFileNumber(), squareToMoveOn.getFile().getFileNumber());
+            int lastFile = Math.max(getFile().getFileNumber(), squareToMoveOn.getFile().getFileNumber());
+            for (int x = firstFile + 1; x < lastFile; x++) {
                 squaresOnThePath.add(Position.posToSquare(File.fromNumber(x), getRow()));
             }
         }
         return squaresOnThePath;
+    }
+
+    @Override
+    public boolean isKing() {
+        return false;
     }
 
     @Override

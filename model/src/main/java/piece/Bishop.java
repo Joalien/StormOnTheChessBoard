@@ -11,7 +11,7 @@ import java.util.Set;
 public class Bishop extends Piece {
 
     public Bishop(Color color) {
-        super(color, color == Color.WHITE ? 'B' : 'b');
+        super(color);
     }
 
     @Override
@@ -31,6 +31,11 @@ public class Bishop extends Piece {
             squaresOnThePath.add(Position.posToSquare(getFile().getFileNumber() + i * (signX ? 1 : -1), getRow().getRowNumber() + i * (signY ? 1 : -1)));
         }
         return squaresOnThePath;
+    }
+
+    @Override
+    public boolean isKing() {
+        return false;
     }
 
 }

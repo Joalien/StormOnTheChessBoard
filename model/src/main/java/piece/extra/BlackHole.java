@@ -14,7 +14,7 @@ import java.util.Set;
 public class BlackHole extends Piece {
 
     public BlackHole() {
-        super(null, 'H');
+        super(null);
     }
 
     @Override
@@ -32,6 +32,11 @@ public class BlackHole extends Piece {
         if (getSquare().isEmpty()) {
             super.setSquare(square);
         } else throw new BlackHoleException("You cannot move a black hole!");
+    }
+
+    @Override
+    public boolean isKing() {
+        return false;
     }
 
     public static class BlackHoleException extends RuntimeException {

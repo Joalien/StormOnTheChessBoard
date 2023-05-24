@@ -14,7 +14,7 @@ import java.util.Set;
 public class Kangaroo extends Piece {
 
     public Kangaroo(Color color) {
-        super(color, color == Color.WHITE ? 'N' : 'n');
+        super(color);
     }
 
     @Override
@@ -31,5 +31,10 @@ public class Kangaroo extends Piece {
     @Override
     public Set<Position> squaresOnThePath(Position squareToMoveOn) {
         return Collections.emptySet(); // piece.Knight can jump over pieces
+    }
+
+    @Override
+    public boolean isKing() {
+        return false;
     }
 }

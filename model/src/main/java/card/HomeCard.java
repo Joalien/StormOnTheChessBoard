@@ -31,7 +31,7 @@ public class HomeCard extends Card {
         boolean positionToMoveOnIsNotStartingPositionOfPiece = ChessBoard.createWithInitialState()
                 .allyPieces(piece.getColor())
                 .stream()
-                .filter(piece1 -> piece1.getType() == piece.getType())
+                .filter(piece1 -> piece1.getClass() == piece.getClass())
                 .map(Piece::getPosition)
                 .noneMatch(pos -> pos.equals(positionToMoveOn));
         if (positionToMoveOnIsNotStartingPositionOfPiece)

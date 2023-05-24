@@ -16,7 +16,7 @@ public class FakePieceDecorator extends Piece {
     private final Square fakeSquare;
 
     public FakePieceDecorator(Piece originalPiece, Square fakeSquare) {
-        super(originalPiece.getColor(), originalPiece.getType());
+        super(originalPiece.getColor());
         this.fakePiece = originalPiece.clone(); // deep copy
         this.fakePiece.setSquare(fakeSquare);
         this.fakeSquare = fakeSquare;
@@ -30,11 +30,6 @@ public class FakePieceDecorator extends Piece {
     @Override
     public File getFile() {
         return fakePiece.getFile();
-    }
-
-    @Override
-    public char getType() {
-        return fakePiece.getType();
     }
 
     @Override
@@ -80,5 +75,10 @@ public class FakePieceDecorator extends Piece {
     @Override
     public Color getColor() {
         return fakePiece.getColor();
+    }
+
+    @Override
+    public boolean isKing() {
+        return fakePiece.isKing();
     }
 }
