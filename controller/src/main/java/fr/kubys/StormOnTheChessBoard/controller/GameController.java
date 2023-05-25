@@ -7,6 +7,7 @@ import command.PlayMoveCommand;
 import command.StartGameCommand;
 import core.Color;
 import fr.kubys.StormOnTheChessBoard.dto.*;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
@@ -26,6 +27,7 @@ public class GameController {
     ChessBoardRepository chessBoardRepository;
 
     @GetMapping("/chessboard/{id}")
+    @CrossOrigin(origins = "*")
     public ChessBoardDto getGameById(@PathVariable Integer id) {
         return mapToDto(id, chessBoardRepository.getChessBoardService(id));
     }

@@ -9,6 +9,15 @@ export default function App() {
         setGame({ [square]: 'wK'})
     }
 
+    function getInitialState() {
+        fetch("http://localhost:8080/chessboard/1")
+            .then(response => response.json())
+            .then(data => {
+                console.log(data.pieces)
+                setGame(data.pieces);
+            })
+    }
+
   return (
       <div style={{
           margin: '3rem auto',
@@ -17,7 +26,7 @@ export default function App() {
       }}>
         <h1>Tempête sur l'Échiquier</h1>
         <Chessboard id="BasicBoard"
-                    onSquareRightClick={onSquareRightClick}
+                    onSquareRightClick={getInitialState}
                     position={game}/>
       </div>
   );
