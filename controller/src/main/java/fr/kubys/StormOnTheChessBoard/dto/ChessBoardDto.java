@@ -1,6 +1,6 @@
 package fr.kubys.StormOnTheChessBoard.dto;
 
-import core.Position;
+import fr.kubys.core.Position;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;

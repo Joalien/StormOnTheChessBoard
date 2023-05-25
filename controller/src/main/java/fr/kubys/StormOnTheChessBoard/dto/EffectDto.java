@@ -4,7 +4,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import core.Position;
+import fr.kubys.core.Position;
 
 import java.util.Set;
 

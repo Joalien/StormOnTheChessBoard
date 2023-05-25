@@ -4,7 +4,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import core.Color;
+import fr.kubys.core.Color;
 
 import java.util.Set;
 

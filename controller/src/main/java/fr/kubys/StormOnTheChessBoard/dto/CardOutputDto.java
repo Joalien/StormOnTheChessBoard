@@ -1,6 +1,6 @@
 package fr.kubys.StormOnTheChessBoard.dto;
 
-import card.CardType;
+import fr.kubys.card.CardType;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;

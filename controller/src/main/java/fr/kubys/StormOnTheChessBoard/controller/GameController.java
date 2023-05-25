@@ -1,32 +1,30 @@
 package fr.kubys.StormOnTheChessBoard.controller;
 
-import api.ChessBoardReadService;
-import board.effect.Effect;
-import card.Card;
-import command.EndTurnCommand;
-import command.PlayMoveCommand;
-import command.StartGameCommand;
-import core.Color;
-import core.Position;
+import fr.kubys.api.ChessBoardReadService;
+import fr.kubys.board.effect.Effect;
+import fr.kubys.card.Card;
+import fr.kubys.command.EndTurnCommand;
+import fr.kubys.command.PlayMoveCommand;
+import fr.kubys.command.StartGameCommand;
+import fr.kubys.core.Color;
+import fr.kubys.core.Position;
 import fr.kubys.StormOnTheChessBoard.dto.CardOutputDto;
 import fr.kubys.StormOnTheChessBoard.dto.ChessBoardDto;
 import fr.kubys.StormOnTheChessBoard.dto.EffectDto;
 import fr.kubys.StormOnTheChessBoard.dto.PlayerDto;
+import fr.kubys.piece.*;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
-import piece.*;
-import player.Player;
-import repository.ChessBoardRepository;
-import repository.ChessBoardRepositoryImpl;
+import fr.kubys.player.Player;
+import fr.kubys.repository.ChessBoardRepository;
+import fr.kubys.repository.ChessBoardRepositoryImpl;
 
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
-import static core.Position.*;
+import static fr.kubys.core.Position.*;
 
 @RestController
 public class GameController {
