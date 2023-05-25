@@ -11,9 +11,8 @@ import fr.kubys.piece.extra.BlackHole;
 
 import java.util.Collections;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static fr.kubys.core.Position.e4;
+import static org.junit.jupiter.api.Assertions.*;
 
 class BlackHoleCardTest {
 
@@ -24,7 +23,7 @@ class BlackHoleCardTest {
             ChessBoard chessBoard = ChessBoard.createEmpty();
             Card blackHoleCard = new BlackHoleCard();
 
-            assertTrue(blackHoleCard.playOn(chessBoard, Collections.singletonList(e4)));
+            assertDoesNotThrow(() -> blackHoleCard.playOn(chessBoard, Collections.singletonList(e4)));
 
             assertTrue(chessBoard.at(e4).getPiece().get() instanceof BlackHole);
             assertThrows(IllegalArgumentException.class, () -> chessBoard.add(new Queen(Color.WHITE), e4));
@@ -47,7 +46,7 @@ class BlackHoleCardTest {
             ChessBoard chessBoard = ChessBoard.createEmpty();
             Card blackHoleCard = new BlackHoleCard();
 
-            assertTrue(blackHoleCard.playOn(chessBoard, Collections.singletonList(e4)));
+            assertDoesNotThrow(() -> blackHoleCard.playOn(chessBoard, Collections.singletonList(e4)));
             assertThrows(IllegalArgumentException.class, () -> blackHoleCard.playOn(chessBoard, Collections.singletonList(e4)));
         }
     }

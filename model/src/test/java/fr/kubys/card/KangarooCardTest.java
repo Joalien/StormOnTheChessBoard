@@ -14,9 +14,8 @@ import fr.kubys.core.Position;
 import java.util.List;
 import java.util.Set;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static fr.kubys.core.Position.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 
 class KangarooCardTest {
@@ -36,13 +35,13 @@ class KangarooCardTest {
     class Success {
         @Test
         void should_work() {
-            assertTrue(kangaroo.playOn(chessBoard, List.of(knight)));
+            assertDoesNotThrow(() -> kangaroo.playOn(chessBoard, List.of(knight)));
         }
 
         @Test
         void should_return_reachable_position() {
             Set<Position> validMoves = Set.of(b5, c4, a4, d5, e4, b3, f3);
-            assertTrue(kangaroo.playOn(chessBoard, List.of(knight)));
+            assertDoesNotThrow(() -> kangaroo.playOn(chessBoard, List.of(knight)));
 
             Piece kangaroo = chessBoard.at(b1).getPiece().get();
             assertTrue(kangaroo instanceof Kangaroo);

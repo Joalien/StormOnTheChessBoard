@@ -46,7 +46,7 @@ class CourtlyLoveCardTest {
     class Success {
         @Test
         void should_tp_knight_to_c1() {
-            assertTrue(courtlyLoveCard.playOn(chessBoard, List.of(knight, c1)));
+            assertDoesNotThrow(() -> courtlyLoveCard.playOn(chessBoard, List.of(knight, c1)));
 
             assertEquals(knight, chessBoard.at(c1).getPiece().get());
             assertTrue(chessBoard.at(b4).getPiece().isEmpty());
@@ -56,7 +56,7 @@ class CourtlyLoveCardTest {
         void should_tp_knight_to_protect_from_chess() {
             chessBoard.add(new Bishop(Color.BLACK), a5);
 
-            assertTrue(courtlyLoveCard.playOn(chessBoard, List.of(knight, d2)));
+            assertDoesNotThrow(() -> courtlyLoveCard.playOn(chessBoard, List.of(knight, d2)));
 
             assertEquals(knight, chessBoard.at(d2).getPiece().get());
             assertTrue(chessBoard.at(b4).getPiece().isEmpty());
@@ -66,7 +66,7 @@ class CourtlyLoveCardTest {
         void should_tp_knight_to_protect_from_chess_bis() {
             chessBoard.add(new Bishop(Color.BLACK), c3);
 
-            assertTrue(courtlyLoveCard.playOn(chessBoard, List.of(knight, d2)));
+            assertDoesNotThrow(() -> courtlyLoveCard.playOn(chessBoard, List.of(knight, d2)));
 
             assertEquals(knight, chessBoard.at(d2).getPiece().get());
             assertTrue(chessBoard.at(b4).getPiece().isEmpty());

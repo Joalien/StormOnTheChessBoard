@@ -29,6 +29,10 @@ class MoveWithoutCardPlayedStateTest {
         beforeMoveCard = new BombingCard();
         replaceMoveCard = new LightweightSquadCard();
         afterMoveCard = new QuadrilleCard();
+        gameStateController.getCurrentPlayer().getCards().add(beforeMoveCard);
+        gameStateController.getCurrentPlayer().getCards().add(replaceMoveCard);
+        gameStateController.getCurrentPlayer().getCards().add(afterMoveCard);
+
     }
 
     @Test
@@ -40,7 +44,7 @@ class MoveWithoutCardPlayedStateTest {
 
     @Test
     void should_be_able_to_pass() {
-        assertTrue(gameStateController.tryToPass());
+        assertDoesNotThrow(() -> gameStateController.tryToPass());
 
         assertEquals(StateEnum.BEGINNING_OF_THE_TURN, gameStateController.getCurrentState());
     }
@@ -49,7 +53,7 @@ class MoveWithoutCardPlayedStateTest {
     class PlayCard {
         @Test
         void should_be_able_to_play_valid_after_move_card() {
-            assertTrue(gameStateController.tryToPlayCard(afterMoveCard, List.of(QuadrilleCard.Direction.CLOCKWISE)));
+            assertDoesNotThrow(() -> gameStateController.tryToPlayCard(afterMoveCard, List.of(QuadrilleCard.Direction.CLOCKWISE)));
 
             assertEquals(StateEnum.END_OF_THE_TURN, gameStateController.getCurrentState());
         }
@@ -70,7 +74,10 @@ class MoveWithoutCardPlayedStateTest {
 
         @Test
         void should_not_be_able_to_play_invalid_card() {
-            assertThrows(IllegalArgumentException.class, () -> gameStateController.tryToPlayCard(new BlackHoleCard(), List.of(h8)));
+            BlackHoleCard blackHoleCard = new BlackHoleCard();
+            gameStateController.getCurrentPlayer().getCards().add(blackHoleCard);
+
+            assertThrows(IllegalArgumentException.class, () -> gameStateController.tryToPlayCard(blackHoleCard, List.of(h8)));
 
             assertEquals(StateEnum.MOVE_WITHOUT_CARD_PLAYED, gameStateController.getCurrentState());
         }

@@ -68,8 +68,7 @@ public class ReflectedBishopCard extends Card {
     }
 
     @Override
-    protected boolean doAction(ChessBoard chessBoard) {
+    protected void doAction(ChessBoard chessBoard) {
         chessBoard.move(bishop, positionToMoveOn);
-        return true;
     }
 }

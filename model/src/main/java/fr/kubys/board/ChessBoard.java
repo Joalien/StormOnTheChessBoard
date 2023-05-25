@@ -115,14 +115,15 @@ public class ChessBoard {
                 .orElse(false); // color is null
     }
 
-    public boolean tryToMove(Position from, Position to) {
-        return at(from)
+    public void tryToMove(Position from, Position to) {
+        at(from)
                 .getPiece()
-                .map(p -> tryToMove(p, to))
-                .orElseThrow(() -> new IllegalArgumentException("%s is empty!".formatted(from)));
+                .ifPresentOrElse(p -> tryToMove(p, to), () -> {
+                    throw new IllegalArgumentException("There is no piece on %s".formatted(from));
+                });
     }
 
-    public boolean tryToMove(Piece piece, Position positionToMoveOn) {
+    public void tryToMove(Piece piece, Position positionToMoveOn) {
         if (piece.getPosition().equals(positionToMoveOn)) throw new IllegalArgumentException();
         if (canMove(piece, positionToMoveOn)) {
             // FIXME if rock cannot castle, it will still castle
@@ -132,11 +133,7 @@ public class ChessBoard {
                     .map(Castlable.class::cast)
                     .ifPresent(Castlable::cannotCastleAnymore);
             move(piece, positionToMoveOn);
-
-            return true;
-        }
-        log.debug("fail to move {} from {} to {}", piece, piece.getPosition(), positionToMoveOn);
-        return false;
+        } else throw new IllegalMoveException("fail to move %s from %s to %s".formatted(piece, piece.getPosition(), positionToMoveOn));
     }
 
     void tryToCastle(Piece piece, Position positionToMoveOn) {
@@ -179,13 +176,17 @@ public class ChessBoard {
     }
 
     public boolean canMove(Piece piece, Position positionToMoveOn) {
-        return canAttack(piece, positionToMoveOn)
-                && !doesMovingPieceCheckOurOwnKing(piece, positionToMoveOn)
-                && isValidCastle(piece, positionToMoveOn);
+        if (!canAttack(piece, positionToMoveOn))
+            throw new IllegalMoveException("You cannot move %s to %s".formatted(piece, positionToMoveOn));
+        if (doesMovingPieceCheckOurOwnKing(piece, positionToMoveOn))
+            throw new CheckException();
+        if (isInvalidCastle(piece, positionToMoveOn))
+            throw new RuntimeException("You cannot castle!"); // TEST ME
+        return true;
     }
 
-    boolean isValidCastle(Piece piece, Position positionToMoveOn) {
-        return true; // TODO
+    boolean isInvalidCastle(Piece piece, Position positionToMoveOn) {
+        return false; // TODO
     }
 
     public void fakeSquare(Piece piece, Position position) {

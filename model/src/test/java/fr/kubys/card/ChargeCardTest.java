@@ -32,7 +32,7 @@ class ChargeCardTest {
             Card chargeCard = new ChargeCard();
             chargeCard.setIsPlayedBy(Color.WHITE);
 
-            assertTrue(chargeCard.playOn(chessBoard, List.of(pawn1, pawn2)));
+            assertDoesNotThrow(() -> chargeCard.playOn(chessBoard, List.of(pawn1, pawn2)));
 
             assertEquals(pawn1, chessBoard.at(e5).getPiece().get());
             assertEquals(pawn2, chessBoard.at(d5).getPiece().get());
@@ -50,7 +50,7 @@ class ChargeCardTest {
             Card chargeCard = new ChargeCard();
             chargeCard.setIsPlayedBy(Color.WHITE);
 
-            assertTrue(chargeCard.playOn(chessBoard, List.of(pawn1, pawn2, pawn3)));
+            assertDoesNotThrow(() -> chargeCard.playOn(chessBoard, List.of(pawn1, pawn2, pawn3)));
 
             assertEquals(pawn1, chessBoard.at(e5).getPiece().get());
             assertEquals(pawn2, chessBoard.at(e6).getPiece().get());
@@ -69,7 +69,7 @@ class ChargeCardTest {
             Card chargeCard = new ChargeCard();
             chargeCard.setIsPlayedBy(Color.BLACK);
 
-            assertTrue(chargeCard.playOn(chessBoard, List.of(pawn1, pawn2, pawn3)));
+            assertDoesNotThrow(() -> chargeCard.playOn(chessBoard, List.of(pawn1, pawn2, pawn3)));
 
             assertEquals(pawn1, chessBoard.at(e3).getPiece().get());
             assertEquals(pawn2, chessBoard.at(e4).getPiece().get());
@@ -89,7 +89,7 @@ class ChargeCardTest {
             Card chargeCard = new ChargeCard();
             chargeCard.setIsPlayedBy(Color.BLACK);
 
-            assertTrue(chargeCard.playOn(chessBoard, allBlackPawnsExceptE7));
+            assertDoesNotThrow(() -> chargeCard.playOn(chessBoard, allBlackPawnsExceptE7));
 
             assertTrue(Set.of(a6, b6, c6, d6, e7, f6, g6, h6).stream()
 

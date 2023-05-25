@@ -7,9 +7,9 @@ import org.junit.jupiter.api.Test;
 import fr.kubys.piece.King;
 import fr.kubys.piece.Rock;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static fr.kubys.core.Position.*;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 class CastlableIT {
 
@@ -50,7 +50,7 @@ class CastlableIT {
     void white_should_be_able_to_castle_king_side() {
         assertTrue(chessBoard.canMove(whiteKing, g1));
 
-        assertTrue(chessBoard.tryToMove(whiteKing, g1));
+        assertDoesNotThrow(() -> chessBoard.tryToMove(whiteKing, g1));
 
         assertEquals(whiteKing, chessBoard.at(g1).getPiece().get());
         assertEquals(h1rock, chessBoard.at(f1).getPiece().get());
@@ -62,7 +62,7 @@ class CastlableIT {
     void white_should_be_able_to_castle_queen_side() {
         assertTrue(chessBoard.canMove(whiteKing, c1));
 
-        assertTrue(chessBoard.tryToMove(whiteKing, c1));
+        assertDoesNotThrow(() -> chessBoard.tryToMove(whiteKing, c1));
 
         assertEquals(whiteKing, chessBoard.at(c1).getPiece().get());
         assertEquals(a1rock, chessBoard.at(d1).getPiece().get());
@@ -74,7 +74,7 @@ class CastlableIT {
     void black_should_be_able_to_castle_king_side() {
         assertTrue(chessBoard.canMove(blackKing, g8));
 
-        assertTrue(chessBoard.tryToMove(blackKing, g8));
+        assertDoesNotThrow(() -> chessBoard.tryToMove(blackKing, g8));
 
         assertEquals(blackKing, chessBoard.at(g8).getPiece().get());
         assertEquals(h8rock, chessBoard.at(f8).getPiece().get());
@@ -86,7 +86,7 @@ class CastlableIT {
     void black_should_be_able_to_castle_queen_side() {
         assertTrue(chessBoard.canMove(blackKing, c8));
 
-        assertTrue(chessBoard.tryToMove(blackKing, c8));
+        assertDoesNotThrow(() -> chessBoard.tryToMove(blackKing, c8));
 
         assertEquals(blackKing, chessBoard.at(c8).getPiece().get());
         assertEquals(a8rock, chessBoard.at(d8).getPiece().get());

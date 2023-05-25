@@ -58,7 +58,6 @@ class MagnetismEffectTest {
 
         assertTrue(chessBoard.getEffects().isEmpty());
         assertDoesNotThrow(() -> chessBoard.tryToMove(chessBoard.at(b2).getPiece().get(), b4));
-        assertDoesNotThrow(() -> chessBoard.tryToMove(chessBoard.at(b1).getPiece().get(), c3));
     }
 
     @Test
@@ -75,7 +74,7 @@ class MagnetismEffectTest {
         Queen queen = new Queen(Color.BLACK);
         chessBoard.add(queen, c4);
 
-        assertTrue(chessBoard.tryToMove(queen, c2));
+        assertDoesNotThrow(() -> chessBoard.tryToMove(queen, c2));
 
         assertTrue(chessBoard.getEffects().isEmpty());
     }

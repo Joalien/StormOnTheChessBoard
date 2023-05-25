@@ -9,9 +9,7 @@ import lombok.experimental.SuperBuilder;
 public class EndTurnCommand extends Command {
 
     @Override
-    public boolean execute(ChessBoardWriteService chessBoardWriteService) {
-        return chessBoardWriteService.tryToPass();
+    public void execute(ChessBoardWriteService chessBoardWriteService) {
+        chessBoardWriteService.tryToPass();
     }
-
-
 }

@@ -30,35 +30,35 @@ class ChessBoardRepositoryImplTest {
     @Test
     void should_start_a_game() {
 
-        assertTrue(chessBoardRepository.saveCommand(START_GAME_COMMAND));
+        assertDoesNotThrow(() -> chessBoardRepository.saveCommand(START_GAME_COMMAND));
     }
 
     @Test
     void should_not_start_a_game_twice() {
-        assertTrue(chessBoardRepository.saveCommand(START_GAME_COMMAND));
-        assertFalse(chessBoardRepository.saveCommand(START_GAME_COMMAND));
+        assertDoesNotThrow(() -> chessBoardRepository.saveCommand(START_GAME_COMMAND));
+        assertThrows(IllegalStateException.class, () -> chessBoardRepository.saveCommand(START_GAME_COMMAND));
     }
 
     @Test
     void should_not_be_able_to_move_if_game_not_started() {
-        assertFalse(chessBoardRepository.saveCommand(MOVE_GAME_COMMAND));
+        assertThrows(IllegalStateException.class, () -> chessBoardRepository.saveCommand(MOVE_GAME_COMMAND));
     }
 
     @Test
     void should_play_a_game() {
-        assertTrue(chessBoardRepository.saveCommand(START_GAME_COMMAND));
-        assertTrue(chessBoardRepository.saveCommand(MOVE_GAME_COMMAND));
-        assertTrue(chessBoardRepository.saveCommand(END_TURN_COMMAND));
-        assertTrue(chessBoardRepository.saveCommand(BLACK_MOVE_COMMAND));
+        assertDoesNotThrow(() -> chessBoardRepository.saveCommand(START_GAME_COMMAND));
+        assertDoesNotThrow(() -> chessBoardRepository.saveCommand(MOVE_GAME_COMMAND));
+        assertDoesNotThrow(() -> chessBoardRepository.saveCommand(END_TURN_COMMAND));
+        assertDoesNotThrow(() -> chessBoardRepository.saveCommand(BLACK_MOVE_COMMAND));
 
-        assertTrue(chessBoardRepository.getChessBoardService(GAME_ID).getPieces().stream().anyMatch(piece -> piece.getPosition().equals(e4)));
+        assertDoesNotThrow(() -> chessBoardRepository.getChessBoardService(GAME_ID).getPieces().stream().anyMatch(piece -> piece.getPosition().equals(e4)));
     }
 
     @Test
     void should_not_be_able_to_play_other_color_if_turn_has_not_been_ended() {
-        assertTrue(chessBoardRepository.saveCommand(START_GAME_COMMAND));
-        assertTrue(chessBoardRepository.saveCommand(MOVE_GAME_COMMAND));
-        assertFalse(chessBoardRepository.saveCommand(BLACK_MOVE_COMMAND));
+        assertDoesNotThrow(() -> chessBoardRepository.saveCommand(START_GAME_COMMAND));
+        assertDoesNotThrow(() -> chessBoardRepository.saveCommand(MOVE_GAME_COMMAND));
+        assertThrows(IllegalStateException.class, () -> chessBoardRepository.saveCommand(BLACK_MOVE_COMMAND));
     }
 
     @Test

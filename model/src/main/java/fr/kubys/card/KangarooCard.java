@@ -33,10 +33,9 @@ public class KangarooCard extends Card {
     }
 
     @Override
-    protected boolean doAction(ChessBoard chessBoard) {
+    protected void doAction(ChessBoard chessBoard) {
         Position knightPosition = knight.getPosition();
         chessBoard.removePieceFromTheBoard(knight);
         chessBoard.add(new Kangaroo(knight.getColor()), knightPosition);
-        return true;
     }
 }

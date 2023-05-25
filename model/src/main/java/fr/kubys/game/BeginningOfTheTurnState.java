@@ -7,28 +7,24 @@ import java.util.List;
 
 public class BeginningOfTheTurnState implements TurnState {
     @Override
-    public boolean tryToMove(GameStateController gameStateController, Position from, Position to) {
-        boolean hasMoved = gameStateController.getChessBoard().tryToMove(from, to);
-        if (hasMoved) gameStateController.setCurrentState(StateEnum.MOVE_WITHOUT_CARD_PLAYED);
-        return hasMoved;
+    public void tryToMove(GameStateController gameStateController, Position from, Position to) {
+        gameStateController.getChessBoard().tryToMove(from, to);
+        gameStateController.setCurrentState(StateEnum.MOVE_WITHOUT_CARD_PLAYED);
     }
 
     @Override
-    public boolean tryToPlayCard(GameStateController gameStateController, Card card, List<?> params) {
+    public void tryToPlayCard(GameStateController gameStateController, Card card, List<?> params) {
         StateEnum nextState = switch (card.getType()) {
             case BEFORE_TURN -> StateEnum.BEFORE_MOVE;
             case REPLACE_TURN -> StateEnum.END_OF_THE_TURN;
             default -> throw new IllegalStateException("You can only play BEFORE or REPLACE card!");
         };
-        boolean hasPlayedCard = card.playOn(gameStateController.getChessBoard(), params);
-        if (hasPlayedCard) {
-            gameStateController.setCurrentState(nextState);
-        }
-        return hasPlayedCard;
+        card.playOn(gameStateController.getChessBoard(), params); // FIXME
+        gameStateController.setCurrentState(nextState);
     }
 
     @Override
-    public boolean tryToPass(GameStateController gameStateController) {
-        return false;
+    public void tryToPass(GameStateController gameStateController) {
+        throw new IllegalStateException("You cannot pass before playing a move");
     }
 }

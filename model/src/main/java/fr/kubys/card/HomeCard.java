@@ -52,10 +52,8 @@ public class HomeCard extends Card {
     }
 
     @Override
-    protected boolean doAction(ChessBoard chessBoard) {
+    protected void doAction(ChessBoard chessBoard) {
         chessBoard.at(positionToMoveOn).getPiece().ifPresent(chessBoard::removePieceFromTheBoard);
         chessBoard.move(piece, positionToMoveOn);
-
-        return true;
     }
 }

@@ -8,8 +8,8 @@ import lombok.experimental.SuperBuilder;
 @Getter
 public class StartGameCommand extends Command {
     @Override
-    public boolean execute(ChessBoardWriteService chessBoardWriteService) {
-        return chessBoardWriteService.startGame();
+    public void execute(ChessBoardWriteService chessBoardWriteService) {
+        chessBoardWriteService.startGame();
     }
 
     @Override

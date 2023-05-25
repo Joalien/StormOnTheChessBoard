@@ -51,8 +51,7 @@ public class CourtlyLoveCard extends Card {
     }
 
     @Override
-    protected boolean doAction(ChessBoard chessBoard) {
+    protected void doAction(ChessBoard chessBoard) {
         chessBoard.move(knight, positionToMoveOn);
-        return true;
     }
 }

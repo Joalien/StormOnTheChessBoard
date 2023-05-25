@@ -33,8 +33,7 @@ public class MagnetismCard extends Card {
     }
 
     @Override
-    protected boolean doAction(ChessBoard chessBoard) {
+    protected void doAction(ChessBoard chessBoard) {
         chessBoard.addEffect(new MagnetismEffect(piece));
-        return true;
     }
 }

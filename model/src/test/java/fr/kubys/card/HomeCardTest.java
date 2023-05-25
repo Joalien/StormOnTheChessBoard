@@ -27,7 +27,7 @@ class HomeCardTest {
             Card homeCard = new HomeCard();
             homeCard.setIsPlayedBy(Color.WHITE);
 
-            assertTrue(homeCard.playOn(chessBoard, List.of(knight, g1)));
+            assertDoesNotThrow(() -> homeCard.playOn(chessBoard, List.of(knight, g1)));
 
             assertEquals(knight, chessBoard.at(g1).getPiece().get());
             assertTrue(chessBoard.at(e4).getPiece().isEmpty());
@@ -43,7 +43,7 @@ class HomeCardTest {
             Card homeCard = new HomeCard();
             homeCard.setIsPlayedBy(Color.WHITE);
 
-            assertTrue(homeCard.playOn(chessBoard, List.of(knight, g1)));
+            assertDoesNotThrow(() -> homeCard.playOn(chessBoard, List.of(knight, g1)));
 
             assertEquals(knight, chessBoard.at(g1).getPiece().get());
             assertTrue(chessBoard.at(e4).getPiece().isEmpty());

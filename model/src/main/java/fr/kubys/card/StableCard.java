@@ -38,7 +38,7 @@ public class StableCard extends Card {
     }
 
     @Override
-    protected boolean doAction(ChessBoard chessBoard) {
+    protected void doAction(ChessBoard chessBoard) {
         Position rockPosition = rock.getPosition();
         Position knightPosition = knight.getPosition();
 
@@ -47,7 +47,5 @@ public class StableCard extends Card {
 
         chessBoard.add(rock, knightPosition);
         chessBoard.add(knight, rockPosition);
-
-        return true;
     }
 }

@@ -6,11 +6,11 @@ import fr.kubys.core.Position;
 import java.util.List;
 
 public interface ChessBoardWriteService {
-    boolean startGame();
+    void startGame();
 
-    boolean tryToMove(Position from, Position to);
+    void tryToMove(Position from, Position to);
 
-    boolean tryToPlayCard(Card card, List<?> params);
+    void tryToPlayCard(Card card, List<?> params);
 
-    boolean tryToPass();
+    void tryToPass();
 }

@@ -34,7 +34,7 @@ class StableCardTest {
     class Success {
         @Test
         void should_swap_pieces() {
-            assertTrue(stableCard.playOn(chessBoard, List.of(rock, knight)));
+            assertDoesNotThrow(() -> stableCard.playOn(chessBoard, List.of(rock, knight)));
 
             assertEquals(rock, chessBoard.at(g1).getPiece().get());
             assertEquals(knight, chessBoard.at(h1).getPiece().get());

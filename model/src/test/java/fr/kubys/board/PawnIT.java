@@ -38,12 +38,12 @@ public class PawnIT {
 
             assertTrue(chessBoard.canMove(pawn, e3));
             assertTrue(chessBoard.canMove(pawn, e4));
-            assertFalse(chessBoard.canMove(pawn, d3));
-            assertFalse(chessBoard.canMove(pawn, f3));
+            assertThrows(IllegalMoveException.class, () -> chessBoard.canMove(pawn, d3));
+            assertThrows(IllegalMoveException.class, () -> chessBoard.canMove(pawn, f3));
 
-            assertFalse(chessBoard.canMove(pawn, e1));
-            assertFalse(chessBoard.canMove(pawn, f1));
-            assertFalse(chessBoard.canMove(pawn, d1));
+            assertThrows(IllegalMoveException.class, () -> chessBoard.canMove(pawn, e1));
+            assertThrows(IllegalMoveException.class, () -> chessBoard.canMove(pawn, f1));
+            assertThrows(IllegalMoveException.class, () -> chessBoard.canMove(pawn, d1));
         }
 
         @Test
@@ -59,14 +59,14 @@ public class PawnIT {
             chessBoard.add(new Queen(Color.WHITE), f1);
             chessBoard.add(new Queen(Color.WHITE), d1);
 
-            assertFalse(chessBoard.canMove(pawn, e3));
-            assertFalse(chessBoard.canMove(pawn, e4));
-            assertFalse(chessBoard.canMove(pawn, d3));
-            assertFalse(chessBoard.canMove(pawn, f3));
+            assertThrows(IllegalMoveException.class, () -> chessBoard.canMove(pawn, e3));
+            assertThrows(IllegalMoveException.class, () -> chessBoard.canMove(pawn, e4));
+            assertThrows(IllegalMoveException.class, () -> chessBoard.canMove(pawn, d3));
+            assertThrows(IllegalMoveException.class, () -> chessBoard.canMove(pawn, f3));
 
-            assertFalse(chessBoard.canMove(pawn, e1));
-            assertFalse(chessBoard.canMove(pawn, f1));
-            assertFalse(chessBoard.canMove(pawn, d1));
+            assertThrows(IllegalMoveException.class, () -> chessBoard.canMove(pawn, e1));
+            assertThrows(IllegalMoveException.class, () -> chessBoard.canMove(pawn, f1));
+            assertThrows(IllegalMoveException.class, () -> chessBoard.canMove(pawn, d1));
         }
 
         @Test
@@ -82,14 +82,14 @@ public class PawnIT {
             chessBoard.add(new Queen(Color.BLACK), f1);
             chessBoard.add(new Queen(Color.BLACK), d1);
 
-            assertFalse(chessBoard.canMove(pawn, e3));
-            assertFalse(chessBoard.canMove(pawn, e4));
+            assertThrows(IllegalMoveException.class, () -> chessBoard.canMove(pawn, e3));
+            assertThrows(IllegalMoveException.class, () -> chessBoard.canMove(pawn, e4));
             assertTrue(chessBoard.canMove(pawn, d3));
             assertTrue(chessBoard.canMove(pawn, f3));
 
-            assertFalse(chessBoard.canMove(pawn, e1));
-            assertFalse(chessBoard.canMove(pawn, f1));
-            assertFalse(chessBoard.canMove(pawn, d1));
+            assertThrows(IllegalMoveException.class, () -> chessBoard.canMove(pawn, e1));
+            assertThrows(IllegalMoveException.class, () -> chessBoard.canMove(pawn, f1));
+            assertThrows(IllegalMoveException.class, () -> chessBoard.canMove(pawn, d1));
         }
 
         @Test
@@ -101,10 +101,10 @@ public class PawnIT {
             chessBoard.add(new Queen(Color.WHITE), f1);
             chessBoard.add(new Queen(Color.WHITE), d1);
 
-            assertFalse(chessBoard.canMove(pawn, e3));
-            assertFalse(chessBoard.canMove(pawn, e4));
-            assertFalse(chessBoard.canMove(pawn, d3));
-            assertFalse(chessBoard.canMove(pawn, f3));
+            assertThrows(IllegalMoveException.class, () -> chessBoard.canMove(pawn, e3));
+            assertThrows(IllegalMoveException.class, () -> chessBoard.canMove(pawn, e4));
+            assertThrows(IllegalMoveException.class, () -> chessBoard.canMove(pawn, d3));
+            assertThrows(IllegalMoveException.class, () -> chessBoard.canMove(pawn, f3));
 
             assertTrue(chessBoard.canMove(pawn, e1));
             assertTrue(chessBoard.canMove(pawn, f1));
@@ -129,7 +129,7 @@ public class PawnIT {
             Pawn pawn = new WhitePawn();
             chessBoard.add(pawn, e5);
 
-            assertFalse(chessBoard.canMove(pawn, e5));
+            assertThrows(IllegalMoveException.class, () -> chessBoard.canMove(pawn, e5));
         }
     }
 }

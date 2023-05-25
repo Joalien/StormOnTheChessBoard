@@ -17,7 +17,7 @@ public class BlackHole extends Piece {
 
     @Override
     public boolean isPositionTheoreticallyReachable(File file, Row row, Color color) {
-        return false;
+        throw new BlackHoleException("You cannot move a black hole!");
     }
 
     @Override
@@ -30,6 +30,11 @@ public class BlackHole extends Piece {
         if (getSquare().isEmpty()) {
             super.setSquare(square);
         } else throw new BlackHoleException("You cannot move a black hole!");
+    }
+
+    @Override
+    public Color getColor() {
+        throw new BlackHoleException("You cannot move on a black hole!");
     }
 
     @Override

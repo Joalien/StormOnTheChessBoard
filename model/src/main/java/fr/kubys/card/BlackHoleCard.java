@@ -33,9 +33,8 @@ public class BlackHoleCard extends Card {
     }
 
     @Override
-    protected boolean doAction(ChessBoard chessBoard) {
+    protected void doAction(ChessBoard chessBoard) {
         BlackHole piece = new BlackHole();
         chessBoard.add(piece, position);
-        return true;
     }
 }

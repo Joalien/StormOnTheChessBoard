@@ -32,7 +32,7 @@ class BombingCardTest {
         void should_work_if_empty_square() {
             assertTrue(chessBoard.getEffects().isEmpty());
 
-            assertTrue(bombing.playOn(chessBoard, Collections.singletonList(e4)));
+            assertDoesNotThrow(() -> bombing.playOn(chessBoard, Collections.singletonList(e4)));
 
             assertEquals(1, chessBoard.getEffects().size());
         }
@@ -41,7 +41,7 @@ class BombingCardTest {
         void should_work_if_played_on_ally_piece() {
             chessBoard.add(new Queen(Color.WHITE), e4);
 
-            assertTrue(bombing.playOn(chessBoard, Collections.singletonList(e4)));
+            assertDoesNotThrow(() -> bombing.playOn(chessBoard, Collections.singletonList(e4)));
         }
     }
 

@@ -8,19 +8,18 @@ import java.util.List;
 
 public class BeforeMoveCardPlayedState implements TurnState {
     @Override
-    public boolean tryToMove(GameStateController gameStateController, Position from, Position to) {
-        boolean hasMoved = gameStateController.getChessBoard().tryToMove(from, to);
-        if (hasMoved) gameStateController.setCurrentState(StateEnum.END_OF_THE_TURN);
-        return hasMoved;
+    public void tryToMove(GameStateController gameStateController, Position from, Position to) {
+        gameStateController.getChessBoard().tryToMove(from, to);
+        gameStateController.setCurrentState(StateEnum.END_OF_THE_TURN);
     }
 
     @Override
-    public boolean tryToPlayCard(GameStateController gameStateController, Card card, List<?> params) {
+    public void tryToPlayCard(GameStateController gameStateController, Card card, List<?> params) {
         throw new CardAlreadyPlayedException();
     }
 
     @Override
-    public boolean tryToPass(GameStateController gameStateController) {
-        return false;
+    public void tryToPass(GameStateController gameStateController) {
+        throw new IllegalStateException("You cannot pass before playing a move");
     }
 }

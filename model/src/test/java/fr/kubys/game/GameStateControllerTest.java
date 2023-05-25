@@ -2,18 +2,15 @@ package fr.kubys.game;
 
 import fr.kubys.card.Card;
 import fr.kubys.card.LightweightSquadCard;
-import fr.kubys.game.GameStateController;
-import fr.kubys.game.StateEnum;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 import fr.kubys.core.Color;
 import fr.kubys.piece.Pawn;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
+import static fr.kubys.core.Position.*;
 import static org.junit.jupiter.api.Assertions.*;
-import static fr.kubys.core.Position.d2;
-import static fr.kubys.core.Position.e2;
 
 class GameStateControllerTest {
 
@@ -45,7 +42,7 @@ class GameStateControllerTest {
         assertEquals(1, gameStateController.getCurrentPlayer().getCards().size());
         assertTrue(gameStateController.getCurrentPlayer().getCards().contains(card));
 
-        assertTrue(gameStateController.tryToPlayCard(card, List.of((Pawn) gameStateController.getChessBoard().at(e2).getPiece().get(), (Pawn) gameStateController.getChessBoard().at(d2).getPiece().get())));
+        assertDoesNotThrow(() -> gameStateController.tryToPlayCard(card, List.of((Pawn) gameStateController.getChessBoard().at(e2).getPiece().get(), (Pawn) gameStateController.getChessBoard().at(d2).getPiece().get())));
 
         assertEquals(1, gameStateController.getCurrentPlayer().getCards().size());
         assertFalse(gameStateController.getCurrentPlayer().getCards().contains(card));
@@ -54,7 +51,19 @@ class GameStateControllerTest {
     @Test
     void should_not_be_able_to_start_an_already_started_game() {
         gameStateController = new GameStateController();
-        assertTrue(gameStateController.startGame());
-        assertFalse(gameStateController.startGame());
+        assertDoesNotThrow(() -> gameStateController.startGame());
+        assertThrows(IllegalStateException.class, () -> gameStateController.startGame());
+    }
+
+    @Test
+    void should_not_be_able_to_move_from_empty_square() {
+        assertThrows(IllegalArgumentException.class, () -> gameStateController.tryToMove(e4, e5));
+    }
+
+    @Test
+    void should_not_be_able_to_play_enemy_piece() {
+        assertDoesNotThrow(() -> gameStateController.tryToMove(e2, e4));
+        gameStateController.tryToPass();
+        assertThrows(IllegalStateException.class, () -> gameStateController.tryToMove(d2, d4));
     }
 }

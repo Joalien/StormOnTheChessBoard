@@ -4,6 +4,7 @@ import fr.kubys.api.ChessBoardService;
 import fr.kubys.board.ChessBoard;
 import fr.kubys.board.effect.Effect;
 import fr.kubys.card.*;
+import fr.kubys.piece.Square;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -13,10 +14,7 @@ import fr.kubys.piece.Piece;
 import fr.kubys.player.Player;
 import fr.kubys.core.Position;
 
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
@@ -41,8 +39,10 @@ public class GameStateController implements ChessBoardService {
     }
 
     @Override
-    public boolean startGame() {
-        if (this.chessBoard != null) return false; // Cannot restart game
+    public void startGame() {
+        if (this.chessBoard != null)
+            throw new IllegalStateException("Game has already started!");
+
         this.chessBoard = ChessBoard.createWithInitialState();
         white = new Player("Name1", Color.WHITE);
         black = new Player("Name2", Color.BLACK);
@@ -53,7 +53,6 @@ public class GameStateController implements ChessBoardService {
                 .forEach(x -> dealCard(black));
         currentPlayer = white;
         currentState = StateEnum.BEGINNING_OF_THE_TURN;
-        return true;
     }
 
     private void initDeck() {
@@ -78,24 +77,44 @@ public class GameStateController implements ChessBoardService {
     }
 
     @Override
-    public boolean tryToMove(Position from, Position to) {
-        return currentState.getState().tryToMove(this, from, to);
+    public void tryToMove(Position from, Position to) {
+        assertGameHasAlreadyStarted();
+        Optional<Piece> pieceToMove = chessBoard.at(from).getPiece();
+        if (pieceToMove.isEmpty()) throw new IllegalArgumentException("There is no piece on %s".formatted(from));
+        if (pieceToMove.get().getColor() != currentPlayer.getColor())
+            throw new IllegalStateException("%s player cannot move %s piece".formatted(currentPlayer.getColor(), pieceToMove.get().getColor()));
+
+        currentState.getState().tryToMove(this, from, to);
     }
 
     @Override
-    public boolean tryToPlayCard(Card card, List<?> params) {
+    public void tryToPlayCard(Card card, List<?> params) {
+        assertGameHasAlreadyStarted();
+        if (!currentPlayer.getCards().contains(card))
+            throw new CardNotFoundException("Player %s does not have %s in hand!".formatted(currentPlayer, card));
+
         card.setIsPlayedBy(currentPlayer.getColor());
-        boolean isPlayed = currentState.getState().tryToPlayCard(this, card, params);
-        if (isPlayed) {
-            currentPlayer.getCards().remove(card);
-            dealCard(currentPlayer);
-        }
-        return isPlayed;
+        currentState.getState().tryToPlayCard(this, card, params);
+        currentPlayer.getCards().remove(card);
+        dealCard(currentPlayer);
     }
 
     @Override
-    public boolean tryToPass() {
-        return currentState.getState().tryToPass(this);
+    public void tryToPass() {
+        assertGameHasAlreadyStarted();
+        currentState.getState().tryToPass(this);
+        setCurrentState(StateEnum.BEGINNING_OF_THE_TURN);
+        swapCurrentPlayer();
+    }
+
+    private void assertGameHasAlreadyStarted() {
+        if (chessBoard == null) throw new IllegalStateException("Game has not started yet!");
+    }
+
+    private void swapCurrentPlayer() {
+        if (getCurrentPlayer() == getWhite()) setCurrentPlayer(getBlack());
+        else if (getCurrentPlayer() == getBlack()) setCurrentPlayer(getWhite());
+        else throw new IllegalStateException("Who's turn?");
     }
 
     @Override

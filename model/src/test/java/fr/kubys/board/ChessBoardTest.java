@@ -3,6 +3,7 @@ package fr.kubys.board;
 import fr.kubys.board.ChessBoard;
 import fr.kubys.core.Color;
 import fr.kubys.piece.*;
+import fr.kubys.piece.extra.BlackHole;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
@@ -20,21 +21,21 @@ class ChessBoardTest {
     @Test
     void play_a_sicilian_game() {
         ChessBoard cb = ChessBoard.createWithInitialState();
-        assertTrue(cb.tryToMove(e2, e4));
-        assertTrue(cb.tryToMove(c7, c5));
-        assertTrue(cb.tryToMove(g1, f3));
-        assertTrue(cb.tryToMove(d7, d6));
-        assertTrue(cb.tryToMove(d2, d4));
-        assertTrue(cb.tryToMove(c5, d4));
-        assertTrue(cb.tryToMove(f3, d4));
-        assertTrue(cb.tryToMove(g8, f6));
-        assertTrue(cb.tryToMove(c1, e3));
-        assertTrue(cb.tryToMove(g7, g6));
-        assertTrue(cb.tryToMove(b1, c3));
-        assertTrue(cb.tryToMove(f8, g7));
-        assertTrue(cb.tryToMove(d1, d2));
-        assertTrue(cb.tryToMove(e8, g8));
-        assertTrue(cb.tryToMove(e1, c1));
+        assertDoesNotThrow(() -> cb.tryToMove(e2, e4));
+        assertDoesNotThrow(() -> cb.tryToMove(c7, c5));
+        assertDoesNotThrow(() -> cb.tryToMove(g1, f3));
+        assertDoesNotThrow(() -> cb.tryToMove(d7, d6));
+        assertDoesNotThrow(() -> cb.tryToMove(d2, d4));
+        assertDoesNotThrow(() -> cb.tryToMove(c5, d4));
+        assertDoesNotThrow(() -> cb.tryToMove(f3, d4));
+        assertDoesNotThrow(() -> cb.tryToMove(g8, f6));
+        assertDoesNotThrow(() -> cb.tryToMove(c1, e3));
+        assertDoesNotThrow(() -> cb.tryToMove(g7, g6));
+        assertDoesNotThrow(() -> cb.tryToMove(b1, c3));
+        assertDoesNotThrow(() -> cb.tryToMove(f8, g7));
+        assertDoesNotThrow(() -> cb.tryToMove(d1, d2));
+        assertDoesNotThrow(() -> cb.tryToMove(e8, g8));
+        assertDoesNotThrow(() -> cb.tryToMove(e1, c1));
 
         assertTrue(cb.at(e4).getPiece().get() instanceof WhitePawn);
         assertTrue(cb.at(e8).getPiece().isEmpty());
@@ -138,7 +139,7 @@ class ChessBoardTest {
             assertEquals(bishop, chessBoard.at(a1).getPiece().get());
             assertTrue(chessBoard.at(h8).getPiece().isEmpty());
 
-            assertTrue(chessBoard.tryToMove(bishop, h8));
+            assertDoesNotThrow(() -> chessBoard.tryToMove(bishop, h8));
 
             assertTrue(chessBoard.at(a1).getPiece().isEmpty());
             assertEquals(bishop, chessBoard.at(h8).getPiece().get());
@@ -150,7 +151,7 @@ class ChessBoardTest {
             Piece knight = chessBoard.at(g1).getPiece().get();
             assertTrue(chessBoard.at(f3).getPiece().isEmpty());
 
-            assertTrue(chessBoard.tryToMove(chessBoard.at(g1).getPiece().get(), f3));
+            assertDoesNotThrow(() -> chessBoard.tryToMove(chessBoard.at(g1).getPiece().get(), f3));
 
             assertTrue(chessBoard.at(g1).getPiece().isEmpty());
             assertEquals(knight, chessBoard.at(f3).getPiece().get());
@@ -178,7 +179,7 @@ class ChessBoardTest {
             assertEquals(bishop, chessBoard.at(a1).getPiece().get());
             assertEquals(queen, chessBoard.at(h8).getPiece().get());
 
-            assertTrue(chessBoard.tryToMove(bishop, h8));
+            assertDoesNotThrow(() -> chessBoard.tryToMove(bishop, h8));
 
             assertTrue(chessBoard.at(a1).getPiece().isEmpty());
             assertEquals(bishop, chessBoard.at(h8).getPiece().get());
@@ -198,7 +199,7 @@ class ChessBoardTest {
             chessBoard.add(new Queen(Color.WHITE), h8);
 
             assertFalse(chessBoard.isEnemyOrEmpty(bishop, h8));
-            assertFalse(chessBoard.tryToMove(bishop, h8));
+            assertThrows(IllegalMoveException.class, () -> chessBoard.tryToMove(bishop, h8));
         }
 
         @Test
@@ -209,7 +210,7 @@ class ChessBoardTest {
             chessBoard.add(new Queen(Color.BLACK), h8);
 
             assertTrue(chessBoard.isEnemyOrEmpty(bishop, h8));
-            assertTrue(chessBoard.tryToMove(bishop, h8));
+            assertDoesNotThrow(() -> chessBoard.tryToMove(bishop, h8));
         }
 
         @Test

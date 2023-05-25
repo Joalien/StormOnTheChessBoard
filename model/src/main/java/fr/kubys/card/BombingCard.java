@@ -41,8 +41,7 @@ public class BombingCard extends Card {
     }
 
     @Override
-    protected boolean doAction(ChessBoard chessBoard) {
+    protected void doAction(ChessBoard chessBoard) {
         chessBoard.addEffect(new BombingEffect(position, isPlayedBy));
-        return true;
     }
 }

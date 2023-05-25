@@ -36,7 +36,7 @@ class MagnetismCardTest {
     class Success {
         @Test
         void should_add_effect_magnetism_on_pawn_c2() {
-            assertTrue(magnetismCard.playOn(chessBoard, List.of(piece)));
+            assertDoesNotThrow(() -> magnetismCard.playOn(chessBoard, List.of(piece)));
             assertEquals(1, chessBoard.getEffects().size());
         }
     }

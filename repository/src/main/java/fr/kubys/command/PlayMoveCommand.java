@@ -12,12 +12,8 @@ public class PlayMoveCommand extends Command {
     Position to;
 
     @Override
-    public boolean execute(ChessBoardWriteService chessBoardWriteService) {
-        try {
-            return chessBoardWriteService.tryToMove(from, to);
-        } catch (Exception e) {
-            return false;
-        }
+    public void execute(ChessBoardWriteService chessBoardWriteService) {
+        chessBoardWriteService.tryToMove(from, to);
     }
 
     @Override

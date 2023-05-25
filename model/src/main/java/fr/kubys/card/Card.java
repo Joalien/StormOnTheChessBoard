@@ -25,13 +25,13 @@ public abstract class Card {
         this.type = type;
     }
 
-    public final boolean playOn(ChessBoard chessBoard, List<?> params) {
+    public final void playOn(ChessBoard chessBoard, List<?> params) {
         setupParams(params);
         validInput(chessBoard);
 
         if (!doesNotCreateCheck(chessBoard)) throw new CheckException();
         log.info("{} card is played!", this.name);
-        return doAction(chessBoard);
+        doAction(chessBoard);
     }
 
     protected abstract void setupParams(List<?> params);
@@ -40,7 +40,7 @@ public abstract class Card {
 
     protected abstract boolean doesNotCreateCheck(ChessBoard chessBoard);
 
-    protected abstract boolean doAction(ChessBoard chessBoard);
+    protected abstract void doAction(ChessBoard chessBoard);
 
 
     @Override

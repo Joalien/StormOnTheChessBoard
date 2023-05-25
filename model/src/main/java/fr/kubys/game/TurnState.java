@@ -7,9 +7,9 @@ import java.util.List;
 
 public interface TurnState {
 
-    boolean tryToMove(GameStateController gameStateController, Position from, Position to);
+    void tryToMove(GameStateController gameStateController, Position from, Position to);
 
-    boolean tryToPlayCard(GameStateController gameStateController, Card card, List<?> params);
+    void tryToPlayCard(GameStateController gameStateController, Card card, List<?> params);
 
-    boolean tryToPass(GameStateController gameStateController);
+    void tryToPass(GameStateController gameStateController);
 }

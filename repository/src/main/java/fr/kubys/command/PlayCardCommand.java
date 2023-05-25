@@ -15,9 +15,9 @@ public class PlayCardCommand extends Command {
     List<?> parameters;
 
     @Override
-    public boolean execute(ChessBoardWriteService chessBoardWriteService) {
+    public void execute(ChessBoardWriteService chessBoardWriteService) {
         try {
-            return chessBoardWriteService.tryToPlayCard((Card) Class.forName(cardName).getConstructor().newInstance(), parameters);
+            chessBoardWriteService.tryToPlayCard((Card) Class.forName(cardName).getConstructor().newInstance(), parameters);
         } catch (ClassNotFoundException | InvocationTargetException | InstantiationException | IllegalAccessException |
                  NoSuchMethodException e) {
             throw new RuntimeException(e);

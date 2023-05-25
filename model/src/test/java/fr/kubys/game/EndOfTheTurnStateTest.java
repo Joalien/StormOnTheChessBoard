@@ -24,12 +24,13 @@ class EndOfTheTurnStateTest {
         gameStateController.startGame();
         gameStateController.setCurrentState(StateEnum.END_OF_THE_TURN);
         card = new QuadrilleCard();
+        gameStateController.getCurrentPlayer().getCards().add(card);
     }
 
     @Test
     void should_go_to_end_of_the_turn() {
         assertEquals(gameStateController.getWhite(), gameStateController.getCurrentPlayer());
-        assertTrue(gameStateController.tryToPass());
+        assertDoesNotThrow(() -> gameStateController.tryToPass());
 
         assertEquals(StateEnum.BEGINNING_OF_THE_TURN, gameStateController.getCurrentState());
         assertEquals(gameStateController.getBlack(), gameStateController.getCurrentPlayer());
@@ -39,7 +40,7 @@ class EndOfTheTurnStateTest {
     void should_change_color() {
         gameStateController.setCurrentPlayer(gameStateController.getBlack());
 
-        assertTrue(gameStateController.tryToPass());
+        assertDoesNotThrow(() -> gameStateController.tryToPass());
 
         assertEquals(StateEnum.BEGINNING_OF_THE_TURN, gameStateController.getCurrentState());
         assertEquals(gameStateController.getWhite(), gameStateController.getCurrentPlayer());

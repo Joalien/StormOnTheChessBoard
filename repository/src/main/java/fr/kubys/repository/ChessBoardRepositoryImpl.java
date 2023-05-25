@@ -16,14 +16,13 @@ public class ChessBoardRepositoryImpl implements ChessBoardRepository {
     private final Map<Integer, List<Command>> store = new HashMap<>();
 
     @Override
-    public boolean saveCommand(Command cbs) {
-        ChessBoardWriteService chessBoardWriteService = computeChessBoard(cbs.getGameId());
+    public void saveCommand(Command command) {
+        ChessBoardWriteService chessBoardWriteService = computeChessBoard(command.getGameId());
 
-        if (cbs.execute(chessBoardWriteService)) {
-            store.putIfAbsent(cbs.getGameId(), new LinkedList<>());
-            log.info("{} has been played on chessboard {}", cbs, cbs.getGameId());
-            return store.get(cbs.getGameId()).add(cbs);
-        } else return false;
+        command.execute(chessBoardWriteService);
+        store.putIfAbsent(command.getGameId(), new LinkedList<>());
+        log.info("{} has been played on chessboard {}", command, command.getGameId());
+        store.get(command.getGameId()).add(command);
     }
 
     @Override
@@ -34,7 +33,7 @@ public class ChessBoardRepositoryImpl implements ChessBoardRepository {
     }
 
     @Override
-    public boolean undoLastCommand(Integer gameId) {
+    public void undoLastCommand(Integer gameId) {
         throw new UnsupportedOperationException("Not implemented yet but easy to do ;)");
     }
 

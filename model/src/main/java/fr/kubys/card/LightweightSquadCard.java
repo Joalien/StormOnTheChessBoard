@@ -53,10 +53,9 @@ public class LightweightSquadCard extends Card {
     }
 
     @Override
-    protected boolean doAction(ChessBoard chessBoard) {
+    protected void doAction(ChessBoard chessBoard) {
         chessBoard.move(pawn1, pawn1.twoSquaresForward().get());
         chessBoard.move(pawn2, pawn2.twoSquaresForward().get());
-        return true;
     }
 
     private boolean cannotMoveTwoSquaresForward(ChessBoard cb, Pawn pawn) {

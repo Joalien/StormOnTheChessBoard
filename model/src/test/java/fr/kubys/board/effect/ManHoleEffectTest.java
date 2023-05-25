@@ -1,14 +1,15 @@
 package fr.kubys.board.effect;
 
+import fr.kubys.board.CheckException;
 import fr.kubys.board.ChessBoard;
+import fr.kubys.board.IllegalMoveException;
 import fr.kubys.board.effect.ManHoleEffect;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import fr.kubys.piece.Piece;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static fr.kubys.core.Position.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 class ManHoleEffectTest {
 
@@ -44,7 +45,7 @@ class ManHoleEffectTest {
         chessBoard.addEffect(manHoleEffect);
 
         assertTrue(chessBoard.canMove(chessBoard.at(c2).getPiece().get(), e6));
-        assertTrue(chessBoard.tryToMove(chessBoard.at(c2).getPiece().get(), e6));
+        assertDoesNotThrow(() -> chessBoard.tryToMove(chessBoard.at(c2).getPiece().get(), e6));
         assertTrue(chessBoard.getOutOfTheBoardPieces().contains(piece));
     }
 
@@ -53,13 +54,13 @@ class ManHoleEffectTest {
         manHoleEffect = new ManHoleEffect(c2, e6);
         chessBoard.removePieceFromTheBoard(chessBoard.at(e7).getPiece().get());
         Piece blackKing = chessBoard.at(e8).getPiece().get();
-        assertTrue(chessBoard.tryToMove(blackKing, e7));
+        assertDoesNotThrow(() -> chessBoard.tryToMove(blackKing, e7));
         assertTrue(chessBoard.canMove(blackKing, e6));
 
         chessBoard.addEffect(manHoleEffect);
 
-        assertFalse(chessBoard.canMove(blackKing, e6));
-        assertFalse(chessBoard.tryToMove(blackKing, e6));
+        assertThrows(CheckException.class, () -> chessBoard.canMove(blackKing, e6));
+        assertThrows(CheckException.class, () -> chessBoard.tryToMove(blackKing, e6));
     }
 
     @Test
@@ -67,12 +68,12 @@ class ManHoleEffectTest {
         manHoleEffect = new ManHoleEffect(e4, e6);
         chessBoard.removePieceFromTheBoard(chessBoard.at(e7).getPiece().get());
         Piece blackKing = chessBoard.at(e8).getPiece().get();
-        assertTrue(chessBoard.tryToMove(blackKing, e7));
+        assertDoesNotThrow(() -> chessBoard.tryToMove(blackKing, e7));
         assertTrue(chessBoard.canMove(blackKing, e6));
 
         chessBoard.addEffect(manHoleEffect);
 
-        assertTrue(chessBoard.tryToMove(blackKing, e6));
-        assertTrue(chessBoard.tryToMove(blackKing, e4));
+        assertDoesNotThrow(() -> chessBoard.tryToMove(blackKing, e6));
+        assertDoesNotThrow(() -> chessBoard.tryToMove(blackKing, e4));
     }
 }

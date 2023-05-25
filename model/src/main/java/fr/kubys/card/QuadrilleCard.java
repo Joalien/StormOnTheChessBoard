@@ -43,11 +43,10 @@ public class QuadrilleCard extends Card {
     }
 
     @Override
-    protected boolean doAction(ChessBoard chessBoard) {
+    protected void doAction(ChessBoard chessBoard) {
         Map<Position, Optional<Piece>> pieces = saveWhichPieceShouldGoInWhichCorner(chessBoard);
         removeCornersFromTheBoard(chessBoard);
         addPiecesInCorner(chessBoard, pieces);
-        return true;
     }
 
     private static void removeCornersFromTheBoard(ChessBoard chessBoard) {

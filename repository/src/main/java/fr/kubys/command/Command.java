@@ -14,5 +14,5 @@ public abstract class Command {
     @Builder.Default
     protected Instant instant = Instant.now();
 
-    public abstract boolean execute(ChessBoardWriteService chessBoardWriteService);
+    public abstract void execute(ChessBoardWriteService chessBoardWriteService);
 }

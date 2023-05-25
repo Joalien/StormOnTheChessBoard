@@ -36,7 +36,7 @@ class ReflectedBishopCardTest {
     class Success {
         @Test
         void should_bounce_once() {
-            assertTrue(reflectedBishop.playOn(chessBoard, List.of(bishop, f7)));
+            assertDoesNotThrow(() -> reflectedBishop.playOn(chessBoard, List.of(bishop, f7)));
 
             assertEquals(bishop, chessBoard.at(f7).getPiece().get());
             assertTrue(chessBoard.at(e2).getPiece().isEmpty());
@@ -45,7 +45,7 @@ class ReflectedBishopCardTest {
         @Test
         void should_bounce_three_times() {
             chessBoard.add(new WhitePawn(), f3);
-            assertTrue(reflectedBishop.playOn(chessBoard, List.of(bishop, f7)));
+            assertDoesNotThrow(() -> reflectedBishop.playOn(chessBoard, List.of(bishop, f7)));
 
             assertEquals(bishop, chessBoard.at(f7).getPiece().get());
             assertTrue(chessBoard.at(e2).getPiece().isEmpty());
@@ -57,7 +57,7 @@ class ReflectedBishopCardTest {
             chessBoard.add(new WhitePawn(), f3);
             chessBoard.add(new WhitePawn(), f5);
             reflectedBishop = new ReflectedBishopCard();
-            assertTrue(reflectedBishop.playOn(chessBoard, List.of(bishop, g4)));
+            assertDoesNotThrow(() -> reflectedBishop.playOn(chessBoard, List.of(bishop, g4)));
 
             assertEquals(bishop, chessBoard.at(g4).getPiece().get());
             assertTrue(chessBoard.at(e2).getPiece().isEmpty());
@@ -68,7 +68,7 @@ class ReflectedBishopCardTest {
             chessBoard.add(new King(Color.WHITE), h2);
             chessBoard.add(new Rock(Color.BLACK), a2);
 
-            assertTrue(new ReflectedBishopCard().playOn(chessBoard, List.of(bishop, g2)));
+            assertDoesNotThrow(() -> new ReflectedBishopCard().playOn(chessBoard, List.of(bishop, g2)));
 
             assertEquals(bishop, chessBoard.at(g2).getPiece().get());
         }
