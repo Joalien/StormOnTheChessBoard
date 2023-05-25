@@ -61,4 +61,9 @@ public enum Position {
         return getRow().distanceTo(position.getRow()) <= 1 &&
                 getFile().distanceTo(position.getFile()) <= 1;
     }
+
+    @Override
+    public String toString() {
+        return this.name();
+    }
 }

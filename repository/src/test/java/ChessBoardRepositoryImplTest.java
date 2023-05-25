@@ -4,6 +4,8 @@ import command.PlayMoveCommand;
 import command.StartGameCommand;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import repository.ChessBoardRepository;
+import repository.ChessBoardRepositoryImpl;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static core.Position.*;

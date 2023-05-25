@@ -1,4 +1,4 @@
-package dto;
+package fr.kubys.StormOnTheChessBoard.dto;
 
 import lombok.Builder;
 import lombok.Getter;

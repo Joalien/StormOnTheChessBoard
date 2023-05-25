@@ -1,19 +1,18 @@
-package dto;
+package fr.kubys.StormOnTheChessBoard.dto;
 
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import core.Color;
 import core.Position;
+
+import java.util.Set;
 
 @Getter
 @Setter
 @Builder
 @ToString
-public class PieceDto {
+public class EffectDto {
     private String name;
-    private Color color;
-    private Position position;
-
+    private Set<Position> positions;
 }

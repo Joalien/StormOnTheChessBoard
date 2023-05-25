@@ -1,18 +1,17 @@
-package dto;
+package fr.kubys.StormOnTheChessBoard.dto;
 
+import card.CardType;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import core.Position;
-
-import java.util.Set;
 
 @Getter
 @Setter
 @Builder
 @ToString
-public class EffectDto {
+public class CardOutputDto {
     private String name;
-    private Set<Position> positions;
+    private String description;
+    private CardType type;
 }

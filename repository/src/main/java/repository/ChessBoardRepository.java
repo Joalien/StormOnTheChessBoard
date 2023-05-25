@@ -1,3 +1,5 @@
+package repository;
+
 import api.ChessBoardReadService;
 import command.Command;
 
