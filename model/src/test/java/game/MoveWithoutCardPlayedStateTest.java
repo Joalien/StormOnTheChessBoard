@@ -40,7 +40,7 @@ class MoveWithoutCardPlayedStateTest {
     void should_be_able_to_pass() {
         assertTrue(gameStateController.tryToPass());
 
-        assertEquals(StateEnum.END_OF_THE_TURN, gameStateController.getCurrentState());
+        assertEquals(StateEnum.BEGINNING_OF_THE_TURN, gameStateController.getCurrentState());
     }
 
     @Nested

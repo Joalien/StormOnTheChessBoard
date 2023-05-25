@@ -11,4 +11,9 @@ public class StartGameCommand extends Command {
     public boolean execute(ChessBoardWriteService chessBoardWriteService) {
         return chessBoardWriteService.startGame();
     }
+
+    @Override
+    public String toString() {
+        return "StartGameCommand";
+    }
 }

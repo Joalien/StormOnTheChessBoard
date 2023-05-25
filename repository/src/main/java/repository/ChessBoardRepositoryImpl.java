@@ -5,19 +5,22 @@ import api.ChessBoardService;
 import game.ChessBoardServiceFactory;
 import api.ChessBoardWriteService;
 import command.Command;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.*;
 
+@Slf4j
 public class ChessBoardRepositoryImpl implements ChessBoardRepository {
     private final Map<Integer, List<Command>> store = new HashMap<>();
 
     @Override
-    public boolean saveCommand(Integer gameId, Command cbs) {
-        ChessBoardWriteService chessBoardWriteService = computeChessBoard(gameId);
+    public boolean saveCommand(Command cbs) {
+        ChessBoardWriteService chessBoardWriteService = computeChessBoard(cbs.getGameId());
 
         if (cbs.execute(chessBoardWriteService)) {
-            store.putIfAbsent(gameId, new LinkedList<>());
-            return store.get(gameId).add(cbs);
+            store.putIfAbsent(cbs.getGameId(), new LinkedList<>());
+            log.info("{} has been played on chessboard {}", cbs, cbs.getGameId());
+            return store.get(cbs.getGameId()).add(cbs);
         } else return false;
     }
 

@@ -19,4 +19,9 @@ public class PlayMoveCommand extends Command {
             return false;
         }
     }
+
+    @Override
+    public String toString() {
+        return "from %s to %s".formatted(from, to);
+    }
 }

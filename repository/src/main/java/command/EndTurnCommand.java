@@ -12,4 +12,6 @@ public class EndTurnCommand extends Command {
     public boolean execute(ChessBoardWriteService chessBoardWriteService) {
         return chessBoardWriteService.tryToPass();
     }
+
+
 }

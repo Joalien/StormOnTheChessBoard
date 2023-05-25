@@ -23,7 +23,7 @@ public class MoveWithoutCardPlayedState implements TurnState {
 
     @Override
     public boolean tryToPass(GameStateController gameStateController) {
-        gameStateController.setCurrentState(StateEnum.END_OF_THE_TURN);
+        gameStateController.setCurrentState(StateEnum.BEGINNING_OF_THE_TURN);
         return true;
     }
 }

@@ -3,10 +3,15 @@ package fr.kubys.StormOnTheChessBoard.controller;
 import api.ChessBoardReadService;
 import board.effect.Effect;
 import card.Card;
+import command.EndTurnCommand;
 import command.PlayMoveCommand;
 import command.StartGameCommand;
 import core.Color;
-import fr.kubys.StormOnTheChessBoard.dto.*;
+import core.Position;
+import fr.kubys.StormOnTheChessBoard.dto.CardOutputDto;
+import fr.kubys.StormOnTheChessBoard.dto.ChessBoardDto;
+import fr.kubys.StormOnTheChessBoard.dto.EffectDto;
+import fr.kubys.StormOnTheChessBoard.dto.PlayerDto;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -16,14 +21,17 @@ import player.Player;
 import repository.ChessBoardRepository;
 import repository.ChessBoardRepositoryImpl;
 
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
-import static core.Position.e2;
-import static core.Position.e4;
+import static core.Position.*;
 
 @RestController
 public class GameController {
 
+    public static final Integer GAME_ID = 1;
     ChessBoardRepository chessBoardRepository;
 
     @GetMapping("/chessboard/{id}")
@@ -35,15 +43,27 @@ public class GameController {
     public GameController() {
         this.chessBoardRepository = new ChessBoardRepositoryImpl();
 
-        Integer gameId = 1;
-        chessBoardRepository.saveCommand(gameId, StartGameCommand.builder().gameId(gameId).build());
-        System.out.println(mapToDto(gameId, chessBoardRepository.getChessBoardService(gameId)).toString());
+        chessBoardRepository.saveCommand(StartGameCommand.builder().gameId(GAME_ID).build());
 
-        chessBoardRepository.saveCommand(gameId, PlayMoveCommand.builder()
-                .gameId(gameId)
-                .from(e2)
-                .to(e4).build());
-        System.out.println(mapToDto(gameId, chessBoardRepository.getChessBoardService(gameId)).toString());
+        List.of(List.of(e2, e4),
+            List.of(c7, c5),
+            List.of(g1, f3),
+            List.of(d7, d6),
+            List.of(d2, d4),
+            List.of(c5, d4),
+            List.of(f3, d4),
+            List.of(g8, f6),
+            List.of(c1, e3),
+            List.of(g7, g6)
+        ).forEach(this::saveCommand);
+    }
+
+    private void saveCommand(List<Position> m) {
+        chessBoardRepository.saveCommand(PlayMoveCommand.builder()
+                .gameId(GAME_ID)
+                .from(m.get(0))
+                .to(m.get(1)).build());
+        chessBoardRepository.saveCommand(EndTurnCommand.builder().gameId(GAME_ID).build());
     }
 
     static ChessBoardDto mapToDto(Integer gameId, ChessBoardReadService chessBoard) {
