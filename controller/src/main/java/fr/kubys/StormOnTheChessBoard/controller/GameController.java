@@ -13,6 +13,7 @@ import fr.kubys.StormOnTheChessBoard.dto.ChessBoardDto;
 import fr.kubys.StormOnTheChessBoard.dto.EffectDto;
 import fr.kubys.StormOnTheChessBoard.dto.PlayerDto;
 import fr.kubys.piece.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -22,6 +23,8 @@ import fr.kubys.repository.ChessBoardRepository;
 import fr.kubys.repository.ChessBoardRepositoryImpl;
 
 import java.util.List;
+import java.util.Map;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import static fr.kubys.core.Position.*;
@@ -30,6 +33,7 @@ import static fr.kubys.core.Position.*;
 public class GameController {
 
     public static final Integer GAME_ID = 1;
+
     ChessBoardRepository chessBoardRepository;
 
     @GetMapping("/chessboard/{id}")
@@ -38,9 +42,8 @@ public class GameController {
         return mapToDto(id, chessBoardRepository.getChessBoardService(id));
     }
 
-    public GameController() {
-        this.chessBoardRepository = new ChessBoardRepositoryImpl();
-
+    @Autowired
+    public GameController(ChessBoardRepository chessBoardRepository) {
         chessBoardRepository.saveCommand(StartGameCommand.builder().gameId(GAME_ID).build());
 
         List.of(List.of(e2, e4),
@@ -96,16 +99,19 @@ public class GameController {
                 .build();
     }
 
-    static String map(Piece p) {
-        String pieceType = switch (p) {
-            case Pawn pawn -> "P";
-            case King k -> "K";
-            case Queen q -> "Q";
-            case Knight knight -> "N";
-            case Bishop b -> "B";
-            case Rock r -> "R";
-            default -> "?";
-        };
-        return (p.getColor() == Color.WHITE? "w" : "b") + pieceType;
+    static String map(Piece piece) {
+        String pieceType = Map.<Predicate<Piece>, String>of(
+                p -> p instanceof Pawn, "P",
+                p -> p instanceof King, "K",
+                p -> p instanceof Queen, "Q",
+                p -> p instanceof Knight, "N",
+                p -> p instanceof Bishop, "B",
+                p -> p instanceof Rock, "R"
+        ).entrySet().stream()
+                .filter(objectStringEntry -> objectStringEntry.getKey().test(piece))
+                .findAny()
+                .map(Map.Entry::getValue)
+                .orElseThrow();
+        return (piece.getColor() == Color.WHITE? "w" : "b") + pieceType;
     }
 }

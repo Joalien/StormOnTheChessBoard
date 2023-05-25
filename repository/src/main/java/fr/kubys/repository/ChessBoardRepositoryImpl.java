@@ -6,10 +6,12 @@ import fr.kubys.command.Command;
 import fr.kubys.game.ChessBoardServiceFactory;
 import fr.kubys.api.ChessBoardWriteService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Repository;
 
 import java.util.*;
 
 @Slf4j
+@Repository
 public class ChessBoardRepositoryImpl implements ChessBoardRepository {
     private final Map<Integer, List<Command>> store = new HashMap<>();
 
