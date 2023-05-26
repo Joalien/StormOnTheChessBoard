@@ -10,8 +10,16 @@ It uses the Command Query Responsibility Segregation aka. CQRS principle.
 It is deliberately over-engineering and not opportune, but it provides an easy way to undo moves.
 
 ## Model
-graph TD;
-A-->B;
-A-->C;
-B-->D;
-C-->D;
+Dependency graph of package
+```mermaid
+graph TD
+
+GAME-->API
+GAME-->PLAYER
+GAME-->BOARD
+GAME-->CARD
+PLAYER-->CARD
+CARD-->BOARD
+BOARD-->PIECE
+PIECE-->CORE 
+```
