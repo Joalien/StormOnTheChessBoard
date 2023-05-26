@@ -45,7 +45,8 @@ public class GameController {
                 List.of(f8, g7),
                 List.of(d1, d2),
                 List.of(e8, g8),
-                List.of(e1, c1)
+                List.of(e1, c1),
+                List.of(a7, a6)
         ).forEach(m -> saveCommand(m, gameId));
     }
 
