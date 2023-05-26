@@ -11,9 +11,7 @@ import fr.kubys.player.Player;
 //import org.slf4j.Logger;
 
 import java.util.*;
-import java.util.stream.Collectors;
 import java.util.stream.IntStream;
-import java.util.stream.Stream;
 
 public class GameStateController implements ChessBoardService {
 
@@ -115,9 +113,7 @@ public class GameStateController implements ChessBoardService {
 
     @Override
     public Set<Piece> getPieces() {
-        return Stream.of(chessBoard.allyPieces(Color.WHITE).stream(), chessBoard.allyPieces(Color.BLACK).stream())
-                .flatMap(x -> x)
-                .collect(Collectors.toSet());
+        return chessBoard.getPieces();
     }
 
     @Override

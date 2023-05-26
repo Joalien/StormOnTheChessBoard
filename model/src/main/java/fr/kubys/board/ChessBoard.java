@@ -10,6 +10,7 @@ import fr.kubys.piece.*;
 
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class ChessBoard {
 
@@ -246,27 +247,26 @@ public class ChessBoard {
                 .anyMatch(enemyPiece -> canAttack(enemyPiece, king.getPosition()));
     }
 
-    public Set<Piece> allyPieces(Color allyColor) {
-        Map<Position, Square> allyPieces = new HashMap<>();
-        allyPieces.putAll(board);
-        allyPieces.putAll(fakeSquares);
-        return allyPieces.values().stream()
+    public Set<Piece> getPieces() {
+        Map<Position, Square> pieces = new HashMap<>();
+        pieces.putAll(board);
+        pieces.putAll(fakeSquares);
+        return pieces.values().stream()
                 .map(Square::getPiece)
                 .filter(Optional::isPresent)
                 .map(Optional::get)
+                .collect(Collectors.toSet());
+    }
+
+    public Set<Piece> allyPieces(Color allyColor) {
+        return getPieces().stream()
                 .filter(p -> p.getColor() == allyColor)
                 .collect(Collectors.toSet());
     }
 
     public Set<Piece> enemyPieces(Color allyColor) {
-        Map<Position, Square> enemyPieces = new HashMap<>();
-        enemyPieces.putAll(board);
-        enemyPieces.putAll(fakeSquares);
-        return enemyPieces.values().stream()
-                .map(Square::getPiece)
-                .filter(Optional::isPresent)
-                .map(Optional::get)
-                .filter(p -> p.getColor() != allyColor)
+        return getPieces().stream()
+                .filter(p -> p.getColor() == allyColor.opposite())
                 .collect(Collectors.toSet());
     }
 
