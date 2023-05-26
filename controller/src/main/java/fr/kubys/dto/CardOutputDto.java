@@ -1,4 +1,4 @@
-package fr.kubys.StormOnTheChessBoard.dto;
+package fr.kubys.dto;
 
 import fr.kubys.card.CardType;
 import lombok.Builder;

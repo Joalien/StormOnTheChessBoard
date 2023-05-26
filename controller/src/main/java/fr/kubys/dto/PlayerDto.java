@@ -1,4 +1,4 @@
-package fr.kubys.StormOnTheChessBoard.dto;
+package fr.kubys.dto;
 
 import fr.kubys.core.Color;
 import lombok.Builder;

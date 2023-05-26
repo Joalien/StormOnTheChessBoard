@@ -1,6 +1,5 @@
-package fr.kubys.StormOnTheChessBoard.dto;
+package fr.kubys.dto;
 
-import fr.kubys.core.Position;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -16,7 +15,7 @@ import java.util.Set;
 public class ChessBoardDto {
     private Integer id;
     private Set<EffectDto> effects;
-    private Map<Position, String> pieces;
+    private Map<String, String> pieces;
     private PlayerDto whitePlayer;
     private PlayerDto blackPlayer;
     private Set<CardOutputDto> deck;
