@@ -6,13 +6,13 @@ import fr.kubys.core.File;
 import fr.kubys.core.Position;
 import fr.kubys.core.Row;
 import fr.kubys.piece.*;
-
+//import org.slf4j.Logger;
 
 import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class ChessBoard {
+//    private static final Logger log = org.slf4j.LoggerFactory.getLogger(BombingEffect.class);
 
     private final HashMap<Position, Square> board = new HashMap<>(64);
     private final HashMap<Position, Square> fakeSquares = new HashMap<>();

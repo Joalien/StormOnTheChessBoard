@@ -29,7 +29,7 @@ public class ArchitectureIT {
     }
 
     private static String[] getDependencyPackages(String itself, Set<String> dependencies) {
-        Stream<String> languageDependencies = Stream.of("java.lang..", "java.util..", "org.junit..", "org.slf4j..");
+        Stream<String> languageDependencies = Stream.of("java.lang..", "java.util..", "org.junit..");
         return Stream.of(
                         languageDependencies,
                         Stream.of(itself),
