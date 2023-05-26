@@ -7,7 +7,7 @@ import fr.kubys.game.exception.CardAlreadyPlayedException;
 
 import java.util.List;
 
-public class EndOfTheTurnState implements TurnState {
+public final class EndOfTheTurnState implements TurnState {
     @Override
     public void tryToMove(GameStateController gameStateController, Position from, Position to) {
         throw new AlreadyMovedException();

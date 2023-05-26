@@ -5,7 +5,7 @@ import fr.kubys.core.Position;
 
 import java.util.List;
 
-public class BeginningOfTheTurnState implements TurnState {
+public final class BeginningOfTheTurnState implements TurnState {
     @Override
     public void tryToMove(GameStateController gameStateController, Position from, Position to) {
         gameStateController.getChessBoard().tryToMove(from, to);

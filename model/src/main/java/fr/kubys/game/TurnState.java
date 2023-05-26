@@ -5,7 +5,7 @@ import fr.kubys.core.Position;
 
 import java.util.List;
 
-public interface TurnState {
+public sealed interface TurnState permits BeforeMoveCardPlayedState, BeginningOfTheTurnState, EndOfTheTurnState, MoveWithoutCardPlayedState {
 
     void tryToMove(GameStateController gameStateController, Position from, Position to);
 

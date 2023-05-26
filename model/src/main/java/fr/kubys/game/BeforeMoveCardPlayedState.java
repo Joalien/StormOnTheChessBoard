@@ -6,7 +6,7 @@ import fr.kubys.game.exception.CardAlreadyPlayedException;
 
 import java.util.List;
 
-public class BeforeMoveCardPlayedState implements TurnState {
+public final class BeforeMoveCardPlayedState implements TurnState {
     @Override
     public void tryToMove(GameStateController gameStateController, Position from, Position to) {
         gameStateController.getChessBoard().tryToMove(from, to);
