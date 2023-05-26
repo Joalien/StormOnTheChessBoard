@@ -4,6 +4,7 @@ import fr.kubys.api.ChessBoardReadService;
 import fr.kubys.api.ChessBoardService;
 import fr.kubys.api.ChessBoardWriteService;
 import fr.kubys.command.Command;
+import fr.kubys.command.StartGameCommand;
 import fr.kubys.game.ChessBoardServiceFactory;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
@@ -14,6 +15,16 @@ import java.util.*;
 @Repository
 public class ChessBoardRepositoryImpl implements ChessBoardRepository {
     private final Map<Integer, List<Command>> store = new HashMap<>();
+
+    @Override
+    public Integer createGame() {
+        Integer nextGameId = store.keySet().stream()
+                .mapToInt(value -> value)
+                .max()
+                .orElse(0) + 1;
+        saveCommand(StartGameCommand.builder().gameId(nextGameId).build());
+        return nextGameId;
+    }
 
     @Override
     public void saveCommand(Command command) {

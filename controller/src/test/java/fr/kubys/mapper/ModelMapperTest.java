@@ -1,4 +1,4 @@
-package fr.kubys.controller;
+package fr.kubys.mapper;
 
 import fr.kubys.mapper.ModelMapper;
 import fr.kubys.core.Color;

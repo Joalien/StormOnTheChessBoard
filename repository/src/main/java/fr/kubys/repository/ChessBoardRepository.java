@@ -4,6 +4,9 @@ import fr.kubys.api.ChessBoardReadService;
 import fr.kubys.command.Command;
 
 public interface ChessBoardRepository {
+
+    Integer createGame();
+
     void saveCommand(Command cbs);
 
     ChessBoardReadService getChessBoardService(Integer gameId);
