@@ -1,9 +1,9 @@
 package fr.kubys.card;
 
 import fr.kubys.board.ChessBoard;
+import fr.kubys.core.Position;
 import fr.kubys.piece.Knight;
 import fr.kubys.piece.extra.Kangaroo;
-import fr.kubys.core.Position;
 
 import java.util.List;
 

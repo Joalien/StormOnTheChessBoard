@@ -1,16 +1,15 @@
 package fr.kubys.board;
 
-import fr.kubys.board.ChessBoard;
 import fr.kubys.core.Color;
-import org.junit.jupiter.api.Test;
 import fr.kubys.core.Position;
 import fr.kubys.piece.Knight;
+import org.junit.jupiter.api.Test;
 
 import java.util.Set;
 
+import static fr.kubys.core.Position.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static fr.kubys.core.Position.*;
 
 public class KnightIT {
 

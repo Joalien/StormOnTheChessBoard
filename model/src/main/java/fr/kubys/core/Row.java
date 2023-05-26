@@ -1,11 +1,10 @@
 package fr.kubys.core;
 
-import lombok.Getter;
+
 
 import java.util.Arrays;
 import java.util.Optional;
 
-@Getter
 public enum Row implements Comparable<Row> {
     One(1, "1"),
     Two(2, "2"),
@@ -49,5 +48,13 @@ public enum Row implements Comparable<Row> {
 
     public boolean isBefore(Row row) {
         return this.compareTo(row) < 0;
+    }
+
+    public Integer getRowNumber() {
+        return this.rowNumber;
+    }
+
+    public String getRowName() {
+        return this.rowName;
     }
 }

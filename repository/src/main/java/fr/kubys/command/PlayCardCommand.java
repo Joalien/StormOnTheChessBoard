@@ -23,4 +23,9 @@ public class PlayCardCommand extends Command {
             throw new RuntimeException(e);
         }
     }
+
+    @Override
+    public String toString() {
+        return "Play card %s with parameters %s".formatted(cardName, parameters);
+    }
 }

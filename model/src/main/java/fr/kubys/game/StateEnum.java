@@ -1,8 +1,5 @@
 package fr.kubys.game;
 
-import lombok.Getter;
-
-@Getter
 public enum StateEnum {
     BEGINNING_OF_THE_TURN(new BeginningOfTheTurnState()),
     BEFORE_MOVE(new BeforeMoveCardPlayedState()),
@@ -13,5 +10,9 @@ public enum StateEnum {
 
     StateEnum(TurnState state) {
         this.state = state;
+    }
+
+    public TurnState getState() {
+        return this.state;
     }
 }

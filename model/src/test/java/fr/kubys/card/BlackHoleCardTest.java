@@ -1,13 +1,11 @@
 package fr.kubys.card;
 
 import fr.kubys.board.ChessBoard;
-import fr.kubys.card.BlackHoleCard;
-import fr.kubys.card.Card;
-import org.junit.jupiter.api.Nested;
-import org.junit.jupiter.api.Test;
 import fr.kubys.core.Color;
 import fr.kubys.piece.Queen;
 import fr.kubys.piece.extra.BlackHole;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
 
 import java.util.Collections;
 

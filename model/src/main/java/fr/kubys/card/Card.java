@@ -3,20 +3,14 @@ package fr.kubys.card;
 import fr.kubys.board.CheckException;
 import fr.kubys.board.ChessBoard;
 import fr.kubys.core.Color;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
 
-@Getter
-@Slf4j
 public abstract class Card {
 
     protected final String name;
     protected final String description;
     protected final CardType type;
-    @Setter
     protected Color isPlayedBy;
 
     protected Card(String name, String description, CardType type) {
@@ -30,7 +24,7 @@ public abstract class Card {
         validInput(chessBoard);
 
         if (!doesNotCreateCheck(chessBoard)) throw new CheckException();
-        log.info("{} card is played!", this.name);
+//        log.info("{} card is played!", this.name);
         doAction(chessBoard);
     }
 
@@ -46,5 +40,25 @@ public abstract class Card {
     @Override
     public String toString() {
         return this.name;
+    }
+
+    public String getName() {
+        return this.name;
+    }
+
+    public String getDescription() {
+        return this.description;
+    }
+
+    public CardType getType() {
+        return this.type;
+    }
+
+    public Color getIsPlayedBy() {
+        return this.isPlayedBy;
+    }
+
+    public void setIsPlayedBy(Color isPlayedBy) {
+        this.isPlayedBy = isPlayedBy;
     }
 }

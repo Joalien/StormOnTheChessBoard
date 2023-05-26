@@ -3,9 +3,7 @@ package fr.kubys.board.effect;
 import fr.kubys.board.ChessBoard;
 import fr.kubys.core.Position;
 import fr.kubys.piece.Piece;
-import lombok.Getter;
 
-@Getter
 public abstract class Effect {
 
     private final String name;
@@ -25,5 +23,9 @@ public abstract class Effect {
 
     public boolean allowToMove(Piece piece, Position positionToMoveOn) {
         return false;
+    }
+
+    public String getName() {
+        return this.name;
     }
 }

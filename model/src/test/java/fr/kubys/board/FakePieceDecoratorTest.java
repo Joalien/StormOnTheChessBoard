@@ -1,14 +1,13 @@
 package fr.kubys.board;
 
-import fr.kubys.board.FakePieceDecorator;
-import org.junit.jupiter.api.Test;
 import fr.kubys.core.Color;
 import fr.kubys.piece.Knight;
 import fr.kubys.piece.Square;
+import org.junit.jupiter.api.Test;
 
+import static fr.kubys.core.Position.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static fr.kubys.core.Position.*;
 
 class FakePieceDecoratorTest {
     @Test

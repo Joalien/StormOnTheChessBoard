@@ -28,6 +28,16 @@ public class ArchitectureIT {
                 .should().onlyDependOnClassesThat().resideInAnyPackage(dependencyPackages);
     }
 
+    private static String[] getDependencyPackages(String itself, Set<String> dependencies) {
+        Stream<String> languageDependencies = Stream.of("java.lang..", "java.util..", "org.junit..", "org.slf4j..");
+        return Stream.of(
+                        languageDependencies,
+                        Stream.of(itself),
+                        dependencies.stream()
+                ).flatMap(dependency -> dependency)
+                .toArray(String[]::new);
+    }
+
     @Test
     void piece_should_only_depend_on_core() {
         String[] dependencyPackages = getDependencyPackages(PIECE, Set.of(CORE));
@@ -72,16 +82,6 @@ public class ArchitectureIT {
         rule = ArchRuleDefinition.noClasses()
                 .that().resideOutsideOfPackages()
                 .should().dependOnClassesThat().resideInAPackage("..org.springframework..");
-    }
-
-    private static String[] getDependencyPackages(String itself, Set<String> dependencies) {
-        Stream<String> languageDependencies = Stream.of("java.lang..", "java.util..", "org.junit..", "org.slf4j..");
-        return Stream.of(
-                    languageDependencies,
-                    Stream.of(itself),
-                    dependencies.stream()
-                ).flatMap(dependency -> dependency)
-                .toArray(String[]::new);
     }
 
     @AfterEach

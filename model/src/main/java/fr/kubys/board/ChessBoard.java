@@ -1,17 +1,16 @@
 package fr.kubys.board;
 
-import fr.kubys.core.Color;
 import fr.kubys.board.effect.Effect;
+import fr.kubys.core.Color;
 import fr.kubys.core.File;
 import fr.kubys.core.Position;
 import fr.kubys.core.Row;
 import fr.kubys.piece.*;
-import lombok.extern.slf4j.Slf4j;
+
 
 import java.util.*;
 import java.util.stream.Collectors;
 
-@Slf4j
 public class ChessBoard {
 
     private final HashMap<Position, Square> board = new HashMap<>(64);
@@ -22,12 +21,12 @@ public class ChessBoard {
     // FIXME ArchUnit : tester l'architecture
 
     public static ChessBoard createEmpty() {
-        log.debug("create empty chessboard");
+//        log.debug("create empty chessboard");
         return new ChessBoard();
     }
 
     public static ChessBoard createWithInitialState() {
-        log.debug("create chessboard with initial state");
+//        log.debug("create chessboard with initial state");
         ChessBoard chessBoard = new ChessBoard();
 
         chessBoard.add(new King(Color.WHITE), Position.e1);
@@ -55,12 +54,15 @@ public class ChessBoard {
         return chessBoard;
     }
 
-    public void add(Piece piece, Position position) { // HERE
+    public void add(Piece piece, Position position) {
         if (!fakeSquares.isEmpty())
+            // Should never happen
             throw new IllegalStateException("You cannot update board if there are fake pieces on");
         if (at(position).getPiece().isPresent())
             throw new IllegalArgumentException("Cannot add %s because %s is not empty".formatted(piece, position));
-        if (outOfTheBoardPieces.remove(piece)) log.info("{} go back to the life!", piece);
+        if (outOfTheBoardPieces.remove(piece)) {
+//            log.info("{} go back to the life!", piece);
+        }
         piece.setSquare(at(position));
         at(position).setPiece(piece);
 
@@ -128,12 +130,8 @@ public class ChessBoard {
         if (canMove(piece, positionToMoveOn)) {
             // FIXME if rock cannot castle, it will still castle
             tryToCastle(piece, positionToMoveOn);
-            Optional.of(piece)
-                    .filter(Castlable.class::isInstance)
-                    .map(Castlable.class::cast)
-                    .ifPresent(Castlable::cannotCastleAnymore);
             move(piece, positionToMoveOn);
-        } else throw new IllegalMoveException("fail to move %s from %s to %s".formatted(piece, piece.getPosition(), positionToMoveOn));
+        }
     }
 
     void tryToCastle(Piece piece, Position positionToMoveOn) {
@@ -148,9 +146,13 @@ public class ChessBoard {
                     .map(Rock.class::cast)
                     .filter(Rock::canCastle)
                     .ifPresentOrElse(rock -> {
-                        log.info("{} is castling", piece);
+//                        log.info("{} is castling", piece);
                         move(rock, finalPositionOfRock);
-                    }, () -> log.debug("{} can castle but rock cannot", piece));
+                        rock.cannotCastleAnymore();
+                        ((King) piece).cannotCastleAnymore();
+                    }, () -> {
+//                        log.debug("{} can castle but rock cannot", piece)
+                    });
         }
     }
 
@@ -158,7 +160,7 @@ public class ChessBoard {
         effects.forEach(effect -> effect.beforeMoveHook(this, piece));
 
         at(positionToMoveOn).getPiece().ifPresent(this::removePieceFromTheBoard);
-        log.info("{} moves from {} to {}", piece, piece.getPosition(), positionToMoveOn);
+//        log.info("{} moves from {} to {}", piece, piece.getPosition(), positionToMoveOn);
         at(piece.getPosition()).removePiece();
         add(piece, positionToMoveOn);
     }
@@ -169,7 +171,7 @@ public class ChessBoard {
         at(piece.getPosition()).setPiece(null);
         piece.setSquare(null);
         outOfTheBoardPieces.add(piece);
-        log.info("{} has been taken and removed out of the board", piece);
+//        log.info("{} has been taken and removed out of the board", piece);
 
         effects.forEach(effect -> effect.afterRemovingPieceHook(this, piece));
         return piece;
@@ -192,7 +194,7 @@ public class ChessBoard {
     public void fakeSquare(Piece piece, Position position) {
         if (fakeSquares.containsKey(position) && fakeSquares.get(position) == null)
             throw new IllegalArgumentException("You cannot re-fake over a fake piece");
-        log.debug("fake that {} is on {}", Optional.ofNullable(piece).map(Objects::toString).orElse("nothing"), position);
+//        log.debug("fake that {} is on {}", Optional.ofNullable(piece).map(Objects::toString).orElse("nothing"), position);
         Square fakeSquare = new Square(position);
         Optional.ofNullable(piece).ifPresent(p -> fakeSquare.setPiece(new FakePieceDecorator(p, fakeSquare)));
         fakeSquares.put(position, fakeSquare);
@@ -200,12 +202,12 @@ public class ChessBoard {
 
     public void unfakeSquare(Position position) {
         Square square = fakeSquares.get(position);
-        log.debug("unfake that {} is on {}", square.getPiece().map(Piece::toString).orElse("nothing"), position);
+//        log.debug("unfake that {} is on {}", square.getPiece().map(Piece::toString).orElse("nothing"), position);
         fakeSquares.remove(position);
     }
 
     public void unfakeAllSquares() {
-        log.debug("unfake {} fake squares", fakeSquares.size());
+//        log.debug("unfake {} fake squares", fakeSquares.size());
         fakeSquares.clear();
     }
 
@@ -269,12 +271,12 @@ public class ChessBoard {
     }
 
     public void removeEffect(Effect effect) {
-        log.info("{} is no longer effective", effect.getName());
+//        log.info("{} is no longer effective", effect.getName());
         this.effects.remove(effect);
     }
 
     public void addEffect(Effect effect) {
-        log.info("{} is now effective", effect.getName());
+//        log.info("{} is now effective", effect.getName());
         this.effects.add(effect);
     }
 

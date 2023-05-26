@@ -3,12 +3,13 @@ package fr.kubys.board.extra;
 import fr.kubys.board.ChessBoard;
 import fr.kubys.board.IllegalMoveException;
 import fr.kubys.core.Color;
-import org.junit.jupiter.api.Test;
 import fr.kubys.piece.Rock;
 import fr.kubys.piece.extra.BlackHole;
+import org.junit.jupiter.api.Test;
 
 import static fr.kubys.core.Position.*;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class BlackHoleTest {
 

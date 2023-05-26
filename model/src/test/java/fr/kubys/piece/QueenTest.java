@@ -1,21 +1,19 @@
 package fr.kubys.piece;
 
 import fr.kubys.core.Color;
-import fr.kubys.piece.Queen;
-import fr.kubys.piece.Square;
-import org.junit.jupiter.api.Nested;
-import org.junit.jupiter.api.Test;
 import fr.kubys.core.File;
 import fr.kubys.core.Position;
 import fr.kubys.core.Row;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
 
 import java.util.Collections;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static fr.kubys.core.Position.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 class QueenTest {
 

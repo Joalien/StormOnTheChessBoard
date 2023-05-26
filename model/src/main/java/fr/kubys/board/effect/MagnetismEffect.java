@@ -1,11 +1,11 @@
 package fr.kubys.board.effect;
 
 import fr.kubys.board.ChessBoard;
-import lombok.extern.slf4j.Slf4j;
 import fr.kubys.piece.Piece;
+//import org.slf4j.Logger;
 
-@Slf4j
 public class MagnetismEffect extends Effect {
+//    private static final Logger log = org.slf4j.LoggerFactory.getLogger(MagnetismEffect.class);
     private final Piece piece;
 
     public MagnetismEffect(Piece piece) {

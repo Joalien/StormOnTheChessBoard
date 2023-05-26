@@ -5,18 +5,16 @@ import fr.kubys.card.BombingCard;
 import fr.kubys.card.Card;
 import fr.kubys.card.LightweightSquadCard;
 import fr.kubys.card.QuadrilleCard;
-import fr.kubys.game.GameStateController;
-import fr.kubys.game.StateEnum;
+import fr.kubys.core.Color;
+import fr.kubys.piece.Pawn;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import fr.kubys.core.Color;
-import fr.kubys.piece.Pawn;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static fr.kubys.core.Position.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 class BeginningOfTheTurnStateTest {
 

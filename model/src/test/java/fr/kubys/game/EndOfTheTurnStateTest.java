@@ -1,18 +1,16 @@
 package fr.kubys.game;
 
 import fr.kubys.card.QuadrilleCard;
-import fr.kubys.game.GameStateController;
-import fr.kubys.game.StateEnum;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 import fr.kubys.game.exception.AlreadyMovedException;
 import fr.kubys.game.exception.CardAlreadyPlayedException;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static fr.kubys.core.Position.e2;
 import static fr.kubys.core.Position.e4;
+import static org.junit.jupiter.api.Assertions.*;
 
 class EndOfTheTurnStateTest {
     private QuadrilleCard card;

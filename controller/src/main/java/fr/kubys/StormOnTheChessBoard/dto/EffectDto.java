@@ -1,10 +1,10 @@
 package fr.kubys.StormOnTheChessBoard.dto;
 
+import fr.kubys.core.Position;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import fr.kubys.core.Position;
 
 import java.util.Set;
 

@@ -1,13 +1,11 @@
 package fr.kubys.player;
 
 import fr.kubys.card.Card;
-import lombok.Getter;
 import fr.kubys.core.Color;
 
 import java.util.HashSet;
 import java.util.Set;
 
-@Getter
 public class Player {
 
     private final String name;
@@ -23,5 +21,17 @@ public class Player {
     @Override
     public String toString() {
         return name;
+    }
+
+    public String getName() {
+        return this.name;
+    }
+
+    public Color getColor() {
+        return this.color;
+    }
+
+    public Set<Card> getCards() {
+        return this.cards;
     }
 }

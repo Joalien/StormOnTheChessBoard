@@ -1,18 +1,17 @@
 package fr.kubys.board.effect;
 
 import fr.kubys.board.ChessBoard;
-import fr.kubys.board.effect.BombingEffect;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Nested;
-import org.junit.jupiter.api.Test;
 import fr.kubys.core.Color;
 import fr.kubys.piece.King;
 import fr.kubys.piece.Queen;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static fr.kubys.core.Position.d4;
 import static fr.kubys.core.Position.e4;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class BombingEffectTest {
 

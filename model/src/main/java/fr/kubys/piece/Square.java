@@ -1,11 +1,10 @@
 package fr.kubys.piece;
 
 import fr.kubys.core.Position;
-import lombok.ToString;
+
 
 import java.util.Optional;
 
-@ToString
 public class Square {
 
     private final Position position;

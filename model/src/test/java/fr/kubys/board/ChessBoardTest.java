@@ -1,20 +1,18 @@
 package fr.kubys.board;
 
-import fr.kubys.board.ChessBoard;
 import fr.kubys.core.Color;
+import fr.kubys.core.Position;
 import fr.kubys.piece.*;
-import fr.kubys.piece.extra.BlackHole;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
-import fr.kubys.core.Position;
 
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static fr.kubys.core.Position.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 class ChessBoardTest {
 
@@ -164,6 +162,21 @@ class ChessBoardTest {
             chessBoard.add(queen, e4);
 
             assertThrows(IllegalArgumentException.class, () -> chessBoard.tryToMove(queen, e4));
+        }
+
+        @Test
+        void should_be_a_valid_piece_position() {
+            ChessBoard chessBoard = ChessBoard.createEmpty();
+
+            assertThrows(IllegalArgumentException.class, () -> chessBoard.tryToMove(e2, e4));
+        }
+
+        @Test
+        void should_be_a_impossible_move() {
+            ChessBoard chessBoard = ChessBoard.createEmpty();
+            chessBoard.add(new Knight(Color.WHITE), g1);
+
+            assertThrows(IllegalMoveException.class, () -> chessBoard.tryToMove(g1, h8));
         }
     }
 

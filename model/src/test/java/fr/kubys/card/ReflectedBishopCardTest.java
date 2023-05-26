@@ -2,8 +2,6 @@ package fr.kubys.card;
 
 import fr.kubys.board.CheckException;
 import fr.kubys.board.ChessBoard;
-import fr.kubys.card.Card;
-import fr.kubys.card.ReflectedBishopCard;
 import fr.kubys.core.Color;
 import fr.kubys.piece.Bishop;
 import fr.kubys.piece.King;
@@ -15,8 +13,8 @@ import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static fr.kubys.core.Position.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 class ReflectedBishopCardTest {
 

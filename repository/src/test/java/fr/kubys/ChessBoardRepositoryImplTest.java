@@ -4,13 +4,13 @@ import fr.kubys.command.Command;
 import fr.kubys.command.EndTurnCommand;
 import fr.kubys.command.PlayMoveCommand;
 import fr.kubys.command.StartGameCommand;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 import fr.kubys.repository.ChessBoardRepository;
 import fr.kubys.repository.ChessBoardRepositoryImpl;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static fr.kubys.core.Position.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 class ChessBoardRepositoryImplTest {
 
@@ -29,7 +29,6 @@ class ChessBoardRepositoryImplTest {
 
     @Test
     void should_start_a_game() {
-
         assertDoesNotThrow(() -> chessBoardRepository.saveCommand(START_GAME_COMMAND));
     }
 

@@ -2,8 +2,8 @@ package fr.kubys.card;
 
 import fr.kubys.board.ChessBoard;
 import fr.kubys.board.effect.BombingEffect;
-import fr.kubys.piece.Piece;
 import fr.kubys.core.Position;
+import fr.kubys.piece.Piece;
 
 import java.util.List;
 

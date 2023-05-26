@@ -1,20 +1,16 @@
 package fr.kubys.piece;
 
 import fr.kubys.core.Color;
-import fr.kubys.piece.BlackPawn;
-import fr.kubys.piece.Pawn;
-import fr.kubys.piece.Square;
-import fr.kubys.piece.WhitePawn;
-import org.junit.jupiter.api.Nested;
-import org.junit.jupiter.api.Test;
 import fr.kubys.core.File;
 import fr.kubys.core.Row;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
 
 import java.util.Collections;
 import java.util.Set;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static fr.kubys.core.Position.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 class PawnTest {
 

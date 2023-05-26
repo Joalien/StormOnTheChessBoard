@@ -12,4 +12,9 @@ public class EndTurnCommand extends Command {
     public void execute(ChessBoardWriteService chessBoardWriteService) {
         chessBoardWriteService.tryToPass();
     }
+
+    @Override
+    public String toString() {
+        return "Pass turn";
+    }
 }

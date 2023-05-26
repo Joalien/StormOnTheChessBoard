@@ -2,16 +2,14 @@ package fr.kubys.game;
 
 import fr.kubys.board.IllegalMoveException;
 import fr.kubys.card.QuadrilleCard;
-import fr.kubys.game.GameStateController;
-import fr.kubys.game.StateEnum;
+import fr.kubys.game.exception.CardAlreadyPlayedException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import fr.kubys.game.exception.CardAlreadyPlayedException;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static fr.kubys.core.Position.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 class BeforeMoveCardPlayedStateTest {
     private QuadrilleCard card;

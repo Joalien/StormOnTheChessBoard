@@ -4,34 +4,25 @@ import fr.kubys.api.ChessBoardService;
 import fr.kubys.board.ChessBoard;
 import fr.kubys.board.effect.Effect;
 import fr.kubys.card.*;
-import fr.kubys.piece.Square;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.extern.slf4j.Slf4j;
 import fr.kubys.core.Color;
+import fr.kubys.core.Position;
 import fr.kubys.piece.Piece;
 import fr.kubys.player.Player;
-import fr.kubys.core.Position;
+//import org.slf4j.Logger;
 
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
-@Getter(AccessLevel.PACKAGE)
-@Slf4j
 public class GameStateController implements ChessBoardService {
 
     private static final int NUMBER_OF_CARDS_IN_HAND = 4;
+//    private static final Logger log = org.slf4j.LoggerFactory.getLogger(GameStateController.class);
     private ChessBoard chessBoard;
-    @Getter
     private Player white;
-    @Getter
     private Player black;
-    @Getter
     private List<Card> cards;
-    @Setter(AccessLevel.PACKAGE)
     private Player currentPlayer;
     private StateEnum currentState;
 
@@ -107,14 +98,19 @@ public class GameStateController implements ChessBoardService {
         swapCurrentPlayer();
     }
 
-    private void assertGameHasAlreadyStarted() {
-        if (chessBoard == null) throw new IllegalStateException("Game has not started yet!");
+    void setCurrentState(StateEnum currentState) {
+//        log.debug("{} is now in state {}", this.currentPlayer, currentState);
+        this.currentState = currentState;
     }
 
     private void swapCurrentPlayer() {
         if (getCurrentPlayer() == getWhite()) setCurrentPlayer(getBlack());
         else if (getCurrentPlayer() == getBlack()) setCurrentPlayer(getWhite());
         else throw new IllegalStateException("Who's turn?");
+    }
+
+    private void assertGameHasAlreadyStarted() {
+        if (chessBoard == null) throw new IllegalStateException("Game has not started yet!");
     }
 
     @Override
@@ -129,8 +125,31 @@ public class GameStateController implements ChessBoardService {
         return chessBoard.getEffects();
     }
 
-    void setCurrentState(StateEnum currentState) {
-        log.debug("{} is now in state {}", this.currentPlayer, currentState);
-        this.currentState = currentState;
+    ChessBoard getChessBoard() {
+        return this.chessBoard;
+    }
+
+    Player getCurrentPlayer() {
+        return this.currentPlayer;
+    }
+
+    StateEnum getCurrentState() {
+        return this.currentState;
+    }
+
+    public Player getWhite() {
+        return this.white;
+    }
+
+    public Player getBlack() {
+        return this.black;
+    }
+
+    public List<Card> getCards() {
+        return this.cards;
+    }
+
+    void setCurrentPlayer(Player currentPlayer) {
+        this.currentPlayer = currentPlayer;
     }
 }

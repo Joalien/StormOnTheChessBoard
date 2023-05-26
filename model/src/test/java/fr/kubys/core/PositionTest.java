@@ -1,8 +1,5 @@
 package fr.kubys.core;
 
-import fr.kubys.core.File;
-import fr.kubys.core.Position;
-import fr.kubys.core.Row;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -12,8 +9,8 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static fr.kubys.core.Position.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 class PositionTest {
 

@@ -1,18 +1,16 @@
 package fr.kubys.card;
 
 import fr.kubys.board.ChessBoard;
-import fr.kubys.card.BombingCard;
-import fr.kubys.card.Card;
+import fr.kubys.core.Color;
+import fr.kubys.piece.Queen;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import fr.kubys.core.Color;
-import fr.kubys.piece.Queen;
 
 import java.util.Collections;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static fr.kubys.core.Position.e4;
+import static org.junit.jupiter.api.Assertions.*;
 
 class BombingCardTest {
 

@@ -1,16 +1,15 @@
 package fr.kubys.board;
 
-import fr.kubys.board.ChessBoard;
 import fr.kubys.core.Color;
-import org.junit.jupiter.api.Test;
 import fr.kubys.core.Position;
 import fr.kubys.piece.Bishop;
+import org.junit.jupiter.api.Test;
 
 import java.util.Collections;
 import java.util.Set;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static fr.kubys.core.Position.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class BishopIT {
 

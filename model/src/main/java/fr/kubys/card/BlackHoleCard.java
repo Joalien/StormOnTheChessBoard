@@ -1,8 +1,8 @@
 package fr.kubys.card;
 
 import fr.kubys.board.ChessBoard;
-import fr.kubys.piece.extra.BlackHole;
 import fr.kubys.core.Position;
+import fr.kubys.piece.extra.BlackHole;
 
 import java.util.List;
 

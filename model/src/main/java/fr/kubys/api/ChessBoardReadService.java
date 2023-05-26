@@ -1,7 +1,7 @@
 package fr.kubys.api;
 
-import fr.kubys.card.Card;
 import fr.kubys.board.effect.Effect;
+import fr.kubys.card.Card;
 import fr.kubys.piece.Piece;
 import fr.kubys.player.Player;
 

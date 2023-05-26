@@ -2,9 +2,9 @@ package fr.kubys.repository;
 
 import fr.kubys.api.ChessBoardReadService;
 import fr.kubys.api.ChessBoardService;
+import fr.kubys.api.ChessBoardWriteService;
 import fr.kubys.command.Command;
 import fr.kubys.game.ChessBoardServiceFactory;
-import fr.kubys.api.ChessBoardWriteService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 
@@ -21,7 +21,7 @@ public class ChessBoardRepositoryImpl implements ChessBoardRepository {
 
         command.execute(chessBoardWriteService);
         store.putIfAbsent(command.getGameId(), new LinkedList<>());
-        log.info("{} has been played on chessboard {}", command, command.getGameId());
+        log.info("[Chessboard {}] {}", command.getGameId(), command);
         store.get(command.getGameId()).add(command);
     }
 

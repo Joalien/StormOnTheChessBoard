@@ -1,15 +1,14 @@
 package fr.kubys.card;
 
 import fr.kubys.board.ChessBoard;
-import lombok.extern.slf4j.Slf4j;
+import fr.kubys.core.Position;
 import fr.kubys.piece.Knight;
 import fr.kubys.piece.Piece;
 import fr.kubys.piece.Queen;
-import fr.kubys.core.Position;
+
 
 import java.util.List;
 
-@Slf4j
 public class CourtlyLoveCard extends Card {
 
     private Knight knight;

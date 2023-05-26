@@ -1,15 +1,13 @@
 package fr.kubys.card;
 
 import fr.kubys.board.ChessBoard;
-import fr.kubys.card.Card;
-import fr.kubys.card.KangarooCard;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Nested;
-import org.junit.jupiter.api.Test;
+import fr.kubys.core.Position;
 import fr.kubys.piece.Knight;
 import fr.kubys.piece.Piece;
 import fr.kubys.piece.extra.Kangaroo;
-import fr.kubys.core.Position;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
 
 import java.util.List;
 import java.util.Set;

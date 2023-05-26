@@ -1,16 +1,13 @@
 package fr.kubys.card;
 
 import fr.kubys.board.ChessBoard;
-import fr.kubys.card.CannotMoveThisColorException;
-import fr.kubys.card.Card;
-import fr.kubys.card.MagnetismCard;
+import fr.kubys.core.Color;
+import fr.kubys.core.Position;
+import fr.kubys.piece.Piece;
+import fr.kubys.piece.Queen;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import fr.kubys.core.Color;
-import fr.kubys.piece.Piece;
-import fr.kubys.piece.Queen;
-import fr.kubys.core.Position;
 
 import java.util.List;
 

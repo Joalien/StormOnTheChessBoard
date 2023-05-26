@@ -1,15 +1,13 @@
 package fr.kubys.board.effect;
 
 import fr.kubys.board.ChessBoard;
-import fr.kubys.board.effect.MagnetismEffect;
-import fr.kubys.board.effect.MagnetismException;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 import fr.kubys.core.Color;
 import fr.kubys.piece.Queen;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static fr.kubys.core.Position.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 class MagnetismEffectTest {
 

@@ -1,10 +1,9 @@
 package fr.kubys.core;
 
-import lombok.Getter;
+
 
 import java.util.Arrays;
 
-@Getter
 public enum File {
     A("a", 1),
     B("b", 2),
@@ -36,5 +35,13 @@ public enum File {
 
     public boolean isBefore(File fil) {
         return this.compareTo(fil) < 0;
+    }
+
+    public String getFileName() {
+        return this.fileName;
+    }
+
+    public Integer getFileNumber() {
+        return this.fileNumber;
     }
 }

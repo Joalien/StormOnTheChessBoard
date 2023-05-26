@@ -1,9 +1,9 @@
 package fr.kubys.command;
 
 import fr.kubys.api.ChessBoardWriteService;
+import fr.kubys.core.Position;
 import lombok.Getter;
 import lombok.experimental.SuperBuilder;
-import fr.kubys.core.Position;
 
 @SuperBuilder
 @Getter
@@ -18,6 +18,6 @@ public class PlayMoveCommand extends Command {
 
     @Override
     public String toString() {
-        return "from %s to %s".formatted(from, to);
+        return "Move %s to %s".formatted(from, to);
     }
 }

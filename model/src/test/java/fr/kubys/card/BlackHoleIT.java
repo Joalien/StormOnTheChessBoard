@@ -1,10 +1,9 @@
 package fr.kubys.card;
 
 import fr.kubys.board.ChessBoard;
-import fr.kubys.card.QuadrilleCard;
+import fr.kubys.piece.extra.BlackHole;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import fr.kubys.piece.extra.BlackHole;
 
 import java.util.List;
 

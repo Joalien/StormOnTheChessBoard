@@ -1,11 +1,11 @@
 package fr.kubys.StormOnTheChessBoard.controller;
 
 import fr.kubys.core.Color;
-import org.junit.jupiter.api.Test;
 import fr.kubys.piece.BlackPawn;
 import fr.kubys.piece.King;
 import fr.kubys.piece.Knight;
 import fr.kubys.piece.Piece;
+import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 

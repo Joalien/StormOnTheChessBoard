@@ -3,7 +3,7 @@ package fr.kubys.card;
 import fr.kubys.board.ChessBoard;
 import fr.kubys.core.Position;
 import fr.kubys.piece.Bishop;
-import lombok.extern.slf4j.Slf4j;
+
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -11,7 +11,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-@Slf4j
 public class ReflectedBishopCard extends Card {
 
     private Bishop bishop;
@@ -45,7 +44,7 @@ public class ReflectedBishopCard extends Card {
         } while (reachablePositions.addAll(positionsToStart));
         chessBoard.unfakeAllSquares();
 
-        log.debug("{} can move on {}", bishop, reachablePositions);
+//        log.debug("{} can move on {}", bishop, reachablePositions);
 
         if (!reachablePositions.contains(positionToMoveOn))
             throw new IllegalArgumentException("%s cannot reflect to %s".formatted(bishop, positionToMoveOn));

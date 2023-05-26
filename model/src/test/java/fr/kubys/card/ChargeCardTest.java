@@ -1,9 +1,6 @@
 package fr.kubys.card;
 
 import fr.kubys.board.ChessBoard;
-import fr.kubys.card.CannotMoveThisColorException;
-import fr.kubys.card.Card;
-import fr.kubys.card.ChargeCard;
 import fr.kubys.core.Color;
 import fr.kubys.piece.*;
 import org.junit.jupiter.api.Nested;
@@ -15,8 +12,8 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static fr.kubys.core.Position.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 class ChargeCardTest {
 

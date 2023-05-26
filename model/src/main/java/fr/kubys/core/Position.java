@@ -1,6 +1,6 @@
 package fr.kubys.core;
 
-import lombok.Getter;
+
 
 import java.util.Arrays;
 import java.util.Set;
@@ -8,7 +8,6 @@ import java.util.stream.Collectors;
 
 import static fr.kubys.core.File.*;
 
-@Getter
 public enum Position {
     h1(H, Row.One), h2(H, Row.Two), h3(H, Row.Three), h4(H, Row.Four), h5(H, Row.Five), h6(H, Row.Six), h7(H, Row.Seven), h8(H, Row.Height),
     g1(G, Row.One), g2(G, Row.Two), g3(G, Row.Three), g4(G, Row.Four), g5(G, Row.Five), g6(G, Row.Six), g7(G, Row.Seven), g8(G, Row.Height),
@@ -64,5 +63,13 @@ public enum Position {
     @Override
     public String toString() {
         return this.name();
+    }
+
+    public File getFile() {
+        return this.file;
+    }
+
+    public Row getRow() {
+        return this.row;
     }
 }

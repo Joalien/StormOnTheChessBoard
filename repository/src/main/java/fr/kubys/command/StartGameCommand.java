@@ -14,6 +14,6 @@ public class StartGameCommand extends Command {
 
     @Override
     public String toString() {
-        return "StartGameCommand";
+        return "Start game";
     }
 }

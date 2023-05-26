@@ -2,11 +2,9 @@ package fr.kubys.board.effect;
 
 import fr.kubys.board.CheckException;
 import fr.kubys.board.ChessBoard;
-import fr.kubys.board.IllegalMoveException;
-import fr.kubys.board.effect.ManHoleEffect;
+import fr.kubys.piece.Piece;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import fr.kubys.piece.Piece;
 
 import static fr.kubys.core.Position.*;
 import static org.junit.jupiter.api.Assertions.*;
