@@ -65,6 +65,23 @@ public class GameController {
         return new ResponseEntity<>(chessBoardRepository.createGame(), HttpStatus.CREATED);
     }
 
+    @PostMapping("/{gameId}/endTurn")
+    @CrossOrigin(origins = "*")
+    public ResponseEntity<Integer> endTurn(@PathVariable Integer gameId) {
+        try {
+            chessBoardRepository.getChessBoardService(gameId);
+        } catch (IllegalArgumentException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
+        EndTurnCommand endTurnCommand = EndTurnCommand.builder().gameId(gameId).build();
+        try {
+            chessBoardRepository.saveCommand(endTurnCommand);
+            return ResponseEntity.ok().build();
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+        }
+    }
+
     @GetMapping("/{gameId}")
     @CrossOrigin(origins = "*")
     public ChessBoardDto getGameById(@PathVariable Integer gameId) {
