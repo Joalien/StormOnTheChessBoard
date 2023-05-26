@@ -19,19 +19,17 @@ import static fr.kubys.core.Position.*;
 @RestController
 public class GameController {
 
-    public static final Integer GAME_ID = 1;
-
     ChessBoardRepository chessBoardRepository;
 
     @Autowired
     public GameController(ChessBoardRepository chessBoardRepository) {
         this.chessBoardRepository = chessBoardRepository;
-        chessBoardRepository.saveCommand(StartGameCommand.builder().gameId(GAME_ID).build());
-
-        createInitialState();
+        createInitialState(); // FIXME remove me later on
     }
 
-    private void createInitialState() { // FIXME remove me later on
+    private void createInitialState() {
+        Integer gameId = 1;
+        chessBoardRepository.saveCommand(StartGameCommand.builder().gameId(gameId).build());
         List.of(List.of(e2, e4),
                 List.of(c7, c5),
                 List.of(g1, f3),
@@ -47,17 +45,18 @@ public class GameController {
                 List.of(d1, d2),
                 List.of(e8, g8),
                 List.of(e1, c1)
-        ).forEach(this::saveCommand);
+        ).forEach(m -> saveCommand(m, gameId));
     }
 
-    private void saveCommand(List<Position> m) {
+    private void saveCommand(List<Position> m, Integer gameId) {
         chessBoardRepository.saveCommand(PlayMoveCommand.builder()
-                .gameId(GAME_ID)
+                .gameId(gameId)
                 .from(m.get(0))
                 .to(m.get(1)).build());
-        chessBoardRepository.saveCommand(EndTurnCommand.builder().gameId(GAME_ID).build());
+        chessBoardRepository.saveCommand(EndTurnCommand.builder().gameId(gameId).build());
     }
 
+    // FIXME split into smaller endpoints in order to allow front to fetch in multiple requests
     @GetMapping("/chessboard/{id}")
     @CrossOrigin(origins = "*")
     public ChessBoardDto getGameById(@PathVariable Integer id) {
