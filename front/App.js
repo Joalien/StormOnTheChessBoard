@@ -1,5 +1,6 @@
 import {Chessboard} from "react-chessboard";
 import {useState} from "react";
+import {Player} from "./Player";
 
 const base = "http://localhost:9000/chessboard";
 export default function App() {
@@ -51,18 +52,8 @@ export default function App() {
         }}>
             <h1>Tempête sur l'Échiquier</h1>
             <h2>Trait aux {color}</h2>
-            <div id={"whitePlayer"}>
-                <h3>{whitePlayer.name}</h3>
-                <ul>
-                    {whitePlayer.cards.map(card => <li>{card.name}</li>)}
-                </ul>
-            </div>
-            <div id={"blackPlayer"}>
-                <h3>{blackPlayer.name}</h3>
-                <ul>
-                    {blackPlayer.cards.map(card => <li>{card.name}</li>)}
-                </ul>
-            </div>
+            <Player player={whitePlayer} />
+            <Player player={blackPlayer} />
 
             <Chessboard id="BasicBoard"
                         onPieceDrop={onDrop}
