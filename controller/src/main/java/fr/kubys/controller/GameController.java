@@ -78,7 +78,7 @@ public class GameController {
             chessBoardRepository.saveCommand(endTurnCommand);
             return ResponseEntity.ok().build();
         } catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
         }
     }
 

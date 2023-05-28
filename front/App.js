@@ -29,26 +29,22 @@ export default function App() {
             .catch(err => alert(err))
     }
 
-    function onDrop(sourceSquare, targetSquare) {
-        fetch(base + gameId + "/move/" + sourceSquare + "/to/" + targetSquare, {method: 'POST'})
-            .then(res => {
-                if (res.ok) {
-                    setTimeout(() => endTurn(), 2000)
-                    fetchGame()
-                }
-                else alert(res.statusText)
-            })
+    async function onDrop(sourceSquare, targetSquare) {
+        const res = await fetch(base + gameId + "/move/" + sourceSquare + "/to/" + targetSquare, {method: 'POST'})
+            if (res.ok) {
+                setTimeout(() => endTurn(), 2000)
+                fetchGame()
+            }
+            else alert((await res.json()).message)
     }
 
-    function endTurn() {
-        fetch(base + gameId + "/endTurn", {method: 'POST'})
-            .then(res => {
-                if (res.ok) {
-                    setCurrentPlayerColor(oppositeColor(currentPlayerColor))
-                    fetchGame()
-                }
-                else alert(res.statusText)
-            })
+    async function endTurn() {
+        const res = await fetch(base + gameId + "/endTurn", {method: 'POST'})
+        if (res.ok) {
+            setCurrentPlayerColor(oppositeColor(currentPlayerColor))
+            fetchGame()
+        }
+        else alert((await res.json()).message)
     }
 
     function fetchGame() {
