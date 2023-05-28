@@ -15,5 +15,5 @@ import java.util.Set;
 public class PlayerDto {
     private String name;
     private Color color;
-    private Set<Class<CardOutputDto>> cards;
+    private Set<CardOutputDto> cards;
 }

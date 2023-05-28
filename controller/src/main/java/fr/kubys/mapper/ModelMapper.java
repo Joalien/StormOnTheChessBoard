@@ -45,6 +45,7 @@ public class ModelMapper {
         return PlayerDto.builder()
                 .name(p.getName())
                 .color(p.getColor())
+                .cards(p.getCards().stream().map(ModelMapper::map).collect(Collectors.toSet()))
                 .build();
     }
 
