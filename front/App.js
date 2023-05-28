@@ -6,6 +6,8 @@ export default function App() {
 
     const [game, setGame] = useState({});
     const [gameId, setGameId] = useState(1);
+    const [whitePlayer, setWhitePlayer] = useState({cards: []});
+    const [blackPlayer, setBlackPlayer] = useState({cards: []});
     const [color, setColor] = useState("Blancs");
 
     function startNewGame() {
@@ -29,6 +31,8 @@ export default function App() {
             .then(data => {
                 console.log(data.pieces)
                 setGame(data.pieces);
+                setWhitePlayer(data.whitePlayer);
+                setBlackPlayer(data.blackPlayer);
             })
     }
 
@@ -46,7 +50,20 @@ export default function App() {
             width: '70vw'
         }}>
             <h1>Tempête sur l'Échiquier</h1>
-            <h1>Trait aux {color}</h1>
+            <h2>Trait aux {color}</h2>
+            <div id={"whitePlayer"}>
+                <h3>{whitePlayer.name}</h3>
+                <ul>
+                    {whitePlayer.cards.map(card => <li>{card.name}</li>)}
+                </ul>
+            </div>
+            <div id={"blackPlayer"}>
+                <h3>{blackPlayer.name}</h3>
+                <ul>
+                    {blackPlayer.cards.map(card => <li>{card.name}</li>)}
+                </ul>
+            </div>
+
             <Chessboard id="BasicBoard"
                         onPieceDrop={onDrop}
                         position={game}/>
@@ -61,6 +78,5 @@ export default function App() {
                 Passer son Tour
             </button>
         </div>
-
     );
 }
