@@ -3,19 +3,20 @@ package fr.kubys.player;
 import fr.kubys.card.Card;
 import fr.kubys.core.Color;
 
+import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
 
 public class Player {
 
     private final String name;
     private final Color color;
-    private final Set<Card> cards;
+    private final List<Card> cards;
 
     public Player(String name, Color color) {
         this.name = name;
         this.color = color;
-        this.cards = new HashSet<>();
+        this.cards = new ArrayList<>();
     }
 
     @Override
@@ -31,7 +32,7 @@ public class Player {
         return this.color;
     }
 
-    public Set<Card> getCards() {
+    public List<Card> getCards() {
         return this.cards;
     }
 }

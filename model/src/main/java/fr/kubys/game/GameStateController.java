@@ -58,7 +58,7 @@ public class GameStateController implements ChessBoardService {
         cards.add(new ReflectedBishopCard());
         cards.add(new StableCard());
 
-        Collections.shuffle(cards);
+//        Collections.shuffle(cards); // FIXME add randomness
     }
 
     private void dealCard(Player player) {

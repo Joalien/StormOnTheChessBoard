@@ -6,7 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
-import java.util.Set;
+import java.util.List;
 
 @Getter
 @Setter
@@ -15,5 +15,5 @@ import java.util.Set;
 public class PlayerDto {
     private String name;
     private Color color;
-    private Set<CardOutputDto> cards;
+    private List<CardOutputDto> cards;
 }

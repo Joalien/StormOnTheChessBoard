@@ -10,7 +10,7 @@ import lombok.ToString;
 @Setter
 @Builder
 @ToString
-public class CardOutputDto {
+public class CardOutputDto { // FIXME use id?
     private String name;
     private String description;
     private CardType type;
