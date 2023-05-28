@@ -1,47 +1,64 @@
 import {Chessboard} from "react-chessboard";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import {Player} from "./Player";
 
-const base = "http://localhost:9000/chessboard";
+const base = "http://localhost:9000/chessboard/";
 export default function App() {
 
     const [game, setGame] = useState({});
     const [gameId, setGameId] = useState(1);
+    const [currentPlayerColor, setCurrentPlayerColor] = useState("white");
     const [whitePlayer, setWhitePlayer] = useState({cards: []});
     const [blackPlayer, setBlackPlayer] = useState({cards: []});
-    const [color, setColor] = useState("Blancs");
+
+    useEffect(() => {
+        fetchGame(gameId)
+        fetchPlayer(gameId, "white").then(data => setWhitePlayer(data));
+        fetchPlayer(gameId, "black").then(data => setBlackPlayer(data));
+    }, [gameId])
+
+    function fetchPlayer(gameId, color) {
+        return fetch(base + gameId + "/players/" + color)
+            .then(res => res.json())
+    }
 
     function startNewGame() {
-        fetch(base, {method: 'POST'})
+        fetch("http://localhost:9000/chessboard", {method: 'POST'})
             .then(res => res.json())
             .then(id => setGameId(id))
             .catch(err => alert(err))
-            .finally(() => fetchGame())
     }
 
     function onDrop(sourceSquare, targetSquare) {
-        fetch(base + "/" + gameId + "/move/" + sourceSquare + "/to/" + targetSquare, {method: 'POST'})
-            .then(() => setTimeout(() => endTurn(), 2000))
-            .then(() => fetchGame())
-            .catch(err => alert(err))
-    }
-
-    function fetchGame() {
-        fetch(base + "/" + gameId)
-            .then(response => response.json())
-            .then(data => {
-                console.log(data.pieces)
-                setGame(data.pieces);
-                setWhitePlayer(data.whitePlayer);
-                setBlackPlayer(data.blackPlayer);
+        fetch(base + gameId + "/move/" + sourceSquare + "/to/" + targetSquare, {method: 'POST'})
+            .then(res => {
+                if (res.ok) {
+                    setTimeout(() => endTurn(), 2000)
+                    fetchGame()
+                }
+                else alert(res.statusText)
             })
     }
 
     function endTurn() {
-        fetch(base + "/" + gameId + "/endTurn", {method: 'POST'})
-            .then(() => setColor(color === "Blancs" ? "Noirs" : "Blancs"))
-            .then(() => fetchGame())
-            .catch(err => alert(err))
+        fetch(base + gameId + "/endTurn", {method: 'POST'})
+            .then(res => {
+                if (res.ok) {
+                    setCurrentPlayerColor(oppositeColor(currentPlayerColor))
+                    fetchGame()
+                }
+                else alert(res.statusText)
+            })
+    }
+
+    function fetchGame() {
+        fetch(base + gameId)
+            .then(response => response.json())
+            .then(data => setGame(data.pieces))
+    }
+
+    function oppositeColor(color) {
+        return color === "white" ? "black" : "white";
     }
 
     return (
@@ -51,13 +68,14 @@ export default function App() {
             width: '70vw'
         }}>
             <h1>Tempête sur l'Échiquier</h1>
-            <h2>Trait aux {color}</h2>
-            <Player player={whitePlayer} />
-            <Player player={blackPlayer} />
-
-            <Chessboard id="BasicBoard"
-                        onPieceDrop={onDrop}
-                        position={game}/>
+            <h2>Trait aux {currentPlayerColor}</h2>
+                <Player player={currentPlayerColor === "white" ? blackPlayer : whitePlayer} hiddenCards={true}/>
+                <Chessboard id="BasicBoard"
+                            onPieceDrop={onDrop}
+                            position={game}
+                            boardOrientation={currentPlayerColor}
+                />
+                <Player player={currentPlayerColor === "black" ? blackPlayer : whitePlayer} hiddenCards={false}/>
             <button
                 onClick={startNewGame}
             >
