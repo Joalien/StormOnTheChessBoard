@@ -28,6 +28,7 @@ public class ChessBoardRepositoryImpl implements ChessBoardRepository {
 
     @Override
     public void saveCommand(Command command) {
+        if ((! (command instanceof StartGameCommand) && !gameExists(command.getGameId()))) throw new GameNotFoundException(command.getGameId());
         ChessBoardWriteService chessBoardWriteService = computeChessBoard(command.getGameId());
 
         command.execute(chessBoardWriteService);
@@ -38,7 +39,7 @@ public class ChessBoardRepositoryImpl implements ChessBoardRepository {
 
     @Override
     public ChessBoardReadService getChessBoardService(Integer gameId) {
-        if (!doesGameExist(gameId)) throw new GameNotFoundException(gameId);
+        if (!gameExists(gameId)) throw new GameNotFoundException(gameId);
 
         return computeChessBoard(gameId);
     }
@@ -49,7 +50,7 @@ public class ChessBoardRepositoryImpl implements ChessBoardRepository {
     }
 
     @Override
-    public boolean doesGameExist(Integer gameId) {
+    public boolean gameExists(Integer gameId) {
         return store.containsKey(gameId);
     }
 

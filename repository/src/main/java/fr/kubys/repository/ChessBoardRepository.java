@@ -13,5 +13,5 @@ public interface ChessBoardRepository {
 
     void undoLastCommand(Integer gameId);
 
-    boolean doesGameExist(Integer gameId);
+    boolean gameExists(Integer gameId);
 }

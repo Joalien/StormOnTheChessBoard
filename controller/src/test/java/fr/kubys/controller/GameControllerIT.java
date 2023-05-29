@@ -53,7 +53,9 @@ class GameControllerIT {
     @Test
     public void should_return_404_if_play_a_move_on_a_non_existing_game() {
         Integer notExistingGameId = chessBoardRepository.createNewGame() + 1;
+
         ResponseEntity<ChessBoardDto> response = this.restTemplate.postForEntity("http://localhost:%s/chessboard/%s/move/%s/to/%s".formatted(port, notExistingGameId, "e2", "e4"), null, null);
+
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
     }
 

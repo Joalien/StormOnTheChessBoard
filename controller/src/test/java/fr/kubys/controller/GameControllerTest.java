@@ -18,6 +18,7 @@ import org.springframework.http.ResponseEntity;
 import static fr.kubys.core.Position.e2;
 import static fr.kubys.core.Position.e4;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -39,7 +40,6 @@ class GameControllerTest {
         ResponseEntity<Object> objectResponseEntity = this.restTemplate.postForEntity("http://localhost:%s/chessboard/%s/move/%s/to/%s".formatted(port, gameId, "e2", "e4"), null, null);
 
         assertEquals(HttpStatus.OK, objectResponseEntity.getStatusCode());
-        verify(chessBoardRepository).getChessBoardService(gameId);
         ArgumentCaptor<PlayMoveCommand> argumentCaptor = ArgumentCaptor.forClass(PlayMoveCommand.class);
         verify(chessBoardRepository).saveCommand(argumentCaptor.capture());
         PlayMoveCommand capturedArgument = argumentCaptor.getValue();
@@ -56,7 +56,6 @@ class GameControllerTest {
         ResponseEntity<Object> objectResponseEntity = this.restTemplate.postForEntity("http://localhost:%s/chessboard/%s/endTurn".formatted(port, gameId), null, null);
 
         assertEquals(HttpStatus.OK, objectResponseEntity.getStatusCode());
-        verify(chessBoardRepository).getChessBoardService(gameId);
         ArgumentCaptor<EndTurnCommand> argumentCaptor = ArgumentCaptor.forClass(EndTurnCommand.class);
         verify(chessBoardRepository).saveCommand(argumentCaptor.capture());
         assertEquals(gameId, argumentCaptor.getValue().getGameId());
@@ -66,7 +65,7 @@ class GameControllerTest {
     void fail_to_end_turn_of_not_existing_game() {
         Integer gameId = 10;
         Mockito.clearInvocations(chessBoardRepository);
-        Mockito.when(chessBoardRepository.getChessBoardService(gameId)).thenThrow(new GameNotFoundException(gameId));
+        Mockito.doThrow(new GameNotFoundException(gameId)).when(chessBoardRepository).saveCommand(any());
 
         ResponseEntity<Object> objectResponseEntity = this.restTemplate.postForEntity("http://localhost:%s/chessboard/%s/endTurn".formatted(port, gameId), null, null);
 

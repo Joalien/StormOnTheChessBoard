@@ -72,7 +72,7 @@ public class GameController {
         try {
             chessBoardRepository.saveCommand(endTurnCommand);
             return ResponseEntity.ok().build();
-        } catch (Exception e) {
+        } catch (IllegalStateException e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
         }
     }
@@ -110,7 +110,7 @@ public class GameController {
         try {
             chessBoardRepository.saveCommand(command);
             return ResponseEntity.ok().build();
-        } catch (Exception e) {
+        } catch (IllegalStateException | IllegalArgumentException e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
         }
     }

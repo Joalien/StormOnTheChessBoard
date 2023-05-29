@@ -9,7 +9,7 @@ import java.time.Instant;
 
 @Getter
 @SuperBuilder
-public abstract class Command {
+public abstract class Command { // FIXME sealed me!
     protected Integer gameId;
     @Builder.Default
     protected Instant instant = Instant.now();

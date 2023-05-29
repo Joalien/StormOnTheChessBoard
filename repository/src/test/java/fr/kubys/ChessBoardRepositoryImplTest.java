@@ -40,11 +40,6 @@ class ChessBoardRepositoryImplTest {
     }
 
     @Test
-    void should_not_be_able_to_move_if_game_not_started() {
-        assertThrows(IllegalStateException.class, () -> chessBoardRepository.saveCommand(MOVE_GAME_COMMAND));
-    }
-
-    @Test
     void should_play_a_game() {
         assertDoesNotThrow(() -> chessBoardRepository.saveCommand(START_GAME_COMMAND));
         assertDoesNotThrow(() -> chessBoardRepository.saveCommand(MOVE_GAME_COMMAND));
@@ -74,12 +69,17 @@ class ChessBoardRepositoryImplTest {
 
     @Test
     void game_should_not_exist() {
-        assertFalse(chessBoardRepository.doesGameExist(GAME_ID));
+        assertFalse(chessBoardRepository.gameExists(GAME_ID));
     }
 
     @Test
     void game_should_exist() {
         chessBoardRepository.createNewGame();
-        assertTrue(chessBoardRepository.doesGameExist(GAME_ID));
+        assertTrue(chessBoardRepository.gameExists(GAME_ID));
+    }
+
+    @Test
+    void should_not_create_game_if_invalid_command() {
+        assertThrows(GameNotFoundException.class, () -> chessBoardRepository.saveCommand(MOVE_GAME_COMMAND));
     }
 }
