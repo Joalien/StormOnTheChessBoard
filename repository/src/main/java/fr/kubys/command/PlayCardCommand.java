@@ -11,21 +11,16 @@ import java.util.List;
 @SuperBuilder
 @Getter
 public final class PlayCardCommand extends Command {
-    String cardName;
-    List<?> parameters;
+    Card card;
+    Object parameters;
 
     @Override
     public void execute(ChessBoardWriteService chessBoardWriteService) {
-        try {
-            chessBoardWriteService.tryToPlayCard((Card) Class.forName(cardName).getConstructor().newInstance(), parameters);
-        } catch (ClassNotFoundException | InvocationTargetException | InstantiationException | IllegalAccessException |
-                 NoSuchMethodException e) {
-            throw new RuntimeException(e);
-        }
+        chessBoardWriteService.tryToPlayCard(card, parameters);
     }
 
     @Override
     public String toString() {
-        return "Play card %s with parameters %s".formatted(cardName, parameters);
+        return "Play card %s with parameters %s".formatted(card, parameters);
     }
 }

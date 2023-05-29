@@ -4,8 +4,6 @@ import fr.kubys.card.Card;
 import fr.kubys.core.Position;
 import fr.kubys.game.exception.CardAlreadyPlayedException;
 
-import java.util.List;
-
 public final class BeforeMoveCardPlayedState implements TurnState {
     @Override
     public void tryToMove(GameStateController gameStateController, Position from, Position to) {
@@ -14,7 +12,7 @@ public final class BeforeMoveCardPlayedState implements TurnState {
     }
 
     @Override
-    public void tryToPlayCard(GameStateController gameStateController, Card card, List<?> params) {
+    public void tryToPlayCard(GameStateController gameStateController, Card card, Object params) {
         throw new CardAlreadyPlayedException();
     }
 

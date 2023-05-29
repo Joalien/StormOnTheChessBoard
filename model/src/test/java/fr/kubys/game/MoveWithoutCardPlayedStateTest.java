@@ -15,9 +15,9 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class MoveWithoutCardPlayedStateTest {
 
-    private Card beforeMoveCard;
-    private Card replaceMoveCard;
-    private Card afterMoveCard;
+    private BombingCard beforeMoveCard;
+    private LightweightSquadCard replaceMoveCard;
+    private QuadrilleCard afterMoveCard;
     private GameStateController gameStateController;
 
     @BeforeEach
@@ -52,21 +52,21 @@ class MoveWithoutCardPlayedStateTest {
     class PlayCard {
         @Test
         void should_be_able_to_play_valid_after_move_card() {
-            assertDoesNotThrow(() -> gameStateController.tryToPlayCard(afterMoveCard, List.of(QuadrilleCard.Direction.CLOCKWISE)));
+            assertDoesNotThrow(() -> gameStateController.tryToPlayCard(afterMoveCard, new QuadrilleCard.QuadrilleCardParam(QuadrilleCard.Direction.CLOCKWISE)));
 
             assertEquals(StateEnum.END_OF_THE_TURN, gameStateController.getCurrentState());
         }
 
         @Test
         void should_not_be_able_to_play_replace_move_card() {
-            assertThrows(IllegalStateException.class, () -> gameStateController.tryToPlayCard(replaceMoveCard, List.of((Pawn) gameStateController.getChessBoard().at(e2).getPiece().get(), (Pawn) gameStateController.getChessBoard().at(d2).getPiece().get())));
+            assertThrows(IllegalStateException.class, () -> gameStateController.tryToPlayCard(replaceMoveCard, new LightweightSquadCard.LightweightSquadCardParam((Pawn) gameStateController.getChessBoard().at(e2).getPiece().get(), (Pawn) gameStateController.getChessBoard().at(d2).getPiece().get())));
 
             assertEquals(StateEnum.MOVE_WITHOUT_CARD_PLAYED, gameStateController.getCurrentState());
         }
 
         @Test
         void should_not_be_able_to_play_before_move_card() {
-            assertThrows(IllegalStateException.class, () -> gameStateController.tryToPlayCard(beforeMoveCard, List.of(e4)));
+            assertThrows(IllegalStateException.class, () -> gameStateController.tryToPlayCard(beforeMoveCard, new BombingCard.BombingCardParam(e4)));
 
             assertEquals(StateEnum.MOVE_WITHOUT_CARD_PLAYED, gameStateController.getCurrentState());
         }
@@ -76,7 +76,7 @@ class MoveWithoutCardPlayedStateTest {
             BlackHoleCard blackHoleCard = new BlackHoleCard();
             gameStateController.getCurrentPlayer().getCards().add(blackHoleCard);
 
-            assertThrows(IllegalArgumentException.class, () -> gameStateController.tryToPlayCard(blackHoleCard, List.of(h8)));
+            assertThrows(IllegalArgumentException.class, () -> gameStateController.tryToPlayCard(blackHoleCard, new BlackHoleCard.BlackHoleCardParam(h8)));
 
             assertEquals(StateEnum.MOVE_WITHOUT_CARD_PLAYED, gameStateController.getCurrentState());
         }

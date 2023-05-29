@@ -4,27 +4,26 @@ import fr.kubys.board.ChessBoard;
 import fr.kubys.board.effect.MagnetismEffect;
 import fr.kubys.piece.Piece;
 
-import java.util.List;
+public class MagnetismCard extends Card<MagnetismCard.MagnetismCardParam> {
 
-public class MagnetismCard extends Card {
-
-    private Piece piece;
+    public record MagnetismCardParam(Piece piece) {}
+    private MagnetismCardParam param;
 
     public MagnetismCard() {
         super("Magnetisme", "", CardType.REPLACE_TURN);
     }
 
     @Override
-    protected void setupParams(List<?> params) {
-        piece = (Piece) params.get(0);
+    protected void setupParams(MagnetismCardParam params) {
+        this.param = params;
     }
 
     @Override
     protected void validInput(ChessBoard chessBoard) {
-        if (piece == null) throw new IllegalStateException();
-        if (piece.getPosition() == null)
-            throw new IllegalArgumentException("%s is not on the board!".formatted(piece));
-        if (piece.getColor() != isPlayedBy) throw new CannotMoveThisColorException(isPlayedBy.opposite());
+        if (param.piece == null) throw new IllegalStateException();
+        if (param.piece.getPosition() == null)
+            throw new IllegalArgumentException("%s is not on the board!".formatted(param.piece));
+        if (param.piece.getColor() != isPlayedBy) throw new CannotMoveThisColorException(isPlayedBy.opposite());
     }
 
     @Override
@@ -34,6 +33,6 @@ public class MagnetismCard extends Card {
 
     @Override
     protected void doAction(ChessBoard chessBoard) {
-        chessBoard.addEffect(new MagnetismEffect(piece));
+        chessBoard.addEffect(new MagnetismEffect(param.piece));
     }
 }

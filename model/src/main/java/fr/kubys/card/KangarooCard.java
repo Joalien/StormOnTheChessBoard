@@ -5,26 +5,25 @@ import fr.kubys.core.Position;
 import fr.kubys.piece.Knight;
 import fr.kubys.piece.extra.Kangaroo;
 
-import java.util.List;
+public class KangarooCard extends Card<KangarooCard.KangarooCardParam> {
 
-public class KangarooCard extends Card {
-
-    private Knight knight;
+    public record KangarooCardParam(Knight knight) {}
+    private KangarooCardParam param;
 
     public KangarooCard() {
         super("Kangaroo", "Transformez définitivement l'un de vos cavaliers, ou un cavalier adverse en kangourou. Le kangourou se déplace en faisant deux sauts de cavalier consécutifs.", CardType.AFTER_TURN);
     }
 
     @Override
-    protected void setupParams(List<?> params) {
-        this.knight = (Knight) params.get(0);
+    protected void setupParams(KangarooCardParam params) {
+        this.param = params;
     }
 
     @Override
     protected void validInput(ChessBoard chessBoard) {
-        if (knight == null) throw new IllegalStateException();
-        if (chessBoard.getOutOfTheBoardPieces().contains(knight))
-            throw new IllegalArgumentException("%s should be on the board".formatted(knight));
+        if (param.knight == null) throw new IllegalStateException();
+        if (chessBoard.getOutOfTheBoardPieces().contains(param.knight))
+            throw new IllegalArgumentException("%s should be on the board".formatted(param.knight));
     }
 
     @Override
@@ -34,8 +33,8 @@ public class KangarooCard extends Card {
 
     @Override
     protected void doAction(ChessBoard chessBoard) {
-        Position knightPosition = knight.getPosition();
-        chessBoard.removePieceFromTheBoard(knight);
-        chessBoard.add(new Kangaroo(knight.getColor()), knightPosition);
+        Position knightPosition = param.knight.getPosition();
+        chessBoard.removePieceFromTheBoard(param.knight);
+        chessBoard.add(new Kangaroo(param.knight.getColor()), knightPosition);
     }
 }

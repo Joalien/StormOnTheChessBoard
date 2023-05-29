@@ -77,7 +77,7 @@ public class GameStateController implements ChessBoardService {
     }
 
     @Override
-    public void tryToPlayCard(Card card, List<?> params) {
+    public void tryToPlayCard(Card card, Object params) {
         assertGameHasAlreadyStarted();
         if (!currentPlayer.getCards().contains(card))
             throw new CardNotFoundException("Player %s does not have %s in hand!".formatted(currentPlayer, card));
@@ -125,7 +125,8 @@ public class GameStateController implements ChessBoardService {
         return this.chessBoard;
     }
 
-    Player getCurrentPlayer() {
+    @Override
+    public Player getCurrentPlayer() {
         return this.currentPlayer;
     }
 
@@ -133,14 +134,17 @@ public class GameStateController implements ChessBoardService {
         return this.currentState;
     }
 
+    @Override
     public Player getWhite() {
         return this.white;
     }
 
+    @Override
     public Player getBlack() {
         return this.black;
     }
 
+    @Override
     public List<Card> getCards() {
         return this.cards;
     }

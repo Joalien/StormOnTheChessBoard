@@ -12,25 +12,23 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class QuadrilleCard extends Card {
+public class QuadrilleCard extends Card<QuadrilleCard.QuadrilleCardParam> {
 
+    public record QuadrilleCardParam(Direction direction) {}
+    private QuadrilleCardParam param;
     private static final List<Position> CORNERS = Stream.of(Position.a1, Position.h1, Position.h8, Position.a8).toList();
-    private final Map<Position, Optional<Piece>> pieces = new HashMap<>();
-
-    private Direction direction;
-
     public QuadrilleCard() {
         super("Quadrille", "Toutes les pièces se trouvant dans l'un des quatre coins de l'échiquier se déplacent d'un quart de tour dans le sens de votre choix. Les mouvements sont simultanés, il n'y a donc pas de prise.", CardType.AFTER_TURN);
     }
 
     @Override
-    protected void setupParams(List<?> params) {
-        direction = (Direction) params.get(0);
+    protected void setupParams(QuadrilleCardParam params) {
+        this.param = params;
     }
 
     @Override
     protected void validInput(ChessBoard chessBoard) {
-        if (direction == null) throw new IllegalStateException();
+        if (param.direction == null) throw new IllegalStateException();
     }
 
     @Override
@@ -67,7 +65,7 @@ public class QuadrilleCard extends Card {
     private Map<Position, Optional<Piece>> saveWhichPieceShouldGoInWhichCorner(ChessBoard chessBoard) {
         return CORNERS.stream()
                 .map(chessBoard::at)
-                .collect(Collectors.toMap(square -> direction.cornersMap.get(square.getPosition()), Square::getPiece));
+                .collect(Collectors.toMap(square -> param.direction.cornersMap.get(square.getPosition()), Square::getPiece));
     }
 
     public enum Direction {

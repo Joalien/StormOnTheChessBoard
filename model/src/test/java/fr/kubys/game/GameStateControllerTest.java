@@ -36,14 +36,14 @@ class GameStateControllerTest {
 
     @Test
     void should_discard_card_and_pick_new_one() {
-        Card card = new LightweightSquadCard();
+        LightweightSquadCard card = new LightweightSquadCard();
         gameStateController.getCurrentPlayer().getCards().clear();
         gameStateController.getCurrentPlayer().getCards().add(card);
         gameStateController.getCards().remove(card);
         assertEquals(1, gameStateController.getCurrentPlayer().getCards().size());
         assertTrue(gameStateController.getCurrentPlayer().getCards().contains(card));
 
-        assertDoesNotThrow(() -> gameStateController.tryToPlayCard(card, List.of((Pawn) gameStateController.getChessBoard().at(e2).getPiece().get(), (Pawn) gameStateController.getChessBoard().at(d2).getPiece().get())));
+        assertDoesNotThrow(() -> gameStateController.tryToPlayCard(card, new LightweightSquadCard.LightweightSquadCardParam((Pawn) gameStateController.getChessBoard().at(e2).getPiece().get(), (Pawn) gameStateController.getChessBoard().at(d2).getPiece().get())));
 
         assertEquals(1, gameStateController.getCurrentPlayer().getCards().size());
         assertFalse(gameStateController.getCurrentPlayer().getCards().contains(card));

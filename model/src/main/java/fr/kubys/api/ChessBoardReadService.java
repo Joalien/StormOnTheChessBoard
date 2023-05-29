@@ -15,6 +15,8 @@ public interface ChessBoardReadService {
 
     List<Card> getCards();
 
+    Player getCurrentPlayer();
+
     Player getWhite();
 
     Player getBlack();

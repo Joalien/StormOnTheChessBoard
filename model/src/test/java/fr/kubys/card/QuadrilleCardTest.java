@@ -2,6 +2,7 @@ package fr.kubys.card;
 
 import fr.kubys.board.CheckException;
 import fr.kubys.board.ChessBoard;
+import fr.kubys.card.QuadrilleCard.QuadrilleCardParam;
 import fr.kubys.core.Color;
 import fr.kubys.piece.King;
 import fr.kubys.piece.Rock;
@@ -22,8 +23,8 @@ class QuadrilleCardTest {
     private Rock h1Rock;
     private Rock a8Rock;
     private Rock h8Rock;
-    private Card clockwiseQuadrille;
-    private Card counterclockwiseQuadrille;
+    private QuadrilleCard clockwiseQuadrille;
+    private QuadrilleCard counterclockwiseQuadrille;
 
 
     @BeforeEach
@@ -43,7 +44,7 @@ class QuadrilleCardTest {
     class Success {
         @Test
         void should_turn_clockwise() {
-            assertDoesNotThrow(() -> clockwiseQuadrille.playOn(chessBoard, List.of(QuadrilleCard.Direction.CLOCKWISE)));
+            assertDoesNotThrow(() -> clockwiseQuadrille.playOn(chessBoard, new QuadrilleCardParam(QuadrilleCard.Direction.CLOCKWISE)));
 
             assertEquals(a1Rock, chessBoard.at(a8).getPiece().get());
             assertEquals(h1Rock, chessBoard.at(a1).getPiece().get());
@@ -57,7 +58,7 @@ class QuadrilleCardTest {
             chessBoard.add(a1Rock, a1);
             chessBoard.add(h8Rock, h8);
 
-            assertDoesNotThrow(() -> clockwiseQuadrille.playOn(chessBoard, List.of(QuadrilleCard.Direction.CLOCKWISE)));
+            assertDoesNotThrow(() -> clockwiseQuadrille.playOn(chessBoard, new QuadrilleCardParam(QuadrilleCard.Direction.CLOCKWISE)));
 
             assertEquals(a1Rock, chessBoard.at(a8).getPiece().get());
             assertEquals(h8Rock, chessBoard.at(h1).getPiece().get());
@@ -67,7 +68,7 @@ class QuadrilleCardTest {
 
         @Test
         void should_turn_counterclockwise() {
-            assertDoesNotThrow(() -> counterclockwiseQuadrille.playOn(chessBoard, List.of(QuadrilleCard.Direction.COUNTERCLOCKWISE)));
+            assertDoesNotThrow(() -> counterclockwiseQuadrille.playOn(chessBoard, new QuadrilleCardParam(QuadrilleCard.Direction.COUNTERCLOCKWISE)));
 
             assertEquals(a1Rock, chessBoard.at(h1).getPiece().get());
             assertEquals(h1Rock, chessBoard.at(h8).getPiece().get());
@@ -78,7 +79,7 @@ class QuadrilleCardTest {
         @Test
         void should_work_on_empty_chessboard() {
             chessBoard = ChessBoard.createEmpty();
-            assertDoesNotThrow(() -> clockwiseQuadrille.playOn(chessBoard, List.of(QuadrilleCard.Direction.CLOCKWISE)));
+            assertDoesNotThrow(() -> clockwiseQuadrille.playOn(chessBoard, new QuadrilleCardParam(QuadrilleCard.Direction.CLOCKWISE)));
 
             assertTrue(chessBoard.at(h1).getPiece().isEmpty());
             assertTrue(chessBoard.at(h8).getPiece().isEmpty());
@@ -95,8 +96,8 @@ class QuadrilleCardTest {
             chessBoard.add(new King(Color.WHITE), e1);
             chessBoard.add(a8Rock, h8);
 
-            Assertions.assertThrows(CheckException.class, () -> clockwiseQuadrille.playOn(chessBoard, List.of(QuadrilleCard.Direction.CLOCKWISE)));
-            assertDoesNotThrow(() -> counterclockwiseQuadrille.playOn(chessBoard, List.of(QuadrilleCard.Direction.COUNTERCLOCKWISE)));
+            Assertions.assertThrows(CheckException.class, () -> clockwiseQuadrille.playOn(chessBoard, new QuadrilleCardParam(QuadrilleCard.Direction.CLOCKWISE)));
+            assertDoesNotThrow(() -> counterclockwiseQuadrille.playOn(chessBoard, new QuadrilleCardParam(QuadrilleCard.Direction.COUNTERCLOCKWISE)));
         }
 
         @Test
@@ -105,8 +106,8 @@ class QuadrilleCardTest {
             chessBoard.add(new King(Color.WHITE), e1);
             chessBoard.add(a8Rock, a8);
 
-            Assertions.assertThrows(CheckException.class, () -> counterclockwiseQuadrille.playOn(chessBoard, List.of(QuadrilleCard.Direction.COUNTERCLOCKWISE)));
-            assertDoesNotThrow(() -> clockwiseQuadrille.playOn(chessBoard, List.of(QuadrilleCard.Direction.CLOCKWISE)));
+            Assertions.assertThrows(CheckException.class, () -> counterclockwiseQuadrille.playOn(chessBoard, new QuadrilleCardParam(QuadrilleCard.Direction.COUNTERCLOCKWISE)));
+            assertDoesNotThrow(() -> clockwiseQuadrille.playOn(chessBoard, new QuadrilleCardParam(QuadrilleCard.Direction.CLOCKWISE)));
         }
     }
 }

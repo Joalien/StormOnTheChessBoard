@@ -4,10 +4,9 @@ import fr.kubys.board.CheckException;
 import fr.kubys.board.ChessBoard;
 import fr.kubys.core.Color;
 
-import java.util.List;
 import java.util.Objects;
 
-public abstract class Card {
+public abstract class Card<T> {
 
     protected final String name;
     protected final String description;
@@ -20,7 +19,7 @@ public abstract class Card {
         this.type = type;
     }
 
-    public final void playOn(ChessBoard chessBoard, List<?> params) {
+    public final void playOn(ChessBoard chessBoard, T params) {
         setupParams(params);
         validInput(chessBoard);
 
@@ -29,7 +28,7 @@ public abstract class Card {
         doAction(chessBoard);
     }
 
-    protected abstract void setupParams(List<?> params);
+    protected abstract void setupParams(T params);
 
     protected abstract void validInput(ChessBoard chessBoard);
 

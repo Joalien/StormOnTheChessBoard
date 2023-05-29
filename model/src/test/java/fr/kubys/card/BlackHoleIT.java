@@ -1,6 +1,7 @@
 package fr.kubys.card;
 
 import fr.kubys.board.ChessBoard;
+import fr.kubys.card.QuadrilleCard.QuadrilleCardParam;
 import fr.kubys.piece.extra.BlackHole;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -17,6 +18,6 @@ class BlackHoleIT {
         chessBoard.removePieceFromTheBoard(chessBoard.at(a1).getPiece().get());
         chessBoard.add(new BlackHole(), a1);
 
-        Assertions.assertThrows(BlackHole.BlackHoleException.class, () -> new QuadrilleCard().playOn(chessBoard, List.of(QuadrilleCard.Direction.CLOCKWISE)));
+        Assertions.assertThrows(BlackHole.BlackHoleException.class, () -> new QuadrilleCard().playOn(chessBoard, new QuadrilleCardParam(QuadrilleCard.Direction.CLOCKWISE)));
     }
 }

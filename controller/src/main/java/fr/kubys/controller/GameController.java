@@ -1,7 +1,9 @@
 package fr.kubys.controller;
 
+import fr.kubys.card.Card;
 import fr.kubys.command.Command;
 import fr.kubys.command.EndTurnCommand;
+import fr.kubys.command.PlayCardCommand;
 import fr.kubys.command.PlayMoveCommand;
 import fr.kubys.core.Position;
 import fr.kubys.dto.ChessBoardDto;
@@ -13,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import java.util.Objects;
 
 import static fr.kubys.core.Position.*;
 import static fr.kubys.mapper.ModelMapper.mapToDto;
@@ -83,21 +86,25 @@ public class GameController {
         return mapToDto(gameId, chessBoardRepository.getChessBoardService(gameId));
     }
 
-//    @PostMapping("/{gameId}/card/{cardName}")
-//    @CrossOrigin(origins = "*")
-//    public ResponseEntity<Void> updateGame(@PathVariable Integer gameId, @PathVariable String cardName, @RequestParam List<Object> param) {
-//        try {
-//            Command command = PlayCardCommand.builder()
-//                    .gameId(gameId)
-//                    .cardName(cardName)
-//                    .parameters(param)
-//                    .build();
-//            chessBoardRepository.saveCommand(command);
-//            return ResponseEntity.ok().build();
-//        } catch (Exception e) {
-//            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
-//        }
-//    }
+    @PostMapping("/{gameId}/card/{cardName}")
+    @CrossOrigin(origins = "*")
+    public ResponseEntity<Void> updateGame(@PathVariable Integer gameId, @PathVariable String cardName, @RequestParam Object param) {
+        try {
+            Card card = chessBoardRepository.getChessBoardService(gameId).getCurrentPlayer().getCards().stream()
+                    .filter(c -> Objects.equals(c.getName(), cardName)) // FIXME migrate to id
+                    .findFirst()
+                    .orElseThrow(IllegalArgumentException::new);
+            Command command = PlayCardCommand.builder()
+                    .gameId(gameId)
+                    .card(card)
+                    .parameters(param)
+                    .build();
+            chessBoardRepository.saveCommand(command);
+            return ResponseEntity.ok().build();
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+        }
+    }
 
     @PostMapping("/{gameId}/move/{from}/to/{to}")
     @CrossOrigin(origins = "*")

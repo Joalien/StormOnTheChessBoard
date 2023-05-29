@@ -2,6 +2,7 @@ package fr.kubys.card;
 
 import fr.kubys.board.CheckException;
 import fr.kubys.board.ChessBoard;
+import fr.kubys.card.CourtlyLoveCard.CourtlyLoveCardParam;
 import fr.kubys.core.Color;
 import fr.kubys.piece.Bishop;
 import fr.kubys.piece.King;
@@ -19,7 +20,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class CourtlyLoveCardTest {
 
     private Knight knight;
-    private Card courtlyLoveCard;
+    private CourtlyLoveCard courtlyLoveCard;
     private ChessBoard chessBoard;
 
     @BeforeEach
@@ -43,7 +44,7 @@ class CourtlyLoveCardTest {
     class Success {
         @Test
         void should_tp_knight_to_c1() {
-            assertDoesNotThrow(() -> courtlyLoveCard.playOn(chessBoard, List.of(knight, c1)));
+            assertDoesNotThrow(() -> courtlyLoveCard.playOn(chessBoard, new CourtlyLoveCardParam(knight, c1)));
 
             assertEquals(knight, chessBoard.at(c1).getPiece().get());
             assertTrue(chessBoard.at(b4).getPiece().isEmpty());
@@ -53,7 +54,7 @@ class CourtlyLoveCardTest {
         void should_tp_knight_to_protect_from_chess() {
             chessBoard.add(new Bishop(Color.BLACK), a5);
 
-            assertDoesNotThrow(() -> courtlyLoveCard.playOn(chessBoard, List.of(knight, d2)));
+            assertDoesNotThrow(() -> courtlyLoveCard.playOn(chessBoard, new CourtlyLoveCardParam(knight, d2)));
 
             assertEquals(knight, chessBoard.at(d2).getPiece().get());
             assertTrue(chessBoard.at(b4).getPiece().isEmpty());
@@ -63,7 +64,7 @@ class CourtlyLoveCardTest {
         void should_tp_knight_to_protect_from_chess_bis() {
             chessBoard.add(new Bishop(Color.BLACK), c3);
 
-            assertDoesNotThrow(() -> courtlyLoveCard.playOn(chessBoard, List.of(knight, d2)));
+            assertDoesNotThrow(() -> courtlyLoveCard.playOn(chessBoard, new CourtlyLoveCardParam(knight, d2)));
 
             assertEquals(knight, chessBoard.at(d2).getPiece().get());
             assertTrue(chessBoard.at(b4).getPiece().isEmpty());
@@ -78,7 +79,7 @@ class CourtlyLoveCardTest {
             Bishop bishop = new Bishop(Color.BLACK);
             chessBoard.add(bishop, d2);
 
-            assertThrows(IllegalArgumentException.class, () -> courtlyLoveCard.playOn(chessBoard, List.of(knight, d2)));
+            assertThrows(IllegalArgumentException.class, () -> courtlyLoveCard.playOn(chessBoard, new CourtlyLoveCardParam(knight, d2)));
 
             assertEquals(knight, chessBoard.at(b4).getPiece().get());
             assertEquals(bishop, chessBoard.at(d2).getPiece().get());
@@ -88,7 +89,7 @@ class CourtlyLoveCardTest {
         void should_not_tp_if_it_create_check() {
             chessBoard.add(new Bishop(Color.BLACK), a5);
 
-            assertThrows(CheckException.class, () -> createCourtlyLoveCard().playOn(chessBoard, List.of(knight, c1)));
+            assertThrows(CheckException.class, () -> createCourtlyLoveCard().playOn(chessBoard, new CourtlyLoveCardParam(knight, c1)));
 
             assertEquals(knight, chessBoard.at(b4).getPiece().get());
             assertTrue(chessBoard.at(c1).getPiece().isEmpty());
@@ -96,7 +97,7 @@ class CourtlyLoveCardTest {
 
         @Test
         void should_not_tp_if_position_not_nearby_queen() {
-            assertThrows(IllegalArgumentException.class, () -> createCourtlyLoveCard().playOn(chessBoard, List.of(knight, h8)));
+            assertThrows(IllegalArgumentException.class, () -> createCourtlyLoveCard().playOn(chessBoard, new CourtlyLoveCardParam(knight, h8)));
 
             assertEquals(knight, chessBoard.at(b4).getPiece().get());
             assertTrue(chessBoard.at(h8).getPiece().isEmpty());
@@ -104,9 +105,9 @@ class CourtlyLoveCardTest {
 
         @Test
         void should_not_move_enemy_knight() {
-            Card courtlyLoveCard = createCourtlyLoveCard();
+            CourtlyLoveCard courtlyLoveCard = createCourtlyLoveCard();
             courtlyLoveCard.setIsPlayedBy(Color.BLACK);
-            assertThrows(CannotMoveThisColorException.class, () -> courtlyLoveCard.playOn(chessBoard, List.of(knight, c1)));
+            assertThrows(CannotMoveThisColorException.class, () -> courtlyLoveCard.playOn(chessBoard, new CourtlyLoveCardParam(knight, c1)));
 
             assertEquals(knight, chessBoard.at(b4).getPiece().get());
             assertTrue(chessBoard.at(c1).getPiece().isEmpty());

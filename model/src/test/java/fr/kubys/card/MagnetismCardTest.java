@@ -1,6 +1,7 @@
 package fr.kubys.card;
 
 import fr.kubys.board.ChessBoard;
+import fr.kubys.card.MagnetismCard.MagnetismCardParam;
 import fr.kubys.core.Color;
 import fr.kubys.core.Position;
 import fr.kubys.piece.Piece;
@@ -17,7 +18,7 @@ class MagnetismCardTest {
 
     private final Position c2 = Position.c2;
     private ChessBoard chessBoard;
-    private Card magnetismCard;
+    private MagnetismCard magnetismCard;
     private Piece piece;
 
 
@@ -33,7 +34,7 @@ class MagnetismCardTest {
     class Success {
         @Test
         void should_add_effect_magnetism_on_pawn_c2() {
-            assertDoesNotThrow(() -> magnetismCard.playOn(chessBoard, List.of(piece)));
+            assertDoesNotThrow(() -> magnetismCard.playOn(chessBoard, new MagnetismCardParam(piece)));
             assertEquals(1, chessBoard.getEffects().size());
         }
     }
@@ -42,13 +43,13 @@ class MagnetismCardTest {
     class Failure {
         @Test
         void should_throws_if_piece_not_on_the_board() {
-            assertThrows(IllegalArgumentException.class, () -> magnetismCard.playOn(chessBoard, List.of(new Queen(Color.WHITE))));
+            assertThrows(IllegalArgumentException.class, () -> magnetismCard.playOn(chessBoard, new MagnetismCardParam(new Queen(Color.WHITE))));
         }
 
         @Test
         void should_throw_if_cast_on_enemy_piece() {
             magnetismCard.setIsPlayedBy(Color.BLACK);
-            assertThrows(CannotMoveThisColorException.class, () -> magnetismCard.playOn(chessBoard, List.of(piece)));
+            assertThrows(CannotMoveThisColorException.class, () -> magnetismCard.playOn(chessBoard, new MagnetismCardParam(piece)));
         }
     }
 }

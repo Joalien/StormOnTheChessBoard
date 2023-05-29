@@ -2,6 +2,7 @@ package fr.kubys.card;
 
 import fr.kubys.board.ChessBoard;
 import fr.kubys.core.Color;
+import fr.kubys.core.Position;
 import fr.kubys.piece.Pawn;
 import fr.kubys.piece.Piece;
 import fr.kubys.piece.Square;
@@ -9,28 +10,29 @@ import fr.kubys.piece.Square;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class ChargeCard extends Card {
+public class ChargeCard extends Card<ChargeCard.ChargeCardParam>{
 
-    private Set<Pawn> pawns;
+    public record ChargeCardParam(Set<Pawn> pawns) {}
+    private ChargeCardParam param;
 
     public ChargeCard() {
         super("Charge", "Avancez tous ceux de vos ppions que vous voulez, et qui le peuvent, d'une case", CardType.REPLACE_TURN);
     }
 
     @Override
-    protected void setupParams(List<?> params) {
-        this.pawns = params.stream().map(p -> (Pawn) p).collect(Collectors.toSet());
+    protected void setupParams(ChargeCardParam param) {
+        this.param = param;
     }
 
     @Override
     protected void validInput(ChessBoard chessBoard) {
-        if (pawns == null) throw new IllegalStateException();
-        if (pawns.isEmpty()) throw new IllegalArgumentException("You should select at least one pawn");
-        if (pawns.stream().map(Piece::getColor).anyMatch(color -> color != isPlayedBy))
+        if (param.pawns == null) throw new IllegalStateException();
+        if (param.pawns.isEmpty()) throw new IllegalArgumentException("You should select at least one pawn");
+        if (param.pawns.stream().map(Piece::getColor).anyMatch(color -> color != isPlayedBy))
             throw new CannotMoveThisColorException(isPlayedBy.opposite());
 
         assert chessBoard.getNumberOfFakeSquares() == 0;
-        pawns.stream()
+        param.pawns.stream()
                 .peek(pawn -> fakeOtherPawns(chessBoard, pawn))
                 .map(Pawn::oneSquareForward)
                 .map(Optional::get)
@@ -44,8 +46,8 @@ public class ChargeCard extends Card {
 
     @Override
     protected boolean doesNotCreateCheck(ChessBoard chessBoard) {
-        pawns.forEach(p -> chessBoard.fakeSquare(null, p.getPosition()));
-        pawns.stream()
+        param.pawns.forEach(p -> chessBoard.fakeSquare(null, p.getPosition()));
+        param.pawns.stream()
                 .filter(p -> p.oneSquareForward().isPresent())
                 .forEach(p -> chessBoard.fakeSquare(p, p.oneSquareForward().get()));
 
@@ -61,13 +63,13 @@ public class ChargeCard extends Card {
                 Color.BLACK, Comparator.<Pawn>comparingInt(pawn -> pawn.getRow().getRowNumber()),
                 Color.WHITE, Comparator.<Pawn>comparingInt(pawn -> pawn.getRow().getRowNumber()).reversed()
         ).get(this.isPlayedBy);
-        pawns.stream()
+        param.pawns.stream()
                 .sorted(startWithMoreAdvancedPawn)
                 .forEach(p -> chessBoard.move(p, p.oneSquareForward().get()));
     }
 
     private void fakeOtherPawns(ChessBoard cb, Pawn pawn) {
-        pawns.stream()
+        param.pawns.stream()
                 .filter(pawn1 -> !pawn1.equals(pawn))
                 .forEach(p -> cb.fakeSquare(null, p.getPosition()));
     }

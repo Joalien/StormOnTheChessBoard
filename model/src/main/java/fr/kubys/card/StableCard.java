@@ -5,13 +5,11 @@ import fr.kubys.core.Position;
 import fr.kubys.piece.Knight;
 import fr.kubys.piece.Rock;
 
-import java.util.List;
-
 // TODO generify me to allow other swap cards
-public class StableCard extends Card {
+public class StableCard extends Card<StableCard.StableCardParam> {
 
-    private Rock rock;
-    private Knight knight;
+    public record StableCardParam(Rock rock, Knight knight) {}
+    private StableCardParam param;
 
 
     public StableCard() {
@@ -19,16 +17,15 @@ public class StableCard extends Card {
     }
 
     @Override
-    protected void setupParams(List<?> params) {
-        this.rock = (Rock) params.get(0);
-        this.knight = (Knight) params.get(1);
+    protected void setupParams(StableCardParam params) {
+        this.param = params;
     }
 
     @Override
     protected void validInput(ChessBoard chessBoard) {
-        if (rock == null) throw new IllegalStateException();
-        if (knight == null) throw new IllegalStateException();
-        if (rock.getColor() != knight.getColor())
+        if (param.rock == null) throw new IllegalStateException();
+        if (param.knight == null) throw new IllegalStateException();
+        if (param.rock.getColor() != param.knight.getColor())
             throw new IllegalArgumentException("You should swap pieces of the same color");
     }
 
@@ -39,13 +36,13 @@ public class StableCard extends Card {
 
     @Override
     protected void doAction(ChessBoard chessBoard) {
-        Position rockPosition = rock.getPosition();
-        Position knightPosition = knight.getPosition();
+        Position rockPosition = param.rock.getPosition();
+        Position knightPosition = param.knight.getPosition();
 
-        chessBoard.removePieceFromTheBoard(rock);
-        chessBoard.removePieceFromTheBoard(knight);
+        chessBoard.removePieceFromTheBoard(param.rock);
+        chessBoard.removePieceFromTheBoard(param.knight);
 
-        chessBoard.add(rock, knightPosition);
-        chessBoard.add(knight, rockPosition);
+        chessBoard.add(param.rock, knightPosition);
+        chessBoard.add(param.knight, rockPosition);
     }
 }

@@ -5,12 +5,10 @@ import fr.kubys.board.effect.BombingEffect;
 import fr.kubys.core.Position;
 import fr.kubys.piece.Piece;
 
-import java.util.List;
+public class BombingCard extends Card <BombingCard.BombingCardParam>{
 
-public class BombingCard extends Card {
-
-    private Position position;
-
+    public record BombingCardParam(Position position) {}
+    private BombingCardParam param;
 
     public BombingCard() {
         super("Attentat",
@@ -19,15 +17,15 @@ public class BombingCard extends Card {
     }
 
     @Override
-    protected void setupParams(List<?> params) {
-        this.position = (Position) params.get(0);
+    protected void setupParams(BombingCardParam params) {
+        this.param = params;
     }
 
     @Override
     protected void validInput(ChessBoard chessBoard) {
-        if (position == null) throw new IllegalStateException();
+        if (param.position == null) throw new IllegalStateException();
         if (isPlayedBy == null) throw new IllegalStateException();
-        boolean thereIsEnemyPieceOnPosition = chessBoard.at(position).getPiece()
+        boolean thereIsEnemyPieceOnPosition = chessBoard.at(param.position).getPiece()
                 .map(Piece::getColor)
                 .map(c -> c != isPlayedBy)
                 .orElse(false);
@@ -42,6 +40,6 @@ public class BombingCard extends Card {
 
     @Override
     protected void doAction(ChessBoard chessBoard) {
-        chessBoard.addEffect(new BombingEffect(position, isPlayedBy));
+        chessBoard.addEffect(new BombingEffect(param.position, isPlayedBy));
     }
 }
