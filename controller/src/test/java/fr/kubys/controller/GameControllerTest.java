@@ -3,6 +3,7 @@ package fr.kubys.controller;
 import fr.kubys.command.EndTurnCommand;
 import fr.kubys.command.PlayMoveCommand;
 import fr.kubys.repository.ChessBoardRepository;
+import fr.kubys.repository.GameNotFoundException;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
@@ -59,5 +60,16 @@ class GameControllerTest {
         ArgumentCaptor<EndTurnCommand> argumentCaptor = ArgumentCaptor.forClass(EndTurnCommand.class);
         verify(chessBoardRepository).saveCommand(argumentCaptor.capture());
         assertEquals(gameId, argumentCaptor.getValue().getGameId());
+    }
+
+    @Test
+    void fail_to_end_turn_of_not_existing_game() {
+        Integer gameId = 10;
+        Mockito.clearInvocations(chessBoardRepository);
+        Mockito.when(chessBoardRepository.getChessBoardService(gameId)).thenThrow(new GameNotFoundException(gameId));
+
+        ResponseEntity<Object> objectResponseEntity = this.restTemplate.postForEntity("http://localhost:%s/chessboard/%s/endTurn".formatted(port, gameId), null, null);
+
+        assertEquals(HttpStatus.NOT_FOUND, objectResponseEntity.getStatusCode());
     }
 }

@@ -38,7 +38,7 @@ public class ChessBoardRepositoryImpl implements ChessBoardRepository {
 
     @Override
     public ChessBoardReadService getChessBoardService(Integer gameId) {
-        if (!doesGameExist(gameId)) throw new IllegalArgumentException("game %s not found".formatted(gameId));
+        if (!doesGameExist(gameId)) throw new GameNotFoundException(gameId);
 
         return computeChessBoard(gameId);
     }

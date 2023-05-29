@@ -6,6 +6,7 @@ import fr.kubys.command.PlayMoveCommand;
 import fr.kubys.command.StartGameCommand;
 import fr.kubys.repository.ChessBoardRepository;
 import fr.kubys.repository.ChessBoardRepositoryImpl;
+import fr.kubys.repository.GameNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -61,8 +62,8 @@ class ChessBoardRepositoryImplTest {
     }
 
     @Test
-    void should_be_empty() {
-        assertThrows(IllegalArgumentException.class, () -> chessBoardRepository.getChessBoardService(GAME_ID));
+    void game_should_not_be_found() {
+        assertThrows(GameNotFoundException.class, () -> chessBoardRepository.getChessBoardService(GAME_ID));
     }
 
     @Test

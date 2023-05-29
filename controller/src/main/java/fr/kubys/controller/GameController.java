@@ -68,11 +68,6 @@ public class GameController {
     @PostMapping("/{gameId}/endTurn")
     @CrossOrigin(origins = "*")
     public ResponseEntity<Integer> endTurn(@PathVariable Integer gameId) {
-        try {
-            chessBoardRepository.getChessBoardService(gameId);
-        } catch (IllegalArgumentException e) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-        }
         EndTurnCommand endTurnCommand = EndTurnCommand.builder().gameId(gameId).build();
         try {
             chessBoardRepository.saveCommand(endTurnCommand);
@@ -85,11 +80,7 @@ public class GameController {
     @GetMapping("/{gameId}")
     @CrossOrigin(origins = "*")
     public ChessBoardDto getGameById(@PathVariable Integer gameId) {
-        try {
-            return mapToDto(gameId, chessBoardRepository.getChessBoardService(gameId));
-        } catch (IllegalArgumentException e) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-        }
+        return mapToDto(gameId, chessBoardRepository.getChessBoardService(gameId));
     }
 
 //    @PostMapping("/{gameId}/card/{cardName}")
@@ -110,12 +101,7 @@ public class GameController {
 
     @PostMapping("/{gameId}/move/{from}/to/{to}")
     @CrossOrigin(origins = "*")
-    public ResponseEntity<Void> updateGame(@PathVariable Integer gameId, @PathVariable String from, @PathVariable String to) {
-        try {
-            chessBoardRepository.getChessBoardService(gameId);
-        } catch (IllegalArgumentException e) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-        }
+    public ResponseEntity<Void> move(@PathVariable Integer gameId, @PathVariable String from, @PathVariable String to) {
         Command command = PlayMoveCommand.builder()
                 .gameId(gameId)
                 .from(Position.valueOf(from))
