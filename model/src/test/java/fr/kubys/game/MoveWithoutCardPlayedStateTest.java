@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
+import java.util.Random;
 
 import static fr.kubys.core.Position.*;
 import static org.junit.jupiter.api.Assertions.*;
@@ -22,7 +23,7 @@ class MoveWithoutCardPlayedStateTest {
     @BeforeEach
     void setUp() {
         gameStateController = new GameStateController();
-        gameStateController.startGame();
+        gameStateController.startGame(new Random().nextLong());
         gameStateController.setCurrentState(StateEnum.MOVE_WITHOUT_CARD_PLAYED);
         beforeMoveCard = new BombingCard();
         replaceMoveCard = new LightweightSquadCard();

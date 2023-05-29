@@ -7,6 +7,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
+import java.util.Random;
 
 import static fr.kubys.core.Position.e2;
 import static fr.kubys.core.Position.e4;
@@ -19,7 +20,7 @@ class EndOfTheTurnStateTest {
     @BeforeEach
     void setUp() {
         gameStateController = new GameStateController();
-        gameStateController.startGame();
+        gameStateController.startGame(new Random().nextLong());
         gameStateController.setCurrentState(StateEnum.END_OF_THE_TURN);
         card = new QuadrilleCard();
         gameStateController.getCurrentPlayer().getCards().add(card);

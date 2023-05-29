@@ -6,7 +6,7 @@ import fr.kubys.core.Position;
 import java.util.List;
 
 public interface ChessBoardWriteService {
-    void startGame();
+    void startGame(long seed);
 
     void tryToMove(Position from, Position to);
 

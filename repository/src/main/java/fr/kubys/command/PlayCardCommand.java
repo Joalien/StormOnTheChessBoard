@@ -10,7 +10,7 @@ import java.util.List;
 
 @SuperBuilder
 @Getter
-public class PlayCardCommand extends Command {
+public final class PlayCardCommand extends Command {
     String cardName;
     List<?> parameters;
 

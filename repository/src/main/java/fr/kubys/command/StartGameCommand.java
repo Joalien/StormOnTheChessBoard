@@ -4,12 +4,15 @@ import fr.kubys.api.ChessBoardWriteService;
 import lombok.Getter;
 import lombok.experimental.SuperBuilder;
 
+import java.util.Random;
+
 @SuperBuilder
 @Getter
-public class StartGameCommand extends Command {
+public final class StartGameCommand extends Command {
+    private final long seed = new Random().nextLong();
     @Override
     public void execute(ChessBoardWriteService chessBoardWriteService) {
-        chessBoardWriteService.startGame();
+        chessBoardWriteService.startGame(seed);
     }
 
     @Override

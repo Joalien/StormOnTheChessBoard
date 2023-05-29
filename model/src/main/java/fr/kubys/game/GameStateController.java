@@ -28,7 +28,7 @@ public class GameStateController implements ChessBoardService {
     }
 
     @Override
-    public void startGame() {
+    public void startGame(long seed) {
         if (this.chessBoard != null)
             throw new IllegalStateException("Game has already started!");
 
@@ -36,7 +36,7 @@ public class GameStateController implements ChessBoardService {
         white = new Player("Name1", Color.WHITE);
         black = new Player("Name2", Color.BLACK);
 
-        initDeck();
+        initDeck(seed);
         IntStream.range(0, NUMBER_OF_CARDS_IN_HAND)
                 .peek(x -> dealCard(white))
                 .forEach(x -> dealCard(black));
@@ -44,7 +44,7 @@ public class GameStateController implements ChessBoardService {
         currentState = StateEnum.BEGINNING_OF_THE_TURN;
     }
 
-    private void initDeck() {
+    private void initDeck(long seed) {
         cards = new LinkedList<>();
         cards.add(new BlackHoleCard());
         cards.add(new BombingCard());
@@ -58,7 +58,7 @@ public class GameStateController implements ChessBoardService {
         cards.add(new ReflectedBishopCard());
         cards.add(new StableCard());
 
-//        Collections.shuffle(cards); // FIXME add randomness (use seed!)
+        Collections.shuffle(cards, new Random(seed));
     }
 
     private void dealCard(Player player) {

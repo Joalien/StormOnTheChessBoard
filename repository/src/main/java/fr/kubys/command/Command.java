@@ -9,7 +9,7 @@ import java.time.Instant;
 
 @Getter
 @SuperBuilder
-public abstract class Command { // FIXME sealed me!
+public abstract sealed class Command permits EndTurnCommand, PlayCardCommand, PlayMoveCommand, StartGameCommand {
     protected Integer gameId;
     @Builder.Default
     protected Instant instant = Instant.now();

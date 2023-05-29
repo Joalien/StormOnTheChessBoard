@@ -5,6 +5,7 @@ import fr.kubys.board.ChessBoard;
 import fr.kubys.core.Color;
 
 import java.util.List;
+import java.util.Objects;
 
 public abstract class Card {
 
@@ -60,5 +61,18 @@ public abstract class Card {
 
     public void setIsPlayedBy(Color isPlayedBy) {
         this.isPlayedBy = isPlayedBy;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Card card = (Card) o;
+        return Objects.equals(name, card.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name);
     }
 }

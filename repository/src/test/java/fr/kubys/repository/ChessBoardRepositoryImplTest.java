@@ -1,4 +1,4 @@
-package fr.kubys;
+package fr.kubys.repository;
 
 import fr.kubys.command.Command;
 import fr.kubys.command.EndTurnCommand;

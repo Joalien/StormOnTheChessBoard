@@ -7,7 +7,7 @@ import lombok.experimental.SuperBuilder;
 
 @SuperBuilder
 @Getter
-public class PlayMoveCommand extends Command {
+public final class PlayMoveCommand extends Command {
     Position from;
     Position to;
 

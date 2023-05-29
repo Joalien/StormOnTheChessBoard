@@ -8,6 +8,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
+import java.util.Random;
 
 import static fr.kubys.core.Position.*;
 import static org.junit.jupiter.api.Assertions.*;
@@ -19,7 +20,7 @@ class GameStateControllerTest {
     @BeforeEach
     void setUp() {
         gameStateController = new GameStateController();
-        gameStateController.startGame();
+        gameStateController.startGame(new Random().nextLong());
     }
 
     @Test
@@ -51,8 +52,8 @@ class GameStateControllerTest {
     @Test
     void should_not_be_able_to_start_an_already_started_game() {
         gameStateController = new GameStateController();
-        assertDoesNotThrow(() -> gameStateController.startGame());
-        assertThrows(IllegalStateException.class, () -> gameStateController.startGame());
+        assertDoesNotThrow(() -> gameStateController.startGame(new Random().nextLong()));
+        assertThrows(IllegalStateException.class, () -> gameStateController.startGame(new Random().nextLong()));
     }
 
     @Test

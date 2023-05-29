@@ -12,6 +12,7 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
+import java.util.Random;
 
 import static fr.kubys.core.Position.*;
 import static org.junit.jupiter.api.Assertions.*;
@@ -26,7 +27,7 @@ class BeginningOfTheTurnStateTest {
     @BeforeEach
     void setUp() {
         gameStateController = new GameStateController();
-        gameStateController.startGame();
+        gameStateController.startGame(new Random().nextLong());
         gameStateController.setCurrentState(StateEnum.BEGINNING_OF_THE_TURN);
         beforeMoveCard = new BombingCard();
         replaceMoveCard = new LightweightSquadCard();

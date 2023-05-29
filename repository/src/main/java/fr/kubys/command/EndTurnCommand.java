@@ -6,7 +6,7 @@ import lombok.experimental.SuperBuilder;
 
 @SuperBuilder
 @Getter
-public class EndTurnCommand extends Command {
+public final class EndTurnCommand extends Command {
 
     @Override
     public void execute(ChessBoardWriteService chessBoardWriteService) {

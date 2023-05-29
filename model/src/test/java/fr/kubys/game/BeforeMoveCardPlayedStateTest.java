@@ -7,6 +7,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
+import java.util.Random;
 
 import static fr.kubys.core.Position.*;
 import static org.junit.jupiter.api.Assertions.*;
@@ -18,7 +19,7 @@ class BeforeMoveCardPlayedStateTest {
     @BeforeEach
     void setUp() {
         gameStateController = new GameStateController();
-        gameStateController.startGame();
+        gameStateController.startGame(new Random().nextLong());
         gameStateController.setCurrentState(StateEnum.BEFORE_MOVE);
         card = new QuadrilleCard();
         gameStateController.getCurrentPlayer().getCards().add(card);
