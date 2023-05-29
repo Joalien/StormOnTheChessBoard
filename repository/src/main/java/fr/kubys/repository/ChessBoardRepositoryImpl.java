@@ -22,25 +22,22 @@ public class ChessBoardRepositoryImpl implements ChessBoardRepository {
                 .mapToInt(value -> value)
                 .max()
                 .orElse(0) + 1;
+        store.put(nextGameId, new LinkedList<>());
         saveCommand(StartGameCommand.builder().gameId(nextGameId).build());
         return nextGameId;
     }
 
     @Override
     public void saveCommand(Command command) {
-        if ((! (command instanceof StartGameCommand) && !gameExists(command.getGameId()))) throw new GameNotFoundException(command.getGameId());
         ChessBoardWriteService chessBoardWriteService = computeChessBoard(command.getGameId());
 
         command.execute(chessBoardWriteService);
-        store.putIfAbsent(command.getGameId(), new LinkedList<>());
         log.info("[Chessboard {}] {}", command.getGameId(), command);
         store.get(command.getGameId()).add(command);
     }
 
     @Override
     public ChessBoardReadService getChessBoardService(Integer gameId) {
-        if (!gameExists(gameId)) throw new GameNotFoundException(gameId);
-
         return computeChessBoard(gameId);
     }
 
@@ -55,8 +52,9 @@ public class ChessBoardRepositoryImpl implements ChessBoardRepository {
     }
 
     private ChessBoardService computeChessBoard(Integer gameId) {
+        if (!store.containsKey(gameId)) throw new GameNotFoundException(gameId);
         ChessBoardService gameStateController = ChessBoardServiceFactory.newChessBoardService();
-        store.getOrDefault(gameId, Collections.emptyList())
+        store.get(gameId)
                 .forEach(command -> command.execute(gameStateController));
         return gameStateController;
     }

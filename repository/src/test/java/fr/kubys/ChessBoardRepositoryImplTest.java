@@ -30,18 +30,18 @@ class ChessBoardRepositoryImplTest {
 
     @Test
     void should_start_a_game() {
-        assertDoesNotThrow(() -> chessBoardRepository.saveCommand(START_GAME_COMMAND));
+        assertDoesNotThrow(() -> chessBoardRepository.createNewGame());
     }
 
     @Test
     void should_not_start_a_game_twice() {
-        assertDoesNotThrow(() -> chessBoardRepository.saveCommand(START_GAME_COMMAND));
+        assertDoesNotThrow(() -> chessBoardRepository.createNewGame());
         assertThrows(IllegalStateException.class, () -> chessBoardRepository.saveCommand(START_GAME_COMMAND));
     }
 
     @Test
     void should_play_a_game() {
-        assertDoesNotThrow(() -> chessBoardRepository.saveCommand(START_GAME_COMMAND));
+        assertDoesNotThrow(() -> chessBoardRepository.createNewGame());
         assertDoesNotThrow(() -> chessBoardRepository.saveCommand(MOVE_GAME_COMMAND));
         assertDoesNotThrow(() -> chessBoardRepository.saveCommand(END_TURN_COMMAND));
         assertDoesNotThrow(() -> chessBoardRepository.saveCommand(BLACK_MOVE_COMMAND));
@@ -51,7 +51,7 @@ class ChessBoardRepositoryImplTest {
 
     @Test
     void should_not_be_able_to_play_other_color_if_turn_has_not_been_ended() {
-        assertDoesNotThrow(() -> chessBoardRepository.saveCommand(START_GAME_COMMAND));
+        assertDoesNotThrow(() -> chessBoardRepository.createNewGame());
         assertDoesNotThrow(() -> chessBoardRepository.saveCommand(MOVE_GAME_COMMAND));
         assertThrows(IllegalStateException.class, () -> chessBoardRepository.saveCommand(BLACK_MOVE_COMMAND));
     }
@@ -63,7 +63,7 @@ class ChessBoardRepositoryImplTest {
 
     @Test
     void should_be_different_chessboard_each_time() {
-        chessBoardRepository.saveCommand(START_GAME_COMMAND);
+        chessBoardRepository.createNewGame();
         assertNotEquals(chessBoardRepository.getChessBoardService(GAME_ID), chessBoardRepository.getChessBoardService(GAME_ID));
     }
 
