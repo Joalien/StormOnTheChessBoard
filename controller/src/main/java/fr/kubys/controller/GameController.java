@@ -30,7 +30,7 @@ public class GameController {
     }
 
     private void createInitialState() {
-        Integer gameId = chessBoardRepository.createGame();
+        Integer gameId = chessBoardRepository.createNewGame();
         List.of(List.of(e2, e4),
                 List.of(c7, c5),
                 List.of(g1, f3),
@@ -62,7 +62,7 @@ public class GameController {
     @PostMapping
     @CrossOrigin(origins = "*")
     public ResponseEntity<Integer> startGame() {
-        return new ResponseEntity<>(chessBoardRepository.createGame(), HttpStatus.CREATED);
+        return new ResponseEntity<>(chessBoardRepository.createNewGame(), HttpStatus.CREATED);
     }
 
     @PostMapping("/{gameId}/endTurn")

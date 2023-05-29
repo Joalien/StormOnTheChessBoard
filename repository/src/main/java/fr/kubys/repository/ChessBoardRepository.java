@@ -5,11 +5,13 @@ import fr.kubys.command.Command;
 
 public interface ChessBoardRepository {
 
-    Integer createGame();
+    Integer createNewGame();
 
     void saveCommand(Command cbs);
 
     ChessBoardReadService getChessBoardService(Integer gameId);
 
     void undoLastCommand(Integer gameId);
+
+    boolean doesGameExist(Integer gameId);
 }

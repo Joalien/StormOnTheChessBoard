@@ -70,4 +70,15 @@ class ChessBoardRepositoryImplTest {
         chessBoardRepository.saveCommand(START_GAME_COMMAND);
         assertNotEquals(chessBoardRepository.getChessBoardService(GAME_ID), chessBoardRepository.getChessBoardService(GAME_ID));
     }
+
+    @Test
+    void game_should_not_exist() {
+        assertFalse(chessBoardRepository.doesGameExist(GAME_ID));
+    }
+
+    @Test
+    void game_should_exist() {
+        chessBoardRepository.createNewGame();
+        assertTrue(chessBoardRepository.doesGameExist(GAME_ID));
+    }
 }

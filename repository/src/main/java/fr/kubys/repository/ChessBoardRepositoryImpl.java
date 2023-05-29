@@ -17,7 +17,7 @@ public class ChessBoardRepositoryImpl implements ChessBoardRepository {
     private final Map<Integer, List<Command>> store = new HashMap<>();
 
     @Override
-    public Integer createGame() {
+    public Integer createNewGame() {
         Integer nextGameId = store.keySet().stream()
                 .mapToInt(value -> value)
                 .max()
@@ -38,7 +38,7 @@ public class ChessBoardRepositoryImpl implements ChessBoardRepository {
 
     @Override
     public ChessBoardReadService getChessBoardService(Integer gameId) {
-        if (!store.containsKey(gameId)) throw new IllegalArgumentException("game %s not found".formatted(gameId));
+        if (!doesGameExist(gameId)) throw new IllegalArgumentException("game %s not found".formatted(gameId));
 
         return computeChessBoard(gameId);
     }
@@ -46,6 +46,11 @@ public class ChessBoardRepositoryImpl implements ChessBoardRepository {
     @Override
     public void undoLastCommand(Integer gameId) {
         throw new UnsupportedOperationException("Not implemented yet but easy to do ;)");
+    }
+
+    @Override
+    public boolean doesGameExist(Integer gameId) {
+        return store.containsKey(gameId);
     }
 
     private ChessBoardService computeChessBoard(Integer gameId) {
