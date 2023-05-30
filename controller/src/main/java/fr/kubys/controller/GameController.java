@@ -1,6 +1,8 @@
 package fr.kubys.controller;
 
 import fr.kubys.card.Card;
+import fr.kubys.card.CardNotFoundException;
+import fr.kubys.card.params.CardParam;
 import fr.kubys.command.Command;
 import fr.kubys.command.EndTurnCommand;
 import fr.kubys.command.PlayCardCommand;
@@ -16,6 +18,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.function.Function;
 
 import static fr.kubys.core.Position.*;
 import static fr.kubys.mapper.ModelMapper.mapToDto;
@@ -88,22 +91,41 @@ public class GameController {
 
     @PostMapping("/{gameId}/card/{cardName}")
     @CrossOrigin(origins = "*")
-    public ResponseEntity<Void> updateGame(@PathVariable Integer gameId, @PathVariable String cardName, @RequestParam Object param) {
+    public <T extends CardParam> ResponseEntity<Void> updateGame(@PathVariable Integer gameId, @PathVariable String cardName, @RequestParam T param) {
         try {
-            Card card = chessBoardRepository.getChessBoardService(gameId).getCurrentPlayer().getCards().stream()
-                    .filter(c -> Objects.equals(c.getName(), cardName)) // FIXME migrate to id
+            Function<Card<? extends CardParam>, Card<T>> downcast = c -> (Card<T>) c;
+
+            List<Card<? extends CardParam>> cards = chessBoardRepository.getChessBoardService(gameId).getCurrentPlayer().getCards().stream()
+                    .filter(c -> Objects.equals(c.getName(), cardName))
+                    .toList();// FIXME migrate to id
+
+            Card<T> card = cards.stream()
+                    .filter(card1 -> {
+                        try {
+                            downcast.apply(card1);
+                            return true;
+                        } catch (Exception e) {
+                            return false;
+                        }
+                    })
+                    .map(downcast)
                     .findFirst()
-                    .orElseThrow(IllegalArgumentException::new);
-            Command command = PlayCardCommand.builder()
+                    .orElseThrow(CardNotFoundException::new);
+
+            PlayCardCommand<T> command = PlayCardCommand.<T>builder()
                     .gameId(gameId)
-                    .card(card)
                     .parameters(param)
+                    .card(card)
                     .build();
             chessBoardRepository.saveCommand(command);
             return ResponseEntity.ok().build();
         } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
         }
+    }
+
+    private <T extends CardParam> List<T> filterRoomByType(List<? extends CardParam> list, Class<T> roomType) {
+        return list.stream().filter(roomType::isInstance).map(roomType::cast).toList();
     }
 
     @PostMapping("/{gameId}/move/{from}/to/{to}")

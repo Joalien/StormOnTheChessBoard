@@ -2,6 +2,7 @@ package fr.kubys.command;
 
 import fr.kubys.api.ChessBoardReadService;
 import fr.kubys.card.Card;
+import fr.kubys.card.params.CardParam;
 import fr.kubys.repository.ChessBoardRepositoryImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -22,11 +23,11 @@ class StartGameCommandTest {
     void should_have_different_card_order() {
         Integer gameId1 = chessBoardRepository.createNewGame();
         ChessBoardReadService game1 = chessBoardRepository.getChessBoardService(gameId1);
-        List<List<Card>> cards1 = List.of(game1.getWhite().getCards(), game1.getBlack().getCards(), game1.getCards());
+        List<List<?>> cards1 = List.of(game1.getWhite().getCards(), game1.getBlack().getCards(), game1.getCards());
 
         Integer gameId2 = chessBoardRepository.createNewGame();
         ChessBoardReadService game2 = chessBoardRepository.getChessBoardService(gameId2);
-        List<List<Card>> cards2 = List.of(game2.getWhite().getCards(), game2.getBlack().getCards(), game2.getCards());
+        List<List<?>> cards2 = List.of(game2.getWhite().getCards(), game2.getBlack().getCards(), game2.getCards());
 
         System.out.println(cards1);
         System.out.println(cards2);

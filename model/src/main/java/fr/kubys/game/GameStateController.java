@@ -23,7 +23,7 @@ public class GameStateController implements ChessBoardService {
     private ChessBoard chessBoard;
     private Player white;
     private Player black;
-    private List<Card> cards;
+    private List<Card<? extends CardParam>> cards;
     private Player currentPlayer;
     private StateEnum currentState;
 
@@ -148,7 +148,7 @@ public class GameStateController implements ChessBoardService {
     }
 
     @Override
-    public List<Card> getCards() {
+    public List<Card<? extends CardParam>> getCards() {
         return this.cards;
     }
 

@@ -2,17 +2,15 @@ package fr.kubys.command;
 
 import fr.kubys.api.ChessBoardWriteService;
 import fr.kubys.card.Card;
+import fr.kubys.card.params.CardParam;
 import lombok.Getter;
 import lombok.experimental.SuperBuilder;
 
-import java.lang.reflect.InvocationTargetException;
-import java.util.List;
-
 @SuperBuilder
 @Getter
-public final class PlayCardCommand extends Command {
-    Card card;
-    Object parameters;
+public final class PlayCardCommand<T extends CardParam> extends Command {
+    Card<T> card;
+    T parameters;
 
     @Override
     public void execute(ChessBoardWriteService chessBoardWriteService) {

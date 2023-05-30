@@ -2,6 +2,7 @@ package fr.kubys.api;
 
 import fr.kubys.board.effect.Effect;
 import fr.kubys.card.Card;
+import fr.kubys.card.params.CardParam;
 import fr.kubys.piece.Piece;
 import fr.kubys.player.Player;
 
@@ -13,7 +14,7 @@ public interface ChessBoardReadService {
 
     Set<Effect> getEffects();
 
-    List<Card> getCards();
+    List<Card<? extends CardParam>> getCards();
 
     Player getCurrentPlayer();
 
