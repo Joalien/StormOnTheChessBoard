@@ -5,13 +5,10 @@ import fr.kubys.board.ChessBoard;
 import fr.kubys.board.effect.Effect;
 import fr.kubys.card.*;
 import fr.kubys.card.params.CardParam;
-import fr.kubys.card.params.KangarooCard;
-import fr.kubys.card.params.StableCard;
 import fr.kubys.core.Color;
 import fr.kubys.core.Position;
 import fr.kubys.piece.Piece;
 import fr.kubys.player.Player;
-//import org.slf4j.Logger;
 
 import java.util.*;
 import java.util.stream.IntStream;

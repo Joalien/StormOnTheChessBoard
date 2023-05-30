@@ -1,5 +1,9 @@
 package fr.kubys.mapper;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException;
+import fr.kubys.card.params.CardParam;
 import fr.kubys.dto.CardOutputDto;
 import fr.kubys.dto.ChessBoardDto;
 import fr.kubys.dto.EffectDto;
@@ -11,6 +15,8 @@ import fr.kubys.core.Color;
 import fr.kubys.piece.*;
 import fr.kubys.player.Player;
 
+import java.lang.reflect.Field;
+import java.util.Arrays;
 import java.util.Map;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -63,5 +69,10 @@ public class ModelMapper {
                 .map(Map.Entry::getValue)
                 .orElseThrow();
         return (piece.getColor() == Color.WHITE ? "w" : "b") + pieceType;
+    }
+
+
+    public static <T extends CardParam> T mapCardDtoToCardParam(String param, Class<T> clazz) throws JsonProcessingException {
+        return new ObjectMapper().readerFor(clazz).readValue(param);
     }
 }

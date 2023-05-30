@@ -9,7 +9,7 @@ public class BlackHoleCard extends Card<PositionCardParam> {
     private PositionCardParam param;
 
     public BlackHoleCard() {
-        super("Trou noir", "Désignez une case vide qui est \"retirée\" de l'échiquier juqu'à la fin de la partie. Il sera impossible pendant la suite du jeu de s'y arrêter ou de la traverser.", CardType.AFTER_TURN);
+        super("Trou noir", "Désignez une case vide qui est \"retirée\" de l'échiquier juqu'à la fin de la partie. Il sera impossible pendant la suite du jeu de s'y arrêter ou de la traverser.", CardType.AFTER_TURN, PositionCardParam.class);
     }
 
     @Override

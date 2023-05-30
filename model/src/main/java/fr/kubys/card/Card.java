@@ -14,11 +14,13 @@ public abstract class Card<T extends CardParam> {
     protected final CardType type;
     protected Color isPlayedBy;
     protected T param;
+    protected Class<T> clazz;
 
-    protected Card(String name, String description, CardType type) {
+    protected Card(String name, String description, CardType type, Class<T> tClass) {
         this.name = name;
         this.description = description;
         this.type = type;
+        this.clazz = tClass;
     }
 
     public final void playOn(ChessBoard chessBoard, T params) {
@@ -76,5 +78,13 @@ public abstract class Card<T extends CardParam> {
     @Override
     public int hashCode() {
         return Objects.hash(name, isPlayedBy, param);
+    }
+
+    public Class<T> getClazz() {
+        return this.clazz;
+    }
+
+    public T getParam() {
+        return param;
     }
 }

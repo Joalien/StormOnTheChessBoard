@@ -1,9 +1,9 @@
-package fr.kubys.card.params;
+package fr.kubys.card;
 
 import fr.kubys.board.ChessBoard;
 import fr.kubys.card.Card;
 import fr.kubys.card.CardType;
-import fr.kubys.card.StableCardParam;
+import fr.kubys.card.params.StableCardParam;
 import fr.kubys.core.Position;
 
 // TODO generify me to allow other swap cards
@@ -13,7 +13,7 @@ public class StableCard extends Card<StableCardParam> {
 
 
     public StableCard() {
-        super("Écurie", "Sur l'échiquier, permutez l'un de vos cavaliers avec l'une de vos tours", CardType.AFTER_TURN);
+        super("Écurie", "Sur l'échiquier, permutez l'un de vos cavaliers avec l'une de vos tours", CardType.AFTER_TURN, StableCardParam.class);
     }
 
     @Override

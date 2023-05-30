@@ -14,7 +14,7 @@ public class ChargeCard extends Card<ChargeCardParam>{
     private ChargeCardParam param;
 
     public ChargeCard() {
-        super("Charge", "Avancez tous ceux de vos pions que vous voulez, et qui le peuvent, d'une case", CardType.REPLACE_TURN);
+        super("Charge", "Avancez tous ceux de vos pions que vous voulez, et qui le peuvent, d'une case", CardType.REPLACE_TURN, ChargeCardParam.class);
     }
 
     @Override

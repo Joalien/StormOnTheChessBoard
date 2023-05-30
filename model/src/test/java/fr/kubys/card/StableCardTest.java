@@ -1,7 +1,7 @@
 package fr.kubys.card;
 
 import fr.kubys.board.ChessBoard;
-import fr.kubys.card.params.StableCard;
+import fr.kubys.card.params.StableCardParam;
 import fr.kubys.piece.Knight;
 import fr.kubys.piece.Rock;
 import org.junit.jupiter.api.BeforeEach;

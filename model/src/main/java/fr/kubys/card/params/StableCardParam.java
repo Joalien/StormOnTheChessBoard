@@ -1,4 +1,4 @@
-package fr.kubys.card;
+package fr.kubys.card.params;
 
 import fr.kubys.card.params.CardParam;
 import fr.kubys.piece.Knight;

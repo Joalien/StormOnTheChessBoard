@@ -1,9 +1,7 @@
-package fr.kubys.card.params;
+package fr.kubys.card;
 
 import fr.kubys.board.ChessBoard;
-import fr.kubys.card.Card;
-import fr.kubys.card.CardType;
-import fr.kubys.card.KangarooCardParam;
+import fr.kubys.card.params.KangarooCardParam;
 import fr.kubys.core.Position;
 import fr.kubys.piece.extra.Kangaroo;
 
@@ -12,7 +10,7 @@ public class KangarooCard extends Card<KangarooCardParam> {
     private KangarooCardParam param;
 
     public KangarooCard() {
-        super("Kangaroo", "Transformez définitivement l'un de vos cavaliers, ou un cavalier adverse en kangourou. Le kangourou se déplace en faisant deux sauts de cavalier consécutifs.", CardType.AFTER_TURN);
+        super("Kangaroo", "Transformez définitivement l'un de vos cavaliers, ou un cavalier adverse en kangourou. Le kangourou se déplace en faisant deux sauts de cavalier consécutifs.", CardType.AFTER_TURN, KangarooCardParam.class);
     }
 
     @Override

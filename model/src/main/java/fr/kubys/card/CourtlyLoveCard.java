@@ -10,7 +10,7 @@ public class CourtlyLoveCard extends Card<CourtlyLoveCardParam> {
     private CourtlyLoveCardParam param;
 
     public CourtlyLoveCard() {
-        super("Amour courtois", "Amenez l'un de vos cavaliers sur une case libre adjacente à votre dame", CardType.REPLACE_TURN);
+        super("Amour courtois", "Amenez l'un de vos cavaliers sur une case libre adjacente à votre dame", CardType.REPLACE_TURN, CourtlyLoveCardParam.class);
     }
 
     @Override

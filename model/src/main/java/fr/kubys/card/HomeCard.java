@@ -10,7 +10,7 @@ public class HomeCard extends Card<PieceToPositionCardParam> {
     private PieceToPositionCardParam param;
 
     public HomeCard() {
-        super("Maison", "Ramener l'une de vos pièces (pas un pion) sur l'une des cases où elle pouvait se trouver en début de partie. Vous pouvez même prendre ainsi une pièce adverse", CardType.REPLACE_TURN);
+        super("Maison", "Ramener l'une de vos pièces (pas un pion) sur l'une des cases où elle pouvait se trouver en début de partie. Vous pouvez même prendre ainsi une pièce adverse", CardType.REPLACE_TURN, PieceToPositionCardParam.class);
     }
 
     @Override

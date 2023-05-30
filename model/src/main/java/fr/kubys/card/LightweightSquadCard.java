@@ -10,7 +10,7 @@ public class LightweightSquadCard extends Card<LightweightSquadCardParam> {
     private LightweightSquadCardParam param;
 
     public LightweightSquadCard() {
-        super("Escouade légère", "Avancez deux de vos pions, chacun de deux cases", CardType.REPLACE_TURN);
+        super("Escouade légère", "Avancez deux de vos pions, chacun de deux cases", CardType.REPLACE_TURN, LightweightSquadCardParam.class);
     }
 
     @Override

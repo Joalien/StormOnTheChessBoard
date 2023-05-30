@@ -9,7 +9,7 @@ public class MagnetismCard extends Card<PieceCardParam> {
     private PieceCardParam param;
 
     public MagnetismCard() {
-        super("Magnetisme", "", CardType.REPLACE_TURN);
+        super("Magnetisme", "", CardType.REPLACE_TURN, PieceCardParam.class);
     }
 
     @Override

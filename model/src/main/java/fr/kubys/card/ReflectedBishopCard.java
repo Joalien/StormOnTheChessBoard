@@ -16,7 +16,7 @@ public class ReflectedBishopCard extends Card<ReflectedBishopCardParam> {
     private ReflectedBishopCardParam param;
 
     public ReflectedBishopCard() {
-        super("Fou réfléchi", "Déplacez l'un de vos fous en le faisant \"rebondir\" sur les côtés de l'échiquier poursuivant son chemin en décrivnat en angle droit. Il n'y a pas de limites au nombre de rebonds au cours d'un déplacement", CardType.REPLACE_TURN);
+        super("Fou réfléchi", "Déplacez l'un de vos fous en le faisant \"rebondir\" sur les côtés de l'échiquier poursuivant son chemin en décrivnat en angle droit. Il n'y a pas de limites au nombre de rebonds au cours d'un déplacement", CardType.REPLACE_TURN, ReflectedBishopCardParam.class);
     }
 
     @Override
