@@ -2,7 +2,7 @@ package fr.kubys.card;
 
 import fr.kubys.board.CheckException;
 import fr.kubys.board.ChessBoard;
-import fr.kubys.card.ReflectedBishopCard.ReflectedBishopCardParam;
+import fr.kubys.card.params.ReflectedBishopCardParam;
 import fr.kubys.core.Color;
 import fr.kubys.piece.Bishop;
 import fr.kubys.piece.King;
@@ -11,9 +11,6 @@ import fr.kubys.piece.WhitePawn;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-
-import java.sql.Ref;
-import java.util.List;
 
 import static fr.kubys.core.Position.*;
 import static org.junit.jupiter.api.Assertions.*;

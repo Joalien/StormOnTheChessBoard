@@ -1,6 +1,7 @@
 package fr.kubys.card;
 
 import fr.kubys.board.ChessBoard;
+import fr.kubys.card.params.ReflectedBishopCardParam;
 import fr.kubys.core.Position;
 import fr.kubys.piece.Bishop;
 
@@ -10,9 +11,8 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class ReflectedBishopCard extends Card<ReflectedBishopCard.ReflectedBishopCardParam> {
+public class ReflectedBishopCard extends Card<ReflectedBishopCardParam> {
 
-    public record ReflectedBishopCardParam(Bishop bishop, Position positionToMoveOn) {}
     private ReflectedBishopCardParam param;
 
     public ReflectedBishopCard() {
@@ -26,10 +26,10 @@ public class ReflectedBishopCard extends Card<ReflectedBishopCard.ReflectedBisho
 
     @Override
     protected void validInput(ChessBoard chessBoard) {
-        if (param.bishop == null) throw new IllegalStateException();
-        if (param.positionToMoveOn == null) throw new IllegalStateException();
+        if (param.bishop() == null) throw new IllegalStateException();
+        if (param.positionToMoveOn() == null) throw new IllegalStateException();
 
-        Set<Position> reachablePositions = new HashSet<>(chessBoard.getAllAttackablePosition(param.bishop));
+        Set<Position> reachablePositions = new HashSet<>(chessBoard.getAllAttackablePosition(param.bishop()));
 
         Set<Position> positionsToStart = Set.copyOf(reachablePositions);
         do {
@@ -42,14 +42,14 @@ public class ReflectedBishopCard extends Card<ReflectedBishopCard.ReflectedBisho
         } while (reachablePositions.addAll(positionsToStart));
         chessBoard.unfakeAllSquares();
 
-//        log.debug("{} can move on {}", param.bishop, reachablePositions);
+//        log.debug("{} can move on {}", param.bishop(, reachablePositions);
 
-        if (!reachablePositions.contains(param.positionToMoveOn))
-            throw new IllegalArgumentException("%s cannot reflect to %s".formatted(param.bishop, param.positionToMoveOn));
+        if (!reachablePositions.contains(param.positionToMoveOn()))
+            throw new IllegalArgumentException("%s cannot reflect to %s".formatted(param.bishop(), param.positionToMoveOn()));
     }
 
     private Bishop createFakeBishop(ChessBoard chessBoard, Position s) {
-        Bishop bishop = new Bishop(this.param.bishop.getColor());
+        Bishop bishop = new Bishop(this.param.bishop().getColor());
         chessBoard.fakeSquare(bishop, s);
         bishop.setSquare(chessBoard.at(s));
         return bishop;
@@ -57,15 +57,15 @@ public class ReflectedBishopCard extends Card<ReflectedBishopCard.ReflectedBisho
 
     @Override
     protected boolean doesNotCreateCheck(ChessBoard chessBoard) {
-        chessBoard.fakeSquare(null, param.bishop.getPosition());
-        chessBoard.fakeSquare(param.bishop, param.positionToMoveOn);
-        boolean isKingUnderAttack = chessBoard.isKingUnderAttack(param.bishop.getColor());
+        chessBoard.fakeSquare(null, param.bishop().getPosition());
+        chessBoard.fakeSquare(param.bishop(), param.positionToMoveOn());
+        boolean isKingUnderAttack = chessBoard.isKingUnderAttack(param.bishop().getColor());
         chessBoard.unfakeAllSquares();
         return !isKingUnderAttack;
     }
 
     @Override
     protected void doAction(ChessBoard chessBoard) {
-        chessBoard.move(param.bishop, param.positionToMoveOn);
+        chessBoard.move(param.bishop(), param.positionToMoveOn());
     }
 }

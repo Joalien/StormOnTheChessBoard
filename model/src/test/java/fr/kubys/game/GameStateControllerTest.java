@@ -1,13 +1,12 @@
 package fr.kubys.game;
 
-import fr.kubys.card.Card;
 import fr.kubys.card.LightweightSquadCard;
+import fr.kubys.card.params.LightweightSquadCardParam;
 import fr.kubys.core.Color;
 import fr.kubys.piece.Pawn;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.List;
 import java.util.Random;
 
 import static fr.kubys.core.Position.*;
@@ -43,7 +42,7 @@ class GameStateControllerTest {
         assertEquals(1, gameStateController.getCurrentPlayer().getCards().size());
         assertTrue(gameStateController.getCurrentPlayer().getCards().contains(card));
 
-        assertDoesNotThrow(() -> gameStateController.tryToPlayCard(card, new LightweightSquadCard.LightweightSquadCardParam((Pawn) gameStateController.getChessBoard().at(e2).getPiece().get(), (Pawn) gameStateController.getChessBoard().at(d2).getPiece().get())));
+        assertDoesNotThrow(() -> gameStateController.tryToPlayCard(card, new LightweightSquadCardParam((Pawn) gameStateController.getChessBoard().at(e2).getPiece().get(), (Pawn) gameStateController.getChessBoard().at(d2).getPiece().get())));
 
         assertEquals(1, gameStateController.getCurrentPlayer().getCards().size());
         assertFalse(gameStateController.getCurrentPlayer().getCards().contains(card));

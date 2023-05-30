@@ -1,6 +1,7 @@
 package fr.kubys.api;
 
 import fr.kubys.card.Card;
+import fr.kubys.card.params.CardParam;
 import fr.kubys.core.Position;
 
 public interface ChessBoardWriteService {
@@ -8,7 +9,7 @@ public interface ChessBoardWriteService {
 
     void tryToMove(Position from, Position to);
 
-    void tryToPlayCard(Card card, Object params);
+    <T extends CardParam> void tryToPlayCard(Card<T> card, T params);
 
     void tryToPass();
 }

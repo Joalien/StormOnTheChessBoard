@@ -1,14 +1,13 @@
 package fr.kubys.card;
 
 import fr.kubys.board.ChessBoard;
-import fr.kubys.card.ChargeCard.ChargeCardParam;
+import fr.kubys.card.params.ChargeCardParam;
 import fr.kubys.core.Color;
 import fr.kubys.piece.*;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 import java.util.Collections;
-import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;

@@ -1,12 +1,10 @@
 package fr.kubys.card;
 
 import fr.kubys.board.ChessBoard;
-import fr.kubys.card.QuadrilleCard.QuadrilleCardParam;
+import fr.kubys.card.params.QuadrilleCardParam;
 import fr.kubys.piece.extra.BlackHole;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-
-import java.util.List;
 
 import static fr.kubys.core.Position.a1;
 

@@ -1,7 +1,7 @@
 package fr.kubys.card;
 
 import fr.kubys.board.ChessBoard;
-import fr.kubys.card.KangarooCard.KangarooCardParam;
+import fr.kubys.card.params.KangarooCard;
 import fr.kubys.core.Position;
 import fr.kubys.piece.Knight;
 import fr.kubys.piece.Piece;
@@ -10,7 +10,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
-import java.util.List;
 import java.util.Set;
 
 import static fr.kubys.core.Position.*;

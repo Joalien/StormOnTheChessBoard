@@ -4,6 +4,9 @@ import fr.kubys.api.ChessBoardService;
 import fr.kubys.board.ChessBoard;
 import fr.kubys.board.effect.Effect;
 import fr.kubys.card.*;
+import fr.kubys.card.params.CardParam;
+import fr.kubys.card.params.KangarooCard;
+import fr.kubys.card.params.StableCard;
 import fr.kubys.core.Color;
 import fr.kubys.core.Position;
 import fr.kubys.piece.Piece;
@@ -77,7 +80,7 @@ public class GameStateController implements ChessBoardService {
     }
 
     @Override
-    public void tryToPlayCard(Card card, Object params) {
+    public <T extends CardParam> void tryToPlayCard(Card<T> card, T params) {
         assertGameHasAlreadyStarted();
         if (!currentPlayer.getCards().contains(card))
             throw new CardNotFoundException("Player %s does not have %s in hand!".formatted(currentPlayer, card));

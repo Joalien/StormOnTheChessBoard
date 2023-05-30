@@ -1,6 +1,7 @@
 package fr.kubys.game;
 
 import fr.kubys.card.QuadrilleCard;
+import fr.kubys.card.params.QuadrilleCardParam;
 import fr.kubys.game.exception.AlreadyMovedException;
 import fr.kubys.game.exception.CardAlreadyPlayedException;
 import org.junit.jupiter.api.BeforeEach;
@@ -54,7 +55,7 @@ class EndOfTheTurnStateTest {
 
     @Test
     void should_not_be_able_to_play_a_card() {
-        assertThrows(CardAlreadyPlayedException.class, () -> gameStateController.tryToPlayCard(card, List.of(QuadrilleCard.Direction.CLOCKWISE)));
+        assertThrows(CardAlreadyPlayedException.class, () -> gameStateController.tryToPlayCard(card, new QuadrilleCardParam(QuadrilleCard.Direction.CLOCKWISE)));
 
         assertEquals(StateEnum.END_OF_THE_TURN, gameStateController.getCurrentState());
     }

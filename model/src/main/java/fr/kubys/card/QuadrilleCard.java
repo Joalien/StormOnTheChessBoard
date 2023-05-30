@@ -1,20 +1,19 @@
 package fr.kubys.card;
 
 import fr.kubys.board.ChessBoard;
+import fr.kubys.card.params.QuadrilleCardParam;
 import fr.kubys.core.Position;
 import fr.kubys.piece.Piece;
 import fr.kubys.piece.Square;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class QuadrilleCard extends Card<QuadrilleCard.QuadrilleCardParam> {
+public class QuadrilleCard extends Card<QuadrilleCardParam> {
 
-    public record QuadrilleCardParam(Direction direction) {}
     private QuadrilleCardParam param;
     private static final List<Position> CORNERS = Stream.of(Position.a1, Position.h1, Position.h8, Position.a8).toList();
     public QuadrilleCard() {
@@ -28,7 +27,7 @@ public class QuadrilleCard extends Card<QuadrilleCard.QuadrilleCardParam> {
 
     @Override
     protected void validInput(ChessBoard chessBoard) {
-        if (param.direction == null) throw new IllegalStateException();
+        if (param.direction() == null) throw new IllegalStateException();
     }
 
     @Override
@@ -65,7 +64,7 @@ public class QuadrilleCard extends Card<QuadrilleCard.QuadrilleCardParam> {
     private Map<Position, Optional<Piece>> saveWhichPieceShouldGoInWhichCorner(ChessBoard chessBoard) {
         return CORNERS.stream()
                 .map(chessBoard::at)
-                .collect(Collectors.toMap(square -> param.direction.cornersMap.get(square.getPosition()), Square::getPiece));
+                .collect(Collectors.toMap(square -> param.direction().cornersMap.get(square.getPosition()), Square::getPiece));
     }
 
     public enum Direction {

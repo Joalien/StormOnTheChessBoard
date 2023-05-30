@@ -1,14 +1,14 @@
-package fr.kubys.card;
+package fr.kubys.card.params;
 
 import fr.kubys.board.ChessBoard;
+import fr.kubys.card.Card;
+import fr.kubys.card.CardType;
+import fr.kubys.card.StableCardParam;
 import fr.kubys.core.Position;
-import fr.kubys.piece.Knight;
-import fr.kubys.piece.Rock;
 
 // TODO generify me to allow other swap cards
-public class StableCard extends Card<StableCard.StableCardParam> {
+public class StableCard extends Card<StableCardParam> {
 
-    public record StableCardParam(Rock rock, Knight knight) {}
     private StableCardParam param;
 
 
@@ -23,9 +23,9 @@ public class StableCard extends Card<StableCard.StableCardParam> {
 
     @Override
     protected void validInput(ChessBoard chessBoard) {
-        if (param.rock == null) throw new IllegalStateException();
-        if (param.knight == null) throw new IllegalStateException();
-        if (param.rock.getColor() != param.knight.getColor())
+        if (param.rock() == null) throw new IllegalStateException();
+        if (param.knight() == null) throw new IllegalStateException();
+        if (param.rock().getColor() != param.knight().getColor())
             throw new IllegalArgumentException("You should swap pieces of the same color");
     }
 
@@ -36,13 +36,13 @@ public class StableCard extends Card<StableCard.StableCardParam> {
 
     @Override
     protected void doAction(ChessBoard chessBoard) {
-        Position rockPosition = param.rock.getPosition();
-        Position knightPosition = param.knight.getPosition();
+        Position rockPosition = param.rock().getPosition();
+        Position knightPosition = param.knight().getPosition();
 
-        chessBoard.removePieceFromTheBoard(param.rock);
-        chessBoard.removePieceFromTheBoard(param.knight);
+        chessBoard.removePieceFromTheBoard(param.rock());
+        chessBoard.removePieceFromTheBoard(param.knight());
 
-        chessBoard.add(param.rock, knightPosition);
-        chessBoard.add(param.knight, rockPosition);
+        chessBoard.add(param.rock(), knightPosition);
+        chessBoard.add(param.knight(), rockPosition);
     }
 }

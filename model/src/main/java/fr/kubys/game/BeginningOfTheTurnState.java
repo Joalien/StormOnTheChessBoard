@@ -1,6 +1,7 @@
 package fr.kubys.game;
 
 import fr.kubys.card.Card;
+import fr.kubys.card.params.CardParam;
 import fr.kubys.core.Position;
 
 public final class BeginningOfTheTurnState implements TurnState {
@@ -11,7 +12,7 @@ public final class BeginningOfTheTurnState implements TurnState {
     }
 
     @Override
-    public void tryToPlayCard(GameStateController gameStateController, Card card, Object params) {
+    public <T extends CardParam> void tryToPlayCard(GameStateController gameStateController, Card<T> card, T params) {
         StateEnum nextState = switch (card.getType()) {
             case BEFORE_TURN -> StateEnum.BEFORE_MOVE;
             case REPLACE_TURN -> StateEnum.END_OF_THE_TURN;

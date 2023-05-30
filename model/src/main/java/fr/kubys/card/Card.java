@@ -2,16 +2,18 @@ package fr.kubys.card;
 
 import fr.kubys.board.CheckException;
 import fr.kubys.board.ChessBoard;
+import fr.kubys.card.params.CardParam;
 import fr.kubys.core.Color;
 
 import java.util.Objects;
 
-public abstract class Card<T> {
+public abstract class Card<T extends CardParam> {
 
     protected final String name;
     protected final String description;
     protected final CardType type;
     protected Color isPlayedBy;
+    protected T param;
 
     protected Card(String name, String description, CardType type) {
         this.name = name;
@@ -28,14 +30,15 @@ public abstract class Card<T> {
         doAction(chessBoard);
     }
 
-    protected abstract void setupParams(T params);
+    protected void setupParams(T params) {
+        this.param = params;
+    }
 
     protected abstract void validInput(ChessBoard chessBoard);
 
     protected abstract boolean doesNotCreateCheck(ChessBoard chessBoard);
 
     protected abstract void doAction(ChessBoard chessBoard);
-
 
     @Override
     public String toString() {
@@ -66,12 +69,12 @@ public abstract class Card<T> {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Card card = (Card) o;
-        return Objects.equals(name, card.name);
+        Card<?> card = (Card<?>) o;
+        return Objects.equals(name, card.name) && isPlayedBy == card.isPlayedBy && Objects.equals(param, card.param);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name);
+        return Objects.hash(name, isPlayedBy, param);
     }
 }

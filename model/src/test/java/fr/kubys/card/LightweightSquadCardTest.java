@@ -1,15 +1,13 @@
 package fr.kubys.card;
 
 import fr.kubys.board.ChessBoard;
-import fr.kubys.card.LightweightSquadCard.LightweightSquadCardParam;
+import fr.kubys.card.params.LightweightSquadCardParam;
 import fr.kubys.piece.BlackPawn;
 import fr.kubys.piece.Pawn;
 import fr.kubys.piece.WhitePawn;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-
-import java.util.List;
 
 import static fr.kubys.core.Position.*;
 import static org.junit.jupiter.api.Assertions.*;

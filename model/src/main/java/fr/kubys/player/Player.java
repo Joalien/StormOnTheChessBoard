@@ -1,6 +1,7 @@
 package fr.kubys.player;
 
 import fr.kubys.card.Card;
+import fr.kubys.card.params.CardParam;
 import fr.kubys.core.Color;
 
 import java.util.ArrayList;
@@ -11,7 +12,7 @@ public class Player {
 
     private final String name;
     private final Color color;
-    private final List<Card> cards;
+    private final List<Card<? extends CardParam>> cards;
 
     public Player(String name, Color color) {
         this.name = name;
@@ -32,7 +33,7 @@ public class Player {
         return this.color;
     }
 
-    public List<Card> getCards() {
+    public List<Card<? extends CardParam>> getCards() {
         return this.cards;
     }
 }

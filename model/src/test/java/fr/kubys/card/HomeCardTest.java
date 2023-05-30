@@ -1,14 +1,12 @@
 package fr.kubys.card;
 
 import fr.kubys.board.ChessBoard;
-import fr.kubys.card.HomeCard.HomeCardParam;
+import fr.kubys.card.params.PieceToPositionCardParam;
 import fr.kubys.core.Color;
 import fr.kubys.piece.*;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-
-import java.util.List;
 
 import static fr.kubys.core.Position.*;
 import static org.junit.jupiter.api.Assertions.*;
@@ -25,7 +23,7 @@ class HomeCardTest {
             HomeCard homeCard = new HomeCard();
             homeCard.setIsPlayedBy(Color.WHITE);
 
-            assertDoesNotThrow(() -> homeCard.playOn(chessBoard, new HomeCardParam(knight, g1)));
+            assertDoesNotThrow(() -> homeCard.playOn(chessBoard, new PieceToPositionCardParam(knight, g1)));
 
             assertEquals(knight, chessBoard.at(g1).getPiece().get());
             assertTrue(chessBoard.at(e4).getPiece().isEmpty());
@@ -41,7 +39,7 @@ class HomeCardTest {
             HomeCard homeCard = new HomeCard();
             homeCard.setIsPlayedBy(Color.WHITE);
 
-            assertDoesNotThrow(() -> homeCard.playOn(chessBoard, new HomeCardParam(knight, g1)));
+            assertDoesNotThrow(() -> homeCard.playOn(chessBoard, new PieceToPositionCardParam(knight, g1)));
 
             assertEquals(knight, chessBoard.at(g1).getPiece().get());
             assertTrue(chessBoard.at(e4).getPiece().isEmpty());
@@ -63,7 +61,7 @@ class HomeCardTest {
             HomeCard homeCard = new HomeCard();
             homeCard.setIsPlayedBy(Color.WHITE);
 
-            assertThrows(IllegalArgumentException.class, () -> homeCard.playOn(chessBoard, new HomeCardParam(pawn, g1)));
+            assertThrows(IllegalArgumentException.class, () -> homeCard.playOn(chessBoard, new PieceToPositionCardParam(pawn, g1)));
 
             assertEquals(pawn, chessBoard.at(e4).getPiece().get());
             assertEquals(queen, chessBoard.at(g1).getPiece().get());
@@ -81,7 +79,7 @@ class HomeCardTest {
             HomeCard homeCard = new HomeCard();
             homeCard.setIsPlayedBy(Color.WHITE);
 
-            assertThrows(IllegalArgumentException.class, () -> homeCard.playOn(chessBoard, new HomeCardParam(knight, g1)));
+            assertThrows(IllegalArgumentException.class, () -> homeCard.playOn(chessBoard, new PieceToPositionCardParam(knight, g1)));
 
             assertEquals(knight, chessBoard.at(e4).getPiece().get());
             assertEquals(queen, chessBoard.at(g1).getPiece().get());
@@ -97,7 +95,7 @@ class HomeCardTest {
             HomeCard homeCard = new HomeCard();
             homeCard.setIsPlayedBy(Color.BLACK);
 
-            assertThrows(IllegalArgumentException.class, () -> homeCard.playOn(chessBoard, new HomeCardParam(queen, g1)));
+            assertThrows(IllegalArgumentException.class, () -> homeCard.playOn(chessBoard, new PieceToPositionCardParam(queen, g1)));
 
             assertEquals(queen, chessBoard.at(e4).getPiece().get());
             assertTrue(chessBoard.at(g1).getPiece().isEmpty());
@@ -112,7 +110,7 @@ class HomeCardTest {
             HomeCard homeCard = new HomeCard();
             homeCard.setIsPlayedBy(Color.WHITE);
 
-            assertThrows(CannotMoveThisColorException.class, () -> homeCard.playOn(chessBoard, new HomeCardParam(queen, d1)));
+            assertThrows(CannotMoveThisColorException.class, () -> homeCard.playOn(chessBoard, new PieceToPositionCardParam(queen, d1)));
 
             assertEquals(queen, chessBoard.at(e4).getPiece().get());
             assertTrue(chessBoard.at(d1).getPiece().isEmpty());
@@ -129,7 +127,7 @@ class HomeCardTest {
             HomeCard homeCard = new HomeCard();
             homeCard.setIsPlayedBy(Color.WHITE);
 
-            assertThrows(IllegalStateException.class, () -> homeCard.playOn(chessBoard, new HomeCardParam(knight, g1)));
+            assertThrows(IllegalStateException.class, () -> homeCard.playOn(chessBoard, new PieceToPositionCardParam(knight, g1)));
 
             assertEquals(knight, chessBoard.at(e4).getPiece().get());
             assertEquals(king, chessBoard.at(g1).getPiece().get());

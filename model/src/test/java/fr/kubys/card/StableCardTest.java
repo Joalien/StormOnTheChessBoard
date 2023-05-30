@@ -1,14 +1,12 @@
 package fr.kubys.card;
 
 import fr.kubys.board.ChessBoard;
-import fr.kubys.card.StableCard.StableCardParam;
+import fr.kubys.card.params.StableCard;
 import fr.kubys.piece.Knight;
 import fr.kubys.piece.Rock;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-
-import java.util.List;
 
 import static fr.kubys.core.Position.*;
 import static org.junit.jupiter.api.Assertions.*;

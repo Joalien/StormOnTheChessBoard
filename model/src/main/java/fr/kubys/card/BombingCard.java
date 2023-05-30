@@ -2,13 +2,12 @@ package fr.kubys.card;
 
 import fr.kubys.board.ChessBoard;
 import fr.kubys.board.effect.BombingEffect;
-import fr.kubys.core.Position;
+import fr.kubys.card.params.PositionCardParam;
 import fr.kubys.piece.Piece;
 
-public class BombingCard extends Card <BombingCard.BombingCardParam>{
+public class BombingCard extends Card<PositionCardParam> {
 
-    public record BombingCardParam(Position position) {}
-    private BombingCardParam param;
+//    private PositionCardParam param;
 
     public BombingCard() {
         super("Attentat",
@@ -16,16 +15,16 @@ public class BombingCard extends Card <BombingCard.BombingCardParam>{
                 CardType.BEFORE_TURN); // FIXME replace with AFTER_TURN once you'll code an other card BEFORE_TURN
     }
 
-    @Override
-    protected void setupParams(BombingCardParam params) {
-        this.param = params;
-    }
+//    @Override
+//    protected void setupParams(PositionCardParam params) {
+//        this.param = params;
+//    }
 
     @Override
     protected void validInput(ChessBoard chessBoard) {
-        if (param.position == null) throw new IllegalStateException();
+        if (param.position() == null) throw new IllegalStateException();
         if (isPlayedBy == null) throw new IllegalStateException();
-        boolean thereIsEnemyPieceOnPosition = chessBoard.at(param.position).getPiece()
+        boolean thereIsEnemyPieceOnPosition = chessBoard.at(param.position()).getPiece()
                 .map(Piece::getColor)
                 .map(c -> c != isPlayedBy)
                 .orElse(false);
@@ -40,6 +39,6 @@ public class BombingCard extends Card <BombingCard.BombingCardParam>{
 
     @Override
     protected void doAction(ChessBoard chessBoard) {
-        chessBoard.addEffect(new BombingEffect(param.position, isPlayedBy));
+        chessBoard.addEffect(new BombingEffect(param.position(), isPlayedBy));
     }
 }

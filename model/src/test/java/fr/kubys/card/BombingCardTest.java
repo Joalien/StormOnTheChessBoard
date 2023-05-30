@@ -1,7 +1,7 @@
 package fr.kubys.card;
 
 import fr.kubys.board.ChessBoard;
-import fr.kubys.card.BombingCard.BombingCardParam;
+import fr.kubys.card.params.PositionCardParam;
 import fr.kubys.core.Color;
 import fr.kubys.piece.Queen;
 import org.junit.jupiter.api.BeforeEach;
@@ -31,7 +31,7 @@ class BombingCardTest {
         void should_work_if_empty_square() {
             assertTrue(chessBoard.getEffects().isEmpty());
 
-            assertDoesNotThrow(() -> bombing.playOn(chessBoard, new BombingCardParam(e4)));
+            assertDoesNotThrow(() -> bombing.playOn(chessBoard, new PositionCardParam(e4)));
 
             assertEquals(1, chessBoard.getEffects().size());
         }
@@ -40,7 +40,7 @@ class BombingCardTest {
         void should_work_if_played_on_ally_piece() {
             chessBoard.add(new Queen(Color.WHITE), e4);
 
-            assertDoesNotThrow(() -> bombing.playOn(chessBoard, new BombingCardParam(e4)));
+            assertDoesNotThrow(() -> bombing.playOn(chessBoard, new PositionCardParam(e4)));
         }
     }
 
@@ -51,7 +51,7 @@ class BombingCardTest {
             Queen queen = new Queen(Color.BLACK);
             chessBoard.add(queen, e4);
 
-            assertThrows(IllegalArgumentException.class, () -> bombing.playOn(chessBoard, new BombingCardParam(e4)));
+            assertThrows(IllegalArgumentException.class, () -> bombing.playOn(chessBoard, new PositionCardParam(e4)));
 
             assertEquals(queen, chessBoard.at(e4).getPiece().get());
         }
