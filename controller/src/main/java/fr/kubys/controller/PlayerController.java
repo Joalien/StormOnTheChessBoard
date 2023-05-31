@@ -1,9 +1,8 @@
 package fr.kubys.controller;
 
 import fr.kubys.dto.PlayerDto;
-import fr.kubys.mapper.ModelMapper;
+import fr.kubys.mapper.OutputMapper;
 import fr.kubys.repository.ChessBoardRepository;
-import fr.kubys.repository.GameNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -24,8 +23,8 @@ public class PlayerController {
     @CrossOrigin(origins = "*")
     public PlayerDto getPlayerById(@PathVariable Integer gameId, @PathVariable String playerId) {
         return switch (playerId) {
-            case "white" -> ModelMapper.map(chessBoardRepository.getChessBoardService(gameId).getWhite());
-            case "black" -> ModelMapper.map(chessBoardRepository.getChessBoardService(gameId).getBlack());
+            case "white" -> OutputMapper.map(chessBoardRepository.getChessBoardService(gameId).getWhite());
+            case "black" -> OutputMapper.map(chessBoardRepository.getChessBoardService(gameId).getBlack());
             default -> throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         };
     }

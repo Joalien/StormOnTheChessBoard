@@ -9,8 +9,8 @@ import fr.kubys.command.PlayCardCommand;
 import fr.kubys.command.PlayMoveCommand;
 import fr.kubys.core.Position;
 import fr.kubys.dto.ChessBoardDto;
+import fr.kubys.mapper.InputMapper;
 import fr.kubys.mapper.MappingException;
-import fr.kubys.mapper.ModelMapper;
 import fr.kubys.repository.ChessBoardRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -23,7 +23,7 @@ import java.util.Map;
 import java.util.Objects;
 
 import static fr.kubys.core.Position.*;
-import static fr.kubys.mapper.ModelMapper.mapToDto;
+import static fr.kubys.mapper.OutputMapper.mapToDto;
 
 @RestController
 @RequestMapping("/chessboard")
@@ -101,7 +101,7 @@ public class GameController {
                 .map(GameController::<T>checkThatCardParametersMatch)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "%s not in user hand!".formatted(cardName)));
         try {
-            T parameters = ModelMapper.mapParamToCardParam(param, card.getClazz(), chessBoardService);
+            T parameters = InputMapper.mapParamToCardParam(param, card.getClazz(), chessBoardService);
             PlayCardCommand<T> command = PlayCardCommand.<T>builder()
                     .gameId(gameId)
                     .parameters(parameters)
