@@ -4,6 +4,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException;
 import fr.kubys.card.params.CardParam;
+import fr.kubys.card.params.CourtlyLoveCardParam;
+import fr.kubys.core.Position;
 import fr.kubys.dto.CardOutputDto;
 import fr.kubys.dto.ChessBoardDto;
 import fr.kubys.dto.EffectDto;
@@ -15,8 +17,11 @@ import fr.kubys.core.Color;
 import fr.kubys.piece.*;
 import fr.kubys.player.Player;
 
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -71,8 +76,28 @@ public class ModelMapper {
         return (piece.getColor() == Color.WHITE ? "w" : "b") + pieceType;
     }
 
+    public static <T extends CardParam> T mapCardDtoToCardParam(Map<String, String> param, Class<T> clazz, ChessBoardReadService chessBoardService) {
+        List<Object> list = Arrays.stream(clazz.getDeclaredFields())
+                .map(field -> {
+                    if (field.getType().equals(String.class)) return param.get(field.getName());
+                    if (field.getType().equals(Position.class)) return Position.valueOf(param.get(field.getName()));
+                    if (field.getType().equals(Piece.class)) return getPieceFromChessboard(chessBoardService, param.get(field.getName()));
+                    if (field.getType().equals(Knight.class)) return (Knight) getPieceFromChessboard(chessBoardService, param.get(field.getName()));
+                    throw new RuntimeException();
+                }).toList();
 
-    public static <T extends CardParam> T mapCardDtoToCardParam(String param, Class<T> clazz) throws JsonProcessingException {
-        return new ObjectMapper().readerFor(clazz).readValue(param);
+        try {
+            Constructor<T> declaredConstructor = clazz.getDeclaredConstructor(list.stream().map(Object::getClass).toArray(Class[]::new));
+            return declaredConstructor.newInstance(list.toArray());
+        } catch (NoSuchMethodException | InvocationTargetException | InstantiationException | IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private static Piece getPieceFromChessboard(ChessBoardReadService chessboard, String position) {
+        return chessboard.getPieces().stream()
+                .filter(piece -> piece.getPosition() == Position.valueOf(position))
+                .findFirst()
+                .orElseThrow();
     }
 }

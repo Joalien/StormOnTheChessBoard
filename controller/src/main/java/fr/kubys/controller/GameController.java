@@ -1,6 +1,7 @@
 package fr.kubys.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import fr.kubys.api.ChessBoardReadService;
 import fr.kubys.card.Card;
 import fr.kubys.card.CardNotFoundException;
 import fr.kubys.card.params.CardParam;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 import static fr.kubys.core.Position.*;
@@ -92,22 +94,24 @@ public class GameController {
 
     @PostMapping("/{gameId}/card/{cardName}")
     @CrossOrigin(origins = "*")
-    public <T extends CardParam> ResponseEntity<Void> updateGame(@PathVariable Integer gameId, @PathVariable String cardName, @RequestBody String param) {
-        Card<T> card = chessBoardRepository.getChessBoardService(gameId).getCurrentPlayer().getCards().stream()
+    public <T extends CardParam> ResponseEntity<Void> updateGame(@PathVariable Integer gameId, @PathVariable String cardName, @RequestBody Map<String, String> param) {
+        ChessBoardReadService chessBoardService = chessBoardRepository.getChessBoardService(gameId);
+        Card<T> card = chessBoardService.getCurrentPlayer().getCards().stream()
                 .filter(c -> Objects.equals(c.getName(), cardName))// FIXME migrate to id
                 .findFirst()
                 .map(GameController::<T>checkThatCardParametersMatch)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "%s not in user hand!".formatted(cardName)));
         try {
+            T parameters = ModelMapper.mapCardDtoToCardParam(param, card.getClazz(), chessBoardService);
             PlayCardCommand<T> command = PlayCardCommand.<T>builder()
                     .gameId(gameId)
-                    .parameters(ModelMapper.mapCardDtoToCardParam(param, card.getClazz()))
+                    .parameters(parameters)
                     .card(card)
                     .build();
             chessBoardRepository.saveCommand(command);
             return ResponseEntity.ok().build();
-        } catch (JsonProcessingException e) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Parameters do not match");
         }
     }
 
