@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.util.Map;
+
 @Getter
 @Setter
 @Builder
@@ -14,4 +16,5 @@ public class CardOutputDto { // FIXME use id?
     private String name;
     private String description;
     private CardType type;
+    private Map<String, Object> param;
 }

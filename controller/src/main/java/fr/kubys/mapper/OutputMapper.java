@@ -3,6 +3,7 @@ package fr.kubys.mapper;
 import fr.kubys.api.ChessBoardReadService;
 import fr.kubys.board.effect.Effect;
 import fr.kubys.card.Card;
+import fr.kubys.card.params.CardParam;
 import fr.kubys.core.Color;
 import fr.kubys.dto.CardOutputDto;
 import fr.kubys.dto.ChessBoardDto;
@@ -11,6 +12,8 @@ import fr.kubys.dto.PlayerDto;
 import fr.kubys.piece.*;
 import fr.kubys.player.Player;
 
+import java.lang.reflect.Field;
+import java.util.Arrays;
 import java.util.Map;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -33,11 +36,15 @@ public class OutputMapper {
                 .build();
     }
 
-    public static CardOutputDto map(Card c) {
+    public static <T extends CardParam> CardOutputDto map(Card<T> c) {
+        Map<String, Object> cardParamOutputDto = Arrays.stream(c.getClazz().getDeclaredFields())
+                .map(Field::getName)
+                .collect(Collectors.toMap(o -> o, o -> "choose a value"));
         return CardOutputDto.builder()
                 .name(c.getName())
                 .description(c.getDescription())
                 .type(c.getType())
+                .param(cardParamOutputDto)
                 .build();
     }
 

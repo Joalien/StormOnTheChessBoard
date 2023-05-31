@@ -10,7 +10,7 @@ export default function App() {
 
     const [game, setGame] = useState({});
     const [gameId, setGameId] = useState(1);
-    const [currentPlayerColor, setCurrentPlayerColor] = useState("white");
+    const [currentPlayerColor, setCurrentPlayerColor] = useState("WHITE");
     const [whitePlayer, setWhitePlayer] = useState({cards: []});
     const [blackPlayer, setBlackPlayer] = useState({cards: []});
     const [selectedCard, setSelectedCard] = useState(null)
@@ -47,6 +47,7 @@ export default function App() {
         const res = await fetch(base + gameId + "/endTurn", {method: 'POST'})
         if (res.ok) {
             setCurrentPlayerColor(oppositeColor(currentPlayerColor))
+            setSelectedCard(null)
             fetchGame()
         } else alert((await res.json()).message)
     }
@@ -58,7 +59,7 @@ export default function App() {
     }
 
     function oppositeColor(color) {
-        return color === "white" ? "black" : "white";
+        return color === "WHITE" ? "BLACK" : "WHITE";
     }
 
     function showCard(card) {
@@ -68,8 +69,6 @@ export default function App() {
 
     function onSquareRightClick(square) {
         if (selectedCard) {
-            console.dir(selectedSquares)
-            console.dir(square)
             if (selectedSquares.has(square)) setSelectedSquares(new Set([...selectedSquares].filter(s => s !== square)))
             else setSelectedSquares(new Set([...selectedSquares, square]))
         }
@@ -83,7 +82,7 @@ export default function App() {
         }}>
             <h1>Tempête sur l'Échiquier</h1>
             <h2>Trait aux {currentPlayerColor}</h2>
-            <Player player={currentPlayerColor === "white" ? blackPlayer : whitePlayer} showCard={showCard}
+            <Player player={currentPlayerColor === "WHITE" ? blackPlayer : whitePlayer} showCard={showCard}
                     hiddenCards={true}/>
             <Chessboard id="BasicBoard"
                         onPieceDrop={onDrop}
@@ -96,7 +95,7 @@ export default function App() {
                         }), {})}
             />
             {selectedCard && <Card card={selectedCard}/>}
-            <Player player={currentPlayerColor === "black" ? blackPlayer : whitePlayer} showCard={showCard}
+            <Player player={currentPlayerColor === "BLACK" ? blackPlayer : whitePlayer} showCard={showCard}
                     hiddenCards={false}/>
             <button
                 onClick={startNewGame}

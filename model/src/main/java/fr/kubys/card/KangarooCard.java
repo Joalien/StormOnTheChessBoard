@@ -10,7 +10,7 @@ public class KangarooCard extends Card<KangarooCardParam> {
     private KangarooCardParam param;
 
     public KangarooCard() {
-        super("Kangaroo", "Transformez définitivement l'un de vos cavaliers, ou un cavalier adverse en kangourou. Le kangourou se déplace en faisant deux sauts de cavalier consécutifs.", CardType.AFTER_TURN, KangarooCardParam.class);
+        super("Kangourou", "Transformez définitivement l'un de vos cavaliers, ou un cavalier adverse en kangourou. Le kangourou se déplace en faisant deux sauts de cavalier consécutifs.", CardType.AFTER_TURN, KangarooCardParam.class);
     }
 
     @Override

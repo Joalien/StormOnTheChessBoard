@@ -1,5 +1,3 @@
-const base = "http://localhost:9000/chessboard/";
-
 export function Player({player, hiddenCards, showCard}) {
     return (
         <div id={"whitePlayer"}>
