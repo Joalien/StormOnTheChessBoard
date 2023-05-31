@@ -11,6 +11,7 @@ import fr.kubys.command.PlayCardCommand;
 import fr.kubys.command.PlayMoveCommand;
 import fr.kubys.core.Position;
 import fr.kubys.dto.ChessBoardDto;
+import fr.kubys.mapper.MappingException;
 import fr.kubys.mapper.ModelMapper;
 import fr.kubys.repository.ChessBoardRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -110,8 +111,8 @@ public class GameController {
                     .build();
             chessBoardRepository.saveCommand(command);
             return ResponseEntity.ok().build();
-        } catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Parameters do not match");
+        } catch (MappingException e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
         }
     }
 

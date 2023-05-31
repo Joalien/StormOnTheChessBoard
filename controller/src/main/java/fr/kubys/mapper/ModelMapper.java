@@ -23,8 +23,10 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class ModelMapper {
     public static ChessBoardDto mapToDto(Integer gameId, ChessBoardReadService chessBoard) {
@@ -77,14 +79,15 @@ public class ModelMapper {
     }
 
     public static <T extends CardParam> T mapCardDtoToCardParam(Map<String, String> param, Class<T> clazz, ChessBoardReadService chessBoardService) {
+        Set<String> inputParameterKeys = param.keySet();
+        Set<String> modelKeys = Arrays.stream(clazz.getDeclaredFields()).map(Field::getName).collect(Collectors.toSet());
+        if (!inputParameterKeys.equals(modelKeys)) {
+            throw new MappingException("Input dto %s does not match card parameter %s".formatted(inputParameterKeys, modelKeys));
+        }
+
         List<Object> list = Arrays.stream(clazz.getDeclaredFields())
-                .map(field -> {
-                    if (field.getType().equals(String.class)) return param.get(field.getName());
-                    if (field.getType().equals(Position.class)) return Position.valueOf(param.get(field.getName()));
-                    if (field.getType().equals(Piece.class)) return getPieceFromChessboard(chessBoardService, param.get(field.getName()));
-                    if (field.getType().equals(Knight.class)) return (Knight) getPieceFromChessboard(chessBoardService, param.get(field.getName()));
-                    throw new RuntimeException();
-                }).toList();
+                .map(field -> mapFieldToModel(param, chessBoardService, field))
+                .toList();
 
         try {
             Constructor<T> declaredConstructor = clazz.getDeclaredConstructor(list.stream().map(Object::getClass).toArray(Class[]::new));
@@ -92,6 +95,12 @@ public class ModelMapper {
         } catch (NoSuchMethodException | InvocationTargetException | InstantiationException | IllegalAccessException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private static Object mapFieldToModel(Map<String, String> param, ChessBoardReadService chessBoardService, Field field) {
+        if (Position.class.equals(field.getType())) return Position.valueOf(param.get(field.getName()));
+        if (Piece.class.isAssignableFrom(field.getType())) return getPieceFromChessboard(chessBoardService, param.get(field.getName()));
+        throw new MappingException("No mapping found for class %s".formatted(field.getType()));
     }
 
     private static Piece getPieceFromChessboard(ChessBoardReadService chessboard, String position) {
