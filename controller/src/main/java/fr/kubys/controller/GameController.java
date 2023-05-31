@@ -1,9 +1,7 @@
 package fr.kubys.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import fr.kubys.api.ChessBoardReadService;
 import fr.kubys.card.Card;
-import fr.kubys.card.CardNotFoundException;
 import fr.kubys.card.params.CardParam;
 import fr.kubys.command.Command;
 import fr.kubys.command.EndTurnCommand;
@@ -95,7 +93,7 @@ public class GameController {
 
     @PostMapping("/{gameId}/card/{cardName}")
     @CrossOrigin(origins = "*")
-    public <T extends CardParam> ResponseEntity<Void> updateGame(@PathVariable Integer gameId, @PathVariable String cardName, @RequestBody Map<String, String> param) {
+    public <T extends CardParam> ResponseEntity<Void> updateGame(@PathVariable Integer gameId, @PathVariable String cardName, @RequestBody Map<String, Object> param) {
         ChessBoardReadService chessBoardService = chessBoardRepository.getChessBoardService(gameId);
         Card<T> card = chessBoardService.getCurrentPlayer().getCards().stream()
                 .filter(c -> Objects.equals(c.getName(), cardName))// FIXME migrate to id
@@ -103,7 +101,7 @@ public class GameController {
                 .map(GameController::<T>checkThatCardParametersMatch)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "%s not in user hand!".formatted(cardName)));
         try {
-            T parameters = ModelMapper.mapCardDtoToCardParam(param, card.getClazz(), chessBoardService);
+            T parameters = ModelMapper.mapParamToCardParam(param, card.getClazz(), chessBoardService);
             PlayCardCommand<T> command = PlayCardCommand.<T>builder()
                     .gameId(gameId)
                     .parameters(parameters)

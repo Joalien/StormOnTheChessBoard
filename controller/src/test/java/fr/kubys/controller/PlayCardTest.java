@@ -1,18 +1,11 @@
 package fr.kubys.controller;
 
 import fr.kubys.api.ChessBoardReadService;
-import fr.kubys.card.BombingCard;
-import fr.kubys.card.Card;
-import fr.kubys.card.CourtlyLoveCard;
-import fr.kubys.card.QuadrilleCard;
-import fr.kubys.card.params.CardParam;
-import fr.kubys.card.params.CourtlyLoveCardParam;
-import fr.kubys.card.params.PositionCardParam;
-import fr.kubys.card.params.QuadrilleCardParam;
+import fr.kubys.card.*;
+import fr.kubys.card.params.*;
 import fr.kubys.command.PlayCardCommand;
 import fr.kubys.core.Color;
-import fr.kubys.piece.Knight;
-import fr.kubys.piece.Square;
+import fr.kubys.piece.*;
 import fr.kubys.player.Player;
 import fr.kubys.repository.ChessBoardRepository;
 import org.junit.jupiter.api.Assertions;
@@ -31,11 +24,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
-import static fr.kubys.core.Position.d6;
-import static fr.kubys.core.Position.e4;
+import static fr.kubys.core.Position.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.verify;
@@ -63,6 +57,20 @@ class PlayCardTest {
     }
 
     @Test
+    void should_play_bombing_card() {
+        Map<String, String> param = Map.of("position", "e4");
+
+        ResponseEntity<Void> res = restTemplate.postForEntity("http://localhost:%s/chessboard/%s/card/%s".formatted(port, GAME_ID, bombingCard.getName()), param, Void.class);
+
+        assertEquals(HttpStatus.OK, res.getStatusCode());
+        ArgumentCaptor<PlayCardCommand<PositionCardParam>> argumentCaptor = ArgumentCaptor.forClass(PlayCardCommand.class);
+        verify(chessBoardRepository).saveCommand(argumentCaptor.capture());
+        Assertions.assertEquals(GAME_ID, argumentCaptor.getValue().getGameId());
+        assertEquals(new PositionCardParam(e4), argumentCaptor.getValue().getParameters());
+        assertEquals(bombingCard, argumentCaptor.getValue().getCard());
+    }
+
+    @Test
     void should_play_courtly_love_card() {
         Card<CourtlyLoveCardParam> courtlyLoveCard = new CourtlyLoveCard();
         Mockito.when(readService.getCurrentPlayer()).thenReturn(getPlayerHaving(courtlyLoveCard));
@@ -82,17 +90,42 @@ class PlayCardTest {
     }
 
     @Test
-    void should_play_bombing_card() {
-        Map<String, String> param = Map.of("position", "e4");
+    void should_play_charge_card() {
+        Card<ChargeCardParam> chargeCard = new ChargeCard();
+        Mockito.when(readService.getCurrentPlayer()).thenReturn(getPlayerHaving(chargeCard));
+        Set<Pawn> collect = Set.of(e2, e3, e4, h7).stream()
+                .map(position -> {
+                    Pawn p = new WhitePawn();
+                    p.setSquare(new Square(position));
+                    return p;
+                }).collect(Collectors.toSet());
+        Mockito.when(readService.getPieces()).thenReturn(new HashSet<>(collect));
+        Map<String, Set<String>> param = Map.of("pawns", Set.of("e2", "e3", "e4", "h7"));
 
-        ResponseEntity<Void> res = restTemplate.postForEntity("http://localhost:%s/chessboard/%s/card/%s".formatted(port, GAME_ID, bombingCard.getName()), param, Void.class);
+        ResponseEntity<String> res = restTemplate.postForEntity("http://localhost:%s/chessboard/%s/card/%s".formatted(port, GAME_ID, chargeCard.getName()), param, String.class);
 
         assertEquals(HttpStatus.OK, res.getStatusCode());
-        ArgumentCaptor<PlayCardCommand<PositionCardParam>> argumentCaptor = ArgumentCaptor.forClass(PlayCardCommand.class);
+        ArgumentCaptor<PlayCardCommand<ChargeCardParam>> argumentCaptor = ArgumentCaptor.forClass(PlayCardCommand.class);
         verify(chessBoardRepository).saveCommand(argumentCaptor.capture());
         Assertions.assertEquals(GAME_ID, argumentCaptor.getValue().getGameId());
-        assertEquals(new PositionCardParam(e4), argumentCaptor.getValue().getParameters());
-        assertEquals(bombingCard, argumentCaptor.getValue().getCard());
+        assertEquals(new ChargeCardParam(collect), argumentCaptor.getValue().getParameters());
+        assertEquals(new ChargeCard(), argumentCaptor.getValue().getCard());
+    }
+
+    @Test
+    void should_play_quadrille_card() { // TODO
+        Card<QuadrilleCardParam> quadrilleCard = new QuadrilleCard();
+        Mockito.when(readService.getCurrentPlayer()).thenReturn(getPlayerHaving(quadrilleCard));
+        Map<String, String> param = Map.of("direction", "CLOCKWISE");
+
+        ResponseEntity<String> res = restTemplate.postForEntity("http://localhost:%s/chessboard/%s/card/%s".formatted(port, GAME_ID, quadrilleCard.getName()), param, String.class);
+
+        assertEquals(HttpStatus.OK, res.getStatusCode());
+        ArgumentCaptor<PlayCardCommand<QuadrilleCardParam>> argumentCaptor = ArgumentCaptor.forClass(PlayCardCommand.class);
+        verify(chessBoardRepository).saveCommand(argumentCaptor.capture());
+        Assertions.assertEquals(GAME_ID, argumentCaptor.getValue().getGameId());
+        assertEquals(new QuadrilleCardParam(QuadrilleCard.Direction.CLOCKWISE), argumentCaptor.getValue().getParameters());
+        assertEquals(new QuadrilleCard(), argumentCaptor.getValue().getCard());
     }
 
     @Test

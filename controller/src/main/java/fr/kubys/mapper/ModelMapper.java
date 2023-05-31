@@ -1,10 +1,7 @@
 package fr.kubys.mapper;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException;
+import fr.kubys.card.QuadrilleCard;
 import fr.kubys.card.params.CardParam;
-import fr.kubys.card.params.CourtlyLoveCardParam;
 import fr.kubys.core.Position;
 import fr.kubys.dto.CardOutputDto;
 import fr.kubys.dto.ChessBoardDto;
@@ -20,13 +17,9 @@ import fr.kubys.player.Player;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class ModelMapper {
     public static ChessBoardDto mapToDto(Integer gameId, ChessBoardReadService chessBoard) {
@@ -78,7 +71,7 @@ public class ModelMapper {
         return (piece.getColor() == Color.WHITE ? "w" : "b") + pieceType;
     }
 
-    public static <T extends CardParam> T mapCardDtoToCardParam(Map<String, String> param, Class<T> clazz, ChessBoardReadService chessBoardService) {
+    public static <T extends CardParam> T mapParamToCardParam(Map<String, Object> param, Class<T> clazz, ChessBoardReadService chessBoardService) {
         Set<String> inputParameterKeys = param.keySet();
         Set<String> modelKeys = Arrays.stream(clazz.getDeclaredFields()).map(Field::getName).collect(Collectors.toSet());
         if (!inputParameterKeys.equals(modelKeys)) {
@@ -90,16 +83,23 @@ public class ModelMapper {
                 .toList();
 
         try {
-            Constructor<T> declaredConstructor = clazz.getDeclaredConstructor(list.stream().map(Object::getClass).toArray(Class[]::new));
+            Constructor<T> declaredConstructor = clazz.getDeclaredConstructor(list.stream()
+                    .map(Object::getClass)
+                    .map(aClass -> aClass.equals(HashSet.class) ? Set.class : aClass) // FIXME
+                    .toArray(Class[]::new));
             return declaredConstructor.newInstance(list.toArray());
         } catch (NoSuchMethodException | InvocationTargetException | InstantiationException | IllegalAccessException e) {
             throw new RuntimeException(e);
         }
     }
 
-    private static Object mapFieldToModel(Map<String, String> param, ChessBoardReadService chessBoardService, Field field) {
-        if (Position.class.equals(field.getType())) return Position.valueOf(param.get(field.getName()));
-        if (Piece.class.isAssignableFrom(field.getType())) return getPieceFromChessboard(chessBoardService, param.get(field.getName()));
+    private static Object mapFieldToModel(Map<String, Object> param, ChessBoardReadService chessBoardService, Field field) {
+        if (Position.class.equals(field.getType())) return Position.valueOf((String) param.get(field.getName()));
+        if (Piece.class.isAssignableFrom(field.getType())) return getPieceFromChessboard(chessBoardService, (String) param.get(field.getName()));
+        if (Collection.class.isAssignableFrom(field.getType())) return ((Collection<String>) param.get(field.getName())).stream()
+                                                                            .map(pos -> getPieceFromChessboard(chessBoardService, pos))
+                                                                            .collect(Collectors.toSet());
+        if (QuadrilleCard.Direction.class.equals(field.getType())) return QuadrilleCard.Direction.valueOf((String) param.get(field.getName()));
         throw new MappingException("No mapping found for class %s".formatted(field.getType()));
     }
 
