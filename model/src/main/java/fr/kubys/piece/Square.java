@@ -2,7 +2,6 @@ package fr.kubys.piece;
 
 import fr.kubys.core.Position;
 
-
 import java.util.Optional;
 
 public class Square {

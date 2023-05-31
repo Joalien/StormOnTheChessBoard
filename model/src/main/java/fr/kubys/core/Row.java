@@ -1,7 +1,6 @@
 package fr.kubys.core;
 
 
-
 import java.util.Arrays;
 import java.util.Optional;
 
@@ -30,6 +29,10 @@ public enum Row implements Comparable<Row> {
                 .orElseThrow(IndexOutOfBoundsException::new);
     }
 
+    public Integer getRowNumber() {
+        return this.rowNumber;
+    }
+
     public Optional<Row> next() {
         return Arrays.stream(Row.values())
                 .filter(row -> row.getRowNumber() == this.getRowNumber() + 1)
@@ -48,10 +51,6 @@ public enum Row implements Comparable<Row> {
 
     public boolean isBefore(Row row) {
         return this.compareTo(row) < 0;
-    }
-
-    public Integer getRowNumber() {
-        return this.rowNumber;
     }
 
     public String getRowName() {

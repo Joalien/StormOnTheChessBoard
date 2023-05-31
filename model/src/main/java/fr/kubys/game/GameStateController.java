@@ -16,7 +16,7 @@ import java.util.stream.IntStream;
 public class GameStateController implements ChessBoardService {
 
     private static final int NUMBER_OF_CARDS_IN_HAND = 4;
-//    private static final Logger log = org.slf4j.LoggerFactory.getLogger(GameStateController.class);
+    //    private static final Logger log = org.slf4j.LoggerFactory.getLogger(GameStateController.class);
     private ChessBoard chessBoard;
     private Player white;
     private Player black;
@@ -96,11 +96,6 @@ public class GameStateController implements ChessBoardService {
         swapCurrentPlayer();
     }
 
-    void setCurrentState(StateEnum currentState) {
-//        log.debug("{} is now in state {}", this.currentPlayer, currentState);
-        this.currentState = currentState;
-    }
-
     private void swapCurrentPlayer() {
         if (getCurrentPlayer() == getWhite()) setCurrentPlayer(getBlack());
         else if (getCurrentPlayer() == getBlack()) setCurrentPlayer(getWhite());
@@ -121,17 +116,14 @@ public class GameStateController implements ChessBoardService {
         return chessBoard.getEffects();
     }
 
-    ChessBoard getChessBoard() {
-        return this.chessBoard;
+    @Override
+    public List<Card<? extends CardParam>> getCards() {
+        return this.cards;
     }
 
     @Override
     public Player getCurrentPlayer() {
         return this.currentPlayer;
-    }
-
-    StateEnum getCurrentState() {
-        return this.currentState;
     }
 
     @Override
@@ -144,12 +136,20 @@ public class GameStateController implements ChessBoardService {
         return this.black;
     }
 
-    @Override
-    public List<Card<? extends CardParam>> getCards() {
-        return this.cards;
-    }
-
     void setCurrentPlayer(Player currentPlayer) {
         this.currentPlayer = currentPlayer;
+    }
+
+    ChessBoard getChessBoard() {
+        return this.chessBoard;
+    }
+
+    StateEnum getCurrentState() {
+        return this.currentState;
+    }
+
+    void setCurrentState(StateEnum currentState) {
+//        log.debug("{} is now in state {}", this.currentPlayer, currentState);
+        this.currentState = currentState;
     }
 }

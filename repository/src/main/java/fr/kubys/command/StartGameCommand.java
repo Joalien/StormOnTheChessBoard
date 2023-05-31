@@ -10,6 +10,7 @@ import java.util.Random;
 @Getter
 public final class StartGameCommand extends Command {
     private final long seed = new Random().nextLong();
+
     @Override
     public void execute(ChessBoardWriteService chessBoardWriteService) {
         chessBoardWriteService.startGame(seed);

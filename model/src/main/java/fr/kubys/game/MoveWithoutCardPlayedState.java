@@ -1,8 +1,8 @@
 package fr.kubys.game;
 
 import fr.kubys.card.Card;
-import fr.kubys.card.params.CardParam;
 import fr.kubys.card.CardType;
+import fr.kubys.card.params.CardParam;
 import fr.kubys.core.Position;
 import fr.kubys.game.exception.AlreadyMovedException;
 

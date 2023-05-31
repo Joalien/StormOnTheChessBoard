@@ -8,8 +8,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
-import java.util.Collections;
-
 import static fr.kubys.core.Position.e4;
 import static org.junit.jupiter.api.Assertions.*;
 

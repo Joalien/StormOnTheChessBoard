@@ -22,7 +22,8 @@ public class LightweightSquadCard extends Card<LightweightSquadCardParam> {
     protected void validInput(ChessBoard chessBoard) {
         if (param.pawn1() == null) throw new IllegalStateException();
         if (param.pawn2() == null) throw new IllegalStateException();
-        if (param.pawn1().equals(param.pawn2())) throw new IllegalArgumentException("You should select two different pawns");
+        if (param.pawn1().equals(param.pawn2()))
+            throw new IllegalArgumentException("You should select two different pawns");
         if (param.pawn1().getColor() != param.pawn2().getColor())
             throw new IllegalArgumentException("You should move pawns of the same color");
         if (param.pawn1().twoSquaresForward().isEmpty() || param.pawn2().twoSquaresForward().isEmpty()) {

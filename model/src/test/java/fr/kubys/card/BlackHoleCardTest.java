@@ -1,9 +1,7 @@
 package fr.kubys.card;
 
 import fr.kubys.board.ChessBoard;
-import fr.kubys.card.params.CardParam;
 import fr.kubys.card.params.PositionCardParam;
-import fr.kubys.card.params.QuadrilleCardParam;
 import fr.kubys.core.Color;
 import fr.kubys.piece.Queen;
 import fr.kubys.piece.extra.BlackHole;

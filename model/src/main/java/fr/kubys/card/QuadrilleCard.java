@@ -14,8 +14,9 @@ import java.util.stream.Stream;
 
 public class QuadrilleCard extends Card<QuadrilleCardParam> {
 
-    private QuadrilleCardParam param;
     private static final List<Position> CORNERS = Stream.of(Position.a1, Position.h1, Position.h8, Position.a8).toList();
+    private QuadrilleCardParam param;
+
     public QuadrilleCard() {
         super("Quadrille", "Toutes les pièces se trouvant dans l'un des quatre coins de l'échiquier se déplacent d'un quart de tour dans le sens de votre choix. Les mouvements sont simultanés, il n'y a donc pas de prise.", CardType.AFTER_TURN, QuadrilleCardParam.class);
     }

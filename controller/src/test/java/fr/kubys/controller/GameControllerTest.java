@@ -25,11 +25,9 @@ import static org.mockito.Mockito.verify;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class GameControllerTest {
 
+    private static final Integer GAME_ID = 10;
     @Value("${local.server.port}")
     private int port;
-
-    private static final Integer GAME_ID = 10;
-
     @Autowired
     private TestRestTemplate restTemplate;
     @MockBean
@@ -52,7 +50,7 @@ class GameControllerTest {
         assertEquals(e4, capturedArgument.getTo());
         assertEquals(GAME_ID, capturedArgument.getGameId());
     }
-    
+
     @Test
     void should_end_turn() {
         ResponseEntity<Object> objectResponseEntity = this.restTemplate.postForEntity("http://localhost:%s/chessboard/%s/endTurn".formatted(port, GAME_ID), null, null);

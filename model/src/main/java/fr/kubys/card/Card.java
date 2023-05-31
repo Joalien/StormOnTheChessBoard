@@ -42,11 +42,6 @@ public abstract class Card<T extends CardParam> {
 
     protected abstract void doAction(ChessBoard chessBoard);
 
-    @Override
-    public String toString() {
-        return this.name;
-    }
-
     public String getName() {
         return this.name;
     }
@@ -68,6 +63,11 @@ public abstract class Card<T extends CardParam> {
     }
 
     @Override
+    public int hashCode() {
+        return Objects.hash(name, isPlayedBy, param);
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
@@ -76,8 +76,8 @@ public abstract class Card<T extends CardParam> {
     }
 
     @Override
-    public int hashCode() {
-        return Objects.hash(name, isPlayedBy, param);
+    public String toString() {
+        return this.name;
     }
 
     public Class<T> getClazz() {

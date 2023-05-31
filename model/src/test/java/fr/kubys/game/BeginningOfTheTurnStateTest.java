@@ -1,7 +1,10 @@
 package fr.kubys.game;
 
 import fr.kubys.board.IllegalMoveException;
-import fr.kubys.card.*;
+import fr.kubys.card.BombingCard;
+import fr.kubys.card.Card;
+import fr.kubys.card.LightweightSquadCard;
+import fr.kubys.card.QuadrilleCard;
 import fr.kubys.card.params.LightweightSquadCardParam;
 import fr.kubys.card.params.PositionCardParam;
 import fr.kubys.card.params.QuadrilleCardParam;

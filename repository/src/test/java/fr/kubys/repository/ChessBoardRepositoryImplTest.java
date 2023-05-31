@@ -4,9 +4,6 @@ import fr.kubys.command.Command;
 import fr.kubys.command.EndTurnCommand;
 import fr.kubys.command.PlayMoveCommand;
 import fr.kubys.command.StartGameCommand;
-import fr.kubys.repository.ChessBoardRepository;
-import fr.kubys.repository.ChessBoardRepositoryImpl;
-import fr.kubys.repository.GameNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

@@ -1,15 +1,14 @@
 package fr.kubys.command;
 
 import fr.kubys.api.ChessBoardReadService;
-import fr.kubys.card.Card;
-import fr.kubys.card.params.CardParam;
 import fr.kubys.repository.ChessBoardRepositoryImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 class StartGameCommandTest {
     ChessBoardRepositoryImpl chessBoardRepository;

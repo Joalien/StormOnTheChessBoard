@@ -31,18 +31,22 @@ public class InputMapper {
                     .map(aClass -> aClass.equals(HashSet.class) ? Set.class : aClass) // FIXME
                     .toArray(Class[]::new));
             return declaredConstructor.newInstance(list.toArray());
-        } catch (NoSuchMethodException | InvocationTargetException | InstantiationException | IllegalAccessException e) {
+        } catch (NoSuchMethodException | InvocationTargetException | InstantiationException |
+                 IllegalAccessException e) {
             throw new RuntimeException(e);
         }
     }
 
     private static Object mapFieldToModel(Map<String, Object> param, ChessBoardReadService chessBoardService, Field field) {
         if (Position.class.equals(field.getType())) return Position.valueOf((String) param.get(field.getName()));
-        if (Piece.class.isAssignableFrom(field.getType())) return getPieceFromChessboard(chessBoardService, (String) param.get(field.getName()));
-        if (Collection.class.isAssignableFrom(field.getType())) return ((Collection<String>) param.get(field.getName())).stream()
-                                                                            .map(pos -> getPieceFromChessboard(chessBoardService, pos))
-                                                                            .collect(Collectors.toSet());
-        if (QuadrilleCard.Direction.class.equals(field.getType())) return QuadrilleCard.Direction.valueOf((String) param.get(field.getName()));
+        if (Piece.class.isAssignableFrom(field.getType()))
+            return getPieceFromChessboard(chessBoardService, (String) param.get(field.getName()));
+        if (Collection.class.isAssignableFrom(field.getType()))
+            return ((Collection<String>) param.get(field.getName())).stream()
+                    .map(pos -> getPieceFromChessboard(chessBoardService, pos))
+                    .collect(Collectors.toSet());
+        if (QuadrilleCard.Direction.class.equals(field.getType()))
+            return QuadrilleCard.Direction.valueOf((String) param.get(field.getName()));
         throw new MappingException("No mapping found for class %s".formatted(field.getType()));
     }
 

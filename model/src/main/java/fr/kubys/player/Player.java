@@ -5,7 +5,6 @@ import fr.kubys.card.params.CardParam;
 import fr.kubys.core.Color;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 
 public class Player {

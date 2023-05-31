@@ -5,12 +5,14 @@ import fr.kubys.card.*;
 import fr.kubys.card.params.*;
 import fr.kubys.command.PlayCardCommand;
 import fr.kubys.core.Color;
-import fr.kubys.piece.*;
+import fr.kubys.piece.Knight;
+import fr.kubys.piece.Pawn;
+import fr.kubys.piece.Square;
+import fr.kubys.piece.WhitePawn;
 import fr.kubys.player.Player;
 import fr.kubys.repository.ChessBoardRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
@@ -36,11 +38,9 @@ import static org.mockito.Mockito.verify;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class PlayCardTest {
+    private static final Integer GAME_ID = 10;
     @Value("${local.server.port}")
     private int port;
-
-    private static final Integer GAME_ID = 10;
-
     @Autowired
     private TestRestTemplate restTemplate;
     @MockBean
@@ -54,6 +54,12 @@ class PlayCardTest {
         bombingCard = new BombingCard();
         Mockito.when(chessBoardRepository.getChessBoardService(GAME_ID)).thenReturn(readService);
         Mockito.when(readService.getCurrentPlayer()).thenReturn(getPlayerHaving(bombingCard));
+    }
+
+    private Player getPlayerHaving(Card<? extends CardParam> card) {
+        Player player = new Player("White", Color.WHITE);
+        player.getCards().add(card);
+        return player;
     }
 
     @Test
@@ -158,11 +164,5 @@ class PlayCardTest {
 
         assertEquals(HttpStatus.BAD_REQUEST, res.getStatusCode());
         assertTrue(res.getBody().contains(" does not match card parameter "));
-    }
-
-    private Player getPlayerHaving(Card<? extends CardParam> card) {
-        Player player = new Player("White", Color.WHITE);
-        player.getCards().add(card);
-        return player;
     }
 }

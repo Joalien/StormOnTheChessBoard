@@ -7,9 +7,11 @@ import fr.kubys.piece.Pawn;
 import fr.kubys.piece.Piece;
 import fr.kubys.piece.Square;
 
-import java.util.*;
+import java.util.Comparator;
+import java.util.Map;
+import java.util.Optional;
 
-public class ChargeCard extends Card<ChargeCardParam>{
+public class ChargeCard extends Card<ChargeCardParam> {
 
     private ChargeCardParam param;
 

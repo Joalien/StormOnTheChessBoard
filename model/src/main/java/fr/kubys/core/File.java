@@ -1,7 +1,6 @@
 package fr.kubys.core;
 
 
-
 import java.util.Arrays;
 
 public enum File {
@@ -29,6 +28,10 @@ public enum File {
                 .orElseThrow(IndexOutOfBoundsException::new);
     }
 
+    public Integer getFileNumber() {
+        return this.fileNumber;
+    }
+
     public int distanceTo(File file) {
         return Math.abs(getFileNumber() - file.getFileNumber());
     }
@@ -39,9 +42,5 @@ public enum File {
 
     public String getFileName() {
         return this.fileName;
-    }
-
-    public Integer getFileNumber() {
-        return this.fileNumber;
     }
 }

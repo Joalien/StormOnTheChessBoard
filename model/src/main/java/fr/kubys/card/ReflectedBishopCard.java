@@ -5,7 +5,6 @@ import fr.kubys.card.params.ReflectedBishopCardParam;
 import fr.kubys.core.Position;
 import fr.kubys.piece.Bishop;
 
-
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;

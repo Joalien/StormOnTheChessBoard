@@ -6,7 +6,6 @@ import fr.kubys.core.File;
 import fr.kubys.core.Position;
 import fr.kubys.core.Row;
 import fr.kubys.piece.*;
-//import org.slf4j.Logger;
 
 import java.util.*;
 import java.util.stream.Collectors;

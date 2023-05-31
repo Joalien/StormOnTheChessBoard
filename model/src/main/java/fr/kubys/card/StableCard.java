@@ -1,8 +1,6 @@
 package fr.kubys.card;
 
 import fr.kubys.board.ChessBoard;
-import fr.kubys.card.Card;
-import fr.kubys.card.CardType;
 import fr.kubys.card.params.StableCardParam;
 import fr.kubys.core.Position;
 

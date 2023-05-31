@@ -1,7 +1,6 @@
 package fr.kubys.core;
 
 
-
 import java.util.Arrays;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -42,6 +41,14 @@ public enum Position {
         return getFile() == A || getFile() == H || getRow() == Row.One || getRow() == Row.Height;
     }
 
+    public File getFile() {
+        return this.file;
+    }
+
+    public Row getRow() {
+        return this.row;
+    }
+
     public boolean areNearby(Position position) {
         return (getFile() == position.getFile() && areNearbyRow(position))
                 || (getRow() == position.getRow() && areNearbyFile(position));
@@ -63,13 +70,5 @@ public enum Position {
     @Override
     public String toString() {
         return this.name();
-    }
-
-    public File getFile() {
-        return this.file;
-    }
-
-    public Row getRow() {
-        return this.row;
     }
 }

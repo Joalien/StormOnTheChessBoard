@@ -5,7 +5,7 @@ import fr.kubys.piece.Piece;
 //import org.slf4j.Logger;
 
 public class MagnetismEffect extends Effect {
-//    private static final Logger log = org.slf4j.LoggerFactory.getLogger(MagnetismEffect.class);
+    //    private static final Logger log = org.slf4j.LoggerFactory.getLogger(MagnetismEffect.class);
     private final Piece piece;
 
     public MagnetismEffect(Piece piece) {
