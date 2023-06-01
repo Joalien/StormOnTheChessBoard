@@ -29,7 +29,7 @@ public class QuadrilleCard extends Card<QuadrilleCardParam> {
     protected boolean doesNotCreateCheck(ChessBoard chessBoard, QuadrilleCardParam param) {
         Map<Position, Optional<Piece>> pieces = saveWhichPieceShouldGoInWhichCorner(chessBoard, param.direction());
         pieces.forEach((key, value) -> chessBoard.fakeSquare(value.orElse(null), key));
-        boolean isKingUnderAttack = chessBoard.isKingUnderAttack(isPlayedBy);
+        boolean isKingUnderAttack = chessBoard.isKingUnderAttack(chessBoard.getCurrentTurn());
         chessBoard.unfakeAllSquares();
         return !isKingUnderAttack;
     }

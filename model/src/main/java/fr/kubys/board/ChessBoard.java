@@ -17,8 +17,8 @@ public class ChessBoard {
     private final HashMap<Position, Square> fakeSquares = new HashMap<>();
     private final Set<Piece> outOfTheBoardPieces = new HashSet<>();
     private final Set<Effect> effects = new HashSet<>();
-    // FIXME retirer les dépendances techniques
-    // FIXME ArchUnit : tester l'architecture
+
+    private Color currentTurn = Color.WHITE;
 
     public static ChessBoard createEmpty() {
 //        log.debug("create empty chessboard");
@@ -281,5 +281,13 @@ public class ChessBoard {
 
     public Set<Effect> getEffects() {
         return Set.copyOf(this.effects);
+    }
+
+    public Color getCurrentTurn() {
+        return currentTurn;
+    }
+
+    public void setTurn(Color currentPlayer) {
+        this.currentTurn = currentPlayer;
     }
 }

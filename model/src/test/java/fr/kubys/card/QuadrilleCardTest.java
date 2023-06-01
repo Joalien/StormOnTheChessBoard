@@ -33,9 +33,9 @@ class QuadrilleCardTest {
         a8Rock = (Rock) chessBoard.at(a8).getPiece().get();
         h8Rock = (Rock) chessBoard.at(h8).getPiece().get();
         clockwiseQuadrille = new QuadrilleCard();
-        clockwiseQuadrille.setIsPlayedBy(Color.WHITE);
+chessBoard.setTurn(Color.WHITE);
         counterclockwiseQuadrille = new QuadrilleCard();
-        counterclockwiseQuadrille.setIsPlayedBy(Color.WHITE);
+chessBoard.setTurn(Color.WHITE);
     }
 
     @Nested

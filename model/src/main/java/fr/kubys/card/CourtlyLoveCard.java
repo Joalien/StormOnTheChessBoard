@@ -15,7 +15,7 @@ public class CourtlyLoveCard extends Card<CourtlyLoveCardParam> {
     protected void validInput(ChessBoard chessBoard, CourtlyLoveCardParam param) {
         if (param.knight() == null) throw new IllegalStateException();
         if (param.positionToMoveOn() == null) throw new IllegalStateException();
-        if (param.knight().getColor() != isPlayedBy) throw new CannotMoveThisColorException(param.knight().getColor());
+        if (param.knight().getColor() != chessBoard.getCurrentTurn()) throw new CannotMoveThisColorException(param.knight().getColor());
         boolean isNearbyQueen = chessBoard.allyPieces(param.knight().getColor()).stream()
                 .filter(Queen.class::isInstance)
                 .map(Piece::getPosition)

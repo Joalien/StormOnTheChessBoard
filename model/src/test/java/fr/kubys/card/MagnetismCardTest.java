@@ -25,7 +25,7 @@ class MagnetismCardTest {
         chessBoard = ChessBoard.createWithInitialState();
         piece = chessBoard.at(c2).getPiece().get();
         magnetismCard = new MagnetismCard();
-        magnetismCard.setIsPlayedBy(Color.WHITE);
+chessBoard.setTurn(Color.WHITE);
     }
 
     @Nested
@@ -46,7 +46,7 @@ class MagnetismCardTest {
 
         @Test
         void should_throw_if_cast_on_enemy_piece() {
-            magnetismCard.setIsPlayedBy(Color.BLACK);
+            chessBoard.setTurn(Color.BLACK);
             assertThrows(CannotMoveThisColorException.class, () -> magnetismCard.playOn(chessBoard, new PieceCardParam(piece)));
         }
     }

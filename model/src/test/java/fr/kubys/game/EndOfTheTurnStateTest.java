@@ -2,6 +2,7 @@ package fr.kubys.game;
 
 import fr.kubys.card.QuadrilleCard;
 import fr.kubys.card.params.QuadrilleCardParam;
+import fr.kubys.core.Color;
 import fr.kubys.game.exception.AlreadyMovedException;
 import fr.kubys.game.exception.CardAlreadyPlayedException;
 import org.junit.jupiter.api.BeforeEach;
@@ -37,12 +38,12 @@ class EndOfTheTurnStateTest {
 
     @Test
     void should_change_color() {
-        gameStateController.setCurrentPlayer(gameStateController.getBlack());
+        assertEquals(Color.WHITE, gameStateController.getCurrentPlayer().getColor());
 
         assertDoesNotThrow(() -> gameStateController.tryToPass());
 
         assertEquals(StateEnum.BEGINNING_OF_THE_TURN, gameStateController.getCurrentState());
-        assertEquals(gameStateController.getWhite(), gameStateController.getCurrentPlayer());
+        assertEquals(Color.BLACK, gameStateController.getCurrentPlayer().getColor());
     }
 
     @Test

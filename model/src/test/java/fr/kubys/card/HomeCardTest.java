@@ -21,7 +21,7 @@ class HomeCardTest {
             Knight knight = new Knight(Color.WHITE);
             chessBoard.add(knight, e4);
             HomeCard homeCard = new HomeCard();
-            homeCard.setIsPlayedBy(Color.WHITE);
+chessBoard.setTurn(Color.WHITE);
 
             assertDoesNotThrow(() -> homeCard.playOn(chessBoard, new PieceToPositionCardParam(knight, g1)));
 
@@ -37,7 +37,7 @@ class HomeCardTest {
             Queen queen = new Queen(Color.BLACK);
             chessBoard.add(queen, g1);
             HomeCard homeCard = new HomeCard();
-            homeCard.setIsPlayedBy(Color.WHITE);
+chessBoard.setTurn(Color.WHITE);
 
             assertDoesNotThrow(() -> homeCard.playOn(chessBoard, new PieceToPositionCardParam(knight, g1)));
 
@@ -59,7 +59,7 @@ class HomeCardTest {
             Queen queen = new Queen(Color.BLACK);
             chessBoard.add(queen, g1);
             HomeCard homeCard = new HomeCard();
-            homeCard.setIsPlayedBy(Color.WHITE);
+chessBoard.setTurn(Color.WHITE);
 
             assertThrows(IllegalArgumentException.class, () -> homeCard.playOn(chessBoard, new PieceToPositionCardParam(pawn, g1)));
 
@@ -77,7 +77,7 @@ class HomeCardTest {
             Queen queen = new Queen(Color.WHITE);
             chessBoard.add(queen, g1);
             HomeCard homeCard = new HomeCard();
-            homeCard.setIsPlayedBy(Color.WHITE);
+chessBoard.setTurn(Color.WHITE);
 
             assertThrows(IllegalArgumentException.class, () -> homeCard.playOn(chessBoard, new PieceToPositionCardParam(knight, g1)));
 
@@ -93,7 +93,7 @@ class HomeCardTest {
             Queen queen = new Queen(Color.BLACK);
             chessBoard.add(queen, e4);
             HomeCard homeCard = new HomeCard();
-            homeCard.setIsPlayedBy(Color.BLACK);
+            chessBoard.setTurn(Color.BLACK);
 
             assertThrows(IllegalArgumentException.class, () -> homeCard.playOn(chessBoard, new PieceToPositionCardParam(queen, g1)));
 
@@ -108,7 +108,7 @@ class HomeCardTest {
             Queen queen = new Queen(Color.BLACK);
             chessBoard.add(queen, e4);
             HomeCard homeCard = new HomeCard();
-            homeCard.setIsPlayedBy(Color.WHITE);
+chessBoard.setTurn(Color.WHITE);
 
             assertThrows(CannotMoveThisColorException.class, () -> homeCard.playOn(chessBoard, new PieceToPositionCardParam(queen, d1)));
 
@@ -125,7 +125,7 @@ class HomeCardTest {
             King king = new King(Color.BLACK);
             chessBoard.add(king, g1);
             HomeCard homeCard = new HomeCard();
-            homeCard.setIsPlayedBy(Color.WHITE);
+chessBoard.setTurn(Color.WHITE);
 
             assertThrows(IllegalStateException.class, () -> homeCard.playOn(chessBoard, new PieceToPositionCardParam(knight, g1)));
 

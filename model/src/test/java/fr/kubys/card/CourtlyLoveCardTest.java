@@ -34,7 +34,7 @@ class CourtlyLoveCardTest {
 
     private CourtlyLoveCard createCourtlyLoveCard() {
         CourtlyLoveCard courtlyLoveCard1 = new CourtlyLoveCard();
-        courtlyLoveCard1.setIsPlayedBy(Color.WHITE);
+chessBoard.setTurn(Color.WHITE);
         return courtlyLoveCard1;
     }
 
@@ -104,7 +104,7 @@ class CourtlyLoveCardTest {
         @Test
         void should_not_move_enemy_knight() {
             CourtlyLoveCard courtlyLoveCard = createCourtlyLoveCard();
-            courtlyLoveCard.setIsPlayedBy(Color.BLACK);
+            chessBoard.setTurn(Color.BLACK);
             assertThrows(CannotMoveThisColorException.class, () -> courtlyLoveCard.playOn(chessBoard, new CourtlyLoveCardParam(knight, c1)));
 
             assertEquals(knight, chessBoard.at(b4).getPiece().get());

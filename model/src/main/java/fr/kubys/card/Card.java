@@ -13,7 +13,6 @@ public abstract class Card<T extends CardParam> {
     protected final String description;
     protected final CardType type;
     protected final Class<T> clazz;
-    protected Color isPlayedBy; // FIXME try to remove this stateful field
 
     protected Card(String name, String description, CardType type, Class<T> tClass) {
         this.name = name;
@@ -46,14 +45,6 @@ public abstract class Card<T extends CardParam> {
 
     public CardType getType() {
         return this.type;
-    }
-
-    public Color getIsPlayedBy() {
-        return this.isPlayedBy;
-    }
-
-    public void setIsPlayedBy(Color isPlayedBy) {
-        this.isPlayedBy = isPlayedBy;
     }
 
     @Override

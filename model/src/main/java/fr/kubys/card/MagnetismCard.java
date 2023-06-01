@@ -15,7 +15,7 @@ public class MagnetismCard extends Card<PieceCardParam> {
         if (param.piece() == null) throw new IllegalStateException();
         if (param.piece().getPosition() == null)
             throw new IllegalArgumentException("%s is not on the board!".formatted(param.piece()));
-        if (param.piece().getColor() != isPlayedBy) throw new CannotMoveThisColorException(isPlayedBy.opposite());
+        if (param.piece().getColor() != chessBoard.getCurrentTurn()) throw new CannotMoveThisColorException(chessBoard.getCurrentTurn().opposite());
     }
 
     @Override

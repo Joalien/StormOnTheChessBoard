@@ -21,8 +21,8 @@ public class ChargeCard extends Card<ChargeCardParam> {
     protected void validInput(ChessBoard chessBoard, ChargeCardParam param) {
         if (param.pawns() == null) throw new IllegalStateException();
         if (param.pawns().isEmpty()) throw new IllegalArgumentException("You should select at least one pawn");
-        if (param.pawns().stream().map(Piece::getColor).anyMatch(color -> color != isPlayedBy))
-            throw new CannotMoveThisColorException(isPlayedBy.opposite());
+        if (param.pawns().stream().map(Piece::getColor).anyMatch(color -> color != chessBoard.getCurrentTurn()))
+            throw new CannotMoveThisColorException(chessBoard.getCurrentTurn().opposite());
 
         assert chessBoard.getNumberOfFakeSquares() == 0;
         param.pawns().stream()
@@ -44,7 +44,7 @@ public class ChargeCard extends Card<ChargeCardParam> {
                 .filter(p -> p.oneSquareForward().isPresent())
                 .forEach(p -> chessBoard.fakeSquare(p, p.oneSquareForward().get()));
 
-        boolean kingIsNotUnderAttack = !chessBoard.isKingUnderAttack(isPlayedBy);
+        boolean kingIsNotUnderAttack = !chessBoard.isKingUnderAttack(chessBoard.getCurrentTurn());
 
         chessBoard.unfakeAllSquares();
         return kingIsNotUnderAttack;
@@ -55,7 +55,7 @@ public class ChargeCard extends Card<ChargeCardParam> {
         Comparator<Pawn> startWithMoreAdvancedPawn = Map.of(
                 Color.BLACK, Comparator.<Pawn>comparingInt(pawn -> pawn.getRow().getRowNumber()),
                 Color.WHITE, Comparator.<Pawn>comparingInt(pawn -> pawn.getRow().getRowNumber()).reversed()
-        ).get(this.isPlayedBy);
+        ).get(chessBoard.getCurrentTurn());
         param.pawns().stream()
                 .sorted(startWithMoreAdvancedPawn)
                 .forEach(p -> chessBoard.move(p, p.oneSquareForward().get()));

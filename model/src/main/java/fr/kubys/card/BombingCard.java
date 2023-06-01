@@ -17,10 +17,10 @@ public class BombingCard extends Card<PositionCardParam> {
     @Override
     protected void validInput(ChessBoard chessBoard, PositionCardParam param) {
         if (param.position() == null) throw new IllegalStateException();
-        if (isPlayedBy == null) throw new IllegalStateException();
+        if (chessBoard.getCurrentTurn() == null) throw new IllegalStateException();
         boolean thereIsEnemyPieceOnPosition = chessBoard.at(param.position()).getPiece()
                 .map(Piece::getColor)
-                .map(c -> c != isPlayedBy)
+                .map(c -> c != chessBoard.getCurrentTurn())
                 .orElse(false);
         if (thereIsEnemyPieceOnPosition)
             throw new IllegalArgumentException("You cannot select a square occupied by an enemy piece");
@@ -33,6 +33,6 @@ public class BombingCard extends Card<PositionCardParam> {
 
     @Override
     protected void doAction(ChessBoard chessBoard, PositionCardParam param) {
-        chessBoard.addEffect(new BombingEffect(param.position(), isPlayedBy));
+        chessBoard.addEffect(new BombingEffect(param.position(), chessBoard.getCurrentTurn()));
     }
 }

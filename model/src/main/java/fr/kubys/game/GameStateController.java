@@ -12,6 +12,7 @@ import fr.kubys.player.Player;
 
 import java.util.*;
 import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 public class GameStateController implements ChessBoardService {
 
@@ -40,7 +41,6 @@ public class GameStateController implements ChessBoardService {
         IntStream.range(0, NUMBER_OF_CARDS_IN_HAND)
                 .peek(x -> dealCard(white))
                 .forEach(x -> dealCard(black));
-        currentPlayer = white;
         currentState = StateEnum.BEGINNING_OF_THE_TURN;
     }
 
@@ -70,8 +70,8 @@ public class GameStateController implements ChessBoardService {
         assertGameHasAlreadyStarted();
         Optional<Piece> pieceToMove = chessBoard.at(from).getPiece();
         if (pieceToMove.isEmpty()) throw new IllegalArgumentException("There is no piece on %s".formatted(from));
-        if (pieceToMove.get().getColor() != currentPlayer.getColor())
-            throw new IllegalStateException("%s player cannot move %s piece".formatted(currentPlayer.getColor(), pieceToMove.get().getColor()));
+        if (pieceToMove.get().getColor() != getCurrentPlayer().getColor())
+            throw new IllegalStateException("%s player cannot move %s piece".formatted(getCurrentPlayer().getColor(), pieceToMove.get().getColor()));
 
         currentState.getState().tryToMove(this, from, to);
     }
@@ -79,13 +79,12 @@ public class GameStateController implements ChessBoardService {
     @Override
     public <T extends CardParam> void tryToPlayCard(Card<T> card, T params) {
         assertGameHasAlreadyStarted();
-        if (!currentPlayer.getCards().contains(card))
-            throw new CardNotFoundException("Player %s does not have %s in hand!".formatted(currentPlayer, card));
+        if (!getCurrentPlayer().getCards().contains(card))
+            throw new CardNotFoundException("Player %s does not have %s in hand!".formatted(getCurrentPlayer(), card));
 
-        card.setIsPlayedBy(currentPlayer.getColor());
         currentState.getState().tryToPlayCard(this, card, params);
-        currentPlayer.getCards().remove(card);
-        dealCard(currentPlayer);
+        getCurrentPlayer().getCards().remove(card);
+        dealCard(getCurrentPlayer());
     }
 
     @Override
@@ -94,12 +93,11 @@ public class GameStateController implements ChessBoardService {
         currentState.getState().tryToPass(this);
         setCurrentState(StateEnum.BEGINNING_OF_THE_TURN);
         swapCurrentPlayer();
+        chessBoard.setTurn(getCurrentPlayer().getColor());
     }
 
     private void swapCurrentPlayer() {
-        if (getCurrentPlayer() == getWhite()) setCurrentPlayer(getBlack());
-        else if (getCurrentPlayer() == getBlack()) setCurrentPlayer(getWhite());
-        else throw new IllegalStateException("Who's turn?");
+        chessBoard.setTurn(chessBoard.getCurrentTurn().opposite());
     }
 
     private void assertGameHasAlreadyStarted() {
@@ -123,7 +121,10 @@ public class GameStateController implements ChessBoardService {
 
     @Override
     public Player getCurrentPlayer() {
-        return this.currentPlayer;
+        return Stream.of(white, black)
+                .filter(player -> player.getColor() == chessBoard.getCurrentTurn())
+                .findAny()
+                .orElseThrow(IllegalStateException::new);
     }
 
     @Override
@@ -134,10 +135,6 @@ public class GameStateController implements ChessBoardService {
     @Override
     public Player getBlack() {
         return this.black;
-    }
-
-    void setCurrentPlayer(Player currentPlayer) {
-        this.currentPlayer = currentPlayer;
     }
 
     ChessBoard getChessBoard() {

@@ -20,7 +20,7 @@ class BombingCardTest {
     void setUp() {
         chessBoard = ChessBoard.createEmpty();
         bombing = new BombingCard();
-        bombing.setIsPlayedBy(Color.WHITE);
+chessBoard.setTurn(Color.WHITE);
     }
 
     @Nested

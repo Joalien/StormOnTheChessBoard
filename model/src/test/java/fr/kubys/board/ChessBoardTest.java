@@ -74,6 +74,8 @@ class ChessBoardTest {
         void create_initial_chessboard() {
             ChessBoard chessBoard = ChessBoard.createWithInitialState();
 
+            assertEquals(Color.WHITE, chessBoard.getCurrentTurn());
+
             // White pieces
             assertTrue(chessBoard.at(a1).getPiece().get() instanceof Rock);
             assertEquals(Color.WHITE, chessBoard.at(a1).getPiece().get().getColor());

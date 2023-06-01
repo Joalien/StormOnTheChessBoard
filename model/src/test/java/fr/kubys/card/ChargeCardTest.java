@@ -27,7 +27,7 @@ class ChargeCardTest {
             chessBoard.add(pawn1, e4);
             chessBoard.add(pawn2, d4);
             ChargeCard chargeCard = new ChargeCard();
-            chargeCard.setIsPlayedBy(Color.WHITE);
+chessBoard.setTurn(Color.WHITE);
 
             assertDoesNotThrow(() -> chargeCard.playOn(chessBoard, new ChargeCardParam(Set.of(pawn1, pawn2))));
 
@@ -45,7 +45,7 @@ class ChargeCardTest {
             chessBoard.add(pawn2, e5);
             chessBoard.add(pawn3, e6);
             ChargeCard chargeCard = new ChargeCard();
-            chargeCard.setIsPlayedBy(Color.WHITE);
+chessBoard.setTurn(Color.WHITE);
 
             assertDoesNotThrow(() -> chargeCard.playOn(chessBoard, new ChargeCardParam(Set.of(pawn1, pawn2, pawn3))));
 
@@ -64,7 +64,7 @@ class ChargeCardTest {
             chessBoard.add(pawn2, e5);
             chessBoard.add(pawn3, e6);
             ChargeCard chargeCard = new ChargeCard();
-            chargeCard.setIsPlayedBy(Color.BLACK);
+            chessBoard.setTurn(Color.BLACK);
 
             assertDoesNotThrow(() -> chargeCard.playOn(chessBoard, new ChargeCardParam(Set.of(pawn1, pawn2, pawn3))));
 
@@ -84,7 +84,7 @@ class ChargeCardTest {
                     .collect(Collectors.toSet());
             assertEquals(7, allBlackPawnsExceptE7.size());
             ChargeCard chargeCard = new ChargeCard();
-            chargeCard.setIsPlayedBy(Color.BLACK);
+            chessBoard.setTurn(Color.BLACK);
 
             assertDoesNotThrow(() -> chargeCard.playOn(chessBoard, new ChargeCardParam(allBlackPawnsExceptE7)));
 
@@ -104,7 +104,7 @@ class ChargeCardTest {
         void should_fail_if_no_pawn_selected() {
             ChessBoard chessBoard = ChessBoard.createEmpty();
             ChargeCard chargeCard = new ChargeCard();
-            chargeCard.setIsPlayedBy(Color.WHITE);
+chessBoard.setTurn(Color.WHITE);
 
             assertThrows(IllegalArgumentException.class, () -> chargeCard.playOn(chessBoard, new ChargeCardParam(Collections.emptySet())));
         }
@@ -117,7 +117,7 @@ class ChargeCardTest {
             chessBoard.add(pawn, e4);
             chessBoard.add(queen, e5);
             ChargeCard chargeCard = new ChargeCard();
-            chargeCard.setIsPlayedBy(Color.WHITE);
+chessBoard.setTurn(Color.WHITE);
 
             assertThrows(IllegalArgumentException.class, () -> chargeCard.playOn(chessBoard, new ChargeCardParam(Set.of(pawn))));
         }
@@ -131,7 +131,7 @@ class ChargeCardTest {
                     .map(Pawn.class::cast)
                     .collect(Collectors.toSet());
             ChargeCard chargeCard = new ChargeCard();
-            chargeCard.setIsPlayedBy(Color.BLACK);
+            chessBoard.setTurn(Color.BLACK);
 
             assertThrows(IllegalArgumentException.class, () -> chargeCard.playOn(chessBoard, new ChargeCardParam(allBlackPawns)));
         }
@@ -144,7 +144,7 @@ class ChargeCardTest {
             chessBoard.add(pawn1, e4);
             chessBoard.add(pawn2, g1);
             ChargeCard chargeCard = new ChargeCard();
-            chargeCard.setIsPlayedBy(Color.WHITE);
+chessBoard.setTurn(Color.WHITE);
 
             assertThrows(CannotMoveThisColorException.class, () -> chargeCard.playOn(chessBoard, new ChargeCardParam(Set.of(pawn1, pawn2))));
 
@@ -158,7 +158,7 @@ class ChargeCardTest {
             Pawn pawn2 = new WhitePawn();
             chessBoard.add(pawn2, g8);
             ChargeCard chargeCard = new ChargeCard();
-            chargeCard.setIsPlayedBy(Color.BLACK);
+            chessBoard.setTurn(Color.BLACK);
 
             assertThrows(CannotMoveThisColorException.class, () -> chargeCard.playOn(chessBoard, new ChargeCardParam(Set.of(pawn2))));
 
