@@ -1,10 +1,10 @@
-import {useState} from "react";
+import {useEffect, useState} from "react";
 
-export function Card({card}) {
+export function Card({card, selectedParam, setSelectedParam}) {
 
-    const [selectedParam, setSelectedParam] = useState(null)
     function playCard() {
-
+        // REST CALL
+        // MOVE up
     }
 
     return (
@@ -23,12 +23,12 @@ export function Card({card}) {
                                 onChange={() => setSelectedParam(key)}
                                 className="form-check-input"
                             />
-                            {key} : <span style={{color: card.param[key] === "choose a value" ? "red" : "blue"}}>{card.param[key]}</span>
+                            {key} : <span style={{color: card.param[key] === null ? "red" : "blue"}}>{card.param[key] === null ? "Choose a value" : card.param[key]}</span>
                         </label>
                     </li>
                 )}
             </ul>
-            <button onClick={playCard}>Jouer la carte</button>
+            <button onClick={playCard} disabled={Object.values(card.param).some(x => x === null)}>Jouer la carte</button>
         </div>
     )
 }

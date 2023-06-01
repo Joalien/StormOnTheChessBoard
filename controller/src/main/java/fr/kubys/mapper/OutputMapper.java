@@ -14,6 +14,7 @@ import fr.kubys.player.Player;
 
 import java.lang.reflect.Field;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -39,7 +40,7 @@ public class OutputMapper {
     public static <T extends CardParam> CardOutputDto map(Card<T> c) {
         Map<String, Object> cardParamOutputDto = Arrays.stream(c.getClazz().getDeclaredFields())
                 .map(Field::getName)
-                .collect(Collectors.toMap(o -> o, o -> "choose a value"));
+                .collect(HashMap::new, (hashMap, name) -> hashMap.put(name, null), HashMap::putAll);
         return CardOutputDto.builder()
                 .name(c.getName())
                 .description(c.getDescription())

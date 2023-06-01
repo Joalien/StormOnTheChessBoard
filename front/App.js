@@ -14,7 +14,7 @@ export default function App() {
     const [whitePlayer, setWhitePlayer] = useState({cards: []});
     const [blackPlayer, setBlackPlayer] = useState({cards: []});
     const [selectedCard, setSelectedCard] = useState(null)
-    const [selectedSquares, setSelectedSquares] = useState(new Set())
+    const [selectedParam, setSelectedParam] = useState(null)
 
 
     useEffect(() => { // FIXME use framework tool to fetch data on startup
@@ -64,13 +64,14 @@ export default function App() {
 
     function showCard(card) {
         setSelectedCard(card !== selectedCard ? card : null)
-        setSelectedSquares(new Set())
+        // setSelectedSquares(new Set())
     }
 
     function onSquareRightClick(square) {
-        if (selectedCard) {
-            if (selectedSquares.has(square)) setSelectedSquares(new Set([...selectedSquares].filter(s => s !== square)))
-            else setSelectedSquares(new Set([...selectedSquares, square]))
+        if (selectedCard && selectedParam) {
+            if (selectedCard.param[selectedParam] === square) selectedCard.param[selectedParam] = null
+            else selectedCard.param[selectedParam] = square
+            setSelectedCard({...selectedCard})
         }
     }
 
@@ -89,12 +90,12 @@ export default function App() {
                         position={game}
                         boardOrientation={currentPlayerColor}
                         onSquareRightClick={onSquareRightClick}
-                        customSquareStyles={[...selectedSquares].reduce((obj, square) => ({
+                        customSquareStyles={selectedCard && selectedParam && [...Object.values(selectedCard.param)].reduce((obj, square) => ({
                             ...obj,
                             [square]: highlight
                         }), {})}
             />
-            {selectedCard && <Card card={selectedCard}/>}
+            {selectedCard && <Card card={selectedCard} selectedParam={selectedParam} setSelectedParam={setSelectedParam}/>}
             <Player player={currentPlayerColor === "BLACK" ? blackPlayer : whitePlayer} showCard={showCard}
                     hiddenCards={false}/>
             <button
