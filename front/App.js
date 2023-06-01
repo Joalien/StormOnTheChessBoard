@@ -35,9 +35,26 @@ export default function App() {
             .catch(err => alert(err))
     }
 
-    async function onDrop(sourceSquare, targetSquare) {
+    async function movePiece(sourceSquare, targetSquare) {
         const res = await fetch(base + gameId + "/move/" + sourceSquare + "/to/" + targetSquare, {method: 'POST'})
         if (res.ok) {
+            setTimeout(() => endTurn(), 2000) // FIXME find prettier way to automatically end turn
+            fetchGame()
+        } else alert((await res.json()).message)
+    }
+
+    async function playCard(sourceSquare, targetSquare) {
+        let params = {
+            method: 'POST',
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(selectedCard.param)
+        };
+        const res = await fetch(base + gameId + "/card/" + selectedCard.name, params)
+        if (res.ok) {
+            setSelectedCard(null)
+            setSelectedParam(null)
             setTimeout(() => endTurn(), 2000) // FIXME find prettier way to automatically end turn
             fetchGame()
         } else alert((await res.json()).message)
@@ -86,8 +103,9 @@ export default function App() {
             <Player player={currentPlayerColor === "WHITE" ? blackPlayer : whitePlayer} showCard={showCard}
                     hiddenCards={true}/>
             <Chessboard id="BasicBoard"
-                        onPieceDrop={onDrop}
+                        onPieceDrop={movePiece}
                         position={game}
+                        arePiecesDraggable={selectedCard === null}
                         boardOrientation={currentPlayerColor}
                         onSquareRightClick={onSquareRightClick}
                         customSquareStyles={selectedCard && selectedParam && [...Object.values(selectedCard.param)].reduce((obj, square) => ({
@@ -95,7 +113,7 @@ export default function App() {
                             [square]: highlight
                         }), {})}
             />
-            {selectedCard && <Card card={selectedCard} selectedParam={selectedParam} setSelectedParam={setSelectedParam}/>}
+            {selectedCard && <Card card={selectedCard} selectedParam={selectedParam} setSelectedParam={setSelectedParam} playCardCallback={playCard}/>}
             <Player player={currentPlayerColor === "BLACK" ? blackPlayer : whitePlayer} showCard={showCard}
                     hiddenCards={false}/>
             <button

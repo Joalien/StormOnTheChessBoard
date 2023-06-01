@@ -79,7 +79,7 @@ class PlayerControllerTest {
         final Integer GAME_ID = 1;
         Mockito.when(chessBoardRepository.getChessBoardService(GAME_ID)).thenThrow(new GameNotFoundException(GAME_ID));
 
-        ResponseEntity<PlayerDto> res = this.restTemplate.getForEntity("http://localhost:%s/chessboard/%s/players/white".formatted(port, GAME_ID), PlayerDto.class);
+        ResponseEntity<Void> res = this.restTemplate.getForEntity("http://localhost:%s/chessboard/%s/players/white".formatted(port, GAME_ID), Void.class);
 
         assertEquals(HttpStatus.NOT_FOUND, res.getStatusCode());
         Mockito.verifyNoInteractions(readService);

@@ -46,7 +46,7 @@ class GameControllerIT {
     @Test
     public void should_return_404_if_game_does_not_exist() {
         Integer notExistingGameId = chessBoardRepository.createNewGame() + 1;
-        ResponseEntity<ChessBoardDto> response = this.restTemplate.getForEntity("http://localhost:%s/chessboard/%s".formatted(port, notExistingGameId), ChessBoardDto.class);
+        ResponseEntity<Void> response = this.restTemplate.getForEntity("http://localhost:%s/chessboard/%s".formatted(port, notExistingGameId), Void.class);
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
     }
 

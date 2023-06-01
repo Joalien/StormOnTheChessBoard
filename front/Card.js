@@ -1,15 +1,11 @@
 import {useEffect, useState} from "react";
 
-export function Card({card, selectedParam, setSelectedParam}) {
-
-    function playCard() {
-        // REST CALL
-        // MOVE up
-    }
+export function Card({card, selectedParam, setSelectedParam, playCardCallback}) {
 
     return (
         <div id={"selectedCard"} style={{'backgroundColor': 'gray'}}>
             <h3>{card.name}</h3>
+            <p>({card.type})</p>
             <p>{card.description}</p>
             <ul>
                 {Object.keys(card.param).map((key, i) =>
@@ -28,7 +24,7 @@ export function Card({card, selectedParam, setSelectedParam}) {
                     </li>
                 )}
             </ul>
-            <button onClick={playCard} disabled={Object.values(card.param).some(x => x === null)}>Jouer la carte</button>
+            <button onClick={playCardCallback} disabled={Object.values(card.param).some(x => x === null)}>Jouer la carte</button>
         </div>
     )
 }

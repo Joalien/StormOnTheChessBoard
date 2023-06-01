@@ -16,7 +16,7 @@ public abstract class Card<T extends CardParam> {
     protected T param;
     protected Class<T> clazz;
 
-    protected Card(String name, String description, CardType type, Class<T> tClass) {
+    protected Card(String name, String description, CardType type, Class<T> tClass) { // FIXME bad design
         this.name = name;
         this.description = description;
         this.type = type;
@@ -64,7 +64,7 @@ public abstract class Card<T extends CardParam> {
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, isPlayedBy, param);
+        return Objects.hash(name);
     }
 
     @Override
@@ -72,7 +72,7 @@ public abstract class Card<T extends CardParam> {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Card<?> card = (Card<?>) o;
-        return Objects.equals(name, card.name) && isPlayedBy == card.isPlayedBy && Objects.equals(param, card.param);
+        return Objects.equals(name, card.name);
     }
 
     @Override

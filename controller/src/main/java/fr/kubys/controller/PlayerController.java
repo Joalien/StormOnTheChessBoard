@@ -1,5 +1,6 @@
 package fr.kubys.controller;
 
+import fr.kubys.api.ChessBoardReadService;
 import fr.kubys.dto.PlayerDto;
 import fr.kubys.mapper.OutputMapper;
 import fr.kubys.repository.ChessBoardRepository;
@@ -22,9 +23,10 @@ public class PlayerController {
     @GetMapping("/{playerId}")
     @CrossOrigin(origins = "*")
     public PlayerDto getPlayerById(@PathVariable Integer gameId, @PathVariable String playerId) {
+        final ChessBoardReadService chessBoardService = chessBoardRepository.getChessBoardService(gameId);
         return switch (playerId) {
-            case "white" -> OutputMapper.map(chessBoardRepository.getChessBoardService(gameId).getWhite());
-            case "black" -> OutputMapper.map(chessBoardRepository.getChessBoardService(gameId).getBlack());
+            case "white" -> OutputMapper.map(chessBoardService.getWhite());
+            case "black" -> OutputMapper.map(chessBoardService.getBlack());
             default -> throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         };
     }

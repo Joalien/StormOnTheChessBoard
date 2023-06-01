@@ -4,6 +4,7 @@ import fr.kubys.api.ChessBoardReadService;
 import fr.kubys.card.QuadrilleCard;
 import fr.kubys.card.params.CardParam;
 import fr.kubys.core.Position;
+import fr.kubys.piece.Pawn;
 import fr.kubys.piece.Piece;
 
 import java.lang.reflect.Constructor;
@@ -26,13 +27,8 @@ public class InputMapper {
                 .toList();
 
         try {
-            Constructor<T> declaredConstructor = clazz.getDeclaredConstructor(list.stream()
-                    .map(Object::getClass)
-                    .map(aClass -> aClass.equals(HashSet.class) ? Set.class : aClass) // FIXME
-                    .toArray(Class[]::new));
-            return declaredConstructor.newInstance(list.toArray());
-        } catch (NoSuchMethodException | InvocationTargetException | InstantiationException |
-                 IllegalAccessException e) {
+            return (T) clazz.getDeclaredConstructors()[0].newInstance(list.toArray()); // pray it works
+        } catch (InvocationTargetException | InstantiationException | IllegalAccessException e) {
             throw new RuntimeException(e);
         }
     }
