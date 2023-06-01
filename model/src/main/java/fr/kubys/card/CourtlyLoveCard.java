@@ -7,19 +7,12 @@ import fr.kubys.piece.Queen;
 
 public class CourtlyLoveCard extends Card<CourtlyLoveCardParam> {
 
-    private CourtlyLoveCardParam param;
-
     public CourtlyLoveCard() {
         super("Amour courtois", "Amenez l'un de vos cavaliers sur une case libre adjacente à votre dame", CardType.REPLACE_TURN, CourtlyLoveCardParam.class);
     }
 
     @Override
-    protected void setupParams(CourtlyLoveCardParam params) {
-        this.param = params;
-    }
-
-    @Override
-    protected void validInput(ChessBoard chessBoard) {
+    protected void validInput(ChessBoard chessBoard, CourtlyLoveCardParam param) {
         if (param.knight() == null) throw new IllegalStateException();
         if (param.positionToMoveOn() == null) throw new IllegalStateException();
         if (param.knight().getColor() != isPlayedBy) throw new CannotMoveThisColorException(param.knight().getColor());
@@ -35,7 +28,7 @@ public class CourtlyLoveCard extends Card<CourtlyLoveCardParam> {
     }
 
     @Override
-    protected boolean doesNotCreateCheck(ChessBoard chessBoard) {
+    protected boolean doesNotCreateCheck(ChessBoard chessBoard, CourtlyLoveCardParam param) {
         chessBoard.fakeSquare(null, param.knight().getPosition());
         chessBoard.fakeSquare(param.knight(), param.positionToMoveOn());
         boolean isKingUnderAttack = chessBoard.isKingUnderAttack(param.knight().getColor());
@@ -44,7 +37,7 @@ public class CourtlyLoveCard extends Card<CourtlyLoveCardParam> {
     }
 
     @Override
-    protected void doAction(ChessBoard chessBoard) {
+    protected void doAction(ChessBoard chessBoard, CourtlyLoveCardParam param) {
         chessBoard.move(param.knight(), param.positionToMoveOn());
     }
 }

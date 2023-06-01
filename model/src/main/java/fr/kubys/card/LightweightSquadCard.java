@@ -7,19 +7,12 @@ import fr.kubys.piece.Square;
 
 public class LightweightSquadCard extends Card<LightweightSquadCardParam> {
 
-    private LightweightSquadCardParam param;
-
     public LightweightSquadCard() {
         super("Escouade légère", "Avancez deux de vos pions, chacun de deux cases", CardType.REPLACE_TURN, LightweightSquadCardParam.class);
     }
 
     @Override
-    protected void setupParams(LightweightSquadCardParam params) {
-        this.param = params;
-    }
-
-    @Override
-    protected void validInput(ChessBoard chessBoard) {
+    protected void validInput(ChessBoard chessBoard, LightweightSquadCardParam param) {
         if (param.pawn1() == null) throw new IllegalStateException();
         if (param.pawn2() == null) throw new IllegalStateException();
         if (param.pawn1().equals(param.pawn2()))
@@ -46,12 +39,12 @@ public class LightweightSquadCard extends Card<LightweightSquadCardParam> {
     }
 
     @Override
-    protected boolean doesNotCreateCheck(ChessBoard chessBoard) {
+    protected boolean doesNotCreateCheck(ChessBoard chessBoard, LightweightSquadCardParam param) {
         return true; // FIXME
     }
 
     @Override
-    protected void doAction(ChessBoard chessBoard) {
+    protected void doAction(ChessBoard chessBoard, LightweightSquadCardParam param) {
         chessBoard.move(param.pawn1(), param.pawn1().twoSquaresForward().get());
         chessBoard.move(param.pawn2(), param.pawn2().twoSquaresForward().get());
     }

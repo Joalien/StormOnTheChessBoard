@@ -15,7 +15,7 @@ public class BombingCard extends Card<PositionCardParam> {
     }
 
     @Override
-    protected void validInput(ChessBoard chessBoard) {
+    protected void validInput(ChessBoard chessBoard, PositionCardParam param) {
         if (param.position() == null) throw new IllegalStateException();
         if (isPlayedBy == null) throw new IllegalStateException();
         boolean thereIsEnemyPieceOnPosition = chessBoard.at(param.position()).getPiece()
@@ -27,12 +27,12 @@ public class BombingCard extends Card<PositionCardParam> {
     }
 
     @Override
-    protected boolean doesNotCreateCheck(ChessBoard chessBoard) {
+    protected boolean doesNotCreateCheck(ChessBoard chessBoard, PositionCardParam param) {
         return true;
     }
 
     @Override
-    protected void doAction(ChessBoard chessBoard) {
+    protected void doAction(ChessBoard chessBoard, PositionCardParam param) {
         chessBoard.addEffect(new BombingEffect(param.position(), isPlayedBy));
     }
 }

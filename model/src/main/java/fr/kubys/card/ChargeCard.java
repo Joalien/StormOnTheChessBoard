@@ -13,19 +13,12 @@ import java.util.Optional;
 
 public class ChargeCard extends Card<ChargeCardParam> {
 
-    private ChargeCardParam param;
-
     public ChargeCard() {
         super("Charge", "Avancez tous ceux de vos pions que vous voulez, et qui le peuvent, d'une case", CardType.REPLACE_TURN, ChargeCardParam.class);
     }
 
     @Override
-    protected void setupParams(ChargeCardParam param) {
-        this.param = param;
-    }
-
-    @Override
-    protected void validInput(ChessBoard chessBoard) {
+    protected void validInput(ChessBoard chessBoard, ChargeCardParam param) {
         if (param.pawns() == null) throw new IllegalStateException();
         if (param.pawns().isEmpty()) throw new IllegalArgumentException("You should select at least one pawn");
         if (param.pawns().stream().map(Piece::getColor).anyMatch(color -> color != isPlayedBy))
@@ -33,7 +26,7 @@ public class ChargeCard extends Card<ChargeCardParam> {
 
         assert chessBoard.getNumberOfFakeSquares() == 0;
         param.pawns().stream()
-                .peek(pawn -> fakeOtherPawns(chessBoard, pawn))
+                .peek(pawn -> fakeOtherPawns(chessBoard, pawn, param))
                 .map(Pawn::oneSquareForward)
                 .map(Optional::get)
                 .map(chessBoard::at)
@@ -45,7 +38,7 @@ public class ChargeCard extends Card<ChargeCardParam> {
     }
 
     @Override
-    protected boolean doesNotCreateCheck(ChessBoard chessBoard) {
+    protected boolean doesNotCreateCheck(ChessBoard chessBoard, ChargeCardParam param) {
         param.pawns().forEach(p -> chessBoard.fakeSquare(null, p.getPosition()));
         param.pawns().stream()
                 .filter(p -> p.oneSquareForward().isPresent())
@@ -58,7 +51,7 @@ public class ChargeCard extends Card<ChargeCardParam> {
     }
 
     @Override
-    protected void doAction(ChessBoard chessBoard) {
+    protected void doAction(ChessBoard chessBoard, ChargeCardParam param) {
         Comparator<Pawn> startWithMoreAdvancedPawn = Map.of(
                 Color.BLACK, Comparator.<Pawn>comparingInt(pawn -> pawn.getRow().getRowNumber()),
                 Color.WHITE, Comparator.<Pawn>comparingInt(pawn -> pawn.getRow().getRowNumber()).reversed()
@@ -68,7 +61,7 @@ public class ChargeCard extends Card<ChargeCardParam> {
                 .forEach(p -> chessBoard.move(p, p.oneSquareForward().get()));
     }
 
-    private void fakeOtherPawns(ChessBoard cb, Pawn pawn) {
+    private void fakeOtherPawns(ChessBoard cb, Pawn pawn, ChargeCardParam param) {
         param.pawns().stream()
                 .filter(pawn1 -> !pawn1.equals(pawn))
                 .forEach(p -> cb.fakeSquare(null, p.getPosition()));

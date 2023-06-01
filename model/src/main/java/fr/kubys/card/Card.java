@@ -12,35 +12,29 @@ public abstract class Card<T extends CardParam> {
     protected final String name;
     protected final String description;
     protected final CardType type;
-    protected Color isPlayedBy;
-    protected T param;
-    protected Class<T> clazz;
+    protected final Class<T> clazz;
+    protected Color isPlayedBy; // FIXME try to remove this stateful field
 
-    protected Card(String name, String description, CardType type, Class<T> tClass) { // FIXME bad design
+    protected Card(String name, String description, CardType type, Class<T> tClass) {
         this.name = name;
         this.description = description;
         this.type = type;
         this.clazz = tClass;
     }
 
-    public final void playOn(ChessBoard chessBoard, T params) {
-        setupParams(params);
-        validInput(chessBoard);
+    public final void playOn(ChessBoard chessBoard, T param) {
+        validInput(chessBoard, param);
 
-        if (!doesNotCreateCheck(chessBoard)) throw new CheckException();
+        if (!doesNotCreateCheck(chessBoard, param)) throw new CheckException();
 //        log.info("{} card is played!", this.name);
-        doAction(chessBoard);
+        doAction(chessBoard, param);
     }
 
-    protected void setupParams(T params) {
-        this.param = params;
-    }
+    protected abstract void validInput(ChessBoard chessBoard, T param);
 
-    protected abstract void validInput(ChessBoard chessBoard);
+    protected abstract boolean doesNotCreateCheck(ChessBoard chessBoard, T param);
 
-    protected abstract boolean doesNotCreateCheck(ChessBoard chessBoard);
-
-    protected abstract void doAction(ChessBoard chessBoard);
+    protected abstract void doAction(ChessBoard chessBoard, T param);
 
     public String getName() {
         return this.name;
@@ -82,9 +76,5 @@ public abstract class Card<T extends CardParam> {
 
     public Class<T> getClazz() {
         return this.clazz;
-    }
-
-    public T getParam() {
-        return param;
     }
 }

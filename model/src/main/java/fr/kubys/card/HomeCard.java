@@ -7,19 +7,12 @@ import fr.kubys.piece.Piece;
 
 public class HomeCard extends Card<PieceToPositionCardParam> {
 
-    private PieceToPositionCardParam param;
-
     public HomeCard() {
         super("Maison", "Ramener l'une de vos pièces (pas un pion) sur l'une des cases où elle pouvait se trouver en début de partie. Vous pouvez même prendre ainsi une pièce adverse", CardType.REPLACE_TURN, PieceToPositionCardParam.class);
     }
 
     @Override
-    protected void setupParams(PieceToPositionCardParam params) {
-        this.param = params;
-    }
-
-    @Override
-    protected void validInput(ChessBoard chessBoard) {
+    protected void validInput(ChessBoard chessBoard, PieceToPositionCardParam param) {
         if (param.piece() == null) throw new IllegalStateException();
         if (param.positionToMoveOn() == null) throw new IllegalStateException();
         if (param.piece() instanceof Pawn) throw new IllegalArgumentException("You cannot rollback a pawn!");
@@ -43,12 +36,12 @@ public class HomeCard extends Card<PieceToPositionCardParam> {
     }
 
     @Override
-    protected boolean doesNotCreateCheck(ChessBoard chessBoard) {
+    protected boolean doesNotCreateCheck(ChessBoard chessBoard, PieceToPositionCardParam param) {
         return true; // FIXME
     }
 
     @Override
-    protected void doAction(ChessBoard chessBoard) {
+    protected void doAction(ChessBoard chessBoard, PieceToPositionCardParam param) {
         chessBoard.at(param.positionToMoveOn()).getPiece().ifPresent(chessBoard::removePieceFromTheBoard);
         chessBoard.move(param.piece(), param.positionToMoveOn());
     }

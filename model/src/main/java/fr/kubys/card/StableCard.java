@@ -7,20 +7,12 @@ import fr.kubys.core.Position;
 // TODO generify me to allow other swap cards
 public class StableCard extends Card<StableCardParam> {
 
-    private StableCardParam param;
-
-
     public StableCard() {
         super("Écurie", "Sur l'échiquier, permutez l'un de vos cavaliers avec l'une de vos tours", CardType.AFTER_TURN, StableCardParam.class);
     }
 
     @Override
-    protected void setupParams(StableCardParam params) {
-        this.param = params;
-    }
-
-    @Override
-    protected void validInput(ChessBoard chessBoard) {
+    protected void validInput(ChessBoard chessBoard, StableCardParam param) {
         if (param.rock() == null) throw new IllegalStateException();
         if (param.knight() == null) throw new IllegalStateException();
         if (param.rock().getColor() != param.knight().getColor())
@@ -28,12 +20,12 @@ public class StableCard extends Card<StableCardParam> {
     }
 
     @Override
-    protected boolean doesNotCreateCheck(ChessBoard chessBoard) {
+    protected boolean doesNotCreateCheck(ChessBoard chessBoard, StableCardParam param) {
         return true;
     }
 
     @Override
-    protected void doAction(ChessBoard chessBoard) {
+    protected void doAction(ChessBoard chessBoard, StableCardParam param) {
         Position rockPosition = param.rock().getPosition();
         Position knightPosition = param.knight().getPosition();
 
