@@ -25,7 +25,7 @@ public class Square {
         if (this.piece == null)
             throw new IllegalStateException("You can not remove piece from a square that does not contain piece");
         Piece p = this.piece;
-        p.setSquare(null);
+        p.setPosition(null);
         this.piece = null;
         return p;
     }

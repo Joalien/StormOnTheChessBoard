@@ -44,7 +44,7 @@ public class ReflectedBishopCard extends Card<ReflectedBishopCardParam> {
     private Bishop createFakeBishop(ChessBoard chessBoard, Position s, Color bishopColor) {
         Bishop bishop = new Bishop(bishopColor);
         chessBoard.fakeSquare(bishop, s);
-        bishop.setSquare(chessBoard.at(s));
+        bishop.setPosition(s);
         return bishop;
     }
 

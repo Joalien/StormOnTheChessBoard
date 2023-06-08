@@ -22,7 +22,7 @@ public class Kangaroo extends Piece {
         return Position.generateAllPositions().stream()
                 .map(pos -> {
                     Knight knight = new Knight(this.color);
-                    knight.setSquare(new Square(pos));
+                    knight.setPosition(pos);
                     return knight;
                 }).filter(knight -> knight.isPositionTheoreticallyReachable(file, row, color))
                 .anyMatch(knight -> knight.isPositionTheoreticallyReachable(getFile(), getRow(), color));

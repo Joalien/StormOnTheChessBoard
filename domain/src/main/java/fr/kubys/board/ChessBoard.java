@@ -63,7 +63,7 @@ public class ChessBoard {
         if (outOfTheBoardPieces.remove(piece)) {
 //            log.info("{} go back to the life!", piece);
         }
-        piece.setSquare(at(position));
+        piece.setPosition(position);
         at(position).setPiece(piece);
 
         effects.forEach(effect -> effect.afterMoveHook(this, piece));
@@ -169,7 +169,7 @@ public class ChessBoard {
         if (piece instanceof King)
             throw new IllegalStateException("You should not be able to take %s".formatted(piece));
         at(piece.getPosition()).setPiece(null);
-        piece.setSquare(null);
+        piece.setPosition(null);
         outOfTheBoardPieces.add(piece);
 //        log.info("{} has been taken and removed out of the board", piece);
 
@@ -196,7 +196,7 @@ public class ChessBoard {
             throw new IllegalArgumentException("You cannot re-fake over a fake piece");
 //        log.debug("fake that {} is on {}", Optional.ofNullable(piece).map(Objects::toString).orElse("nothing"), position);
         Square fakeSquare = new Square(position);
-        Optional.ofNullable(piece).ifPresent(p -> fakeSquare.setPiece(new FakePieceDecorator(p, fakeSquare)));
+        Optional.ofNullable(piece).ifPresent(p -> fakeSquare.setPiece(new FakePieceDecorator(p, position)));
         fakeSquares.put(position, fakeSquare);
     }
 
@@ -225,7 +225,7 @@ public class ChessBoard {
 
         boolean enemyCanCheck = isKingUnderAttack(piece.getColor());
 
-        piece.setSquare(at(piece.getPosition()));
+        piece.setPosition(piece.getPosition());
         unfakeSquare(piece.getPosition());
         unfakeSquare(positionToMoveOn);
         assert fakeSquares.isEmpty();

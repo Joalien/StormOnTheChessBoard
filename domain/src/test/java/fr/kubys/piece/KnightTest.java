@@ -18,7 +18,7 @@ class KnightTest {
     @Test
     void spawn_knight() {
         Knight knight = new Knight(Color.WHITE);
-        knight.setSquare(new Square(e4));
+        knight.setPosition(e4);
 
 
         assertEquals(File.E, knight.getFile());
@@ -45,7 +45,7 @@ class KnightTest {
         void move_knight_in_the_middle_of_the_board() {
             List<Position> validMoves = Stream.of(g1, e1, d2, d4, e5, g5, h4, h2).toList();
             Knight knight = new Knight(Color.WHITE);
-            knight.setSquare(new Square(f3));
+            knight.setPosition(f3);
 
             assertTrue(Position.generateAllPositions()
                     .stream()
@@ -56,7 +56,7 @@ class KnightTest {
         void move_knight_in_the_corner() {
             List<Position> validMoves = Stream.of(f2, g3).toList();
             Knight knight = new Knight(Color.WHITE);
-            knight.setSquare(new Square(h1));
+            knight.setPosition(h1);
 
             assertTrue(Position.generateAllPositions()
                     .stream()
@@ -66,7 +66,7 @@ class KnightTest {
         @Test
         void should_not_be_able_to_move_on_itself() {
             Knight knight = new Knight(Color.WHITE);
-            knight.setSquare(new Square(e5));
+            knight.setPosition(e5);
 
             assertFalse(knight.isPositionTheoreticallyReachable(e5));
         }

@@ -81,7 +81,7 @@ class PlayCardTest {
         Card<CourtlyLoveCardParam> courtlyLoveCard = new CourtlyLoveCard();
         Mockito.when(readService.getCurrentPlayer()).thenReturn(getPlayerHaving(courtlyLoveCard));
         Knight knight = new Knight(Color.WHITE);
-        knight.setSquare(new Square(e4));
+        knight.setPosition(e4);
         Mockito.when(readService.getPieces()).thenReturn(Set.of(knight));
         Map<String, String> param = Map.of("knight", "e4", "positionToMoveOn", "d6");
 
@@ -102,7 +102,7 @@ class PlayCardTest {
         Set<Pawn> collect = Set.of(e2, e3, e4, h7).stream()
                 .map(position -> {
                     Pawn p = new WhitePawn();
-                    p.setSquare(new Square(position));
+                    p.setPosition(position);
                     return p;
                 }).collect(Collectors.toSet());
         Mockito.when(readService.getPieces()).thenReturn(new HashSet<>(collect));

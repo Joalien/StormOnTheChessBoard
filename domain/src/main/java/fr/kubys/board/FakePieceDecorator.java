@@ -13,13 +13,13 @@ import java.util.Set;
 public class FakePieceDecorator extends Piece {
 
     private final Piece fakePiece;
-    private final Square fakeSquare;
+    private final Position fakePosition;
 
-    public FakePieceDecorator(Piece originalPiece, Square fakeSquare) {
+    public FakePieceDecorator(Piece originalPiece, Position fakePosition) {
         super(originalPiece.getColor());
         this.fakePiece = originalPiece.clone(); // deep copy
-        this.fakePiece.setSquare(fakeSquare);
-        this.fakeSquare = fakeSquare;
+        this.fakePiece.setPosition(fakePosition);
+        this.fakePosition = fakePosition;
     }
 
     @Override
@@ -54,17 +54,12 @@ public class FakePieceDecorator extends Piece {
 
     @Override
     public Position getPosition() {
-        return fakeSquare.getPosition();
+        return fakePosition;
     }
 
     @Override
-    public Optional<Square> getSquare() {
-        return Optional.of(fakeSquare);
-    }
-
-    @Override
-    public void setSquare(Square square) {
-        fakePiece.setSquare(square);
+    public void setPosition(Position position) {
+        fakePiece.setPosition(position);
     }
 
     @Override

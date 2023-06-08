@@ -20,7 +20,7 @@ class QueenTest {
     @Test
     void spawn_queen() {
         Queen queen = new Queen(Color.WHITE);
-        queen.setSquare(new Square(e4));
+        queen.setPosition(e4);
 
 
         assertEquals(File.E, queen.getFile());
@@ -32,7 +32,7 @@ class QueenTest {
         @Test
         void should_return_empty_square_it_will_go_through() {
             Queen queen = new Queen(Color.WHITE);
-            queen.setSquare(new Square(c6));
+            queen.setPosition(c6);
 
 
             assertEquals(Collections.emptySet(), queen.squaresOnThePath(b5));
@@ -41,7 +41,7 @@ class QueenTest {
         @Test
         void should_return_all_square_it_will_go_through() {
             Queen queen = new Queen(Color.WHITE);
-            queen.setSquare(new Square(a1));
+            queen.setPosition(a1);
 
             assertEquals(Set.of(b2, c3, d4, e5), queen.squaresOnThePath(f6));
         }
@@ -49,7 +49,7 @@ class QueenTest {
         @Test
         void should_return_all_square_it_will_go_through_bis() {
             Queen queen = new Queen(Color.WHITE);
-            queen.setSquare(new Square(e4));
+            queen.setPosition(e4);
 
             assertEquals(Set.of(d3), queen.squaresOnThePath(c2));
         }
@@ -57,7 +57,7 @@ class QueenTest {
         @Test
         void should_return_all_square_it_will_go_through_ter() {
             Queen queen = new Queen(Color.BLACK);
-            queen.setSquare(new Square(e4));
+            queen.setPosition(e4);
 
             assertEquals(Set.of(b4, c4, d4), queen.squaresOnThePath(a4));
         }
@@ -65,7 +65,7 @@ class QueenTest {
         @Test
         void should_not_be_reachable() {
             Queen queen = new Queen(Color.WHITE);
-            queen.setSquare(new Square(b7));
+            queen.setPosition(b7);
 
             assertTrue(queen.squaresOnThePath(e8).isEmpty());
         }
@@ -79,7 +79,7 @@ class QueenTest {
             Set<Position> rockMovements = Set.of(e3, e2, e1, e5, e6, e7, e8, d4, c4, b4, a4, f4, g4, h4);
             Set<Position> validMoves = Stream.concat(bishopMovements.stream(), rockMovements.stream()).collect(Collectors.toSet());
             Queen queen = new Queen(Color.WHITE);
-            queen.setSquare(new Square(e4));
+            queen.setPosition(e4);
 
 
             assertTrue(Position.generateAllPositions()
@@ -93,7 +93,7 @@ class QueenTest {
             Set<Position> rockMovements = Set.of(a2, a3, a4, a5, a6, a7, a8, d1, c1, b1, e1, f1, g1, h1);
             Set<Position> validMoves = Stream.concat(bishopMovements.stream(), rockMovements.stream()).collect(Collectors.toSet());
             Queen queen = new Queen(Color.WHITE);
-            queen.setSquare(new Square(a1));
+            queen.setPosition(a1);
 
             assertTrue(Position.generateAllPositions()
                     .stream()
@@ -103,7 +103,7 @@ class QueenTest {
         @Test
         void should_not_be_able_to_move_on_itself() {
             Queen queen = new Queen(Color.WHITE);
-            queen.setSquare(new Square(e5));
+            queen.setPosition(e5);
 
             assertFalse(queen.isPositionTheoreticallyReachable(e5));
         }

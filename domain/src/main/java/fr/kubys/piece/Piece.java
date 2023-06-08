@@ -14,18 +14,18 @@ import java.util.Set;
 public abstract class Piece {
 
     protected Color color;
-    private Square square;
+    private Position position;
 
     public Piece(Color color) {
         this.color = color;
     }
 
     public File getFile() {
-        return square.getPosition().getFile();
+        return position.getFile();
     }
 
     public Row getRow() {
-        return square.getPosition().getRow();
+        return position.getRow();
     }
 
     public boolean isPositionTheoreticallyReachable(Position position) {
@@ -41,15 +41,11 @@ public abstract class Piece {
     public abstract Set<Position> squaresOnThePath(Position squareToMoveOn);
 
     public Position getPosition() {
-        return this.getSquare().map(Square::getPosition).orElse(null);
+        return this.position;
     }
 
-    public Optional<Square> getSquare() {
-        return Optional.ofNullable(square);
-    }
-
-    public void setSquare(Square square) {
-        this.square = square;
+    public void setPosition(Position position) {
+        this.position = position;
     }
 
     public Piece clone() {
@@ -63,7 +59,7 @@ public abstract class Piece {
             } else {
                 throw new InstantiationException("Constructor not found");
             }
-            p.setSquare(square);
+            p.setPosition(position);
             return p;
         } catch (InstantiationException | IllegalAccessException | NoSuchMethodException |
                  InvocationTargetException e) {

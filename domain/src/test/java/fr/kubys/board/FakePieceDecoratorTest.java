@@ -13,9 +13,9 @@ class FakePieceDecoratorTest {
     @Test
     void should_apply_isPositionTheoreticallyReachable_on_fake_piece() {
         Knight knight = new Knight(Color.WHITE);
-        knight.setSquare(new Square(a8));
+        knight.setPosition(a8);
 
-        FakePieceDecorator fakePiece = new FakePieceDecorator(knight, new Square(h1));
+        FakePieceDecorator fakePiece = new FakePieceDecorator(knight, h1);
 
         assertTrue(fakePiece.isPositionTheoreticallyReachable(f2));
     }
@@ -23,9 +23,9 @@ class FakePieceDecoratorTest {
     @Test
     void should_not_move_original_piece() {
         Knight knight = new Knight(Color.WHITE);
-        knight.setSquare(new Square(a8));
+        knight.setPosition(a8);
 
-        new FakePieceDecorator(knight, new Square(h1));
+        new FakePieceDecorator(knight, h1);
 
         assertEquals(a8, knight.getPosition());
     }

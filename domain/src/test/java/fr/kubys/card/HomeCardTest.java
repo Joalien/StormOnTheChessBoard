@@ -37,13 +37,13 @@ chessBoard.setTurn(Color.WHITE);
             Queen queen = new Queen(Color.BLACK);
             chessBoard.add(queen, g1);
             HomeCard homeCard = new HomeCard();
-chessBoard.setTurn(Color.WHITE);
+            chessBoard.setTurn(Color.WHITE);
 
             assertDoesNotThrow(() -> homeCard.playOn(chessBoard, new PieceToPositionCardParam(knight, g1)));
 
             assertEquals(knight, chessBoard.at(g1).getPiece().get());
             assertTrue(chessBoard.at(e4).getPiece().isEmpty());
-            assertTrue(queen.getSquare().isEmpty());
+            assertNull(queen.getPosition());
             assertTrue(chessBoard.getOutOfTheBoardPieces().contains(queen));
         }
     }
