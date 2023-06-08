@@ -66,7 +66,7 @@ class PlayCardTest {
     void should_play_bombing_card() {
         Map<String, String> param = Map.of("position", "e4");
 
-        ResponseEntity<Void> res = restTemplate.postForEntity("http://localhost:%s/chessboard/%s/card/%s".formatted(port, GAME_ID, bombingCard.getName()), param, Void.class);
+        ResponseEntity<Void> res = restTemplate.postForEntity("http://localhost:%s/chessboard/%s/card/%s".formatted(port, GAME_ID, bombingCard.getId()), param, Void.class);
 
         assertEquals(HttpStatus.OK, res.getStatusCode());
         ArgumentCaptor<PlayCardCommand<PositionCardParam>> argumentCaptor = ArgumentCaptor.forClass(PlayCardCommand.class);
@@ -85,7 +85,7 @@ class PlayCardTest {
         Mockito.when(readService.getPieces()).thenReturn(Set.of(knight));
         Map<String, String> param = Map.of("knight", "e4", "positionToMoveOn", "d6");
 
-        ResponseEntity<String> res = restTemplate.postForEntity("http://localhost:%s/chessboard/%s/card/%s".formatted(port, GAME_ID, courtlyLoveCard.getName()), param, String.class);
+        ResponseEntity<String> res = restTemplate.postForEntity("http://localhost:%s/chessboard/%s/card/%s".formatted(port, GAME_ID, courtlyLoveCard.getId()), param, String.class);
 
         assertEquals(HttpStatus.OK, res.getStatusCode());
         ArgumentCaptor<PlayCardCommand<CourtlyLoveCardParam>> argumentCaptor = ArgumentCaptor.forClass(PlayCardCommand.class);
@@ -108,7 +108,7 @@ class PlayCardTest {
         Mockito.when(readService.getPieces()).thenReturn(new HashSet<>(collect));
         Map<String, Set<String>> param = Map.of("pawns", Set.of("e2", "e3", "e4", "h7"));
 
-        ResponseEntity<String> res = restTemplate.postForEntity("http://localhost:%s/chessboard/%s/card/%s".formatted(port, GAME_ID, chargeCard.getName()), param, String.class);
+        ResponseEntity<String> res = restTemplate.postForEntity("http://localhost:%s/chessboard/%s/card/%s".formatted(port, GAME_ID, chargeCard.getId()), param, String.class);
 
         assertEquals(HttpStatus.OK, res.getStatusCode());
         ArgumentCaptor<PlayCardCommand<ChargeCardParam>> argumentCaptor = ArgumentCaptor.forClass(PlayCardCommand.class);
@@ -124,7 +124,7 @@ class PlayCardTest {
         Mockito.when(readService.getCurrentPlayer()).thenReturn(getPlayerHaving(quadrilleCard));
         Map<String, String> param = Map.of("direction", "CLOCKWISE");
 
-        ResponseEntity<String> res = restTemplate.postForEntity("http://localhost:%s/chessboard/%s/card/%s".formatted(port, GAME_ID, quadrilleCard.getName()), param, String.class);
+        ResponseEntity<String> res = restTemplate.postForEntity("http://localhost:%s/chessboard/%s/card/%s".formatted(port, GAME_ID, quadrilleCard.getId()), param, String.class);
 
         assertEquals(HttpStatus.OK, res.getStatusCode());
         ArgumentCaptor<PlayCardCommand<QuadrilleCardParam>> argumentCaptor = ArgumentCaptor.forClass(PlayCardCommand.class);
@@ -138,29 +138,29 @@ class PlayCardTest {
     void should_return_404_if_card_not_found_in_player_hand() {
         Card<CourtlyLoveCardParam> courtlyLoveCard = new CourtlyLoveCard();
 
-        ResponseEntity<String> res = restTemplate.postForEntity("http://localhost:%s/chessboard/%s/card/%s".formatted(port, GAME_ID, courtlyLoveCard.getName()), Collections.emptyMap(), String.class);
+        ResponseEntity<String> res = restTemplate.postForEntity("http://localhost:%s/chessboard/%s/card/%s".formatted(port, GAME_ID, courtlyLoveCard.getId()), Collections.emptyMap(), String.class);
 
         assertEquals(HttpStatus.NOT_FOUND, res.getStatusCode());
-        assertTrue(res.getBody().contains("Amour courtois not in user hand!"));
+        assertTrue(res.getBody().contains(" is not in user hand!"));
     }
 
     @Test
     void should_return_400_if_no_param() {
-        ResponseEntity<Void> res = restTemplate.postForEntity("http://localhost:%s/chessboard/%s/card/%s".formatted(port, GAME_ID, bombingCard.getName()), null, Void.class);
+        ResponseEntity<Void> res = restTemplate.postForEntity("http://localhost:%s/chessboard/%s/card/%s".formatted(port, GAME_ID, bombingCard.getId()), null, Void.class);
 
         assertTrue(res.getStatusCode().is4xxClientError());
     }
 
     @Test
     void should_return_400_if_no_param_bis() {
-        ResponseEntity<Void> res = restTemplate.postForEntity("http://localhost:%s/chessboard/%s/card/%s".formatted(port, GAME_ID, bombingCard.getName()), "", Void.class);
+        ResponseEntity<Void> res = restTemplate.postForEntity("http://localhost:%s/chessboard/%s/card/%s".formatted(port, GAME_ID, bombingCard.getId()), "", Void.class);
 
         assertTrue(res.getStatusCode().is4xxClientError());
     }
 
     @Test
     void should_return_400_if_param_does_not_include_invalid_field() {
-        ResponseEntity<String> res = restTemplate.postForEntity("http://localhost:%s/chessboard/%s/card/%s".formatted(port, GAME_ID, bombingCard.getName()), new QuadrilleCardParam(QuadrilleCard.Direction.CLOCKWISE), String.class);
+        ResponseEntity<String> res = restTemplate.postForEntity("http://localhost:%s/chessboard/%s/card/%s".formatted(port, GAME_ID, bombingCard.getId()), new QuadrilleCardParam(QuadrilleCard.Direction.CLOCKWISE), String.class);
 
         assertEquals(HttpStatus.BAD_REQUEST, res.getStatusCode());
         assertTrue(res.getBody().contains(" does not match card parameter "));

@@ -91,15 +91,15 @@ public class GameController {
         return mapToDto(gameId, chessBoardRepository.getChessBoardService(gameId));
     }
 
-    @PostMapping("/{gameId}/card/{cardName}")
+    @PostMapping("/{gameId}/card/{cardId}")
     @CrossOrigin(origins = "*")
-    public <T extends CardParam> ResponseEntity<Void> updateGame(@PathVariable Integer gameId, @PathVariable String cardName, @RequestBody Map<String, Object> param) {
+    public <T extends CardParam> ResponseEntity<Void> updateGame(@PathVariable Integer gameId, @PathVariable Integer cardId, @RequestBody Map<String, Object> param) {
         ChessBoardReadService chessBoardService = chessBoardRepository.getChessBoardService(gameId);
         Card<T> card = chessBoardService.getCurrentPlayer().getCards().stream()
-                .filter(c -> Objects.equals(c.getName(), cardName))// FIXME migrate to id
+                .filter(c -> Objects.equals(c.getId(), cardId))
                 .findFirst()
                 .map(GameController::<T>checkThatCardParametersMatch)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "%s not in user hand!".formatted(cardName)));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Card with id %s is not in user hand!".formatted(cardId)));
         try {
             T parameters = InputMapper.mapParamToCardParam(param, card.getClazz(), chessBoardService);
             PlayCardCommand<T> command = PlayCardCommand.<T>builder()

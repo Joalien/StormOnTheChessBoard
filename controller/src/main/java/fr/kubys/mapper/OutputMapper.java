@@ -42,6 +42,7 @@ public class OutputMapper {
                 .map(Field::getName)
                 .collect(HashMap::new, (hashMap, name) -> hashMap.put(name, null), HashMap::putAll);
         return CardOutputDto.builder()
+                .id(c.getId())
                 .name(c.getName())
                 .description(c.getDescription())
                 .type(c.getType())

@@ -22,7 +22,6 @@ public class GameStateController implements ChessBoardService {
     private Player white;
     private Player black;
     private List<Card<? extends CardParam>> cards;
-    private Player currentPlayer;
     private StateEnum currentState;
 
     public GameStateController() {

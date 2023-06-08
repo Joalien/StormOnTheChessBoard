@@ -12,7 +12,8 @@ import java.util.Map;
 @Setter
 @Builder
 @ToString
-public class CardOutputDto { // FIXME use id?
+public class CardOutputDto {
+    private Integer id;
     private String name;
     private String description;
     private CardType type;
