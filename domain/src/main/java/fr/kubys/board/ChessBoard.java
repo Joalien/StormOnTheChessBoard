@@ -290,4 +290,8 @@ public class ChessBoard {
     public void setTurn(Color currentPlayer) {
         this.currentTurn = currentPlayer;
     }
+
+    public void setSquare(Square square) {
+        this.board.put(square.getPosition(), square);
+    }
 }

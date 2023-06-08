@@ -10,7 +10,7 @@ import lombok.experimental.SuperBuilder;
 @Getter
 public final class PlayCardCommand<T extends CardParam> extends Command {
     Card<T> card;
-    T parameters;
+    T parameters; // FIXME make immutable
 
     @Override
     public void execute(ChessBoardWriteService chessBoardWriteService) {

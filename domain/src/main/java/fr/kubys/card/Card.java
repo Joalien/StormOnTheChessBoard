@@ -9,6 +9,7 @@ import java.util.Objects;
 
 public abstract class Card<T extends CardParam> {
 
+    //FIXME add functional id
     protected final String name;
     protected final String description;
     protected final CardType type;

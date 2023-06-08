@@ -4,14 +4,14 @@ import fr.kubys.board.ChessBoard;
 import fr.kubys.card.params.PositionCardParam;
 import fr.kubys.core.Color;
 import fr.kubys.piece.Queen;
-import fr.kubys.piece.extra.BlackHole;
+import fr.kubys.piece.extra.BlackHoleSquare;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 import static fr.kubys.core.Position.e4;
 import static org.junit.jupiter.api.Assertions.*;
 
-class BlackHoleCardTest {
+class BlackHoleSquareCardTest {
 
     @Nested
     class Success {
@@ -22,8 +22,8 @@ class BlackHoleCardTest {
 
             assertDoesNotThrow(() -> blackHoleCard.playOn(chessBoard, new PositionCardParam(e4)));
 
-            assertTrue(chessBoard.at(e4).getPiece().get() instanceof BlackHole);
-            assertThrows(IllegalArgumentException.class, () -> chessBoard.add(new Queen(Color.WHITE), e4));
+            assertTrue(chessBoard.at(e4) instanceof BlackHoleSquare);
+            assertThrows(BlackHoleSquare.BlackHoleException.class, () -> chessBoard.add(new Queen(Color.WHITE), e4));
         }
     }
 
@@ -44,7 +44,7 @@ class BlackHoleCardTest {
             BlackHoleCard blackHoleCard = new BlackHoleCard();
 
             assertDoesNotThrow(() -> blackHoleCard.playOn(chessBoard, new PositionCardParam(e4)));
-            assertThrows(IllegalArgumentException.class, () -> blackHoleCard.playOn(chessBoard, new PositionCardParam(e4)));
+            assertThrows(BlackHoleSquare.BlackHoleException.class, () -> blackHoleCard.playOn(chessBoard, new PositionCardParam(e4)));
         }
     }
 }

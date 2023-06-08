@@ -2,7 +2,7 @@ package fr.kubys.card;
 
 import fr.kubys.board.ChessBoard;
 import fr.kubys.card.params.PositionCardParam;
-import fr.kubys.piece.extra.BlackHole;
+import fr.kubys.piece.extra.BlackHoleSquare;
 
 public class BlackHoleCard extends Card<PositionCardParam> {
 
@@ -24,7 +24,6 @@ public class BlackHoleCard extends Card<PositionCardParam> {
 
     @Override
     protected void doAction(ChessBoard chessBoard, PositionCardParam param) {
-        BlackHole piece = new BlackHole();
-        chessBoard.add(piece, param.position());
+        chessBoard.setSquare(new BlackHoleSquare(param.position()));
     }
 }

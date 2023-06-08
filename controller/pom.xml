@@ -30,7 +30,7 @@
         </dependency>
         <dependency>
             <groupId>fr.kubys</groupId>
-            <artifactId>model</artifactId>
+            <artifactId>domain</artifactId>
             <version>1.0-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>

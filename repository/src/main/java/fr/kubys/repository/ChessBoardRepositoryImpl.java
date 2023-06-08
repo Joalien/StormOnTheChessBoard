@@ -57,8 +57,7 @@ public class ChessBoardRepositoryImpl implements ChessBoardRepository {
     private ChessBoardService computeChessBoard(Integer gameId) {
         if (!store.containsKey(gameId)) throw new GameNotFoundException(gameId);
         ChessBoardService gameStateController = ChessBoardServiceFactory.newChessBoardService();
-        store.get(gameId)
-                .forEach(command -> command.execute(gameStateController));
+        store.get(gameId).forEach(command -> command.execute(gameStateController));
         return gameStateController;
     }
 }
