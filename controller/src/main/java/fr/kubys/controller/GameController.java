@@ -1,15 +1,10 @@
 package fr.kubys.controller;
 
 import fr.kubys.api.ChessBoardReadService;
-import fr.kubys.card.Card;
 import fr.kubys.card.params.CardParam;
-import fr.kubys.command.Command;
-import fr.kubys.command.EndTurnCommand;
-import fr.kubys.command.PlayCardCommand;
-import fr.kubys.command.PlayMoveCommand;
+import fr.kubys.command.*;
 import fr.kubys.core.Position;
 import fr.kubys.dto.ChessBoardDto;
-import fr.kubys.mapper.InputMapper;
 import fr.kubys.mapper.MappingException;
 import fr.kubys.repository.ChessBoardRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +15,6 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 import static fr.kubys.core.Position.*;
 import static fr.kubys.mapper.OutputMapper.mapToDto;
@@ -91,34 +85,19 @@ public class GameController {
         return mapToDto(gameId, chessBoardRepository.getChessBoardService(gameId));
     }
 
-    @PostMapping("/{gameId}/card/{cardId}")
+    @PostMapping("/{gameId}/card/{cardName}")
     @CrossOrigin(origins = "*")
-    public <T extends CardParam> ResponseEntity<Void> updateGame(@PathVariable Integer gameId, @PathVariable Integer cardId, @RequestBody Map<String, Object> param) {
-        ChessBoardReadService chessBoardService = chessBoardRepository.getChessBoardService(gameId);
-        Card<T> card = chessBoardService.getCurrentPlayer().getCards().stream()
-                .filter(c -> Objects.equals(c.getId(), cardId))
-                .findFirst()
-                .map(GameController::<T>checkThatCardParametersMatch)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Card with id %s is not in user hand!".formatted(cardId)));
+    public <T extends CardParam> ResponseEntity<Void> updateGame(@PathVariable Integer gameId, @PathVariable String cardName, @RequestBody Map<String, Object> param) {
         try {
-            T parameters = InputMapper.mapParamToCardParam(param, card.getClazz(), chessBoardService);
-            PlayCardCommand<T> command = PlayCardCommand.<T>builder()
+        PlayCardWithImmutableParamCommand<T> command = PlayCardWithImmutableParamCommand.<T>builder()
                     .gameId(gameId)
-                    .parameters(parameters)
-                    .card(card)
+                    .cardName(cardName)
+                    .param(param)
                     .build();
             chessBoardRepository.saveCommand(command);
             return ResponseEntity.ok().build();
         } catch (MappingException e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
-        }
-    }
-
-    private static <T extends CardParam> Card<T> checkThatCardParametersMatch(Card<? extends CardParam> cardMatchingName) {
-        try {
-            return (Card<T>) cardMatchingName;
-        } catch (ClassCastException e) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Parameters do not match");
         }
     }
 

@@ -9,19 +9,17 @@ import java.util.Objects;
 
 public abstract class Card<T extends CardParam> {
 
-    protected final Integer id;
+    //FIXME add functional id
     protected final String name;
     protected final String description;
     protected final CardType type;
     protected final Class<T> clazz;
-    private static Integer maxGameId = 1;
 
-    protected Card(String name, String description, CardType type, Class<T> tClass) {
+    protected Card(String name, String description, CardType type, Class<T> clazz) {
         this.name = name;
         this.description = description;
         this.type = type;
-        this.clazz = tClass;
-        this.id = maxGameId++;
+        this.clazz = clazz;
     }
 
     public final void playOn(ChessBoard chessBoard, T param) {
@@ -70,9 +68,5 @@ public abstract class Card<T extends CardParam> {
 
     public Class<T> getClazz() {
         return this.clazz;
-    }
-
-    public Integer getId() {
-        return id;
     }
 }

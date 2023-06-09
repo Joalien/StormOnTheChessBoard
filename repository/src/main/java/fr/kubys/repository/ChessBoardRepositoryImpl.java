@@ -32,7 +32,7 @@ public class ChessBoardRepositoryImpl implements ChessBoardRepository {
 
     @Override
     public void saveCommand(Command command) {
-        ChessBoardWriteService chessBoardWriteService = computeChessBoard(command.getGameId());
+        ChessBoardService chessBoardWriteService = computeChessBoard(command.getGameId());
 
         command.execute(chessBoardWriteService);
         log.info("[Chessboard {}] {}", command.getGameId(), command);

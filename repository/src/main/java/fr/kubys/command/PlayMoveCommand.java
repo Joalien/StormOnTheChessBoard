@@ -1,6 +1,6 @@
 package fr.kubys.command;
 
-import fr.kubys.api.ChessBoardWriteService;
+import fr.kubys.api.ChessBoardService;
 import fr.kubys.core.Position;
 import lombok.Getter;
 import lombok.experimental.SuperBuilder;
@@ -12,7 +12,7 @@ public final class PlayMoveCommand extends Command {
     Position to;
 
     @Override
-    public void execute(ChessBoardWriteService chessBoardWriteService) {
+    public void execute(ChessBoardService chessBoardWriteService) {
         chessBoardWriteService.tryToMove(from, to);
     }
 

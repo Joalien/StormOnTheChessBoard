@@ -1,6 +1,6 @@
 package fr.kubys.command;
 
-import fr.kubys.api.ChessBoardWriteService;
+import fr.kubys.api.ChessBoardService;
 import fr.kubys.card.Card;
 import fr.kubys.card.params.CardParam;
 import lombok.Getter;
@@ -8,12 +8,11 @@ import lombok.experimental.SuperBuilder;
 
 @SuperBuilder
 @Getter
-public final class PlayCardCommand<T extends CardParam> extends Command {
+public final class PlayCardWithMutableParam<T extends CardParam> {
     Card<T> card;
-    T parameters; // FIXME make immutable
+    T parameters;
 
-    @Override
-    public void execute(ChessBoardWriteService chessBoardWriteService) {
+    public void execute(ChessBoardService chessBoardWriteService) {
         chessBoardWriteService.tryToPlayCard(card, parameters);
     }
 

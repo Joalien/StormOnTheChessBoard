@@ -1,25 +1,33 @@
 package fr.kubys.mapper;
 
 import fr.kubys.api.ChessBoardReadService;
+import fr.kubys.card.Card;
 import fr.kubys.card.QuadrilleCard;
 import fr.kubys.card.params.CardParam;
+import fr.kubys.card.params.CardParamException;
 import fr.kubys.core.Position;
-import fr.kubys.piece.Pawn;
 import fr.kubys.piece.Piece;
 
-import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class InputMapper {
+public class CardParametersMapper {
+
+    public static <T extends CardParam> Card<T> checkThatCardParametersMatch(Card<? extends CardParam> cardMatchingName) {
+        try {
+            return (Card<T>) cardMatchingName;
+        } catch (ClassCastException e) {
+            throw new IllegalArgumentException();
+        }
+    }
 
     public static <T extends CardParam> T mapParamToCardParam(Map<String, Object> param, Class<T> clazz, ChessBoardReadService chessBoardService) {
         Set<String> inputParameterKeys = param.keySet();
         Set<String> modelKeys = Arrays.stream(clazz.getDeclaredFields()).map(Field::getName).collect(Collectors.toSet());
         if (!inputParameterKeys.equals(modelKeys)) {
-            throw new MappingException("Input dto %s does not match card parameter %s".formatted(inputParameterKeys, modelKeys));
+            throw new CardParamException("Input dto %s does not match card parameter %s".formatted(inputParameterKeys, modelKeys));
         }
 
         List<Object> list = Arrays.stream(clazz.getDeclaredFields())
@@ -43,13 +51,13 @@ public class InputMapper {
                     .collect(Collectors.toSet());
         if (QuadrilleCard.Direction.class.equals(field.getType()))
             return QuadrilleCard.Direction.valueOf((String) param.get(field.getName()));
-        throw new MappingException("No mapping found for class %s".formatted(field.getType()));
+        throw new CardParamException("No mapping found for class %s".formatted(field.getType()));
     }
 
     private static Piece getPieceFromChessboard(ChessBoardReadService chessboard, String position) {
         return chessboard.getPieces().stream()
                 .filter(piece -> piece.getPosition() == Position.valueOf(position))
                 .findFirst()
-                .orElseThrow();
+                .orElseThrow(() -> new CardParamException("No piece found on square %s".formatted(position)));
     }
 }

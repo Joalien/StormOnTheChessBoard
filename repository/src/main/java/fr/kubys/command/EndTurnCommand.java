@@ -1,6 +1,6 @@
 package fr.kubys.command;
 
-import fr.kubys.api.ChessBoardWriteService;
+import fr.kubys.api.ChessBoardService;
 import lombok.Getter;
 import lombok.experimental.SuperBuilder;
 
@@ -9,7 +9,7 @@ import lombok.experimental.SuperBuilder;
 public final class EndTurnCommand extends Command {
 
     @Override
-    public void execute(ChessBoardWriteService chessBoardWriteService) {
+    public void execute(ChessBoardService chessBoardWriteService) {
         chessBoardWriteService.tryToPass();
     }
 

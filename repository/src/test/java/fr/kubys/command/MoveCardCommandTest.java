@@ -8,11 +8,10 @@ import fr.kubys.core.Position;
 import fr.kubys.piece.Pawn;
 import fr.kubys.repository.ChessBoardRepositoryImpl;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
-import static fr.kubys.core.Position.d2;
-import static fr.kubys.core.Position.e2;
+import java.util.Map;
+
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 class MoveCardCommandTest {
@@ -25,24 +24,23 @@ class MoveCardCommandTest {
     }
 
     @Test
-    @Disabled
     void card_parameter_should_act_as_immutable() {
-        Integer gameId = getGameWithLightweightSquadCardInTHeHandOfCurrentPlayer();
-        ChessBoardReadService chessBoardService = chessBoardRepository.getChessBoardService(gameId);
-        LightweightSquadCardParam lightweightSquadCardParam = new LightweightSquadCardParam(getPawnOn(chessBoardService, e2), getPawnOn(chessBoardService, d2));
-        LightweightSquadCard lightweightSquadCard = new LightweightSquadCard();
-        chessBoardService.getCurrentPlayer().getCards().add(lightweightSquadCard);
-        PlayCardCommand<LightweightSquadCardParam> command = PlayCardCommand.<LightweightSquadCardParam>builder()
+        Integer gameId = getGameWithLightweightSquadCardInTheHandOfCurrentPlayer();
+        String cardName = chessBoardRepository.getChessBoardService(gameId).getCurrentPlayer().getCards().stream()
+                .filter(card -> card.getClass() == LightweightSquadCard.class)
+                .findAny().orElseThrow()
+                .getName();
+        PlayCardWithImmutableParamCommand<LightweightSquadCardParam> command = PlayCardWithImmutableParamCommand.<LightweightSquadCardParam>builder()
                 .gameId(gameId)
-                .card(lightweightSquadCard)
-                .parameters(lightweightSquadCardParam)
+                .cardName(cardName)
+                .param(Map.of("pawn1", "e2", "pawn2", "d2"))
                 .build();
 
         assertDoesNotThrow(() -> chessBoardRepository.saveCommand(command));
         assertDoesNotThrow(() -> chessBoardRepository.getChessBoardService(gameId));
     }
 
-    private Integer getGameWithLightweightSquadCardInTHeHandOfCurrentPlayer() { // FIXME
+    private Integer getGameWithLightweightSquadCardInTheHandOfCurrentPlayer() { // FIXME
         Integer newGame;
         do {
             newGame = chessBoardRepository.createNewGame();
