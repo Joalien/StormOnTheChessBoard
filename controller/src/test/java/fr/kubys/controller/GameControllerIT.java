@@ -76,5 +76,6 @@ class GameControllerIT {
         assertEquals(gameId, chessBoardDto.getId());
         assertFalse(chessBoardDto.getPieces().isEmpty());
         assertEquals("wP", chessBoardDto.getPieces().get("e2"));
+        assertEquals("white", chessBoardDto.getCurrentTurn());
     }
 }

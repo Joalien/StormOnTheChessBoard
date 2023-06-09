@@ -27,6 +27,7 @@ public class OutputMapper {
                 .deck(chessBoard.getCards().stream().map(OutputMapper::map).collect(Collectors.toSet()))
                 .whitePlayer(map(chessBoard.getWhite()))
                 .blackPlayer(map(chessBoard.getBlack()))
+                .currentTurn(chessBoard.getCurrentPlayer().getColor().name().toLowerCase())
                 .pieces(chessBoard.getPieces().stream().collect(Collectors.toMap(piece -> piece.getPosition().name(), OutputMapper::map)))
                 .build();
     }

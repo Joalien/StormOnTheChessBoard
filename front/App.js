@@ -10,7 +10,7 @@ export default function App() {
 
     const [game, setGame] = useState({});
     const [gameId, setGameId] = useState(1);
-    const [currentPlayerColor, setCurrentPlayerColor] = useState("WHITE");
+    const [currentPlayerColor, setCurrentPlayerColor] = useState("white");
     const [whitePlayer, setWhitePlayer] = useState({cards: []});
     const [blackPlayer, setBlackPlayer] = useState({cards: []});
     const [selectedCard, setSelectedCard] = useState(null)
@@ -72,11 +72,14 @@ export default function App() {
     function fetchGame() {
         fetch(base + gameId)
             .then(response => response.json())
-            .then(data => setGame(data.pieces))
+            .then(data => {
+                setGame(data.pieces)
+                setCurrentPlayerColor(data.currentTurn)
+            })
     }
 
     function oppositeColor(color) {
-        return color === "WHITE" ? "BLACK" : "WHITE";
+        return color === "white" ? "black" : "white";
     }
 
     function showCard(card) {
@@ -100,7 +103,7 @@ export default function App() {
         }}>
             <h1>Tempête sur l'Échiquier</h1>
             <h2>Trait aux {currentPlayerColor}</h2>
-            <Player player={currentPlayerColor === "WHITE" ? blackPlayer : whitePlayer} showCard={showCard}
+            <Player player={currentPlayerColor === "white" ? blackPlayer : whitePlayer} showCard={showCard}
                     hiddenCards={true}/>
             <Chessboard id="BasicBoard"
                         onPieceDrop={movePiece}
@@ -114,7 +117,7 @@ export default function App() {
                         }), {})}
             />
             {selectedCard && <Card card={selectedCard} selectedParam={selectedParam} setSelectedParam={setSelectedParam} playCardCallback={playCard}/>}
-            <Player player={currentPlayerColor === "BLACK" ? blackPlayer : whitePlayer} showCard={showCard}
+            <Player player={currentPlayerColor === "black" ? blackPlayer : whitePlayer} showCard={showCard}
                     hiddenCards={false}/>
             <button
                 onClick={startNewGame}
