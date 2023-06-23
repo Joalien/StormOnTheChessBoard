@@ -70,7 +70,7 @@ public abstract class Piece {
     @Override
     public String toString() {
         String color = Optional.ofNullable(this.getColor())
-                .map(Objects::toString)
+                .map(Enum::toString)
                 .map(String::toLowerCase)
                 .orElse("");
         String pieceName = this.getClass().getSimpleName();

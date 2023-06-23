@@ -1,11 +1,19 @@
 import {Chessboard} from "react-chessboard";
 import {useEffect, useState} from "react";
-import {Player} from "./Player";
-import {Card} from "./Card";
+import {Player} from "./component/Player";
+import {CardParameters} from "./component/CardParameters";
+import {toast, ToastContainer} from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 
 const base = "http://localhost:9000/chessboard/";
 
 const highlight = {boxShadow: "rgba(255, 0, 0, 0.75) 0px 0px 20px 0px inset"};
+
+async function showErrorMessage(res) {
+    const errorMessage = (await res.text());
+    toast.error(errorMessage);
+}
+
 export default function App() {
 
     const [game, setGame] = useState({});
@@ -38,9 +46,9 @@ export default function App() {
     async function movePiece(sourceSquare, targetSquare) {
         const res = await fetch(base + gameId + "/move/" + sourceSquare + "/to/" + targetSquare, {method: 'POST'})
         if (res.ok) {
-            setTimeout(() => endTurn(), 2000) // FIXME find prettier way to automatically end turn
+            // setTimeout(() => endTurn(), 2000) // FIXME find prettier way to automatically end turn
             fetchGame()
-        } else alert((await res.json()).message)
+        } else await showErrorMessage(res);
     }
 
     async function playCard(sourceSquare, targetSquare) {
@@ -55,9 +63,9 @@ export default function App() {
         if (res.ok) {
             setSelectedCard(null)
             setSelectedParam(null)
-            setTimeout(() => endTurn(), 2000) // FIXME find prettier way to automatically end turn
+            // setTimeout(() => endTurn(), 2000) // FIXME find prettier way to automatically end turn
             fetchGame()
-        } else alert((await res.json()).message)
+        } else await showErrorMessage(res);
     }
 
     async function endTurn() {
@@ -66,7 +74,7 @@ export default function App() {
             setCurrentPlayerColor(oppositeColor(currentPlayerColor))
             setSelectedCard(null)
             fetchGame()
-        } else alert((await res.json()).message)
+        } else await showErrorMessage(res);
     }
 
     function fetchGame() {
@@ -101,6 +109,14 @@ export default function App() {
             maxWidth: '70vh',
             width: '70vw'
         }}>
+            <ToastContainer
+                position="top-right"
+                closeOnClick
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+                autoClose={3000}
+            />
             <h1>Tempête sur l'Échiquier</h1>
             <h2>Trait aux {currentPlayerColor}</h2>
             <Player player={currentPlayerColor === "white" ? blackPlayer : whitePlayer} showCard={showCard}
@@ -116,7 +132,7 @@ export default function App() {
                             [square]: highlight
                         }), {})}
             />
-            {selectedCard && <Card card={selectedCard} selectedParam={selectedParam} setSelectedParam={setSelectedParam} playCardCallback={playCard}/>}
+            {selectedCard && <CardParameters card={selectedCard} selectedParam={selectedParam} setSelectedParam={setSelectedParam} playCardCallback={playCard}/>}
             <Player player={currentPlayerColor === "black" ? blackPlayer : whitePlayer} showCard={showCard}
                     hiddenCards={false}/>
             <button

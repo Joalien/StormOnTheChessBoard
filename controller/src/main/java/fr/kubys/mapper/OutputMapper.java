@@ -10,6 +10,7 @@ import fr.kubys.dto.ChessBoardDto;
 import fr.kubys.dto.EffectDto;
 import fr.kubys.dto.PlayerDto;
 import fr.kubys.piece.*;
+import fr.kubys.piece.extra.Kangaroo;
 import fr.kubys.player.Player;
 
 import java.lang.reflect.Field;
@@ -44,6 +45,7 @@ public class OutputMapper {
                 .collect(HashMap::new, (hashMap, name) -> hashMap.put(name, null), HashMap::putAll);
         return CardOutputDto.builder()
                 .name(c.getName())
+                .englishName(c.getClass().getSimpleName())
                 .description(c.getDescription())
                 .type(c.getType())
                 .param(cardParamOutputDto)
@@ -65,7 +67,8 @@ public class OutputMapper {
                         p -> p instanceof Queen, "Q",
                         p -> p instanceof Knight, "N",
                         p -> p instanceof Bishop, "B",
-                        p -> p instanceof Rock, "R"
+                        p -> p instanceof Rock, "R",
+                        p -> p instanceof Kangaroo, "Kangaroo"
                 ).entrySet().stream()
                 .filter(objectStringEntry -> objectStringEntry.getKey().test(piece))
                 .findAny()

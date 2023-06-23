@@ -10,11 +10,13 @@ import fr.kubys.piece.*;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static fr.kubys.core.Position.*;
+
 public class ChessBoard {
 //    private static final Logger log = org.slf4j.LoggerFactory.getLogger(BombingEffect.class);
 
-    private final HashMap<Position, Square> board = new HashMap<>(64);
-    private final HashMap<Position, Square> fakeSquares = new HashMap<>();
+    private final Map<Position, Square> board = new HashMap<>(64);
+    private final Map<Position, Square> fakeSquares = new HashMap<>();
     private final Set<Piece> outOfTheBoardPieces = new HashSet<>();
     private final Set<Effect> effects = new HashSet<>();
 
@@ -25,31 +27,34 @@ public class ChessBoard {
         return new ChessBoard();
     }
 
+    private ChessBoard() {}
+
     public static ChessBoard createWithInitialState() {
 //        log.debug("create chessboard with initial state");
         ChessBoard chessBoard = new ChessBoard();
 
-        chessBoard.add(new King(Color.WHITE), Position.e1);
-        chessBoard.add(new King(Color.BLACK), Position.e8);
-        chessBoard.add(new Queen(Color.WHITE), Position.d1);
-        chessBoard.add(new Queen(Color.BLACK), Position.d8);
-        chessBoard.add(new Bishop(Color.WHITE), Position.c1);
-        chessBoard.add(new Bishop(Color.WHITE), Position.f1);
-        chessBoard.add(new Bishop(Color.BLACK), Position.f8);
-        chessBoard.add(new Bishop(Color.BLACK), Position.c8);
-        chessBoard.add(new Knight(Color.WHITE), Position.b1);
-        chessBoard.add(new Knight(Color.WHITE), Position.g1);
-        chessBoard.add(new Knight(Color.BLACK), Position.b8);
-        chessBoard.add(new Knight(Color.BLACK), Position.g8);
-        chessBoard.add(new Rock(Color.WHITE), Position.a1);
-        chessBoard.add(new Rock(Color.WHITE), Position.h1);
-        chessBoard.add(new Rock(Color.BLACK), Position.a8);
-        chessBoard.add(new Rock(Color.BLACK), Position.h8);
+        chessBoard.add(new King(Color.WHITE), e1);
+        chessBoard.add(new King(Color.BLACK), e8);
+        chessBoard.add(new Queen(Color.WHITE), d1);
+        chessBoard.add(new Queen(Color.BLACK), d8);
+        chessBoard.add(new Bishop(Color.WHITE), c1);
+        chessBoard.add(new Bishop(Color.WHITE), f1);
+        chessBoard.add(new Bishop(Color.BLACK), f8);
+        chessBoard.add(new Bishop(Color.BLACK), c8);
+        chessBoard.add(new Knight(Color.WHITE), b1);
+        chessBoard.add(new Knight(Color.WHITE), g1);
+        chessBoard.add(new Knight(Color.BLACK), b8);
+        chessBoard.add(new Knight(Color.BLACK), g8);
+        chessBoard.add(new Rock(Color.WHITE), a1);
+        chessBoard.add(new Rock(Color.WHITE), h1);
+        chessBoard.add(new Rock(Color.BLACK), a8);
+        chessBoard.add(new Rock(Color.BLACK), h8);
+
         Arrays.stream(File.values())
-                .map(file -> Position.posToSquare(file, Row.Two))
+                .map(file -> posToSquare(file, Row.Two))
                 .forEach(position -> chessBoard.add(new WhitePawn(), position));
         Arrays.stream(File.values())
-                .map(file -> Position.posToSquare(file, Row.Seven))
+                .map(file -> posToSquare(file, Row.Seven))
                 .forEach(position -> chessBoard.add(new BlackPawn(), position));
         return chessBoard;
     }
@@ -81,7 +86,7 @@ public class ChessBoard {
     }
 
     public Set<Position> getAllAttackablePosition(Piece piece) {
-        return Position.generateAllPositions().stream()
+        return generateAllPositions().stream()
                 .filter(pos -> !pos.equals(piece.getPosition()))
                 .filter(pos -> canAttack(piece, pos))
                 .collect(Collectors.toSet());

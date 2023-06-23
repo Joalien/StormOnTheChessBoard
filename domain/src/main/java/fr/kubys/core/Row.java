@@ -12,7 +12,7 @@ public enum Row implements Comparable<Row> {
     Five(5, "5"),
     Six(6, "6"),
     Seven(7, "7"),
-    Height(8, "8");
+    Eight(8, "8");
 
     private final Integer rowNumber;
     private final String rowName;

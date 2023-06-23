@@ -1,6 +1,7 @@
 package fr.kubys.controller;
 
 import fr.kubys.api.ChessBoardReadService;
+import fr.kubys.board.IllegalMoveException;
 import fr.kubys.card.params.CardParam;
 import fr.kubys.command.*;
 import fr.kubys.core.Position;
@@ -71,12 +72,8 @@ public class GameController {
     @CrossOrigin(origins = "*")
     public ResponseEntity<Integer> endTurn(@PathVariable Integer gameId) {
         EndTurnCommand endTurnCommand = EndTurnCommand.builder().gameId(gameId).build();
-        try {
-            chessBoardRepository.saveCommand(endTurnCommand);
-            return ResponseEntity.ok().build();
-        } catch (IllegalStateException e) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
-        }
+        chessBoardRepository.saveCommand(endTurnCommand);
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping("/{gameId}")
@@ -88,17 +85,13 @@ public class GameController {
     @PostMapping("/{gameId}/card/{cardName}")
     @CrossOrigin(origins = "*")
     public <T extends CardParam> ResponseEntity<Void> updateGame(@PathVariable Integer gameId, @PathVariable String cardName, @RequestBody Map<String, Object> param) {
-        try {
         PlayCardWithImmutableParamCommand<T> command = PlayCardWithImmutableParamCommand.<T>builder()
-                    .gameId(gameId)
-                    .cardName(cardName)
-                    .param(param)
-                    .build();
-            chessBoardRepository.saveCommand(command);
-            return ResponseEntity.ok().build();
-        } catch (MappingException e) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
-        }
+                .gameId(gameId)
+                .cardName(cardName)
+                .param(param)
+                .build();
+        chessBoardRepository.saveCommand(command);
+        return ResponseEntity.ok().build();
     }
 
     @PostMapping("/{gameId}/move/{from}/to/{to}")
@@ -109,11 +102,7 @@ public class GameController {
                 .from(Position.valueOf(from))
                 .to(Position.valueOf(to))
                 .build();
-        try {
-            chessBoardRepository.saveCommand(command);
-            return ResponseEntity.ok().build();
-        } catch (IllegalStateException | IllegalArgumentException e) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
-        }
+        chessBoardRepository.saveCommand(command);
+        return ResponseEntity.ok().build();
     }
 }

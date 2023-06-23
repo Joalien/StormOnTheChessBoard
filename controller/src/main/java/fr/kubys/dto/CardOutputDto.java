@@ -14,6 +14,7 @@ import java.util.Map;
 @ToString
 public class CardOutputDto { // FIXME use id?
     private String name;
+    private String englishName;
     private String description;
     private CardType type;
     private Map<String, Object> param;

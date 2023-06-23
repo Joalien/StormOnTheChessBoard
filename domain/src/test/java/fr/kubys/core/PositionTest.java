@@ -79,7 +79,7 @@ class PositionTest {
         @ParameterizedTest
         @ValueSource(strings = {"a8", "b8", "d8", "h8"})
         public void should_get_row_number_from_square(Position square) {
-            assertEquals(Row.Height, square.getRow());
+            assertEquals(Row.Eight, square.getRow());
         }
     }
 

@@ -1,7 +1,4 @@
-import {useEffect, useState} from "react";
-
-export function Card({card, selectedParam, setSelectedParam, playCardCallback}) {
-
+export function CardParameters({card, selectedParam, setSelectedParam, playCardCallback}) {
     return (
         <div id={"selectedCard"} style={{'backgroundColor': 'gray'}}>
             <h3>{card.name}</h3>

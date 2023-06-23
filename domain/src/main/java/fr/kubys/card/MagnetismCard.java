@@ -7,7 +7,7 @@ import fr.kubys.card.params.PieceCardParam;
 public class MagnetismCard extends Card<PieceCardParam> {
 
     public MagnetismCard() {
-        super("Magnetisme", "", CardType.REPLACE_TURN, PieceCardParam.class);
+        super("Magnetisme", "", CardType.AFTER_TURN, PieceCardParam.class);
     }
 
     @Override
