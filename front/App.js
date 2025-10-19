@@ -177,9 +177,13 @@ export default function App() {
 
     return (
         <div style={{
-            margin: '3rem auto',
-            maxWidth: '70vh',
-            width: '70vw'
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            minHeight: '100vh',
+            padding: '1rem',
+            gap: '2rem',
+            width: '100%',
         }}>
             <ToastContainer
                 position="top-right"
@@ -189,43 +193,79 @@ export default function App() {
                 pauseOnHover
                 autoClose={3000}
             />
-            <h1>Tempête sur l'Échiquier</h1>
-            <h2>Trait aux {currentPlayerColor}</h2>
-            <Player player={currentPlayerColor === "white" ? blackPlayer : whitePlayer} showCard={showCard}
-                    hiddenCards={true}/>
-            <Chessboard id="BasicBoard"
-                        onPieceDrop={movePiece}
-                        position={game}
-                        arePiecesDraggable={selectedCard === null}
-                        boardOrientation={currentPlayerColor}
-                        onSquareRightClick={onSquareRightClick}
-                        customPieces={customPieces}
-                        customSquareStyles={{
-                            ...customSquares(),  // Toujours appliqué
-                            ...(selectedCard && selectedParam && [...Object.values(selectedCard.param)].reduce((obj, square) => ({
-                                ...obj,
-                                [square]: highlight
-                            }), {}))
-                        }}
-            />
-            {selectedCard && <CardParameters card={selectedCard} selectedParam={selectedParam} setSelectedParam={setSelectedParam} playCardCallback={playCard}/>}
-            <Player player={currentPlayerColor === "black" ? blackPlayer : whitePlayer} showCard={showCard}
-                    hiddenCards={false}/>
-            <button
-                onClick={startNewGame}
-            >
-                Commencer une nouvelle partie
-            </button>
-            <button
-                onClick={endTurn}
-            >
-                Passer son Tour
-            </button>
-            <button
-                onClick={undo}
-            >
-                Annuler la précédente action
-            </button>
+
+            {/* Colonne centrale : Cartes + Échiquier + Cartes */}
+            <div style={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                gap: '0.5rem',
+            }}>
+                {/* Cartes adversaire en haut (petites) */}
+                <Player
+                    player={currentPlayerColor === "white" ? blackPlayer : whitePlayer}
+                    showCard={showCard}
+                    hiddenCards={true}
+                />
+
+                {/* Échiquier au centre */}
+                <Chessboard
+                    id="BasicBoard"
+                    onPieceDrop={movePiece}
+                    position={game}
+                    arePiecesDraggable={selectedCard === null}
+                    boardOrientation={currentPlayerColor}
+                    onSquareRightClick={onSquareRightClick}
+                    customPieces={customPieces}
+                    customSquareStyles={{
+                        ...customSquares(),
+                        ...(selectedCard && selectedParam && [...Object.values(selectedCard.param)].reduce((obj, square) => ({
+                            ...obj,
+                            [square]: highlight
+                        }), {}))
+                    }}
+                />
+
+                {/* Cartes joueur en bas (petites) */}
+                <Player
+                    player={currentPlayerColor === "black" ? blackPlayer : whitePlayer}
+                    showCard={showCard}
+                    hiddenCards={false}
+                />
+
+                {/* Boutons sous les cartes */}
+                <div style={{
+                    display: 'flex',
+                    gap: '0.5rem',
+                    marginTop: '1rem'
+                }}>
+                    <button onClick={startNewGame}>
+                        Commencer une nouvelle partie
+                    </button>
+                    <button onClick={endTurn}>
+                        Passer son Tour
+                    </button>
+                    <button onClick={undo}>
+                        Annuler
+                    </button>
+                </div>
+            </div>
+
+            {/* Carte sélectionnée à droite en grand */}
+            {selectedCard && (
+                <div style={{
+                    width: '600px',
+                    height: '600px',
+                    flexShrink: 0
+                }}>
+                    <CardParameters
+                        card={selectedCard}
+                        selectedParam={selectedParam}
+                        setSelectedParam={setSelectedParam}
+                        playCardCallback={playCard}
+                    />
+                </div>
+            )}
         </div>
     );
 }

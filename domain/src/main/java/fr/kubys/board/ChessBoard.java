@@ -71,7 +71,7 @@ public class ChessBoard {
         piece.setPosition(position);
         at(position).setPiece(piece);
 
-        effects.forEach(effect -> effect.afterMoveHook(this, piece));
+        new ArrayList<>(effects).forEach(effect -> effect.afterMoveHook(this, piece));
     }
 
     public Square at(Position position) {
@@ -161,7 +161,7 @@ public class ChessBoard {
     }
 
     public void move(Piece piece, Position positionToMoveOn) {
-        effects.forEach(effect -> effect.beforeMoveHook(this, piece));
+        new ArrayList<>(effects).forEach(effect -> effect.beforeMoveHook(this, piece));
 
         at(positionToMoveOn).getPiece().ifPresent(this::removePieceFromTheBoard);
 //        log.info("{} moves from {} to {}", piece, piece.getPosition(), positionToMoveOn);

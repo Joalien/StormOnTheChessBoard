@@ -30,8 +30,8 @@ class GameStateControllerTest {
     void should_set_up_correctly() {
         assertEquals(StateEnum.BEGINNING_OF_THE_TURN, gameStateController.getCurrentState());
         assertEquals(gameStateController.getWhite(), gameStateController.getCurrentPlayer());
-        assertEquals(4, gameStateController.getWhite().getCards().size());
-        assertEquals(4, gameStateController.getBlack().getCards().size());
+        assertEquals(5, gameStateController.getWhite().getCards().size());
+        assertEquals(5, gameStateController.getBlack().getCards().size());
         assertFalse(gameStateController.getStack().isEmpty());
         assertEquals(Color.WHITE, gameStateController.getWhite().getColor());
         assertEquals(Color.BLACK, gameStateController.getBlack().getColor());
