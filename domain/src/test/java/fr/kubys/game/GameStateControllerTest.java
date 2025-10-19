@@ -1,9 +1,13 @@
 package fr.kubys.game;
 
+import fr.kubys.card.Card;
+import fr.kubys.card.KangarooCard;
 import fr.kubys.card.LightweightSquadCard;
+import fr.kubys.card.params.KangarooCardParam;
 import fr.kubys.card.params.LightweightSquadCardParam;
 import fr.kubys.core.Color;
 import fr.kubys.piece.Pawn;
+import fr.kubys.player.Player;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -65,5 +69,26 @@ class GameStateControllerTest {
         assertDoesNotThrow(() -> gameStateController.tryToMove(e2, e4));
         gameStateController.tryToPass();
         assertThrows(IllegalStateException.class, () -> gameStateController.tryToMove(d2, d4));
+    }
+
+    @Test
+    void should_reshuffle_discard_when_deck_is_empty() {
+        gameStateController.getStack().clear();
+        add_2_cards_in_discard();
+        Player player = gameStateController.getCurrentPlayer();
+        player.getCards().clear();
+
+        assertDoesNotThrow(() -> gameStateController.dealCard(player));
+
+        assertTrue(gameStateController.getDiscard().isEmpty());
+        assertEquals(1, gameStateController.getStack().size());
+        assertEquals(1, gameStateController.getCurrentPlayer().getCards().size());
+    }
+
+    private void add_2_cards_in_discard() {
+        Card<LightweightSquadCardParam> card1 = new LightweightSquadCard();
+        Card<KangarooCardParam> card2 = new KangarooCard();
+        gameStateController.getDiscard().add(card1);
+        gameStateController.getDiscard().add(card2);
     }
 }

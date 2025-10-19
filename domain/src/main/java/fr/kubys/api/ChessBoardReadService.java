@@ -16,6 +16,8 @@ public interface ChessBoardReadService {
 
     List<Card<? extends CardParam>> getStack();
 
+    List<Card<? extends CardParam>> getDiscard();
+
     Player getCurrentPlayer();
 
     Player getWhite();

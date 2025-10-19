@@ -22,6 +22,7 @@ public class GameStateController implements ChessBoardService {
     private Player white;
     private Player black;
     private List<Card<? extends CardParam>> stack;
+    private List<Card<? extends CardParam>> discard;
     private Player currentPlayer;
     private StateEnum currentState;
 
@@ -46,6 +47,7 @@ public class GameStateController implements ChessBoardService {
 
     private void initDeck(long seed) {
         stack = new LinkedList<>();
+        discard = new LinkedList<>();
         stack.add(new BlackHoleCard());
         stack.add(new BombingCard());
         stack.add(new ChargeCard());
@@ -61,7 +63,13 @@ public class GameStateController implements ChessBoardService {
         Collections.shuffle(stack, new Random(seed));
     }
 
-    private void dealCard(Player player) {
+    void dealCard(Player player) {
+        if (stack.isEmpty()) {
+//            log.info("Stack is empty, reshuffling discard");
+            stack.addAll(discard);
+            discard.clear();
+            Collections.shuffle(stack);
+        }
         player.getCards().add(stack.remove(0));
     }
 
@@ -84,6 +92,7 @@ public class GameStateController implements ChessBoardService {
 
         currentState.getState().tryToPlayCard(this, card, params);
         getCurrentPlayer().getCards().remove(card);
+        discard.add(card);
         dealCard(getCurrentPlayer());
     }
 
@@ -117,6 +126,11 @@ public class GameStateController implements ChessBoardService {
     @Override
     public List<Card<? extends CardParam>> getStack() {
         return this.stack;
+    }
+
+    @Override
+    public List<Card<? extends CardParam>> getDiscard() {
+        return this.discard;
     }
 
     @Override
