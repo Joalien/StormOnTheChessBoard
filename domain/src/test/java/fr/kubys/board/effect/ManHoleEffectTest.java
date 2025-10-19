@@ -48,6 +48,17 @@ class ManHoleEffectTest {
     }
 
     @Test
+    void should_move_from_one_hole_to_the_other_even_if_theorical_path_is_blocked() {
+        manHoleEffect = new ManHoleEffect(d1, d8);
+        chessBoard.addEffect(manHoleEffect);
+        Piece queen = chessBoard.at(d8).getPiece().get();
+
+        assertTrue(chessBoard.canMove(chessBoard.at(d1).getPiece().get(), d8));
+        assertDoesNotThrow(() -> chessBoard.tryToMove(chessBoard.at(d1).getPiece().get(), d8));
+        assertTrue(chessBoard.getOutOfTheBoardPieces().contains(queen));
+    }
+
+    @Test
     void should_not_be_able_to_move_king_on_the_other_man_hole() {
         manHoleEffect = new ManHoleEffect(c2, e6);
         chessBoard.removePieceFromTheBoard(chessBoard.at(e7).getPiece().get());

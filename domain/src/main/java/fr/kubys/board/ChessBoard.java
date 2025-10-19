@@ -93,8 +93,7 @@ public class ChessBoard {
     }
 
     public boolean canAttack(Piece piece, Position positionToMoveOn) {
-        return (isPositionTheoreticallyReachable(piece, positionToMoveOn) || doesEffectAllowToMove(piece, positionToMoveOn))
-                && emptyPath(piece, positionToMoveOn)
+        return ((isPositionTheoreticallyReachable(piece, positionToMoveOn) && emptyPath(piece, positionToMoveOn)) || doesEffectAllowToMove(piece, positionToMoveOn))
                 && isEnemyOrEmpty(piece, positionToMoveOn);
     }
 
