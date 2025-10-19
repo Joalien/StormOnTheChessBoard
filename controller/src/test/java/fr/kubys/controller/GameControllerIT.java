@@ -39,7 +39,7 @@ class GameControllerIT {
         assertNotNull(chessBoardService.getWhite());
         assertNotNull(chessBoardService.getEffects());
         assertTrue(chessBoardService.getEffects().isEmpty());
-        assertFalse(chessBoardService.getCards().isEmpty());
+        assertFalse(chessBoardService.getStack().isEmpty());
         assertEquals(32, chessBoardService.getPieces().size());
     }
 

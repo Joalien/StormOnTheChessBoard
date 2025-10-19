@@ -14,7 +14,7 @@ public interface ChessBoardReadService {
 
     Set<Effect> getEffects();
 
-    List<Card<? extends CardParam>> getCards();
+    List<Card<? extends CardParam>> getStack();
 
     Player getCurrentPlayer();
 

@@ -21,7 +21,7 @@ public class GameStateController implements ChessBoardService {
     private ChessBoard chessBoard;
     private Player white;
     private Player black;
-    private List<Card<? extends CardParam>> cards;
+    private List<Card<? extends CardParam>> stack;
     private Player currentPlayer;
     private StateEnum currentState;
 
@@ -45,24 +45,24 @@ public class GameStateController implements ChessBoardService {
     }
 
     private void initDeck(long seed) {
-        cards = new LinkedList<>();
-        cards.add(new BlackHoleCard());
-        cards.add(new BombingCard());
-        cards.add(new ChargeCard());
-        cards.add(new CourtlyLoveCard());
-        cards.add(new HomeCard());
-        cards.add(new KangarooCard());
-        cards.add(new LightweightSquadCard());
-        cards.add(new MagnetismCard());
-        cards.add(new QuadrilleCard());
-        cards.add(new ReflectedBishopCard());
-        cards.add(new StableCard());
+        stack = new LinkedList<>();
+        stack.add(new BlackHoleCard());
+        stack.add(new BombingCard());
+        stack.add(new ChargeCard());
+        stack.add(new CourtlyLoveCard());
+        stack.add(new HomeCard());
+        stack.add(new KangarooCard());
+        stack.add(new LightweightSquadCard());
+        stack.add(new MagnetismCard());
+        stack.add(new QuadrilleCard());
+        stack.add(new ReflectedBishopCard());
+        stack.add(new StableCard());
 
-        Collections.shuffle(cards, new Random(seed));
+        Collections.shuffle(stack, new Random(seed));
     }
 
     private void dealCard(Player player) {
-        player.getCards().add(cards.remove(0));
+        player.getCards().add(stack.remove(0));
     }
 
     @Override
@@ -115,8 +115,8 @@ public class GameStateController implements ChessBoardService {
     }
 
     @Override
-    public List<Card<? extends CardParam>> getCards() {
-        return this.cards;
+    public List<Card<? extends CardParam>> getStack() {
+        return this.stack;
     }
 
     @Override

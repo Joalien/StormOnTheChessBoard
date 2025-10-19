@@ -25,7 +25,7 @@ public class OutputMapper {
         return ChessBoardDto.builder()
                 .id(gameId)
                 .effects(chessBoard.getEffects().stream().map(OutputMapper::map).collect(Collectors.toSet()))
-                .deck(chessBoard.getCards().stream().map(OutputMapper::map).collect(Collectors.toSet()))
+                .deck(chessBoard.getStack().stream().map(OutputMapper::map).collect(Collectors.toSet()))
                 .whitePlayer(map(chessBoard.getWhite()))
                 .blackPlayer(map(chessBoard.getBlack()))
                 .currentTurn(chessBoard.getCurrentPlayer().getColor().name().toLowerCase())

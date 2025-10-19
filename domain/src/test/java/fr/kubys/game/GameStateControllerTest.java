@@ -28,7 +28,7 @@ class GameStateControllerTest {
         assertEquals(gameStateController.getWhite(), gameStateController.getCurrentPlayer());
         assertEquals(4, gameStateController.getWhite().getCards().size());
         assertEquals(4, gameStateController.getBlack().getCards().size());
-        assertFalse(gameStateController.getCards().isEmpty());
+        assertFalse(gameStateController.getStack().isEmpty());
         assertEquals(Color.WHITE, gameStateController.getWhite().getColor());
         assertEquals(Color.BLACK, gameStateController.getBlack().getColor());
     }
@@ -38,7 +38,7 @@ class GameStateControllerTest {
         LightweightSquadCard card = new LightweightSquadCard();
         gameStateController.getCurrentPlayer().getCards().clear();
         gameStateController.getCurrentPlayer().getCards().add(card);
-        gameStateController.getCards().remove(card);
+        gameStateController.getStack().remove(card);
         assertEquals(1, gameStateController.getCurrentPlayer().getCards().size());
         assertTrue(gameStateController.getCurrentPlayer().getCards().contains(card));
 
