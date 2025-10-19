@@ -19,5 +19,6 @@ public class ChessBoardDto {
     private PlayerDto whitePlayer;
     private PlayerDto blackPlayer;
     private Set<CardOutputDto> deck;
+    private Set<CardOutputDto> discard;
     private String currentTurn;
 }
