@@ -7,16 +7,18 @@ import fr.kubys.piece.Square;
 import java.util.Optional;
 
 public class BlackHoleSquare extends Square {
+    private final BlackHolePiece blackHolePiece = new BlackHolePiece();
     public BlackHoleSquare(Position position) {
         super(position);
+        blackHolePiece.setPosition(position);
     }
 
     public Optional<Piece> getPiece() {
-        throw new BlackHoleException("You cannot move a black hole!");
+        return Optional.of(blackHolePiece);
     }
 
     public void setPiece(Piece piece) {
-        throw new BlackHoleException("You cannot move a black hole!");
+        throw new BlackHoleException("You cannot move a piece on a black hole!");
     }
 
     public Piece removePiece() {

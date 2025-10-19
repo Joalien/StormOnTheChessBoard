@@ -172,7 +172,7 @@ public class ChessBoard {
 
     public Piece removePieceFromTheBoard(Piece piece) {
         if (piece instanceof King)
-            throw new IllegalStateException("You should not be able to take %s".formatted(piece));
+            throw new IllegalStateException("You should not be able to take %s".formatted(piece)); // FIXME not for Quadrille ;)
         at(piece.getPosition()).setPiece(null);
         piece.setPosition(null);
         outOfTheBoardPieces.add(piece);
@@ -182,6 +182,7 @@ public class ChessBoard {
         return piece;
     }
 
+    // Throw exception instead of false to send a message to explain why it is not possible to move
     public boolean canMove(Piece piece, Position positionToMoveOn) {
         if (!canAttack(piece, positionToMoveOn))
             throw new IllegalMoveException("You cannot move %s to %s".formatted(piece, positionToMoveOn));
