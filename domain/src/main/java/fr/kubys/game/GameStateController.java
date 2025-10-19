@@ -16,7 +16,7 @@ import java.util.stream.Stream;
 
 public class GameStateController implements ChessBoardService {
 
-    private static final int NUMBER_OF_CARDS_IN_HAND = 4;
+    private static final int NUMBER_OF_CARDS_IN_HAND = 5;
     //    private static final Logger log = org.slf4j.LoggerFactory.getLogger(GameStateController.class);
     private ChessBoard chessBoard;
     private Player white;
