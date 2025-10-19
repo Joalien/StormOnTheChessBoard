@@ -18,7 +18,7 @@ class BlackHoleSquareTest {
         ChessBoard chessBoard = ChessBoard.createEmpty();
         chessBoard.setSquare(new BlackHoleSquare(e4));
 
-        assertThrows(BlackHoleSquare.BlackHoleException.class, () -> chessBoard.tryToMove(chessBoard.at(e4).getPiece().get(), e5));
+        assertThrows(IllegalMoveException.class, () -> chessBoard.tryToMove(chessBoard.at(e4).getPiece().get(), e5));
     }
 
     @Test

@@ -5,6 +5,16 @@ import {CardParameters} from "./component/CardParameters";
 import {toast, ToastContainer} from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 
+// Add CSS animation for rotating black hole
+const style = document.createElement('style');
+style.textContent = `
+    @keyframes rotate {
+        from { transform: rotate(0deg); }
+        to { transform: rotate(360deg); }
+    }
+`;
+document.head.appendChild(style);
+
 const base = "http://localhost:9000/chessboard/";
 
 const highlight = {boxShadow: "rgba(255, 0, 0, 0.75) 0px 0px 20px 0px inset"};
@@ -44,6 +54,17 @@ export default function App() {
                     width: squareWidth * 0.85,
                     height: squareWidth * 0.85,
                     padding: squareWidth * 0.075
+                }}
+            />
+        ),
+        BlackHole: ({ squareWidth }) => (
+            <img
+                src={require('./assets/images/BlackHole.png')}
+                alt="BlackHole"
+                style={{
+                    width: squareWidth,
+                    height: squareWidth,
+                    animation: 'rotate 60s linear infinite'
                 }}
             />
         )
