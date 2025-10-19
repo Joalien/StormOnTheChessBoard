@@ -24,6 +24,31 @@ export default function App() {
     const [selectedCard, setSelectedCard] = useState(null)
     const [selectedParam, setSelectedParam] = useState(null)
 
+    const customPieces = {
+        wKangaroo: ({ squareWidth }) => (
+            <img
+                src={require('./assets/images/wKangaroo.svg')}
+                alt="White Kangaroo"
+                style={{
+                    width: squareWidth * 0.85,
+                    height: squareWidth * 0.85,
+                    padding: squareWidth * 0.075
+                }}
+            />
+        ),
+        bKangaroo: ({ squareWidth }) => (
+            <img
+                src={require('./assets/images/bKangaroo.svg')}
+                alt="Black Kangaroo"
+                style={{
+                    width: squareWidth * 0.85,
+                    height: squareWidth * 0.85,
+                    padding: squareWidth * 0.075
+                }}
+            />
+        )
+    }
+
 
     useEffect(() => { // FIXME use framework tool to fetch data on startup
         fetchGame(gameId)
@@ -127,6 +152,7 @@ export default function App() {
                         arePiecesDraggable={selectedCard === null}
                         boardOrientation={currentPlayerColor}
                         onSquareRightClick={onSquareRightClick}
+                        customPieces={customPieces}
                         customSquareStyles={selectedCard && selectedParam && [...Object.values(selectedCard.param)].reduce((obj, square) => ({
                             ...obj,
                             [square]: highlight
