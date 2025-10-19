@@ -76,6 +76,13 @@ public class GameController {
         return ResponseEntity.ok().build();
     }
 
+    @PostMapping("/{gameId}/undo")
+    @CrossOrigin(origins = "*")
+    public ResponseEntity<Integer> undo(@PathVariable Integer gameId) {
+        chessBoardRepository.undoLastCommand(gameId);
+        return ResponseEntity.ok().build();
+    }
+
     @GetMapping("/{gameId}")
     @CrossOrigin(origins = "*")
     public ChessBoardDto getGameById(@PathVariable Integer gameId) {

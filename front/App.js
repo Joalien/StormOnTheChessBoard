@@ -122,6 +122,15 @@ export default function App() {
         } else await showErrorMessage(res);
     }
 
+    async function undo() {
+        const res = await fetch(base + gameId + "/undo", {method: 'POST'})
+        if (res.ok) {
+            setSelectedCard(null)
+            setSelectedParam(null)
+            fetchGame()
+        } else await showErrorMessage(res);
+    }
+
     function fetchGame() {
         fetch(base + gameId)
             .then(response => response.json())
@@ -211,6 +220,11 @@ export default function App() {
                 onClick={endTurn}
             >
                 Passer son Tour
+            </button>
+            <button
+                onClick={undo}
+            >
+                Annuler la précédente action
             </button>
         </div>
     );

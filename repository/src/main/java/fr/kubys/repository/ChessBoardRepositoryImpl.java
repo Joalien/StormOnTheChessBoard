@@ -46,7 +46,8 @@ public class ChessBoardRepositoryImpl implements ChessBoardRepository {
 
     @Override
     public void undoLastCommand(Integer gameId) {
-        throw new UnsupportedOperationException("Not implemented yet but easy to do ;)");
+        int lastActionIndex = store.get(gameId).size() - 1;
+        store.get(gameId).remove(lastActionIndex);
     }
 
     @Override
