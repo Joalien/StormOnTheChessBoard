@@ -48,6 +48,7 @@ public class GameStateController implements ChessBoardService {
     private void initDeck(long seed) {
         stack = new LinkedList<>();
         discard = new LinkedList<>();
+        stack.add(new ManHoleCard());
         stack.add(new BlackHoleCard());
         stack.add(new BombingCard());
         stack.add(new ChargeCard());

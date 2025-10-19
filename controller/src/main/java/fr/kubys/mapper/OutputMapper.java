@@ -35,9 +35,10 @@ public class OutputMapper {
                 .build();
     }
 
-    public static EffectDto map(Effect c) {
+    public static EffectDto map(Effect e) {
         return EffectDto.builder()
-                .name(c.getName())
+                .name(e.getClass().getSimpleName())
+                .positions(e.getPositions())
                 .build();
     }
 

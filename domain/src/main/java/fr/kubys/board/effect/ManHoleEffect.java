@@ -6,6 +6,7 @@ import fr.kubys.piece.Piece;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 
 public class ManHoleEffect extends Effect {
     //    private static final Logger log = org.slf4j.LoggerFactory.getLogger(ManHoleEffect.class);
@@ -13,6 +14,7 @@ public class ManHoleEffect extends Effect {
 
     public ManHoleEffect(Position position1, Position position2) {
         super("Bouche d'égout");
+        this.getPositions().addAll(Set.of(position1, position2));
         this.holes.put(position1, position2);
         this.holes.put(position2, position1);
     }

@@ -4,7 +4,6 @@ import {Player} from "./component/Player";
 import {CardParameters} from "./component/CardParameters";
 import {toast, ToastContainer} from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
-
 // Add CSS animation for rotating black hole
 const style = document.createElement('style');
 style.textContent = `
@@ -14,7 +13,6 @@ style.textContent = `
     }
 `;
 document.head.appendChild(style);
-
 const base = "http://localhost:9000/chessboard/";
 
 const highlight = {boxShadow: "rgba(255, 0, 0, 0.75) 0px 0px 20px 0px inset"};
@@ -33,6 +31,7 @@ export default function App() {
     const [blackPlayer, setBlackPlayer] = useState({cards: []});
     const [selectedCard, setSelectedCard] = useState(null)
     const [selectedParam, setSelectedParam] = useState(null)
+    const [effects, setEffects] = useState([])
 
     const customPieces = {
         wKangaroo: ({ squareWidth }) => (
@@ -129,6 +128,7 @@ export default function App() {
             .then(data => {
                 setGame(data.pieces)
                 setCurrentPlayerColor(data.currentTurn)
+                setEffects(data.effects || [])
             })
     }
 
@@ -147,6 +147,23 @@ export default function App() {
             else selectedCard.param[selectedParam] = square
             setSelectedCard({...selectedCard})
         }
+    }
+
+    function customSquares() {
+        const squares = {};
+
+        effects.forEach(effect => {
+            if (effect.name === "ManHoleEffect") {
+                for (const position of effect.positions) {
+                    squares[position] = {
+                        backgroundImage: `url(${require('./assets/images/ManHoleEffect.png')})`,
+                        backgroundSize: 'cover'
+                    };
+                }
+            }
+        });
+
+        return squares;
     }
 
     return (
@@ -174,10 +191,13 @@ export default function App() {
                         boardOrientation={currentPlayerColor}
                         onSquareRightClick={onSquareRightClick}
                         customPieces={customPieces}
-                        customSquareStyles={selectedCard && selectedParam && [...Object.values(selectedCard.param)].reduce((obj, square) => ({
-                            ...obj,
-                            [square]: highlight
-                        }), {})}
+                        customSquareStyles={{
+                            ...customSquares(),  // Toujours appliqué
+                            ...(selectedCard && selectedParam && [...Object.values(selectedCard.param)].reduce((obj, square) => ({
+                                ...obj,
+                                [square]: highlight
+                            }), {}))
+                        }}
             />
             {selectedCard && <CardParameters card={selectedCard} selectedParam={selectedParam} setSelectedParam={setSelectedParam} playCardCallback={playCard}/>}
             <Player player={currentPlayerColor === "black" ? blackPlayer : whitePlayer} showCard={showCard}
