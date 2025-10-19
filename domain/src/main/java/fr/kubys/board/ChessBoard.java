@@ -177,7 +177,7 @@ public class ChessBoard {
         outOfTheBoardPieces.add(piece);
 //        log.info("{} has been taken and removed out of the board", piece);
 
-        effects.forEach(effect -> effect.afterRemovingPieceHook(this, piece));
+        new ArrayList<>(effects).forEach(effect -> effect.afterRemovingPieceHook(this, piece)); // duplicate the list to be able to remove an element while iterating
         return piece;
     }
 

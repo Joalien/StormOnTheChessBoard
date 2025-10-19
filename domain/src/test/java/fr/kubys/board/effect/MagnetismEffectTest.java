@@ -60,9 +60,10 @@ class MagnetismEffectTest {
 
     @Test
     void should_remove_effect_if_piece_is_removed() {
+        chessBoard.addEffect(new MagnetismEffect(chessBoard.at(h8).getPiece().get())); // add another effect in the list to test ConcurrentModificationException
         chessBoard.removePieceFromTheBoard(chessBoard.at(c2).getPiece().get());
 
-        assertTrue(chessBoard.getEffects().isEmpty());
+        assertEquals(1, chessBoard.getEffects().size());
         assertDoesNotThrow(() -> chessBoard.tryToMove(chessBoard.at(b2).getPiece().get(), b4));
         assertDoesNotThrow(() -> chessBoard.tryToMove(chessBoard.at(b1).getPiece().get(), c3));
     }
