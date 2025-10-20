@@ -6,12 +6,14 @@ function injectStyles() {
 
     const style = document.createElement('style');
     style.textContent = `
-        @keyframes float {
+        @keyframes pulseBackground {
             0%, 100% {
-                transform: scale(1);
+                background-size: 100% 100%;
+                background-position: center;
             }
             50% {
-                transform: scale(1.05);
+                background-size: 105% 105%;
+                background-position: center;
             }
         }
     `;
@@ -23,8 +25,9 @@ export const ManHoleEffect = {
         injectStyles();
         return {
             backgroundImage: `url(${require('../../assets/images/effects/ManHoleEffect.png')})`,
-            backgroundSize: 'cover',
-            animation: 'float 2s ease-in-out infinite'
+            backgroundSize: '100% 100%',
+            backgroundPosition: 'center',
+            animation: 'pulseBackground 4s ease-in-out infinite'
         };
     }
 };
