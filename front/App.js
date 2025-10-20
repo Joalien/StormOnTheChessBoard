@@ -4,17 +4,8 @@ import {Player} from "./component/Player";
 import {CardParameters} from "./component/CardParameters";
 import {toast, ToastContainer} from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
-// Add CSS animation for rotating black hole
-const style = document.createElement('style');
-style.textContent = `
-    @keyframes rotate {
-        from { transform: rotate(0deg); }
-        to { transform: rotate(360deg); }
-    }
-`;
-document.head.appendChild(style);
-const base = "http://localhost:9000/chessboard/";
 
+const base = "http://localhost:9000/chessboard/";
 const highlight = {boxShadow: "rgba(255, 0, 0, 0.75) 0px 0px 20px 0px inset"};
 
 async function showErrorMessage(res) {
@@ -33,42 +24,34 @@ export default function App() {
     const [selectedParam, setSelectedParam] = useState(null)
     const [effects, setEffects] = useState([])
 
-    const customPieces = {
-        wKangaroo: ({ squareWidth }) => (
-            <img
-                src={require('./assets/images/wKangaroo.svg')}
-                alt="White Kangaroo"
-                style={{
-                    width: squareWidth * 0.85,
-                    height: squareWidth * 0.85,
-                    padding: squareWidth * 0.075
-                }}
-            />
-        ),
-        bKangaroo: ({ squareWidth }) => (
-            <img
-                src={require('./assets/images/bKangaroo.svg')}
-                alt="Black Kangaroo"
-                style={{
-                    width: squareWidth * 0.85,
-                    height: squareWidth * 0.85,
-                    padding: squareWidth * 0.075
-                }}
-            />
-        ),
-        BlackHole: ({ squareWidth }) => (
-            <img
-                src={require('./assets/images/BlackHole.png')}
-                alt="BlackHole"
-                style={{
-                    width: squareWidth,
-                    height: squareWidth,
-                    animation: 'rotate 60s linear infinite'
-                }}
-            />
-        )
-    }
+    function loadCustomPieces() {
+        const requirePiece = require.context('./component/pieces', false, /\.js$/);
+        const pieces = {};
 
+        requirePiece.keys().forEach(fileName => {
+            const pieceName = fileName.replace('./', '').replace('.js', '');
+            pieces[pieceName] = Object.values(requirePiece(fileName))[0];
+        });
+
+        return pieces;
+    }
+    const customPieces = loadCustomPieces();
+    function customSquares() {
+        const squares = {};
+        const loadEffect = require.context('./component/effects', false, /\.js$/);
+
+        effects.forEach(effect => {
+            const effectFileName = `./${effect.name}.js`;
+
+            if (loadEffect.keys().includes(effectFileName)) {
+                const effectConfig = Object.values(loadEffect(effectFileName))[0];
+                effect.positions.forEach(position => {
+                    squares[position] = effectConfig.applyStyle(position);
+                });
+            }
+        });
+        return squares;
+    }
 
     useEffect(() => { // FIXME use framework tool to fetch data on startup
         fetchGame(gameId)
@@ -138,6 +121,8 @@ export default function App() {
                 setGame(data.pieces)
                 setCurrentPlayerColor(data.currentTurn)
                 setEffects(data.effects || [])
+                setBlackPlayer(data.blackPlayer)
+                setWhitePlayer(data.whitePlayer)
             })
     }
 
@@ -156,23 +141,6 @@ export default function App() {
             else selectedCard.param[selectedParam] = square
             setSelectedCard({...selectedCard})
         }
-    }
-
-    function customSquares() {
-        const squares = {};
-
-        effects.forEach(effect => {
-            if (effect.name === "ManHoleEffect") {
-                for (const position of effect.positions) {
-                    squares[position] = {
-                        backgroundImage: `url(${require('./assets/images/ManHoleEffect.png')})`,
-                        backgroundSize: 'cover'
-                    };
-                }
-            }
-        });
-
-        return squares;
     }
 
     return (

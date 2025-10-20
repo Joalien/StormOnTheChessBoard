@@ -11,6 +11,7 @@ public class MagnetismEffect extends Effect {
     public MagnetismEffect(Piece piece) {
         super("Magnétisme");
         this.piece = piece;
+        this.getPositions().add(piece.getPosition());
     }
 
     @Override
