@@ -2,7 +2,9 @@ package fr.kubys.board.effect;
 
 import fr.kubys.board.CheckException;
 import fr.kubys.board.ChessBoard;
+import fr.kubys.core.Color;
 import fr.kubys.piece.Piece;
+import fr.kubys.piece.extra.Kangaroo;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

@@ -9,6 +9,7 @@ import fr.kubys.piece.*;
 
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static fr.kubys.core.Position.*;
 
@@ -107,10 +108,10 @@ public class ChessBoard {
     }
 
     public boolean emptyPath(Piece piece, Position squareToGo) {
-        return piece.squaresOnThePath(squareToGo).stream()
+        Stream<Optional<Piece>> piecesOnPath = piece.squaresOnThePath(squareToGo).stream()
                 .map(this::at)
-                .map(Square::getPiece)
-                .allMatch(Optional::isEmpty);
+                .map(Square::getPiece);
+        return piece.hasEmptyPath().test(piecesOnPath);
     }
 
     boolean isEnemyOrEmpty(Piece piece, Position positionToMoveOn) {

@@ -7,14 +7,19 @@ import fr.kubys.core.Row;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.Predicate;
+import java.util.stream.Stream;
 
 public abstract class Piece {
 
     protected Color color;
     private Position position;
+
+    public Predicate<Stream<Optional<Piece>>> hasEmptyPath() {
+        return path -> path.allMatch(Optional::isEmpty);
+    }
 
     public Piece(Color color) {
         this.color = color;
