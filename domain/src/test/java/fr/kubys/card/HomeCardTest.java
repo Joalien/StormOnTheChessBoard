@@ -1,5 +1,6 @@
 package fr.kubys.card;
 
+import fr.kubys.board.CannotTakeKingException;
 import fr.kubys.board.ChessBoard;
 import fr.kubys.card.params.PieceToPositionCardParam;
 import fr.kubys.core.Color;
@@ -127,7 +128,7 @@ class HomeCardTest {
             HomeCard homeCard = new HomeCard();
             chessBoard.setTurn(Color.WHITE);
 
-            assertThrows(IllegalStateException.class, () -> homeCard.playOn(chessBoard, new PieceToPositionCardParam(knight, g1)));
+            assertThrows(CannotTakeKingException.class, () -> homeCard.playOn(chessBoard, new PieceToPositionCardParam(knight, g1)));
 
             assertEquals(knight, chessBoard.at(e4).getPiece().get());
             assertEquals(king, chessBoard.at(g1).getPiece().get());

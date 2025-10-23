@@ -1,5 +1,6 @@
 package fr.kubys.card;
 
+import fr.kubys.board.CannotTakeKingException;
 import fr.kubys.board.ChessBoard;
 import fr.kubys.card.params.PieceToPositionCardParam;
 import fr.kubys.piece.Pawn;
@@ -32,7 +33,11 @@ public class HomeCard extends Card<PieceToPositionCardParam> {
                 .map(color -> color == param.piece().getColor())
                 .orElse(false);
         if (positionToMoveOnHasSameColorPiece)
-            throw new IllegalArgumentException("You cannot rollback on a square occupied by an ally param.piece(");
+            throw new IllegalArgumentException("You cannot rollback on a square occupied by an ally piece");
+        if (chessBoard.at(param.positionToMoveOn()).getPiece().map(Piece::isKing).orElse(false)) {
+            throw new CannotTakeKingException();
+        }
+
     }
 
     @Override

@@ -33,9 +33,8 @@ class QuadrilleCardTest {
         a8Rock = (Rock) chessBoard.at(a8).getPiece().get();
         h8Rock = (Rock) chessBoard.at(h8).getPiece().get();
         clockwiseQuadrille = new QuadrilleCard();
-chessBoard.setTurn(Color.WHITE);
         counterclockwiseQuadrille = new QuadrilleCard();
-chessBoard.setTurn(Color.WHITE);
+        chessBoard.setTurn(Color.WHITE);
     }
 
     @Nested
@@ -77,12 +76,27 @@ chessBoard.setTurn(Color.WHITE);
         @Test
         void should_work_on_empty_chessboard() {
             chessBoard = ChessBoard.createEmpty();
+
             assertDoesNotThrow(() -> clockwiseQuadrille.playOn(chessBoard, new QuadrilleCardParam(QuadrilleCard.Direction.CLOCKWISE)));
 
             assertTrue(chessBoard.at(h1).getPiece().isEmpty());
             assertTrue(chessBoard.at(h8).getPiece().isEmpty());
             assertTrue(chessBoard.at(a8).getPiece().isEmpty());
             assertTrue(chessBoard.at(a1).getPiece().isEmpty());
+        }
+        @Test
+        void should_turn_kings() {
+            chessBoard = ChessBoard.createEmpty();
+            King king = new King(Color.WHITE);
+            chessBoard.add(king, h1);
+
+            assertDoesNotThrow(() -> clockwiseQuadrille.playOn(chessBoard, new QuadrilleCardParam(QuadrilleCard.Direction.CLOCKWISE)));
+
+            assertTrue(chessBoard.at(h1).getPiece().isEmpty());
+            assertTrue(chessBoard.at(h8).getPiece().isEmpty());
+            assertTrue(chessBoard.at(a8).getPiece().isEmpty());
+            assertEquals(king, chessBoard.at(a1).getPiece().get());
+            assertFalse(chessBoard.getOutOfTheBoardPieces().contains(king));
         }
     }
 

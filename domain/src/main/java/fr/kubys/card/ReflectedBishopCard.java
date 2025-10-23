@@ -1,10 +1,12 @@
 package fr.kubys.card;
 
+import fr.kubys.board.CannotTakeKingException;
 import fr.kubys.board.ChessBoard;
 import fr.kubys.card.params.ReflectedBishopCardParam;
 import fr.kubys.core.Color;
 import fr.kubys.core.Position;
 import fr.kubys.piece.Bishop;
+import fr.kubys.piece.Piece;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -39,6 +41,9 @@ public class ReflectedBishopCard extends Card<ReflectedBishopCardParam> {
 
         if (!reachablePositions.contains(param.positionToMoveOn()))
             throw new IllegalArgumentException("%s cannot reflect to %s".formatted(param.bishop(), param.positionToMoveOn()));
+        if (chessBoard.at(param.positionToMoveOn()).getPiece().map(Piece::isKing).orElse(false)) {
+            throw new CannotTakeKingException();
+        }
     }
 
     private Bishop createFakeBishop(ChessBoard chessBoard, Position s, Color bishopColor) {

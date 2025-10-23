@@ -6,6 +6,8 @@ import fr.kubys.core.File;
 import fr.kubys.core.Position;
 import fr.kubys.core.Row;
 import fr.kubys.piece.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -14,6 +16,7 @@ import java.util.stream.Stream;
 import static fr.kubys.core.Position.*;
 
 public class ChessBoard {
+    private static final Logger log = LoggerFactory.getLogger(ChessBoard.class);
 //    private static final Logger log = org.slf4j.LoggerFactory.getLogger(BombingEffect.class);
 
     private final Map<Position, Square> board = new HashMap<>(64);
@@ -172,7 +175,7 @@ public class ChessBoard {
 
     public Piece removePieceFromTheBoard(Piece piece) {
         if (piece instanceof King)
-            throw new IllegalStateException("You should not be able to take %s".formatted(piece)); // FIXME not for Quadrille ;)
+            log.warn("{} is removed from the board, are you sure? Or should you throw CannotTakeKingException?", piece);
         at(piece.getPosition()).setPiece(null);
         piece.setPosition(null);
         outOfTheBoardPieces.add(piece);

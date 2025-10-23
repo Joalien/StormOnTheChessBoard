@@ -1,5 +1,6 @@
 package fr.kubys.card;
 
+import fr.kubys.board.CannotTakeKingException;
 import fr.kubys.board.CheckException;
 import fr.kubys.board.ChessBoard;
 import fr.kubys.card.params.ReflectedBishopCardParam;
@@ -79,7 +80,7 @@ class ReflectedBishopCardTest {
             King king = new King(Color.BLACK);
             chessBoard.add(king, f7);
 
-            assertThrows(IllegalStateException.class, () -> reflectedBishop.playOn(chessBoard, new ReflectedBishopCardParam(bishop, f7)));
+            assertThrows(CannotTakeKingException.class, () -> reflectedBishop.playOn(chessBoard, new ReflectedBishopCardParam(bishop, f7)));
 
             assertEquals(bishop, chessBoard.at(e2).getPiece().get());
             assertEquals(king, chessBoard.at(f7).getPiece().get());
