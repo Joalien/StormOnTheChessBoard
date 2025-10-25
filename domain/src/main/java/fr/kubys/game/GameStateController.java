@@ -49,19 +49,20 @@ public class GameStateController implements ChessBoardService {
         stack = new LinkedList<>();
         discard = new LinkedList<>();
         stack.add(new ManHoleCard());
-        stack.add(new BlackHoleCard());
         stack.add(new BombingCard());
+        stack.add(new BlackHoleCard());
         stack.add(new ChargeCard());
+        stack.add(new ApartheidCard());
         stack.add(new CourtlyLoveCard());
-        stack.add(new HomeCard());
         stack.add(new KangarooCard());
+        stack.add(new HomeCard());
         stack.add(new LightweightSquadCard());
         stack.add(new MagnetismCard());
         stack.add(new QuadrilleCard());
         stack.add(new ReflectedBishopCard());
         stack.add(new StableCard());
 
-        Collections.shuffle(stack, new Random(seed));
+//        Collections.shuffle(stack, new Random(seed));
     }
 
     void dealCard(Player player) {

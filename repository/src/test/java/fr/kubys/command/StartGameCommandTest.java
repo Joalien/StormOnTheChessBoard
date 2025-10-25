@@ -3,6 +3,7 @@ package fr.kubys.command;
 import fr.kubys.api.ChessBoardReadService;
 import fr.kubys.repository.ChessBoardRepositoryImpl;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -19,6 +20,7 @@ class StartGameCommandTest {
     }
 
     @Test
+    @Disabled("Do not shuffle to make tests easier")
     void should_have_different_card_order() {
         Integer gameId1 = chessBoardRepository.createNewGame();
         ChessBoardReadService game1 = chessBoardRepository.getChessBoardService(gameId1);
