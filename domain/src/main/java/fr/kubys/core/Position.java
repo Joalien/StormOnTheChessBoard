@@ -67,6 +67,10 @@ public enum Position {
                 getFile().distanceTo(position.getFile()) <= 1;
     }
 
+    public boolean isWhiteSquare() {
+        return (getFile().getFileNumber() + getRow().getRowNumber()) % 2 == 1;
+    }
+
     @Override
     public String toString() {
         return this.name();
