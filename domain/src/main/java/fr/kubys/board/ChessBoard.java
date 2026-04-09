@@ -171,6 +171,16 @@ public class ChessBoard {
 //        log.info("{} moves from {} to {}", piece, piece.getPosition(), positionToMoveOn);
         at(piece.getPosition()).removePiece();
         add(piece, positionToMoveOn);
+
+        if (piece instanceof Pawn pawn && pawn.isOnPromotionRow()) {
+            promote(pawn);
+        }
+    }
+
+    private void promote(Pawn pawn) {
+        Position position = pawn.getPosition();
+        removePieceFromTheBoard(pawn);
+        add(new Queen(pawn.getColor()), position);
     }
 
     public Piece removePieceFromTheBoard(Piece piece) {

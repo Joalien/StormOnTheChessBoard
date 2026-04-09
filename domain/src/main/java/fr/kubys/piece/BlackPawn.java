@@ -18,6 +18,11 @@ public class BlackPawn extends Pawn {
     }
 
     @Override
+    protected Row promotionRow() {
+        return Row.One;
+    }
+
+    @Override
     public Optional<Position> twoSquaresForward() {
         return this.getRow().previous()
                 .flatMap(Row::previous)

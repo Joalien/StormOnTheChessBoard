@@ -2,10 +2,7 @@ package fr.kubys.board;
 
 import fr.kubys.core.Color;
 import fr.kubys.core.Position;
-import fr.kubys.piece.BlackPawn;
-import fr.kubys.piece.Pawn;
-import fr.kubys.piece.Queen;
-import fr.kubys.piece.WhitePawn;
+import fr.kubys.piece.*;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
@@ -129,6 +126,62 @@ public class PawnIT {
             chessBoard.add(pawn, e5);
 
             assertThrows(IllegalMoveException.class, () -> chessBoard.canMove(pawn, e5));
+        }
+    }
+
+    @Nested
+    class Promotion {
+
+        @Test
+        void white_pawn_should_promote_to_queen_on_row_8() {
+            ChessBoard chessBoard = ChessBoard.createEmpty();
+            WhitePawn pawn = new WhitePawn();
+            chessBoard.add(pawn, e7);
+
+            chessBoard.tryToMove(pawn, e8);
+
+            assertInstanceOf(Queen.class, chessBoard.at(e8).getPiece().get());
+            assertEquals(Color.WHITE, chessBoard.at(e8).getPiece().get().getColor());
+            assertTrue(chessBoard.at(e7).getPiece().isEmpty());
+        }
+
+        @Test
+        void black_pawn_should_promote_to_queen_on_row_1() {
+            ChessBoard chessBoard = ChessBoard.createEmpty();
+            BlackPawn pawn = new BlackPawn();
+            chessBoard.add(pawn, e2);
+
+            chessBoard.tryToMove(pawn, e1);
+
+            assertInstanceOf(Queen.class, chessBoard.at(e1).getPiece().get());
+            assertEquals(Color.BLACK, chessBoard.at(e1).getPiece().get().getColor());
+            assertTrue(chessBoard.at(e2).getPiece().isEmpty());
+        }
+
+        @Test
+        void white_pawn_should_promote_when_capturing_on_row_8() {
+            ChessBoard chessBoard = ChessBoard.createEmpty();
+            WhitePawn pawn = new WhitePawn();
+            chessBoard.add(pawn, e7);
+            Knight enemy = new Knight(Color.BLACK);
+            chessBoard.add(enemy, d8);
+
+            chessBoard.tryToMove(pawn, d8);
+
+            assertInstanceOf(Queen.class, chessBoard.at(d8).getPiece().get());
+            assertEquals(Color.WHITE, chessBoard.at(d8).getPiece().get().getColor());
+            assertTrue(chessBoard.getOutOfTheBoardPieces().contains(enemy));
+        }
+
+        @Test
+        void white_pawn_should_not_promote_before_row_8() {
+            ChessBoard chessBoard = ChessBoard.createEmpty();
+            WhitePawn pawn = new WhitePawn();
+            chessBoard.add(pawn, e6);
+
+            chessBoard.tryToMove(pawn, e7);
+
+            assertInstanceOf(Pawn.class, chessBoard.at(e7).getPiece().get());
         }
     }
 }

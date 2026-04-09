@@ -18,6 +18,11 @@ public class WhitePawn extends Pawn {
     }
 
     @Override
+    protected Row promotionRow() {
+        return Row.Eight;
+    }
+
+    @Override
     public Optional<Position> twoSquaresForward() {
         return this.getRow().next()
                 .flatMap(Row::next)
