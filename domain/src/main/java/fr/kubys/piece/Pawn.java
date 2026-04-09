@@ -35,7 +35,7 @@ public abstract class Pawn extends Piece {
         boolean moveForward = color == null && file == getFile() && (moveTwoSquaresFromStart || moveOneSquare);
 
         boolean takePiece = moveOneSquare && getFile().distanceTo(file) == 1;
-        boolean takeEnemyPiece = color == getColor().opposite() && takePiece;
+        boolean takeEnemyPiece = color != null && color != getColor() && takePiece;
 
         return moveForward || takeEnemyPiece;
     }

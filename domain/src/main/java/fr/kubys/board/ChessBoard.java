@@ -103,8 +103,12 @@ public class ChessBoard {
     }
 
     public boolean canAttack(Piece piece, Position positionToMoveOn) {
+        return canAttack(piece, positionToMoveOn, piece.getColor());
+    }
+
+    private boolean canAttack(Piece piece, Position positionToMoveOn, Color effectiveColor) {
         return ((isPositionTheoreticallyReachable(piece, positionToMoveOn) && emptyPath(piece, positionToMoveOn)) || doesEffectAllowToMove(piece, positionToMoveOn))
-                && isEnemyOrEmpty(piece, positionToMoveOn);
+                && isEnemyOrEmpty(piece, positionToMoveOn, effectiveColor);
     }
 
     private boolean isPositionTheoreticallyReachable(Piece piece, Position positionToMoveOn) {
@@ -124,10 +128,14 @@ public class ChessBoard {
     }
 
     boolean isEnemyOrEmpty(Piece piece, Position positionToMoveOn) {
+        return isEnemyOrEmpty(piece, positionToMoveOn, piece.getColor());
+    }
+
+    boolean isEnemyOrEmpty(Piece piece, Position positionToMoveOn, Color effectiveColor) {
         Optional<Piece> p = at(positionToMoveOn).getPiece();
         return p.isEmpty() || p
                 .map(Piece::getColor)
-                .map(color -> color != piece.getColor())
+                .map(color -> color != effectiveColor)
                 .orElse(false); // color is null
     }
 
@@ -213,8 +221,10 @@ public class ChessBoard {
 
     // Throw exception instead of false to send a message to explain why it is not possible to move
     public boolean canMove(Piece piece, Position positionToMoveOn) {
-        if (!canAttack(piece, positionToMoveOn))
+        if (!canAttack(piece, positionToMoveOn, piece.getColor().resolveFor(currentTurn)))
             throw new IllegalMoveException("You cannot move %s to %s".formatted(piece, positionToMoveOn));
+        if (!piece.isDirectionValid(currentTurn, positionToMoveOn))
+            throw new IllegalMoveException("%s cannot move in this direction".formatted(piece));
         if (doesMovingPieceCheckOurOwnKing(piece, positionToMoveOn))
             throw new CheckException();
         if (isInvalidCastle(piece, positionToMoveOn))
@@ -258,7 +268,8 @@ public class ChessBoard {
         fakeSquare(piece, positionToMoveOn);
         assert fakeSquares.size() == 2; // is that a smell ?
 
-        boolean enemyCanCheck = isKingUnderAttack(piece.getColor());
+        // Check if the king of the player performing the move is under attack
+        boolean enemyCanCheck = isKingUnderAttack(piece.getColor().resolveFor(currentTurn));
 
         piece.setPosition(piece.getPosition());
         unfakeSquare(piece.getPosition());
@@ -300,7 +311,7 @@ public class ChessBoard {
 
     public Set<Piece> enemyPieces(Color allyColor) {
         return getPieces().stream()
-                .filter(p -> p.getColor() == allyColor.opposite())
+                .filter(p -> p.getColor() != allyColor)
                 .collect(Collectors.toSet());
     }
 

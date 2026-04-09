@@ -86,5 +86,13 @@ public abstract class Piece {
         return color;
     }
 
+    public void setColor(Color color) {
+        this.color = color;
+    }
+
+    public boolean isDirectionValid(Color currentTurn, Position target) {
+        return true;
+    }
+
     public abstract boolean isKing();
 }

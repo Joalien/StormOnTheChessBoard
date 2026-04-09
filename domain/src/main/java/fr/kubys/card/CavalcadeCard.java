@@ -14,7 +14,7 @@ public class CavalcadeCard extends Card<PieceToPositionCardParam> {
     protected void validInput(ChessBoard chessBoard, PieceToPositionCardParam param) {
         if (param.piece() == null) throw new IllegalStateException();
         if (param.positionToMoveOn() == null) throw new IllegalStateException();
-        if (param.piece().getColor() != chessBoard.getCurrentTurn())
+        if (param.piece().getColor().cannotBeMovedBy(chessBoard.getCurrentTurn()))
             throw new CannotMoveThisColorException(param.piece().getColor());
 
         Knight fakeKnight = new Knight(param.piece().getColor());

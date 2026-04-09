@@ -17,7 +17,7 @@ public class HomeCard extends Card<PieceToPositionCardParam> {
         if (param.piece() == null) throw new IllegalStateException();
         if (param.positionToMoveOn() == null) throw new IllegalStateException();
         if (param.piece() instanceof Pawn) throw new IllegalArgumentException("You cannot rollback a pawn!");
-        if (param.piece().getColor() != chessBoard.getCurrentTurn()) throw new CannotMoveThisColorException(param.piece().getColor());
+        if (param.piece().getColor().cannotBeMovedBy(chessBoard.getCurrentTurn())) throw new CannotMoveThisColorException(param.piece().getColor());
         boolean positionToMoveOnIsNotStartingPositionOfPiece = ChessBoard.createWithInitialState()
                 .allyPieces(param.piece().getColor())
                 .stream()

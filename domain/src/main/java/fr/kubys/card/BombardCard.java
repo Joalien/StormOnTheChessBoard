@@ -23,7 +23,7 @@ public class BombardCard extends Card<PieceToPositionCardParam> {
         if (param.positionToMoveOn() == null) throw new IllegalStateException();
         if (!(param.piece() instanceof Rock))
             throw new IllegalArgumentException("You must select a Rook");
-        if (param.piece().getColor() != chessBoard.getCurrentTurn())
+        if (param.piece().getColor().cannotBeMovedBy(chessBoard.getCurrentTurn()))
             throw new CannotMoveThisColorException(param.piece().getColor());
         if (chessBoard.getOutOfTheBoardPieces().contains(param.piece()))
             throw new IllegalArgumentException("The selected Rook must be on the board");

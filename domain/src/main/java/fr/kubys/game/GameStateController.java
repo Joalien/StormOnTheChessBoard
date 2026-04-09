@@ -97,7 +97,7 @@ public class GameStateController implements ChessBoardService {
         assertGameHasAlreadyStarted();
         Optional<Piece> pieceToMove = chessBoard.at(from).getPiece();
         if (pieceToMove.isEmpty()) throw new IllegalArgumentException("There is no piece on %s".formatted(from));
-        if (pieceToMove.get().getColor() != getCurrentPlayer().getColor())
+        if (pieceToMove.get().getColor().cannotBeMovedBy(getCurrentPlayer().getColor()))
             throw new IllegalStateException("%s player cannot move %s piece".formatted(getCurrentPlayer().getColor(), pieceToMove.get().getColor()));
 
         currentState.getState().tryToMove(this, from, to);
