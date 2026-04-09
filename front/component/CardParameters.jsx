@@ -1,6 +1,6 @@
 import {Image} from "react-native";
 
-const requireCard = require.context('../assets/images/cards', false, /\.png$/);
+const requireCard = require.context('../assets/images/cards/implemented', false, /\.png$/);
 
 const TYPE_LABELS = {
     BEFORE_TURN:  'Before Move',

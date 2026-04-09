@@ -1,6 +1,6 @@
 import {Image} from "react-native";
 
-const requireCard = require.context('../assets/images/cards', false, /\.png$/);
+const requireCard = require.context('../assets/images/cards/implemented', false, /\.png$/);
 
 export function Card({hidden, name, showCard, isSelected}) {
     const fileName = `./${name}.png`;
