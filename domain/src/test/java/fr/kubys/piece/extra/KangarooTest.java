@@ -2,7 +2,7 @@ package fr.kubys.piece.extra;
 
 import fr.kubys.board.ChessBoard;
 import fr.kubys.card.KangarooCard;
-import fr.kubys.card.params.KangarooCardParam;
+import fr.kubys.card.params.KnightCardParam;
 import fr.kubys.core.Color;
 import fr.kubys.core.File;
 import fr.kubys.core.Position;

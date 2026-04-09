@@ -3,7 +3,7 @@ package fr.kubys.game;
 import fr.kubys.card.Card;
 import fr.kubys.card.KangarooCard;
 import fr.kubys.card.LightweightSquadCard;
-import fr.kubys.card.params.KangarooCardParam;
+import fr.kubys.card.params.KnightCardParam;
 import fr.kubys.card.params.LightweightSquadCardParam;
 import fr.kubys.core.Color;
 import fr.kubys.piece.Pawn;
@@ -87,7 +87,7 @@ class GameStateControllerTest {
 
     private void add_2_cards_in_discard() {
         Card<LightweightSquadCardParam> card1 = new LightweightSquadCard();
-        Card<KangarooCardParam> card2 = new KangarooCard();
+        Card<KnightCardParam> card2 = new KangarooCard();
         gameStateController.getDiscard().add(card1);
         gameStateController.getDiscard().add(card2);
     }

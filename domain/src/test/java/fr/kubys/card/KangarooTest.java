@@ -1,7 +1,7 @@
 package fr.kubys.card;
 
 import fr.kubys.board.ChessBoard;
-import fr.kubys.card.params.KangarooCardParam;
+import fr.kubys.card.params.KnightCardParam;
 import fr.kubys.core.Color;
 import fr.kubys.core.Position;
 import fr.kubys.piece.Knight;
@@ -35,7 +35,7 @@ class KangarooTest {
     class Success {
         @Test
         void should_work() {
-            assertDoesNotThrow(() -> kangaroo.playOn(chessBoard, new KangarooCardParam(knight)));
+            assertDoesNotThrow(() -> kangaroo.playOn(chessBoard, new KnightCardParam(knight)));
             assertInstanceOf(Kangaroo.class, chessBoard.at(b1).getPiece().get());
         }
     }
