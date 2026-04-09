@@ -3,7 +3,7 @@ package fr.kubys.board.effect;
 import fr.kubys.board.CheckException;
 import fr.kubys.board.ChessBoard;
 import fr.kubys.core.Color;
-import fr.kubys.piece.Piece;
+import fr.kubys.piece.*;
 import fr.kubys.piece.extra.Kangaroo;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -72,6 +72,34 @@ class ManHoleEffectTest {
 
         assertThrows(CheckException.class, () -> chessBoard.canMove(blackKing, e6));
         assertThrows(CheckException.class, () -> chessBoard.tryToMove(blackKing, e6));
+    }
+
+    @Test
+    void white_pawn_should_promote_when_teleporting_to_row_8_via_manhole() {
+        ChessBoard board = ChessBoard.createEmpty();
+        WhitePawn pawn = new WhitePawn();
+        board.add(pawn, c4);
+        board.addEffect(new ManHoleEffect(c4, c8));
+
+        board.tryToMove(pawn, c8);
+
+        assertInstanceOf(Queen.class, board.at(c8).getPiece().get());
+        assertEquals(Color.WHITE, board.at(c8).getPiece().get().getColor());
+        assertTrue(board.at(c4).getPiece().isEmpty());
+    }
+
+    @Test
+    void black_pawn_should_promote_when_teleporting_to_row_1_via_manhole() {
+        ChessBoard board = ChessBoard.createEmpty();
+        BlackPawn pawn = new BlackPawn();
+        board.add(pawn, f5);
+        board.addEffect(new ManHoleEffect(f5, f1));
+
+        board.tryToMove(pawn, f1);
+
+        assertInstanceOf(Queen.class, board.at(f1).getPiece().get());
+        assertEquals(Color.BLACK, board.at(f1).getPiece().get().getColor());
+        assertTrue(board.at(f5).getPiece().isEmpty());
     }
 
     @Test

@@ -76,6 +76,10 @@ public class ChessBoard {
         at(position).setPiece(piece);
 
         new ArrayList<>(effects).forEach(effect -> effect.afterMoveHook(this, piece));
+
+        if (piece instanceof Pawn pawn && pawn.isOnPromotionRow()) {
+            promote(pawn);
+        }
     }
 
     public Square at(Position position) {
@@ -171,10 +175,6 @@ public class ChessBoard {
 //        log.info("{} moves from {} to {}", piece, piece.getPosition(), positionToMoveOn);
         at(piece.getPosition()).removePiece();
         add(piece, positionToMoveOn);
-
-        if (piece instanceof Pawn pawn && pawn.isOnPromotionRow()) {
-            promote(pawn);
-        }
     }
 
     private void promote(Pawn pawn) {

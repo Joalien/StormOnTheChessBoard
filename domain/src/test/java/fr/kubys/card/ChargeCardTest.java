@@ -98,6 +98,61 @@ chessBoard.setTurn(Color.WHITE);
     }
 
     @Nested
+    class Promotion {
+        @Test
+        void white_pawn_on_row_7_should_promote_when_charged() {
+            ChessBoard chessBoard = ChessBoard.createEmpty();
+            WhitePawn pawn = new WhitePawn();
+            chessBoard.add(pawn, e7);
+            chessBoard.setTurn(Color.WHITE);
+
+            new ChargeCard().playOn(chessBoard, new ChargeCardParam(Set.of(pawn)));
+
+            assertInstanceOf(Queen.class, chessBoard.at(e8).getPiece().get());
+            assertEquals(Color.WHITE, chessBoard.at(e8).getPiece().get().getColor());
+            assertTrue(chessBoard.at(e7).getPiece().isEmpty());
+        }
+
+        @Test
+        void black_pawn_on_row_2_should_promote_when_charged() {
+            ChessBoard chessBoard = ChessBoard.createEmpty();
+            BlackPawn pawn = new BlackPawn();
+            chessBoard.add(pawn, e2);
+            chessBoard.setTurn(Color.BLACK);
+
+            new ChargeCard().playOn(chessBoard, new ChargeCardParam(Set.of(pawn)));
+
+            assertInstanceOf(Queen.class, chessBoard.at(e1).getPiece().get());
+            assertEquals(Color.BLACK, chessBoard.at(e1).getPiece().get().getColor());
+            assertTrue(chessBoard.at(e2).getPiece().isEmpty());
+        }
+
+        @Test
+        void three_white_pawns_on_row_7_should_all_promote_when_charged() {
+            ChessBoard chessBoard = ChessBoard.createEmpty();
+            WhitePawn pawn1 = new WhitePawn();
+            WhitePawn pawn2 = new WhitePawn();
+            WhitePawn pawn3 = new WhitePawn();
+            chessBoard.add(pawn1, c7);
+            chessBoard.add(pawn2, e7);
+            chessBoard.add(pawn3, g7);
+            chessBoard.setTurn(Color.WHITE);
+
+            new ChargeCard().playOn(chessBoard, new ChargeCardParam(Set.of(pawn1, pawn2, pawn3)));
+
+            assertInstanceOf(Queen.class, chessBoard.at(c8).getPiece().get());
+            assertEquals(Color.WHITE, chessBoard.at(c8).getPiece().get().getColor());
+            assertInstanceOf(Queen.class, chessBoard.at(e8).getPiece().get());
+            assertEquals(Color.WHITE, chessBoard.at(e8).getPiece().get().getColor());
+            assertInstanceOf(Queen.class, chessBoard.at(g8).getPiece().get());
+            assertEquals(Color.WHITE, chessBoard.at(g8).getPiece().get().getColor());
+            assertTrue(chessBoard.at(c7).getPiece().isEmpty());
+            assertTrue(chessBoard.at(e7).getPiece().isEmpty());
+            assertTrue(chessBoard.at(g7).getPiece().isEmpty());
+        }
+    }
+
+    @Nested
     class Failure {
 
         @Test
@@ -142,27 +197,27 @@ chessBoard.setTurn(Color.WHITE);
             Pawn pawn1 = new WhitePawn();
             Pawn pawn2 = new BlackPawn();
             chessBoard.add(pawn1, e4);
-            chessBoard.add(pawn2, g1);
+            chessBoard.add(pawn2, g3);
             ChargeCard chargeCard = new ChargeCard();
 chessBoard.setTurn(Color.WHITE);
 
             assertThrows(CannotMoveThisColorException.class, () -> chargeCard.playOn(chessBoard, new ChargeCardParam(Set.of(pawn1, pawn2))));
 
             assertEquals(pawn1, chessBoard.at(e4).getPiece().get());
-            assertEquals(pawn2, chessBoard.at(g1).getPiece().get());
+            assertEquals(pawn2, chessBoard.at(g3).getPiece().get());
         }
 
         @Test
         void should_not_move_pawns_of_enemy_color_bis() {
             ChessBoard chessBoard = ChessBoard.createEmpty();
             Pawn pawn2 = new WhitePawn();
-            chessBoard.add(pawn2, g8);
+            chessBoard.add(pawn2, g5);
             ChargeCard chargeCard = new ChargeCard();
             chessBoard.setTurn(Color.BLACK);
 
             assertThrows(CannotMoveThisColorException.class, () -> chargeCard.playOn(chessBoard, new ChargeCardParam(Set.of(pawn2))));
 
-            assertEquals(pawn2, chessBoard.at(g8).getPiece().get());
+            assertEquals(pawn2, chessBoard.at(g5).getPiece().get());
         }
     }
 }

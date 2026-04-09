@@ -4,8 +4,7 @@ import fr.kubys.board.CheckException;
 import fr.kubys.board.ChessBoard;
 import fr.kubys.card.params.QuadrilleCardParam;
 import fr.kubys.core.Color;
-import fr.kubys.piece.King;
-import fr.kubys.piece.Rock;
+import fr.kubys.piece.*;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
@@ -97,6 +96,64 @@ class QuadrilleCardTest {
             assertTrue(chessBoard.at(a8).getPiece().isEmpty());
             assertEquals(king, chessBoard.at(a1).getPiece().get());
             assertFalse(chessBoard.getOutOfTheBoardPieces().contains(king));
+        }
+    }
+
+    @Nested
+    class Promotion {
+        // CLOCKWISE: a1→a8, h1→a1, h8→h1, a8→h8
+        // COUNTERCLOCKWISE: a1→h1, h1→h8, h8→a8, a8→a1
+
+        @Test
+        void white_pawn_on_a1_clockwise_should_promote_on_a8() {
+            chessBoard = ChessBoard.createEmpty();
+            WhitePawn pawn = new WhitePawn();
+            chessBoard.add(pawn, a1);
+            chessBoard.setTurn(Color.WHITE);
+
+            clockwiseQuadrille.playOn(chessBoard, new QuadrilleCardParam(QuadrilleCard.Direction.CLOCKWISE));
+
+            assertInstanceOf(Queen.class, chessBoard.at(a8).getPiece().get());
+            assertEquals(Color.WHITE, chessBoard.at(a8).getPiece().get().getColor());
+        }
+
+        @Test
+        void white_pawn_on_h1_counterclockwise_should_promote_on_h8() {
+            chessBoard = ChessBoard.createEmpty();
+            WhitePawn pawn = new WhitePawn();
+            chessBoard.add(pawn, h1);
+            chessBoard.setTurn(Color.WHITE);
+
+            counterclockwiseQuadrille.playOn(chessBoard, new QuadrilleCardParam(QuadrilleCard.Direction.COUNTERCLOCKWISE));
+
+            assertInstanceOf(Queen.class, chessBoard.at(h8).getPiece().get());
+            assertEquals(Color.WHITE, chessBoard.at(h8).getPiece().get().getColor());
+        }
+
+        @Test
+        void black_pawn_on_h8_clockwise_should_promote_on_h1() {
+            chessBoard = ChessBoard.createEmpty();
+            BlackPawn pawn = new BlackPawn();
+            chessBoard.add(pawn, h8);
+            chessBoard.setTurn(Color.BLACK);
+
+            clockwiseQuadrille.playOn(chessBoard, new QuadrilleCardParam(QuadrilleCard.Direction.CLOCKWISE));
+
+            assertInstanceOf(Queen.class, chessBoard.at(h1).getPiece().get());
+            assertEquals(Color.BLACK, chessBoard.at(h1).getPiece().get().getColor());
+        }
+
+        @Test
+        void black_pawn_on_a8_counterclockwise_should_promote_on_a1() {
+            chessBoard = ChessBoard.createEmpty();
+            BlackPawn pawn = new BlackPawn();
+            chessBoard.add(pawn, a8);
+            chessBoard.setTurn(Color.BLACK);
+
+            counterclockwiseQuadrille.playOn(chessBoard, new QuadrilleCardParam(QuadrilleCard.Direction.COUNTERCLOCKWISE));
+
+            assertInstanceOf(Queen.class, chessBoard.at(a1).getPiece().get());
+            assertEquals(Color.BLACK, chessBoard.at(a1).getPiece().get().getColor());
         }
     }
 

@@ -2,10 +2,8 @@ package fr.kubys.card;
 
 import fr.kubys.board.ChessBoard;
 import fr.kubys.card.params.LightweightSquadCardParam;
-import fr.kubys.piece.BlackPawn;
-import fr.kubys.piece.Pawn;
-import fr.kubys.piece.WhitePawn;
-import org.junit.jupiter.api.Disabled;
+import fr.kubys.core.Color;
+import fr.kubys.piece.*;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
@@ -78,13 +76,13 @@ class LightweightSquadCardTest {
             Pawn pawn1 = new WhitePawn();
             Pawn pawn2 = new BlackPawn();
             chessBoard.add(pawn1, e4);
-            chessBoard.add(pawn2, g1);
+            chessBoard.add(pawn2, g3);
             LightweightSquadCard lightweightSquadCard = new LightweightSquadCard();
 
             assertThrows(IllegalArgumentException.class, () -> lightweightSquadCard.playOn(chessBoard, new LightweightSquadCardParam(pawn1, pawn2)));
 
             assertEquals(pawn1, chessBoard.at(e4).getPiece().get());
-            assertEquals(pawn2, chessBoard.at(g1).getPiece().get());
+            assertEquals(pawn2, chessBoard.at(g3).getPiece().get());
         }
 
         @Test
@@ -103,9 +101,53 @@ class LightweightSquadCardTest {
         }
 
         @Test
-        @Disabled
-        void promotion() {
+        void white_pawn_on_row_6_should_promote_when_advanced_two_squares() {
+            ChessBoard chessBoard = ChessBoard.createEmpty();
+            WhitePawn promotingPawn = new WhitePawn();
+            WhitePawn otherPawn = new WhitePawn();
+            chessBoard.add(promotingPawn, e6);
+            chessBoard.add(otherPawn, d4);
 
+            new LightweightSquadCard().playOn(chessBoard, new LightweightSquadCardParam(promotingPawn, otherPawn));
+
+            assertInstanceOf(Queen.class, chessBoard.at(e8).getPiece().get());
+            assertEquals(Color.WHITE, chessBoard.at(e8).getPiece().get().getColor());
+            assertTrue(chessBoard.at(e6).getPiece().isEmpty());
+            assertInstanceOf(Pawn.class, chessBoard.at(d6).getPiece().get());
+        }
+
+        @Test
+        void black_pawn_on_row_3_should_promote_when_advanced_two_squares() {
+            ChessBoard chessBoard = ChessBoard.createEmpty();
+            BlackPawn promotingPawn = new BlackPawn();
+            BlackPawn otherPawn = new BlackPawn();
+            chessBoard.add(promotingPawn, e3);
+            chessBoard.add(otherPawn, d5);
+
+            new LightweightSquadCard().playOn(chessBoard, new LightweightSquadCardParam(promotingPawn, otherPawn));
+
+            assertInstanceOf(Queen.class, chessBoard.at(e1).getPiece().get());
+            assertEquals(Color.BLACK, chessBoard.at(e1).getPiece().get().getColor());
+            assertTrue(chessBoard.at(e3).getPiece().isEmpty());
+            assertInstanceOf(Pawn.class, chessBoard.at(d3).getPiece().get());
+        }
+
+        @Test
+        void both_white_pawns_on_row_6_should_both_promote_when_advanced_two_squares() {
+            ChessBoard chessBoard = ChessBoard.createEmpty();
+            WhitePawn pawn1 = new WhitePawn();
+            WhitePawn pawn2 = new WhitePawn();
+            chessBoard.add(pawn1, c6);
+            chessBoard.add(pawn2, e6);
+
+            new LightweightSquadCard().playOn(chessBoard, new LightweightSquadCardParam(pawn1, pawn2));
+
+            assertInstanceOf(Queen.class, chessBoard.at(c8).getPiece().get());
+            assertEquals(Color.WHITE, chessBoard.at(c8).getPiece().get().getColor());
+            assertInstanceOf(Queen.class, chessBoard.at(e8).getPiece().get());
+            assertEquals(Color.WHITE, chessBoard.at(e8).getPiece().get().getColor());
+            assertTrue(chessBoard.at(c6).getPiece().isEmpty());
+            assertTrue(chessBoard.at(e6).getPiece().isEmpty());
         }
 
 
