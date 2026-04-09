@@ -28,3 +28,7 @@ out/
 !**/src/main/**/out/
 !**/src/test/**/out/
 *.iml
+
+### Local config ###
+.env
+.claude/
