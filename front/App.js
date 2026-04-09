@@ -396,15 +396,28 @@ export default function App() {
         return color === "white" ? "black" : "white";
     }
 
+    function firstUnsetParam(card) {
+        if (!card || !card.param) return null;
+        return Object.keys(card.param).find(k => card.param[k] === null) || null;
+    }
+
     function showCard(card) {
-        setSelectedCard(card !== selectedCard ? card : null);
+        if (card !== selectedCard) {
+            setSelectedCard(card);
+            setSelectedParam(firstUnsetParam(card));
+        } else {
+            setSelectedCard(null);
+            setSelectedParam(null);
+        }
     }
 
     function onSquareRightClick(square) {
         if (selectedCard && selectedParam) {
             if (selectedCard.param[selectedParam] === square) selectedCard.param[selectedParam] = null;
             else selectedCard.param[selectedParam] = square;
-            setSelectedCard({...selectedCard});
+            const updated = {...selectedCard};
+            setSelectedCard(updated);
+            setSelectedParam(firstUnsetParam(updated));
         }
     }
 
@@ -416,8 +429,8 @@ export default function App() {
     const promotionHighlight = {boxShadow: "rgba(248, 81, 73, 0.85) 0px 0px 24px 0px inset", cursor: "pointer"};
     const customSquareStyles = {
         ...customSquares(),
-        ...(selectedCard && selectedParam
-            ? Object.values(selectedCard.param).reduce((obj, square) => {
+        ...(selectedCard
+            ? Object.values(selectedCard.param || {}).reduce((obj, square) => {
                 if (square) obj[square] = highlight;
                 return obj;
             }, {})

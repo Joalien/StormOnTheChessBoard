@@ -68,40 +68,43 @@ export function CardParameters({card, selectedParam, setSelectedParam, playCardC
                         fontWeight: '700',
                         margin: '0 0 10px 2px',
                     }}>
-                        Parameters
+                        Right-click squares to set
                     </p>
                     {paramKeys.map((key, i) => {
                         const value = card.param[key];
                         const isSet = value !== null;
                         const isActive = selectedParam === key;
                         return (
-                            <label
+                            <div
                                 key={i}
                                 className={`param-row${isActive ? ' active' : ''}`}
-                                onClick={() => setSelectedParam(key)}
+                                onClick={() => {
+                                    if (isSet) {
+                                        card.param[key] = null;
+                                        setSelectedParam(key);
+                                    }
+                                }}
+                                style={isSet ? {cursor: 'pointer'} : {cursor: 'default'}}
                             >
-                                <input
-                                    type="radio"
-                                    className="param-radio"
-                                    name="param"
-                                    checked={isActive}
-                                    onChange={() => setSelectedParam(key)}
-                                    onClick={e => e.stopPropagation()}
-                                />
+                                <div style={{
+                                    width: '8px', height: '8px', borderRadius: '50%', flexShrink: 0,
+                                    background: isActive ? '#d4a843' : isSet ? '#3fb950' : '#484f58',
+                                    boxShadow: isActive ? '0 0 8px rgba(212,168,67,0.5)' : 'none',
+                                }}/>
                                 <div style={{flex: 1, minWidth: 0}}>
                                     <div style={{fontSize: '12px', fontWeight: '600', color: '#c9d1d9', marginBottom: '3px'}}>
                                         {key}
                                     </div>
                                     <div style={{
                                         fontSize: '11px',
-                                        color: isSet ? '#d4a843' : '#f85149',
+                                        color: isSet ? '#d4a843' : isActive ? '#8b949e' : '#484f58',
                                         fontFamily: 'monospace',
                                         letterSpacing: '0.3px',
                                     }}>
-                                        {isSet ? value : 'Right-click a square to set'}
+                                        {isSet ? value : isActive ? 'awaiting...' : '—'}
                                     </div>
                                 </div>
-                            </label>
+                            </div>
                         );
                     })}
                 </div>
