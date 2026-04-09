@@ -78,6 +78,7 @@ public class GameStateController implements ChessBoardService {
         stack.add(new CavalcadeCard());
         stack.add(new BombardCard());
         stack.add(new MadHorseDiseaseCard());
+        stack.add(new NeutralityCard());
 
 //        Collections.shuffle(stack, new Random(seed));
     }

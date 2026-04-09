@@ -1,0 +1,72 @@
+package fr.kubys.piece;
+
+import fr.kubys.core.Color;
+import fr.kubys.core.File;
+import fr.kubys.core.Position;
+import fr.kubys.core.Row;
+
+import java.util.Collections;
+import java.util.Optional;
+import java.util.Set;
+
+public class NeutralPawn extends Pawn {
+
+    public NeutralPawn() {
+        super(Color.NONE);
+    }
+
+    @Override
+    protected Row startingRow() {
+        return null; // no two-square move
+    }
+
+    @Override
+    protected Row promotionRow() {
+        return null; // handled by isOnPromotionRow
+    }
+
+    @Override
+    public boolean isOnPromotionRow() {
+        return getRow() == Row.One || getRow() == Row.Eight;
+    }
+
+    @Override
+    public Optional<Position> oneSquareForward() {
+        // Used by squaresOnThePath for two-square move; not applicable
+        return getRow().next().map(row -> Position.posToSquare(getFile(), row));
+    }
+
+    @Override
+    public Optional<Position> twoSquaresForward() {
+        return Optional.empty(); // no two-square move
+    }
+
+    @Override
+    public boolean isPositionTheoreticallyReachable(File file, Row row, Color color) {
+        // Accept both directions: up (white-style) and down (black-style)
+        // The actual direction constraint is enforced by ChessBoard.canMove()
+        boolean reachableUp = checkDirection(file, row, color, getRow().next());
+        boolean reachableDown = checkDirection(file, row, color, getRow().previous());
+        return reachableUp || reachableDown;
+    }
+
+    private boolean checkDirection(File file, Row row, Color color, Optional<Row> forwardRow) {
+        boolean moveOneSquare = forwardRow.map(r -> r == row).orElse(false);
+        boolean moveForward = color == null && file == getFile() && moveOneSquare;
+        boolean takePiece = moveOneSquare && getFile().distanceTo(file) == 1;
+        boolean takeEnemyPiece = color != null && color != getColor() && takePiece;
+        return moveForward || takeEnemyPiece;
+    }
+
+    @Override
+    public boolean isDirectionValid(Color currentTurn, Position target) {
+        int rowDelta = target.getRow().getRowNumber() - getRow().getRowNumber();
+        return !(currentTurn == Color.WHITE && rowDelta < 0)
+                && !(currentTurn == Color.BLACK && rowDelta > 0);
+    }
+
+    @Override
+    public Set<Position> squaresOnThePath(Position squareToMoveOn) {
+        return Collections.emptySet(); // no two-square move, no intermediate squares
+    }
+}
