@@ -1,21 +1,21 @@
 import {Image} from "react-native";
 
 const IMAGES = {
-    'ApartheidCard': require('../assets/images/cards/Apartheid.png'),
-    'BarricadeCard': require('../assets/images/cards/Barricade.png'),
-    'BombardCard': require('../assets/images/cards/Bombard.png'),
-    'BombingCardCard': require('../assets/images/cards/Bombing.png'),
-    'MadHorseDiseaseCard': require('../assets/images/cards/MadHorseDisease.png'),
-    'MadHouseCard': require('../assets/images/cards/MadHouse.png'),
-    'MagnetismCard': require('../assets/images/cards/Magnetism.png'),
-    'ManHoleCard': require('../assets/images/cards/ManHole.png'),
-    'MercyCard': require('../assets/images/cards/Mercy.png'),
-    'NeutralityCard': require('../assets/images/cards/Neutrality.png'),
-    'NuclearBombCard': require('../assets/images/cards/NuclearBomb.png'),
-    'PegasusCard': require('../assets/images/cards/Pegasus.png'),
-    'SelfDefenseCard': require('../assets/images/cards/SelfDefense.png'),
-    'VampirismCard': require('../assets/images/cards/Vampirism.png'),
-    'ZombiesCard': require('../assets/images/cards/Zombies.png'),
+    'ApartheidCard': require('../assets/images/cards/ApartheidCard.png'),
+    'BarricadeCard': require('../assets/images/cards/BarricadeCard.png'),
+    'BombardCard': require('../assets/images/cards/BombardCard.png'),
+    'BombingCardCard': require('../assets/images/cards/BombingCard.png'),
+    'MadHorseDiseaseCard': require('../assets/images/cards/MadHorseDiseaseCard.png'),
+    'MadHouseCard': require('../assets/images/cards/MadHouseCard.png'),
+    'MagnetismCard': require('../assets/images/cards/MagnetismCard.png'),
+    'ManHoleCard': require('../assets/images/cards/ManHoleCard.png'),
+    'MercyCard': require('../assets/images/cards/MercyCard.png'),
+    'NeutralityCard': require('../assets/images/cards/NeutralityCard.png'),
+    'NuclearBombCard': require('../assets/images/cards/NuclearBombCard.png'),
+    'PegasusCard': require('../assets/images/cards/PegasusCard.png'),
+    'SelfDefenseCard': require('../assets/images/cards/SelfDefenseCard.png'),
+    'VampirismCard': require('../assets/images/cards/VampirismCard.png'),
+    'ZombiesCard': require('../assets/images/cards/ZombiesCard.png'),
 }
 
 export function Card({hidden, name, showCard}) {
@@ -26,12 +26,18 @@ export function Card({hidden, name, showCard}) {
     };
 
     const back = <Image source={require('../assets/images/cards/back.png')} style={style}/>;
-    const image = <Image source={IMAGES[name]} style={style} onClick={showCard}/>;
+    const requireCard = require.context('../assets/images/cards', false, /\.png$/);
+    const fileName = `./${name}.png`;
+    const hasImage = requireCard.keys().includes(fileName);
+
+    const image = hasImage ?
+        <Image source={requireCard(fileName)} style={style} onClick={showCard}/> :
+        null;
 
     const defaultImage = <div style={{...style, backgroundColor: "grey"}} onClick={showCard}>
         <h4 style={{wordWrap: "break-word"}}>{name}</h4>
     </div>;
     return (
-        hidden ? back : IMAGES[name] ? image : defaultImage
+        hidden ? back : (hasImage ? image : defaultImage)
     )
 }
