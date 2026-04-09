@@ -43,11 +43,17 @@ public class NeutralPawn extends Pawn {
 
     @Override
     public boolean isPositionTheoreticallyReachable(File file, Row row, Color color) {
-        // Accept both directions: up (white-style) and down (black-style)
-        // The actual direction constraint is enforced by ChessBoard.canMove()
+        // Without movingAs context (check detection), accept both directions
         boolean reachableUp = checkDirection(file, row, color, getRow().next());
         boolean reachableDown = checkDirection(file, row, color, getRow().previous());
         return reachableUp || reachableDown;
+    }
+
+    @Override
+    public boolean isPositionTheoreticallyReachable(File file, Row row, Color targetPieceColor, Color movingAs) {
+        if (movingAs == Color.WHITE) return checkDirection(file, row, targetPieceColor, getRow().next());
+        if (movingAs == Color.BLACK) return checkDirection(file, row, targetPieceColor, getRow().previous());
+        return isPositionTheoreticallyReachable(file, row, targetPieceColor);
     }
 
     private boolean checkDirection(File file, Row row, Color color, Optional<Row> forwardRow) {
@@ -56,13 +62,6 @@ public class NeutralPawn extends Pawn {
         boolean takePiece = moveOneSquare && getFile().distanceTo(file) == 1;
         boolean takeEnemyPiece = color != null && color != getColor() && takePiece;
         return moveForward || takeEnemyPiece;
-    }
-
-    @Override
-    public boolean isDirectionValid(Color currentTurn, Position target) {
-        int rowDelta = target.getRow().getRowNumber() - getRow().getRowNumber();
-        return !(currentTurn == Color.WHITE && rowDelta < 0)
-                && !(currentTurn == Color.BLACK && rowDelta > 0);
     }
 
     @Override

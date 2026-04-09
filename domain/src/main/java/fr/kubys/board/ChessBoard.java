@@ -107,12 +107,10 @@ public class ChessBoard {
     }
 
     private boolean canAttack(Piece piece, Position positionToMoveOn, Color effectiveColor) {
-        return ((isPositionTheoreticallyReachable(piece, positionToMoveOn) && emptyPath(piece, positionToMoveOn)) || doesEffectAllowToMove(piece, positionToMoveOn))
+        Color targetPieceColor = at(positionToMoveOn).getPiece().map(Piece::getColor).orElse(null);
+        boolean reachable = piece.isPositionTheoreticallyReachable(positionToMoveOn.getFile(), positionToMoveOn.getRow(), targetPieceColor, effectiveColor);
+        return ((reachable && emptyPath(piece, positionToMoveOn)) || doesEffectAllowToMove(piece, positionToMoveOn))
                 && isEnemyOrEmpty(piece, positionToMoveOn, effectiveColor);
-    }
-
-    private boolean isPositionTheoreticallyReachable(Piece piece, Position positionToMoveOn) {
-        return piece.isPositionTheoreticallyReachable(positionToMoveOn, at(positionToMoveOn).getPiece().map(Piece::getColor).orElse(null));
     }
 
     private boolean doesEffectAllowToMove(Piece piece, Position positionToMoveOn) {
@@ -223,8 +221,6 @@ public class ChessBoard {
     public boolean canMove(Piece piece, Position positionToMoveOn) {
         if (!canAttack(piece, positionToMoveOn, piece.getColor().resolveFor(currentTurn)))
             throw new IllegalMoveException("You cannot move %s to %s".formatted(piece, positionToMoveOn));
-        if (!piece.isDirectionValid(currentTurn, positionToMoveOn))
-            throw new IllegalMoveException("%s cannot move in this direction".formatted(piece));
         if (doesMovingPieceCheckOurOwnKing(piece, positionToMoveOn))
             throw new CheckException();
         if (isInvalidCastle(piece, positionToMoveOn))

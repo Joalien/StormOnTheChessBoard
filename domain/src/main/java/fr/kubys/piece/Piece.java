@@ -39,6 +39,10 @@ public abstract class Piece {
 
     public abstract boolean isPositionTheoreticallyReachable(File file, Row row, Color color);
 
+    public boolean isPositionTheoreticallyReachable(File file, Row row, Color targetPieceColor, Color movingAs) {
+        return isPositionTheoreticallyReachable(file, row, targetPieceColor);
+    }
+
     public boolean isPositionTheoreticallyReachable(Position position, Color color) {
         return isPositionTheoreticallyReachable(position.getFile(), position.getRow(), color);
     }
@@ -88,10 +92,6 @@ public abstract class Piece {
 
     public void setColor(Color color) {
         this.color = color;
-    }
-
-    public boolean isDirectionValid(Color currentTurn, Position target) {
-        return true;
     }
 
     public abstract boolean isKing();
