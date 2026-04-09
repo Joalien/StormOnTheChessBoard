@@ -241,9 +241,15 @@ async function showErrorMessage(res) {
     toast.error(errorMessage);
 }
 
+function getGameIdFromUrl() {
+    if (typeof window === 'undefined') return 1;
+    const match = window.location.pathname.match(/^\/(\d+)$/);
+    return match ? parseInt(match[1], 10) : 1;
+}
+
 export default function App() {
     const [game, setGame] = useState({});
-    const [gameId, setGameId] = useState(1);
+    const [gameId, setGameId] = useState(getGameIdFromUrl);
     const [currentPlayerColor, setCurrentPlayerColor] = useState("white");
     const [whitePlayer, setWhitePlayer] = useState({cards: []});
     const [blackPlayer, setBlackPlayer] = useState({cards: []});
@@ -289,10 +295,21 @@ export default function App() {
         return fetch(base + gameId + "/players/" + color).then(res => res.json());
     }
 
+    function navigateToGame(id) {
+        window.history.pushState({}, '', `/${id}`);
+        setGameId(id);
+    }
+
+    useEffect(() => {
+        function onPopState() { setGameId(getGameIdFromUrl()); }
+        window.addEventListener('popstate', onPopState);
+        return () => window.removeEventListener('popstate', onPopState);
+    }, []);
+
     function startNewGame() {
         fetch("http://localhost:9000/chessboard", {method: 'POST'})
             .then(res => res.json())
-            .then(id => setGameId(id))
+            .then(id => navigateToGame(id))
             .catch(err => alert(err));
     }
 
@@ -450,7 +467,11 @@ export default function App() {
                     </span>
                 </div>
                 <div style={{display: 'flex', gap: '8px', alignItems: 'center'}}>
-                    <span style={{color: '#484f58', fontSize: '12px', marginRight: '4px'}}>#{gameId}</span>
+                    {[1, 2].map(id => (
+                        <button key={id} onClick={() => navigateToGame(id)} className="sotc-btn" style={gameId === id ? {borderColor: 'rgba(212,168,67,0.6)', color: '#d4a843'} : {}}>
+                            #{id}
+                        </button>
+                    ))}
                     <button className="sotc-btn sotc-btn-danger" onClick={undo}>↩ Undo</button>
                     <button className="sotc-btn" onClick={startNewGame}>＋ New Game</button>
                 </div>

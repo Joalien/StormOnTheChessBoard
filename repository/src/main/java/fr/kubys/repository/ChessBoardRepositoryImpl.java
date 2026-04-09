@@ -3,8 +3,11 @@ package fr.kubys.repository;
 import fr.kubys.api.ChessBoardReadService;
 import fr.kubys.api.ChessBoardService;
 import fr.kubys.api.ChessBoardWriteService;
+import fr.kubys.board.ChessBoard;
 import fr.kubys.command.Command;
 import fr.kubys.command.StartGameCommand;
+
+import java.util.function.Supplier;
 import fr.kubys.game.ChessBoardServiceFactory;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
@@ -18,14 +21,21 @@ import java.util.Map;
 @Repository
 public class ChessBoardRepositoryImpl implements ChessBoardRepository {
     private final Map<Integer, List<Command>> store = new HashMap<>();
+    private final Map<Integer, Supplier<ChessBoard>> boardFactories = new HashMap<>();
 
     @Override
     public Integer createNewGame() {
+        return createCustomGame(GamePresets.INITIAL_STATE);
+    }
+
+    @Override
+    public Integer createCustomGame(Supplier<ChessBoard> boardFactory) {
         Integer nextGameId = store.keySet().stream()
                 .mapToInt(value -> value)
                 .max()
                 .orElse(0) + 1;
         store.put(nextGameId, new LinkedList<>());
+        boardFactories.put(nextGameId, boardFactory);
         saveCommand(StartGameCommand.builder().gameId(nextGameId).build());
         return nextGameId;
     }
@@ -57,7 +67,8 @@ public class ChessBoardRepositoryImpl implements ChessBoardRepository {
 
     private ChessBoardService computeChessBoard(Integer gameId) {
         if (!store.containsKey(gameId)) throw new GameNotFoundException(gameId);
-        ChessBoardService gameStateController = ChessBoardServiceFactory.newChessBoardService();
+        Supplier<ChessBoard> factory = boardFactories.getOrDefault(gameId, GamePresets.INITIAL_STATE);
+        ChessBoardService gameStateController = ChessBoardServiceFactory.newChessBoardService(factory);
         store.get(gameId).forEach(command -> command.execute(gameStateController));
         return gameStateController;
     }

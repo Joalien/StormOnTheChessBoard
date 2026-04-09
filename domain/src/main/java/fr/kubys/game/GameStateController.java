@@ -29,15 +29,26 @@ public class GameStateController implements ChessBoardService {
     private final Set<Position> pendingPromotions = new HashSet<>();
     private StateEnum returnStateAfterPromotion;
 
+    private final java.util.function.Supplier<ChessBoard> boardFactory;
+
     public GameStateController() {
+        this(ChessBoard::createWithInitialState);
+    }
+
+    public GameStateController(java.util.function.Supplier<ChessBoard> boardFactory) {
+        this.boardFactory = boardFactory;
     }
 
     @Override
     public void startGame(long seed) {
+        startWith(boardFactory.get(), seed);
+    }
+
+    private void startWith(ChessBoard board, long seed) {
         if (this.chessBoard != null)
             throw new IllegalStateException("Game has already started!");
 
-        this.chessBoard = ChessBoard.createWithInitialState();
+        this.chessBoard = board;
         white = new Player("Name1", Color.WHITE);
         black = new Player("Name2", Color.BLACK);
 
