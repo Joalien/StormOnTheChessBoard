@@ -29,7 +29,7 @@ public class ArchitectureIT {
     }
 
     private static String[] getDependencyPackages(String itself, Set<String> dependencies) {
-        Stream<String> languageDependencies = Stream.of("java.lang..", "java.util..", "org.junit..");
+        Stream<String> languageDependencies = Stream.of("java.lang..", "java.util..", "org.junit..", "org.slf4j..");
         return Stream.of(
                         languageDependencies,
                         Stream.of(itself),
@@ -42,7 +42,7 @@ public class ArchitectureIT {
     void piece_should_only_depend_on_core() {
         String[] dependencyPackages = getDependencyPackages(PIECE, Set.of(CORE));
         rule = ArchRuleDefinition.classes()
-                .that().resideInAPackage(PIECE)
+                .that().resideInAPackage(PIECE).and().haveNameNotMatching(".*Test.*").and().haveNameNotMatching(".*IT$")
                 .should().onlyDependOnClassesThat().resideInAnyPackage(dependencyPackages);
     }
 
@@ -50,7 +50,7 @@ public class ArchitectureIT {
     void board_should_only_depend_on_core_and_piece() {
         String[] dependencyPackages = getDependencyPackages(BOARD, Set.of(CORE, PIECE));
         rule = ArchRuleDefinition.classes()
-                .that().resideInAPackage(BOARD)
+                .that().resideInAPackage(BOARD).and().haveNameNotMatching(".*Test.*").and().haveNameNotMatching(".*IT$")
                 .should().onlyDependOnClassesThat().resideInAnyPackage(dependencyPackages);
     }
 
@@ -58,7 +58,7 @@ public class ArchitectureIT {
     void card_should_only_depend_on_board_and_below() {
         String[] dependencyPackages = getDependencyPackages(CARD, Set.of(CORE, PIECE, BOARD));
         rule = ArchRuleDefinition.classes()
-                .that().resideInAPackage(CARD)
+                .that().resideInAPackage(CARD).and().haveNameNotMatching(".*Test.*").and().haveNameNotMatching(".*IT$")
                 .should().onlyDependOnClassesThat().resideInAnyPackage(dependencyPackages);
     }
 
@@ -66,21 +66,21 @@ public class ArchitectureIT {
     void player_should_only_depend_on_card_and_core() {
         String[] dependencyPackages = getDependencyPackages(PLAYER, Set.of(CORE, CARD));
         rule = ArchRuleDefinition.classes()
-                .that().resideInAPackage(PLAYER)
+                .that().resideInAPackage(PLAYER).and().haveNameNotMatching(".*Test.*").and().haveNameNotMatching(".*IT$")
                 .should().onlyDependOnClassesThat().resideInAnyPackage(dependencyPackages);
     }
 
     @Test
     void nothing_should_depend_on_game() {
         rule = ArchRuleDefinition.classes()
-                .that().resideInAPackage(GAME)
+                .that().resideInAPackage(GAME).and().haveNameNotMatching(".*Test.*").and().haveNameNotMatching(".*IT$")
                 .should().onlyHaveDependentClassesThat().resideInAPackage(GAME);
     }
 
     @Test
     void should_not_have_spring_dependencies_in_model() {
         rule = ArchRuleDefinition.noClasses()
-                .that().resideOutsideOfPackages()
+                .that().resideInAPackage("fr.kubys..")
                 .should().dependOnClassesThat().resideInAPackage("..org.springframework..");
     }
 

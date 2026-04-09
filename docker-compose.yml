@@ -2,7 +2,7 @@ services:
 
   sotc-backend:
     container_name: sotc-backend
-    image: maven:3.9-eclipse-temurin-20
+    image: maven:3.9-eclipse-temurin-21
     working_dir: /app
     volumes:
       - ./pom.xml:/app/pom.xml
