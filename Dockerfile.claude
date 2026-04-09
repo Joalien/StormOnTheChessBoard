@@ -1,14 +1,12 @@
-FROM ghcr.io/anthropics/claude-code:latest
+FROM maven:3.9-eclipse-temurin-21
 
 RUN apt-get update && apt-get install -y \
-    openjdk-21-jdk \
-    maven \
+    curl \
+    nodejs \
+    npm \
     && rm -rf /var/lib/apt/lists/*
 
-ENV JAVA_HOME=/usr/lib/jvm/java-21-openjdk-amd64
-
-RUN mkdir -p /home/user
+RUN npm install -g @anthropic-ai/claude-code
 
 WORKDIR /workspace
-
 ENTRYPOINT ["claude"]

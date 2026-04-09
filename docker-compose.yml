@@ -49,6 +49,8 @@ services:
       - HOME=/home/user
     stdin_open: true
     tty: true
+    extra_hosts:
+      - "sotc-notifier:host-gateway"
     networks:
       - sotc-net
 
