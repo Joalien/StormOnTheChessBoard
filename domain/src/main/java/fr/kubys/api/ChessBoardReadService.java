@@ -3,6 +3,7 @@ package fr.kubys.api;
 import fr.kubys.board.effect.Effect;
 import fr.kubys.card.Card;
 import fr.kubys.card.params.CardParam;
+import fr.kubys.core.Position;
 import fr.kubys.piece.Piece;
 import fr.kubys.player.Player;
 
@@ -23,4 +24,6 @@ public interface ChessBoardReadService {
     Player getWhite();
 
     Player getBlack();
+
+    Set<Position> getPendingPromotions();
 }

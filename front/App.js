@@ -250,6 +250,8 @@ export default function App() {
     const [selectedCard, setSelectedCard] = useState(null);
     const [selectedParam, setSelectedParam] = useState(null);
     const [effects, setEffects] = useState([]);
+    const [pendingPromotions, setPendingPromotions] = useState([]);
+    const [promotionSquare, setPromotionSquare] = useState(null);
 
     function loadCustomPieces() {
         const requirePiece = require.context('./component/pieces', false, /\.js$/);
@@ -341,7 +343,36 @@ export default function App() {
                 setEffects(data.effects || []);
                 setBlackPlayer(data.blackPlayer);
                 setWhitePlayer(data.whitePlayer);
+                setPendingPromotions(data.pendingPromotions || []);
+                setPromotionSquare(null);
             });
+    }
+
+    async function promote(position, piece) {
+        const res = await fetch(base + gameId + "/promote/" + position + "/" + piece, {method: 'POST'});
+        if (res.ok) fetchGame();
+        else await showErrorMessage(res);
+    }
+
+    function onSquareClick(square) {
+        if (pendingPromotions.includes(square)) {
+            setPromotionSquare(promotionSquare === square ? null : square);
+        }
+    }
+
+    function squareToCoords(square, orientation) {
+        const file = square.charCodeAt(0) - 97; // 'a' = 0
+        const rank = parseInt(square[1]) - 1;   // '1' = 0
+        const size = 70; // 560 / 8
+        let x, y;
+        if (orientation === 'white') {
+            x = file * size;
+            y = (7 - rank) * size;
+        } else {
+            x = (7 - file) * size;
+            y = rank * size;
+        }
+        return {x, y};
     }
 
     function oppositeColor(color) {
@@ -365,6 +396,7 @@ export default function App() {
     const currentPlayer = isWhiteTurn ? whitePlayer : blackPlayer;
     const opponentColor = isWhiteTurn ? "black" : "white";
 
+    const promotionHighlight = {boxShadow: "rgba(248, 81, 73, 0.85) 0px 0px 24px 0px inset", cursor: "pointer"};
     const customSquareStyles = {
         ...customSquares(),
         ...(selectedCard && selectedParam
@@ -374,6 +406,7 @@ export default function App() {
             }, {})
             : {}
         ),
+        ...pendingPromotions.reduce((obj, sq) => { obj[sq] = promotionHighlight; return obj; }, {}),
     };
 
     return (
@@ -473,24 +506,77 @@ export default function App() {
                     />
 
                     {/* Board */}
-                    <div style={{
-                        borderRadius: '10px',
-                        overflow: 'hidden',
-                        boxShadow: '0 0 0 1px rgba(255,255,255,0.07), 0 24px 64px rgba(0,0,0,0.65)',
-                    }}>
-                        <Chessboard
-                            id="BasicBoard"
-                            boardWidth={560}
-                            onPieceDrop={movePiece}
-                            position={game}
-                            arePiecesDraggable={selectedCard === null}
-                            boardOrientation={currentPlayerColor}
-                            onSquareRightClick={onSquareRightClick}
-                            customPieces={customPieces}
-                            customSquareStyles={customSquareStyles}
-                            customDarkSquareStyle={{backgroundColor: '#b58863'}}
-                            customLightSquareStyle={{backgroundColor: '#f0d9b5'}}
-                        />
+                    <div style={{position: 'relative'}}>
+                        <div style={{
+                            borderRadius: '10px',
+                            overflow: 'hidden',
+                            boxShadow: '0 0 0 1px rgba(255,255,255,0.07), 0 24px 64px rgba(0,0,0,0.65)',
+                        }}>
+                            <Chessboard
+                                id="BasicBoard"
+                                boardWidth={560}
+                                onPieceDrop={movePiece}
+                                position={game}
+                                arePiecesDraggable={selectedCard === null && pendingPromotions.length === 0}
+                                boardOrientation={currentPlayerColor}
+                                onSquareRightClick={onSquareRightClick}
+                                onSquareClick={onSquareClick}
+                                customPieces={customPieces}
+                                customSquareStyles={customSquareStyles}
+                                customDarkSquareStyle={{backgroundColor: '#b58863'}}
+                                customLightSquareStyle={{backgroundColor: '#f0d9b5'}}
+                            />
+                        </div>
+                        {promotionSquare && (() => {
+                            const {x, y} = squareToCoords(promotionSquare, currentPlayerColor);
+                            const isWhitePiece = (game[promotionSquare] || '').startsWith('w');
+                            const popupBelow = y < 280;
+                            const pieces = [
+                                {name: 'ROOK',   symbol: isWhitePiece ? '♖' : '♜'},
+                                {name: 'BISHOP', symbol: isWhitePiece ? '♗' : '♝'},
+                                {name: 'KNIGHT', symbol: isWhitePiece ? '♘' : '♞'},
+                            ];
+                            const popupWidth = 160;
+                            const clampedLeft = Math.min(Math.max(x - (popupWidth / 2 - 35), 0), 560 - popupWidth);
+                            return (
+                                <div style={{
+                                    position: 'absolute',
+                                    left: clampedLeft,
+                                    top: popupBelow ? y + 70 : y - 66,
+                                    zIndex: 1000,
+                                    display: 'flex',
+                                    gap: '6px',
+                                    background: '#1c2128',
+                                    border: '1px solid rgba(255,255,255,0.15)',
+                                    borderRadius: '10px',
+                                    padding: '8px',
+                                    boxShadow: '0 8px 32px rgba(0,0,0,0.7)',
+                                }}>
+                                    {pieces.map(p => (
+                                        <button key={p.name} title={p.name} onClick={() => promote(promotionSquare, p.name)} style={{
+                                            background: 'rgba(255,255,255,0.04)',
+                                            border: '1px solid rgba(255,255,255,0.1)',
+                                            borderRadius: '7px',
+                                            color: isWhitePiece ? '#f0d9b5' : '#b58863',
+                                            fontSize: '30px',
+                                            cursor: 'pointer',
+                                            width: '44px',
+                                            height: '44px',
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                            lineHeight: 1,
+                                            transition: 'background 0.15s, transform 0.1s',
+                                        }}
+                                        onMouseEnter={e => { e.currentTarget.style.background = 'rgba(212,168,67,0.15)'; e.currentTarget.style.transform = 'scale(1.12)'; }}
+                                        onMouseLeave={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.04)'; e.currentTarget.style.transform = 'scale(1)'; }}
+                                        >
+                                            {p.symbol}
+                                        </button>
+                                    ))}
+                                </div>
+                            );
+                        })()}
                     </div>
 
                     {/* Current player cards */}

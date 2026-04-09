@@ -8,6 +8,7 @@ import fr.kubys.card.params.CardParam;
 import fr.kubys.core.Color;
 import fr.kubys.core.Position;
 import fr.kubys.piece.Piece;
+import fr.kubys.piece.PromotionPiece;
 import fr.kubys.player.Player;
 
 import java.util.*;
@@ -25,6 +26,8 @@ public class GameStateController implements ChessBoardService {
     private List<Card<? extends CardParam>> discard;
     private Player currentPlayer;
     private StateEnum currentState;
+    private final Set<Position> pendingPromotions = new HashSet<>();
+    private StateEnum returnStateAfterPromotion;
 
     public GameStateController() {
     }
@@ -162,8 +165,39 @@ public class GameStateController implements ChessBoardService {
         return this.currentState;
     }
 
+    void clearPendingPromotions() {
+        pendingPromotions.clear();
+    }
+
     void setCurrentState(StateEnum currentState) {
 //        log.debug("{} is now in state {}", this.currentPlayer, currentState);
         this.currentState = currentState;
+    }
+
+    void transitionToState(StateEnum nextState) {
+        List<Position> promoted = chessBoard.drainPromotedPositions();
+        if (!promoted.isEmpty()) {
+            pendingPromotions.addAll(promoted);
+            returnStateAfterPromotion = nextState;
+            setCurrentState(StateEnum.PROMOTION_PENDING);
+        } else {
+            setCurrentState(nextState);
+        }
+    }
+
+    @Override
+    public void promote(Position position, PromotionPiece piece) {
+        assertGameHasAlreadyStarted();
+        if (!pendingPromotions.remove(position))
+            throw new IllegalArgumentException("No pending promotion on %s".formatted(position));
+        chessBoard.overridePromotion(position, piece);
+        if (pendingPromotions.isEmpty()) {
+            setCurrentState(returnStateAfterPromotion);
+        }
+    }
+
+    @Override
+    public Set<Position> getPendingPromotions() {
+        return Set.copyOf(pendingPromotions);
     }
 }

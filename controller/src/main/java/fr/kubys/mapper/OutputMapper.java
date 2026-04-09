@@ -32,6 +32,7 @@ public class OutputMapper {
                 .blackPlayer(map(chessBoard.getBlack()))
                 .currentTurn(chessBoard.getCurrentPlayer().getColor().name().toLowerCase())
                 .pieces(chessBoard.getPieces().stream().collect(Collectors.toMap(piece -> piece.getPosition().name(), OutputMapper::map)))
+                .pendingPromotions(chessBoard.getPendingPromotions().stream().map(p -> p.name()).collect(Collectors.toSet()))
                 .build();
     }
 

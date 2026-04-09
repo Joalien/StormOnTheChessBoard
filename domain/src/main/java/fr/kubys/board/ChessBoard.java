@@ -6,6 +6,7 @@ import fr.kubys.core.File;
 import fr.kubys.core.Position;
 import fr.kubys.core.Row;
 import fr.kubys.piece.*;
+import fr.kubys.piece.PromotionPiece;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,6 +24,7 @@ public class ChessBoard {
     private final Map<Position, Square> fakeSquares = new HashMap<>();
     private final Set<Piece> outOfTheBoardPieces = new HashSet<>();
     private final Set<Effect> effects = new HashSet<>();
+    private final List<Position> promotedPositions = new ArrayList<>();
 
     private Color currentTurn = Color.WHITE;
 
@@ -181,6 +183,20 @@ public class ChessBoard {
         Position position = pawn.getPosition();
         removePieceFromTheBoard(pawn);
         add(new Queen(pawn.getColor()), position);
+        promotedPositions.add(position);
+    }
+
+    public List<Position> drainPromotedPositions() {
+        List<Position> result = new ArrayList<>(promotedPositions);
+        promotedPositions.clear();
+        return result;
+    }
+
+    public void overridePromotion(Position position, PromotionPiece promotionPiece) {
+        Piece current = at(position).getPiece().orElseThrow();
+        Color color = current.getColor();
+        removePieceFromTheBoard(current);
+        add(promotionPiece.toPiece(color), position);
     }
 
     public Piece removePieceFromTheBoard(Piece piece) {

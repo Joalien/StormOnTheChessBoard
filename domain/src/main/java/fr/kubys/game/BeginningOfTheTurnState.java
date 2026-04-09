@@ -8,7 +8,7 @@ public final class BeginningOfTheTurnState implements TurnState {
     @Override
     public void tryToMove(GameStateController gameStateController, Position from, Position to) {
         gameStateController.getChessBoard().tryToMove(from, to);
-        gameStateController.setCurrentState(StateEnum.MOVE_WITHOUT_CARD_PLAYED);
+        gameStateController.transitionToState(StateEnum.MOVE_WITHOUT_CARD_PLAYED);
     }
 
     @Override
@@ -19,7 +19,7 @@ public final class BeginningOfTheTurnState implements TurnState {
             default -> throw new IllegalStateException("You can only play BEFORE or REPLACE card!");
         };
         card.playOn(gameStateController.getChessBoard(), params); // FIXME
-        gameStateController.setCurrentState(nextState);
+        gameStateController.transitionToState(nextState);
     }
 
     @Override

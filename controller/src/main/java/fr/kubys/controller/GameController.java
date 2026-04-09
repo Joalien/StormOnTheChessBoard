@@ -5,6 +5,7 @@ import fr.kubys.board.IllegalMoveException;
 import fr.kubys.card.params.CardParam;
 import fr.kubys.command.*;
 import fr.kubys.core.Position;
+import fr.kubys.piece.PromotionPiece;
 import fr.kubys.dto.ChessBoardDto;
 import fr.kubys.mapper.MappingException;
 import fr.kubys.repository.ChessBoardRepository;
@@ -51,6 +52,7 @@ public class GameController {
                 List.of(e1, c1),
                 List.of(a7, a6)
         ).forEach(m -> saveCommand(m, gameId));
+        
     }
 
     private void saveCommand(List<Position> m, Integer gameId) {
@@ -98,6 +100,19 @@ public class GameController {
                 .param(param)
                 .build();
         chessBoardRepository.saveCommand(command);
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/{gameId}/promote/{position}/{piece}")
+    @CrossOrigin(origins = "*")
+    public ResponseEntity<Void> promote(@PathVariable Integer gameId, @PathVariable String position, @PathVariable PromotionPiece piece) {
+        chessBoardRepository.saveCommand(
+            PromoteCommand.builder()
+                .gameId(gameId)
+                .position(Position.valueOf(position))
+                .piece(piece)
+                .build()
+        );
         return ResponseEntity.ok().build();
     }
 

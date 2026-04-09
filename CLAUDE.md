@@ -52,8 +52,54 @@ front/        # React/Expo frontend
 
 **State Machine (Game Flow)**
 - Located in `domain/src/main/java/fr/kubys/game/`
-- States: `BEGINNING_OF_THE_TURN` → `BEFORE_MOVE`/`MOVE_WITHOUT_CARD_PLAYED` → `END_OF_THE_TURN`
-- Each state implements `TurnState` interface with `tryToMove()`, `tryToPlayCard()`, `tryToPass()`
+- Each state implements `TurnState` sealed interface with `tryToMove()`, `tryToPlayCard()`, `tryToPass()`
+
+```
+                         ┌─────────────────────────────────────────────────────────┐
+                         │             BEGINNING_OF_THE_TURN                       │
+                         │  tryToMove  → MOVE_WITHOUT_CARD_PLAYED                  │
+                         │  tryToPlay BEFORE_TURN card  → BEFORE_MOVE              │
+                         │  tryToPlay REPLACE_TURN card → END_OF_THE_TURN          │
+                         │  tryToPass → ✗ IllegalState                             │
+                         └──────────────────┬──────────────────┬───────────────────┘
+                                            │                  │
+                              tryToMove     │                  │ tryToPlay
+                                            ▼                  ▼
+               ┌────────────────────────────────┐   ┌──────────────────────────────┐
+               │    MOVE_WITHOUT_CARD_PLAYED    │   │      BEFORE_MOVE             │
+               │  tryToMove  → ✗                │   │  tryToMove  → END_OF_THE_TURN│
+               │  tryToPlay AFTER_TURN card     │   │  tryToPlay  → ✗              │
+               │             → END_OF_THE_TURN  │   │  tryToPass  → ok             │
+               │  tryToPass  → ok               │   └──────────────┬───────────────┘
+               └───────────────┬────────────────┘                  │
+                               │ tryToPlay / tryToPass             │ tryToMove
+                               ▼                                   ▼
+                         ┌─────────────────────────────────────────────────────────┐
+                         │                  END_OF_THE_TURN                        │
+                         │  tryToMove  → ✗ AlreadyMoved                            │
+                         │  tryToPlay  → ✗ CardAlreadyPlayed                       │
+                         │  tryToPass  → ok                                        │
+                         └──────────────────────────┬──────────────────────────────┘
+                                                    │ tryToPass
+                                                    ▼
+                                         swap player → BEGINNING_OF_THE_TURN
+
+─────────────────────────────────────────────────────────────────────────────────────
+  PROMOTION_PENDING  (intercepted transparently by transitionToState())
+─────────────────────────────────────────────────────────────────────────────────────
+  Any state that calls transitionToState(X) after a move/card triggers auto-promotion.
+  If ChessBoard.drainPromotedPositions() is non-empty, the machine enters:
+
+               ┌──────────────────────────────────────────────────────┐
+               │                 PROMOTION_PENDING                    │
+               │  promote(pos, piece) → resolves one promotion        │
+               │    when last promotion resolved → returns to X       │
+               │  tryToPass → clears all pending (Queens kept)        │
+               │              then returns to X via tryToPass chain   │
+               │  tryToMove  → ✗ IllegalState                        │
+               │  tryToPlay  → ✗ IllegalState                        │
+               └──────────────────────────────────────────────────────┘
+```
 
 **Domain Model**
 - `GameStateController` orchestrates game, implements `ChessBoardService`
