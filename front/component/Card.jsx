@@ -1,43 +1,45 @@
 import {Image} from "react-native";
 
-const IMAGES = {
-    'ApartheidCard': require('../assets/images/cards/ApartheidCard.png'),
-    'BarricadeCard': require('../assets/images/cards/BarricadeCard.png'),
-    'BombardCard': require('../assets/images/cards/BombardCard.png'),
-    'BombingCardCard': require('../assets/images/cards/BombingCard.png'),
-    'MadHorseDiseaseCard': require('../assets/images/cards/MadHorseDiseaseCard.png'),
-    'MadHouseCard': require('../assets/images/cards/MadHouseCard.png'),
-    'MagnetismCard': require('../assets/images/cards/MagnetismCard.png'),
-    'ManHoleCard': require('../assets/images/cards/ManHoleCard.png'),
-    'MercyCard': require('../assets/images/cards/MercyCard.png'),
-    'NeutralityCard': require('../assets/images/cards/NeutralityCard.png'),
-    'NuclearBombCard': require('../assets/images/cards/NuclearBombCard.png'),
-    'PegasusCard': require('../assets/images/cards/PegasusCard.png'),
-    'SelfDefenseCard': require('../assets/images/cards/SelfDefenseCard.png'),
-    'VampirismCard': require('../assets/images/cards/VampirismCard.png'),
-    'ZombiesCard': require('../assets/images/cards/ZombiesCard.png'),
-}
+const requireCard = require.context('../assets/images/cards', false, /\.png$/);
 
-export function Card({hidden, name, showCard}) {
-
-    const style = {
-        width: 100,
-        height: 150,
-    };
-
-    const back = <Image source={require('../assets/images/cards/back.png')} style={style}/>;
-    const requireCard = require.context('../assets/images/cards', false, /\.png$/);
+export function Card({hidden, name, showCard, isSelected}) {
     const fileName = `./${name}.png`;
     const hasImage = requireCard.keys().includes(fileName);
+    const imgStyle = {width: 80, height: 116, borderRadius: 7};
 
-    const image = hasImage ?
-        <Image source={requireCard(fileName)} style={style} onClick={showCard}/> :
-        null;
+    if (hidden) {
+        return (
+            <div className="sotc-card-hidden">
+                <Image source={require('../assets/images/cards/back.png')} style={imgStyle}/>
+            </div>
+        );
+    }
 
-    const defaultImage = <div style={{...style, backgroundColor: "grey"}} onClick={showCard}>
-        <h4 style={{wordWrap: "break-word"}}>{name}</h4>
-    </div>;
+    const wrapperClass = `sotc-card-wrapper${isSelected ? ' selected' : ''}`;
+
+    if (hasImage) {
+        return (
+            <div className={wrapperClass} onClick={showCard}>
+                <Image source={requireCard(fileName)} style={imgStyle}/>
+            </div>
+        );
+    }
+
     return (
-        hidden ? back : (hasImage ? image : defaultImage)
-    )
+        <div className={wrapperClass} onClick={showCard} style={{
+            width: 80,
+            height: 116,
+            background: 'rgba(255,255,255,0.04)',
+            border: '1px solid rgba(255,255,255,0.1)',
+            borderRadius: 7,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            padding: 8,
+        }}>
+            <span style={{fontSize: 10, color: '#8b949e', textAlign: 'center', wordBreak: 'break-word', fontWeight: 500, lineHeight: 1.4}}>
+                {name}
+            </span>
+        </div>
+    );
 }
