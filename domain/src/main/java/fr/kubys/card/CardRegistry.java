@@ -30,7 +30,8 @@ public class CardRegistry {
                 new MadHorseDiseaseCard(),
                 new NeutralityCard(),
                 new MadHouseCard(),
-                new NuclearBombCard()
+                new NuclearBombCard(),
+                new PegasusCard()
         );
     }
 }
