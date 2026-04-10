@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg height="800px" width="800px" version="1.1" xmlns="http://www.w3.org/2000/svg"
+	 viewBox="0 0 512 512" xml:space="preserve">
+<style type="text/css">
+	.st0{fill:#FFFFFF;stroke:#000000;stroke-width:8;}
+</style>
+<g>
+	<!-- Body -->
+	<ellipse class="st0" cx="256" cy="300" rx="120" ry="90"/>
+	<!-- Left leg 1 -->
+	<path class="st0" d="M160,330 Q120,370 90,400 Q80,410 95,415 Q110,410 140,380 Q155,365 160,350"/>
+	<!-- Left leg 2 -->
+	<path class="st0" d="M145,290 Q100,310 70,340 Q60,350 75,355 Q90,350 120,325 Q140,310 145,300"/>
+	<!-- Left leg 3 -->
+	<path class="st0" d="M140,260 Q95,260 60,270 Q48,275 55,285 Q68,285 105,275 Q135,268 142,265"/>
+	<!-- Right leg 1 -->
+	<path class="st0" d="M352,330 Q392,370 422,400 Q432,410 417,415 Q402,410 372,380 Q357,365 352,350"/>
+	<!-- Right leg 2 -->
+	<path class="st0" d="M367,290 Q412,310 442,340 Q452,350 437,355 Q422,350 392,325 Q372,310 367,300"/>
+	<!-- Right leg 3 -->
+	<path class="st0" d="M372,260 Q417,260 452,270 Q464,275 457,285 Q444,285 407,275 Q377,268 370,265"/>
+	<!-- Left claw arm -->
+	<path class="st0" d="M170,240 Q130,190 100,160 Q85,145 80,130"/>
+	<!-- Left claw top -->
+	<path class="st0" d="M80,130 Q65,110 50,120 Q55,140 75,145 Q80,130 80,130"/>
+	<!-- Left claw bottom -->
+	<path class="st0" d="M80,130 Q70,150 80,160 Q95,155 100,160"/>
+	<!-- Right claw arm -->
+	<path class="st0" d="M342,240 Q382,190 412,160 Q427,145 432,130"/>
+	<!-- Right claw top -->
+	<path class="st0" d="M432,130 Q447,110 462,120 Q457,140 437,145 Q432,130 432,130"/>
+	<!-- Right claw bottom -->
+	<path class="st0" d="M432,130 Q442,150 432,160 Q417,155 412,160"/>
+	<!-- Left eye stalk -->
+	<path class="st0" d="M220,215 Q210,180 200,160"/>
+	<circle class="st0" cx="200" cy="155" r="15"/>
+	<!-- Right eye stalk -->
+	<path class="st0" d="M292,215 Q302,180 312,160"/>
+	<circle class="st0" cx="312" cy="155" r="15"/>
+	<!-- Mouth -->
+	<path class="st0" d="M230,310 Q256,330 282,310"/>
+</g>
+</svg>
