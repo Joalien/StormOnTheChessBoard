@@ -570,11 +570,11 @@ export default function App() {
                         {isWhiteTurn ? "White's turn" : "Black's turn"}
                     </span>
 
-                    {/* Opponent cards */}
+                    {/* Opponent cards (face-up for ENEMY_TURN testing) */}
                     <Player
                         player={opponentPlayer}
                         showCard={showCard}
-                        hiddenCards={true}
+                        hiddenCards={false}
                         color={opponentColor}
                         selectedCard={selectedCard}
                     />
