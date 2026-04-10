@@ -22,7 +22,7 @@ public class ChessBoard {
 
     private final Map<Position, Square> board = new HashMap<>(64);
     private final Map<Position, Square> fakeSquares = new HashMap<>();
-    private final Set<Piece> outOfTheBoardPieces = new HashSet<>();
+    private final Set<PieceRemoval> outOfTheBoardPieces = new HashSet<>();
     private final Set<Effect> effects = new HashSet<>();
     private final List<Position> promotedPositions = new ArrayList<>();
 
@@ -74,9 +74,7 @@ public class ChessBoard {
             throw new IllegalArgumentException("Cannot add %s because %s is blocked".formatted(piece, position));
         if (at(position).getPiece().isPresent())
             throw new IllegalArgumentException("Cannot add %s because %s is not empty".formatted(piece, position));
-        if (outOfTheBoardPieces.remove(piece)) {
-//            log.info("{} go back to the life!", piece);
-        }
+        outOfTheBoardPieces.removeIf(r -> r.piece() == piece);
         piece.setPosition(position);
         at(position).setPiece(piece);
 
@@ -95,7 +93,11 @@ public class ChessBoard {
 
 
     public Set<Piece> getOutOfTheBoardPieces() {
-        return outOfTheBoardPieces;
+        return outOfTheBoardPieces.stream().map(PieceRemoval::piece).collect(Collectors.toSet());
+    }
+
+    public Set<PieceRemoval> getPieceRemovals() {
+        return Set.copyOf(outOfTheBoardPieces);
     }
 
     public Set<Position> getAllAttackablePosition(Piece piece) {
@@ -190,7 +192,7 @@ public class ChessBoard {
     public void move(Piece piece, Position positionToMoveOn) {
         new ArrayList<>(effects).forEach(effect -> effect.beforeMoveHook(this, piece));
 
-        at(positionToMoveOn).getPiece().ifPresent(this::removePieceFromTheBoard);
+        at(positionToMoveOn).getPiece().ifPresent(captured -> removePieceFromTheBoard(captured, PieceRemoval.RemovalReason.CAPTURED));
 //        log.info("{} moves from {} to {}", piece, piece.getPosition(), positionToMoveOn);
         at(piece.getPosition()).removePiece();
         add(piece, positionToMoveOn);
@@ -217,14 +219,17 @@ public class ChessBoard {
     }
 
     public Piece removePieceFromTheBoard(Piece piece) {
+        return removePieceFromTheBoard(piece, PieceRemoval.RemovalReason.EFFECT);
+    }
+
+    public Piece removePieceFromTheBoard(Piece piece, PieceRemoval.RemovalReason reason) {
         if (piece instanceof King)
             log.warn("{} is removed from the board, are you sure? Or should you throw CannotTakeKingException?", piece);
         at(piece.getPosition()).setPiece(null);
         piece.setPosition(null);
-        outOfTheBoardPieces.add(piece);
-//        log.info("{} has been taken and removed out of the board", piece);
+        outOfTheBoardPieces.add(new PieceRemoval(piece, turnNumber, reason));
 
-        new ArrayList<>(effects).forEach(effect -> effect.afterRemovingPieceHook(this, piece)); // duplicate the list to be able to remove an element while iterating
+        new ArrayList<>(effects).forEach(effect -> effect.afterRemovingPieceHook(this, piece));
         return piece;
     }
 
