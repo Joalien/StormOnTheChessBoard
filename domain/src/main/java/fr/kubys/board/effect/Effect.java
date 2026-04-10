@@ -29,6 +29,10 @@ public abstract class Effect {
         return false;
     }
 
+    public boolean blocksPosition(Position position) {
+        return false;
+    }
+
     public String getName() {
         return this.name;
     }

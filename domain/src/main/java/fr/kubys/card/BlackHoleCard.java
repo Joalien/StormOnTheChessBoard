@@ -1,8 +1,8 @@
 package fr.kubys.card;
 
 import fr.kubys.board.ChessBoard;
+import fr.kubys.board.effect.BlackHoleEffect;
 import fr.kubys.card.params.PositionCardParam;
-import fr.kubys.piece.extra.BlackHoleSquare;
 
 public class BlackHoleCard extends Card<PositionCardParam> {
 
@@ -13,6 +13,8 @@ public class BlackHoleCard extends Card<PositionCardParam> {
     @Override
     protected void validInput(ChessBoard chessBoard, PositionCardParam param) {
         if (param.position() == null) throw new IllegalStateException();
+        if (chessBoard.getEffects().stream().anyMatch(effect -> effect.blocksPosition(param.position())))
+            throw new IllegalArgumentException("You should select an empty square");
         if (chessBoard.at(param.position()).getPiece().isPresent())
             throw new IllegalArgumentException("You should select an empty square");
     }
@@ -24,6 +26,6 @@ public class BlackHoleCard extends Card<PositionCardParam> {
 
     @Override
     protected void doAction(ChessBoard chessBoard, PositionCardParam param) {
-        chessBoard.setSquare(new BlackHoleSquare(param.position()));
+        chessBoard.addEffect(new BlackHoleEffect(param.position()));
     }
 }

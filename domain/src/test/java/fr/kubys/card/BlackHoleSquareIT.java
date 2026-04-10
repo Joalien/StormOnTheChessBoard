@@ -1,8 +1,8 @@
 package fr.kubys.card;
 
 import fr.kubys.board.ChessBoard;
+import fr.kubys.board.effect.BlackHoleEffect;
 import fr.kubys.card.params.QuadrilleCardParam;
-import fr.kubys.piece.extra.BlackHoleSquare;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -14,8 +14,8 @@ class BlackHoleSquareIT {
     void should_not_turn_if_black_hole_in_corner() {
         ChessBoard chessBoard = ChessBoard.createWithInitialState();
         chessBoard.removePieceFromTheBoard(chessBoard.at(a1).getPiece().get());
-        chessBoard.setSquare(new BlackHoleSquare(a1));
+        chessBoard.addEffect(new BlackHoleEffect(a1));
 
-        Assertions.assertThrows(BlackHoleSquare.BlackHoleException.class, () -> new QuadrilleCard().playOn(chessBoard, new QuadrilleCardParam(QuadrilleCard.Direction.CLOCKWISE)));
+        Assertions.assertThrows(IllegalArgumentException.class, () -> new QuadrilleCard().playOn(chessBoard, new QuadrilleCardParam(QuadrilleCard.Direction.CLOCKWISE)));
     }
 }

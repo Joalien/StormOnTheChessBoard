@@ -10,7 +10,6 @@ import fr.kubys.dto.ChessBoardDto;
 import fr.kubys.dto.EffectDto;
 import fr.kubys.dto.PlayerDto;
 import fr.kubys.piece.*;
-import fr.kubys.piece.extra.BlackHolePiece;
 import fr.kubys.piece.extra.Kangaroo;
 import fr.kubys.player.Player;
 
@@ -72,8 +71,7 @@ public class OutputMapper {
                         p -> p instanceof Knight, "N",
                         p -> p instanceof Bishop, "B",
                         p -> p instanceof Rock, "R",
-                        p -> p instanceof Kangaroo, "Kangaroo",
-                        p -> p instanceof BlackHolePiece, "BlackHole"
+                        p -> p instanceof Kangaroo, "Kangaroo"
                 ).entrySet().stream()
                 .filter(objectStringEntry -> objectStringEntry.getKey().test(piece))
                 .findAny()

@@ -2,11 +2,11 @@ package fr.kubys.card;
 
 import fr.kubys.board.ChessBoard;
 import fr.kubys.board.IllegalMoveException;
+import fr.kubys.board.effect.BlackHoleEffect;
 import fr.kubys.card.params.PositionCardParam;
 import fr.kubys.core.Color;
 import fr.kubys.piece.Piece;
 import fr.kubys.piece.Queen;
-import fr.kubys.piece.extra.BlackHoleSquare;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
@@ -24,7 +24,7 @@ class BlackHoleSquareCardTest {
 
             assertDoesNotThrow(() -> blackHoleCard.playOn(chessBoard, new PositionCardParam(e4)));
 
-            assertInstanceOf(BlackHoleSquare.class, chessBoard.at(e4));
+            assertTrue(chessBoard.getEffects().stream().anyMatch(e -> e instanceof BlackHoleEffect));
             assertThrows(IllegalArgumentException.class, () -> chessBoard.add(new Queen(Color.WHITE), e4));
         }
     }

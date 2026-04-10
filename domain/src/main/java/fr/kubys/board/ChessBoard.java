@@ -69,6 +69,8 @@ public class ChessBoard {
         if (!fakeSquares.isEmpty())
             // Should never happen
             throw new IllegalStateException("You cannot update board if there are fake pieces on");
+        if (doesEffectBlockSquare(position))
+            throw new IllegalArgumentException("Cannot add %s because %s is blocked".formatted(piece, position));
         if (at(position).getPiece().isPresent())
             throw new IllegalArgumentException("Cannot add %s because %s is not empty".formatted(piece, position));
         if (outOfTheBoardPieces.remove(piece)) {
@@ -118,7 +120,13 @@ public class ChessBoard {
                 .anyMatch(effect -> effect.allowToMove(piece, positionToMoveOn));
     }
 
+    private boolean doesEffectBlockSquare(Position position) {
+        return effects.stream()
+                .anyMatch(effect -> effect.blocksPosition(position));
+    }
+
     public boolean emptyPath(Piece piece, Position squareToGo) {
+        if (piece.squaresOnThePath(squareToGo).stream().anyMatch(this::doesEffectBlockSquare)) return false;
         Stream<Optional<Piece>> piecesOnPath = piece.squaresOnThePath(squareToGo).stream()
                 .map(this::at)
                 .map(Square::getPiece);
@@ -130,6 +138,7 @@ public class ChessBoard {
     }
 
     boolean isEnemyOrEmpty(Piece piece, Position positionToMoveOn, Color effectiveColor) {
+        if (doesEffectBlockSquare(positionToMoveOn)) return false;
         Optional<Piece> p = at(positionToMoveOn).getPiece();
         return p.isEmpty() || p
                 .map(Piece::getColor)
@@ -333,7 +342,4 @@ public class ChessBoard {
         this.currentTurn = currentPlayer;
     }
 
-    public void setSquare(Square square) {
-        this.board.put(square.getPosition(), square);
-    }
 }
