@@ -1,0 +1,131 @@
+# Plan: Déployer le jeu pour 2 joueurs distants
+
+## Contexte
+
+Le jeu fonctionne actuellement en mode "pass-the-device" : un seul navigateur affiche les deux côtés. L'objectif est de permettre à 2 joueurs sur des machines différentes de se connecter à la même URL et jouer ensemble, sans système de connexion/auth.
+
+## Approche
+
+Principe : changements minimaux, côté frontend uniquement + ajout d'un reverse proxy nginx.
+
+- Couleur via query param : ?color=white / ?color=black dans l'URL
+- Polling toutes les 2s pour synchroniser l'état (pas de WebSocket -- trop lourd pour le gain)
+- Nginx reverse proxy : point d'entrée unique qui sert le frontend sur / et proxie /chessboard vers le backend
+- Aucun changement backend : le REST existant suffit
+
+## Étapes
+
+### 1. Frontend -- URL API dynamique (front/App.js)
+
+Remplacer les 2 URLs hardcodées http://localhost:9000/chessboard :
+- Ligne 9 : const base = ... -> utiliser window.location.origin + "/chessboard/"
+- Ligne 313 : fetch("http://localhost:9000/chessboard", ...) -> utiliser la même base
+
+  const base = (typeof window !== 'undefined' ? window.location.origin : 'http://localhost:9000') + "/chessboard/";
+
+### 2. Frontend -- Lecture couleur depuis l'URL (front/App.js)
+
+Ajouter une fonction pour extraire ?color=white|black :
+
+  function getPlayerColorFromUrl() {
+      if (typeof window === 'undefined') return null;
+      const params = new URLSearchParams(window.location.search);
+      return params.get('color'); // "white", "black", or null (local mode)
+  }
+
+Nouveau state : const [myColor] = useState(getPlayerColorFromUrl);
+
+Impacts sur le comportement :
+- Orientation plateau : boardOrientation={myColor || currentPlayerColor} (fixe au lieu de tourner)
+- Verrouillage interactions : quand myColor est défini et que ce n'est pas mon tour -> arePiecesDraggable={false}, boutons "End Turn"/"Undo"/cartes désactivés
+- Cartes : afficher toujours mes cartes en bas, les cartes adverses en haut
+- Sans ?color : garder le comportement actuel (mode local pass-the-device)
+
+### 3. Frontend -- Polling (front/App.js)
+
+Ajouter un useEffect qui poll fetchGame() quand c'est le tour de l'adversaire :
+
+  useEffect(() => {
+      if (!myColor) return; // pas de polling en mode local
+      if (currentPlayerColor === myColor) return; // mon tour, pas besoin
+      const interval = setInterval(fetchGame, 2000);
+      return () => clearInterval(interval);
+  }, [gameId, myColor, currentPlayerColor]);
+
+### 4. Frontend -- Bouton "Copier le lien adversaire" (front/App.js)
+
+Ajouter un bouton dans le header qui copie l'URL pour l'adversaire :
+
+  function getOpponentUrl() {
+      const oppositeColor = myColor === 'white' ? 'black' : 'white';
+      return window.location.origin + '/' + gameId + '?color=' + oppositeColor;
+  }
+
+Utiliser navigator.clipboard.writeText() pour copier.
+
+### 5. Nginx reverse proxy (nouveau fichier nginx.conf)
+
+  server {
+      listen 80;
+
+      location /chessboard {
+          proxy_pass http://sotc-backend:9000;
+          proxy_set_header Host $host;
+          proxy_set_header X-Real-IP $remote_addr;
+      }
+
+      location / {
+          proxy_pass http://sotc-frontend:8081;
+          proxy_set_header Host $host;
+          proxy_set_header Upgrade $http_upgrade;
+          proxy_set_header Connection "upgrade";
+      }
+  }
+
+### 6. Docker Compose -- Ajouter nginx (docker-compose.yml)
+
+Ajouter un service sotc-nginx :
+
+  sotc-nginx:
+    container_name: sotc-nginx
+    image: nginx:alpine
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
+    depends_on:
+      - sotc-backend
+      - sotc-frontend
+    networks:
+      - sotc-net
+
+Garder les ports existants sur backend/frontend pour le dev local.
+
+## Fichiers modifiés
+
+  front/App.js          -> URL dynamique, myColor, polling, verrouillage tour, bouton copier lien
+  nginx.conf            -> Nouveau fichier -- config reverse proxy
+  docker-compose.yml    -> Ajout service nginx
+
+## Déploiement
+
+Sur n'importe quel VPS avec Docker :
+1. git clone + docker-compose up -d
+2. Joueur 1 ouvre http://<ip>/ -> crée une partie -> redirigé vers /<gameId>
+3. Joueur 1 ajoute ?color=white à son URL, copie le lien adversaire
+4. Joueur 2 ouvre http://<ip>/<gameId>?color=black
+
+## Vérification
+
+1. docker-compose up -- vérifier que les 3 services démarrent
+2. Ouvrir 2 onglets : http://localhost/<gameId>?color=white et ?color=black
+3. Vérifier que le plateau est orienté correctement dans chaque onglet
+4. Jouer un coup côté blanc -> vérifier qu'il apparaît côté noir en ~2s
+5. Vérifier qu'on ne peut pas bouger les pièces quand ce n'est pas son tour
+6. Vérifier que le mode sans ?color fonctionne toujours (rétrocompatibilité)
+
+## Limites acceptées (projet hobby)
+
+- Pas de vérification côté serveur de qui joue quelle couleur (honor system)
+- Expo dev server en production (optimisation future : npx expo export:web + servir en statique)
+- Pas de HTTPS (ajout ultérieur via Cloudflare ou certbot)
