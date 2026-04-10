@@ -28,6 +28,7 @@ public class ChessBoard {
 
     private Color currentTurn = Color.WHITE;
     private int turnNumber = 0;
+    private Position lastMoveFrom;
 
     public static ChessBoard createEmpty() {
 //        log.debug("create empty chessboard");
@@ -201,6 +202,7 @@ public class ChessBoard {
 
     public void move(Piece piece, Position positionToMoveOn) {
         new ArrayList<>(effects).forEach(effect -> effect.beforeMoveHook(this, piece));
+        lastMoveFrom = piece.getPosition();
 
         at(positionToMoveOn).getPiece().ifPresent(captured -> removePieceFromTheBoard(captured, PieceRemoval.RemovalReason.CAPTURED));
 //        log.info("{} moves from {} to {}", piece, piece.getPosition(), positionToMoveOn);
@@ -358,6 +360,10 @@ public class ChessBoard {
 
     public int getTurnNumber() {
         return turnNumber;
+    }
+
+    public Position getLastMoveFrom() {
+        return lastMoveFrom;
     }
 
 }
