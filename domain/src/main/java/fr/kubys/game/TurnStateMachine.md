@@ -8,24 +8,32 @@ Ce document décrit le fonctionnement de la machine à états qui gère le déro
 stateDiagram-v2
     [*] --> BEGINNING_OF_THE_TURN: Début du tour
 
-    BEGINNING_OF_THE_TURN --> BEFORE_MOVE: Jouer carte BEFORE_TURN
-    BEGINNING_OF_THE_TURN --> END_OF_THE_TURN: Jouer carte REPLACE_TURN
-    BEGINNING_OF_THE_TURN --> MOVE_WITHOUT_CARD_PLAYED: Déplacer une pièce
+    BEGINNING_OF_THE_TURN --> ENEMY_REACTION: Déplacer une pièce
+    BEGINNING_OF_THE_TURN --> ENEMY_REACTION: Jouer carte BEFORE_TURN
+    BEGINNING_OF_THE_TURN --> ENEMY_REACTION: Jouer carte REPLACE_TURN
 
-    BEFORE_MOVE --> END_OF_THE_TURN: Déplacer une pièce
-    BEFORE_MOVE --> PROMOTION_PENDING: (si promotion détectée)
+    ENEMY_REACTION --> MOVE_WITHOUT_CARD_PLAYED: Passer / Jouer carte ENEMY_TURN\n(retour après mouvement)
+    ENEMY_REACTION --> BEFORE_MOVE: Passer / Jouer carte ENEMY_TURN\n(retour après carte BEFORE_TURN)
+    ENEMY_REACTION --> END_OF_THE_TURN: Passer / Jouer carte ENEMY_TURN\n(retour après carte REPLACE_TURN)
 
-    MOVE_WITHOUT_CARD_PLAYED --> END_OF_THE_TURN: Jouer carte AFTER_TURN
+    BEFORE_MOVE --> ENEMY_REACTION: Déplacer une pièce
+
+    MOVE_WITHOUT_CARD_PLAYED --> ENEMY_REACTION: Jouer carte AFTER_TURN
     MOVE_WITHOUT_CARD_PLAYED --> END_OF_THE_TURN: Passer (pass)
-    MOVE_WITHOUT_CARD_PLAYED --> PROMOTION_PENDING: (si promotion détectée)
 
     END_OF_THE_TURN --> [*]: Fin du tour (pass)
 
     PROMOTION_PENDING --> PROMOTION_PENDING: promote(pos, pièce)\n[promotions restantes]
-    PROMOTION_PENDING --> BEFORE_MOVE: promote(pos, pièce)\n[dernière promotion depuis BEFORE_MOVE]
-    PROMOTION_PENDING --> END_OF_THE_TURN: promote(pos, pièce)\n[dernière promotion depuis END_OF_THE_TURN]
-    PROMOTION_PENDING --> MOVE_WITHOUT_CARD_PLAYED: promote(pos, pièce)\n[dernière promotion depuis MOVE_WITHOUT_CARD_PLAYED]
+    PROMOTION_PENDING --> ENEMY_REACTION: promote(pos, pièce)\n[dernière promotion]
     PROMOTION_PENDING --> END_OF_THE_TURN: Passer (valide la Dame par défaut)
+
+    note right of ENEMY_REACTION
+        État intercalé par transitionToState().
+        Le joueur adverse est temporairement swappé.
+        Il peut jouer une carte ENEMY_TURN ou passer.
+        Max 1 carte ENEMY_TURN par tour.
+        Skippé si déjà jouée ce tour.
+    end note
 ```
 
 ## Description des États
@@ -60,7 +68,18 @@ Le joueur a déplacé une pièce sans avoir joué de carte avant. Il peut :
 ❌ Impossible de jouer une carte (exception `CardAlreadyPlayedException`)
 ✅ Passer est autorisé → échange de joueur, retour à `BEGINNING_OF_THE_TURN`
 
-### 5. PROMOTION_PENDING (Promotion en attente)
+### 5. ENEMY_REACTION (Réaction adverse)
+État intercalé automatiquement par `transitionToState()` après chaque coup ou carte joué(e), si aucune carte `ENEMY_TURN` n'a encore été jouée ce tour. Le joueur courant est temporairement swappé vers l'adversaire.
+
+- **Jouer une carte ENEMY_TURN** → joue la carte, swap back, retourne à l'état cible mémorisé
+- **Passer** → swap back, retourne à l'état cible mémorisé
+
+❌ Impossible de déplacer une pièce
+❌ Impossible de jouer une carte qui n'est pas `ENEMY_TURN`
+
+> **Note :** maximum une carte `ENEMY_TURN` peut être jouée par tour. Si déjà jouée, l'état est skippé automatiquement.
+
+### 6. PROMOTION_PENDING (Promotion en attente)
 État intercalé automatiquement par `transitionToState()` lorsqu'un déplacement ou une carte a promu un ou plusieurs pions en Dame. Le pion est **déjà remplacé par une Dame** sur le plateau ; le joueur peut choisir de la remplacer par une autre pièce.
 
 - **`promote(position, pièce)`** → remplace la Dame à cette position par la pièce choisie. Si c'est la dernière promotion en attente, retourne à l'état cible mémorisé (`BEFORE_MOVE`, `MOVE_WITHOUT_CARD_PLAYED` ou `END_OF_THE_TURN`).
@@ -78,7 +97,7 @@ Le joueur a déplacé une pièce sans avoir joué de carte avant. Il peut :
 | **BEFORE_TURN** | Carte jouée avant le déplacement | État `BEGINNING_OF_THE_TURN` |
 | **REPLACE_TURN** | Remplace complètement le tour (pas de déplacement) | État `BEGINNING_OF_THE_TURN` |
 | **AFTER_TURN** | Carte jouée après le déplacement | État `MOVE_WITHOUT_CARD_PLAYED` |
-| **ENEMY_TURN** | *(à implémenter)* | ? |
+| **ENEMY_TURN** | Carte jouée par l'adversaire en réaction à un coup ou une carte | État `ENEMY_REACTION` (max 1 par tour) |
 
 ## Implémentation
 
@@ -88,6 +107,7 @@ Le joueur a déplacé une pièce sans avoir joué de carte avant. Il peut :
   - `BeforeMoveCardPlayedState` (domain/src/main/java/fr/kubys/game/BeforeMoveCardPlayedState.java:8)
   - `MoveWithoutCardPlayedState` (domain/src/main/java/fr/kubys/game/MoveWithoutCardPlayedState.java:9)
   - `EndOfTheTurnState` (domain/src/main/java/fr/kubys/game/EndOfTheTurnState.java:9)
+  - `EnemyReactionState` (domain/src/main/java/fr/kubys/game/EnemyReactionState.java:8)
   - `PromotionPendingState` (domain/src/main/java/fr/kubys/game/PromotionPendingState.java:7)
 - **Enum** : `StateEnum` (domain/src/main/java/fr/kubys/game/StateEnum.java:3)
 - **Contrôleur** : `GameStateController` — `transitionToState()` intercepte les promotions de façon transparente

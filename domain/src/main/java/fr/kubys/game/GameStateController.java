@@ -5,6 +5,7 @@ import fr.kubys.board.ChessBoard;
 import fr.kubys.board.effect.Effect;
 import fr.kubys.card.Card;
 import fr.kubys.card.CardNotFoundException;
+import fr.kubys.card.CardType;
 import fr.kubys.card.params.CardParam;
 import fr.kubys.core.Color;
 import fr.kubys.core.Position;
@@ -31,6 +32,8 @@ public class GameStateController implements ChessBoardService {
     private StateEnum currentState;
     private final Set<Position> pendingPromotions = new HashSet<>();
     private StateEnum returnStateAfterPromotion;
+    private boolean enemyCardPlayedThisTurn = false;
+    private StateEnum returnStateAfterEnemyReaction;
 
     private final java.util.function.Supplier<ChessBoard> boardFactory;
 
@@ -65,6 +68,7 @@ public class GameStateController implements ChessBoardService {
     @Override
     public void tryToMove(Position from, Position to) {
         assertGameHasAlreadyStarted();
+        autoResolveEnemyReaction();
         Optional<Piece> pieceToMove = chessBoard.at(from).getPiece();
         if (pieceToMove.isEmpty()) throw new IllegalArgumentException("There is no piece on %s".formatted(from));
         if (pieceToMove.get().getColor().cannotBeMovedBy(getCurrentPlayer().getColor()))
@@ -76,21 +80,43 @@ public class GameStateController implements ChessBoardService {
     @Override
     public <T extends CardParam> void tryToPlayCard(Card<T> card, T params) {
         assertGameHasAlreadyStarted();
-        if (!getCurrentPlayer().getCards().contains(card))
-            throw new CardNotFoundException("Player %s does not have %s in hand!".formatted(getCurrentPlayer(), card));
+
+        if (currentState == StateEnum.ENEMY_REACTION && card.getType() == CardType.ENEMY_TURN) {
+            // Opponent is reacting with an ENEMY_TURN card — check opponent's hand
+            Player opponent = getOpponent();
+            if (!opponent.getCards().contains(card))
+                throw new CardNotFoundException("Player %s does not have %s in hand!".formatted(opponent, card));
+            currentState.getState().tryToPlayCard(this, card, params);
+            opponent.getCards().remove(card);
+            deck.discardAndDraw(card, opponent);
+            return;
+        }
+
+        autoResolveEnemyReaction();
+        Player player = getCurrentPlayer();
+        if (!player.getCards().contains(card))
+            throw new CardNotFoundException("Player %s does not have %s in hand!".formatted(player, card));
 
         currentState.getState().tryToPlayCard(this, card, params);
-        getCurrentPlayer().getCards().remove(card);
-        deck.discardAndDraw(card, getCurrentPlayer());
+        player.getCards().remove(card);
+        deck.discardAndDraw(card, player);
     }
 
     @Override
     public void tryToPass() {
         assertGameHasAlreadyStarted();
+        autoResolveEnemyReaction();
         currentState.getState().tryToPass(this);
+        enemyCardPlayedThisTurn = false;
         setCurrentState(StateEnum.BEGINNING_OF_THE_TURN);
         swapCurrentPlayer();
         chessBoard.setTurn(getCurrentPlayer().getColor());
+    }
+
+    private void autoResolveEnemyReaction() {
+        if (currentState == StateEnum.ENEMY_REACTION) {
+            setCurrentState(returnStateAfterEnemyReaction);
+        }
     }
 
     private void swapCurrentPlayer() {
@@ -167,6 +193,15 @@ public class GameStateController implements ChessBoardService {
             returnStateAfterPromotion = nextState;
             setCurrentState(StateEnum.PROMOTION_PENDING);
         } else {
+            transitionToStateAfterPromotion(nextState);
+        }
+    }
+
+    void transitionToStateAfterPromotion(StateEnum nextState) {
+        if (!enemyCardPlayedThisTurn) {
+            returnStateAfterEnemyReaction = nextState;
+            setCurrentState(StateEnum.ENEMY_REACTION);
+        } else {
             setCurrentState(nextState);
         }
     }
@@ -178,12 +213,27 @@ public class GameStateController implements ChessBoardService {
             throw new IllegalArgumentException("No pending promotion on %s".formatted(position));
         chessBoard.overridePromotion(position, piece);
         if (pendingPromotions.isEmpty()) {
-            setCurrentState(returnStateAfterPromotion);
+            transitionToStateAfterPromotion(returnStateAfterPromotion);
         }
     }
 
     @Override
     public Set<Position> getPendingPromotions() {
         return Set.copyOf(pendingPromotions);
+    }
+
+    Player getOpponent() {
+        return Stream.of(white, black)
+                .filter(player -> player.getColor() != chessBoard.getCurrentTurn())
+                .findAny()
+                .orElseThrow(IllegalStateException::new);
+    }
+
+    void setEnemyCardPlayedThisTurn(boolean played) {
+        this.enemyCardPlayedThisTurn = played;
+    }
+
+    StateEnum getReturnStateAfterEnemyReaction() {
+        return returnStateAfterEnemyReaction;
     }
 }

@@ -59,7 +59,7 @@ class MoveWithoutCardPlayedStateTest {
         void should_be_able_to_play_valid_after_move_card() {
             assertDoesNotThrow(() -> gameStateController.tryToPlayCard(afterMoveCard, new QuadrilleCardParam(QuadrilleCard.Direction.CLOCKWISE)));
 
-            assertEquals(StateEnum.END_OF_THE_TURN, gameStateController.getCurrentState());
+            assertEquals(StateEnum.ENEMY_REACTION, gameStateController.getCurrentState());
         }
 
         @Test

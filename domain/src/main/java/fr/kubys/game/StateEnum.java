@@ -5,6 +5,7 @@ public enum StateEnum {
     BEFORE_MOVE(new BeforeMoveCardPlayedState()),
     MOVE_WITHOUT_CARD_PLAYED(new MoveWithoutCardPlayedState()),
     END_OF_THE_TURN(new EndOfTheTurnState()),
+    ENEMY_REACTION(new EnemyReactionState()),
     PROMOTION_PENDING(new PromotionPendingState());
 
     private final TurnState state;

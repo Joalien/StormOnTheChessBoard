@@ -29,7 +29,7 @@ class BeforeMoveCardPlayedStateTest {
     void should_be_able_to_play_a_valid_move() {
         assertDoesNotThrow(() -> gameStateController.tryToMove(e2, e4));
 
-        assertEquals(StateEnum.END_OF_THE_TURN, gameStateController.getCurrentState());
+        assertEquals(StateEnum.ENEMY_REACTION, gameStateController.getCurrentState());
     }
 
     @Test
