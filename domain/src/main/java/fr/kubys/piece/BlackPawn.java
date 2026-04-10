@@ -18,8 +18,8 @@ public class BlackPawn extends Pawn {
     }
 
     @Override
-    protected Row promotionRow() {
-        return Row.One;
+    public boolean isOnPromotionRow() {
+        return getRow() == Row.One;
     }
 
     @Override

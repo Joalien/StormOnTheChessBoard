@@ -21,11 +21,6 @@ public class NeutralPawn extends Pawn {
     }
 
     @Override
-    protected Row promotionRow() {
-        return null; // handled by isOnPromotionRow
-    }
-
-    @Override
     public boolean isOnPromotionRow() {
         return getRow() == Row.One || getRow() == Row.Eight;
     }

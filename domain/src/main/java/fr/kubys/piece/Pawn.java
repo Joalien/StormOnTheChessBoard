@@ -21,11 +21,7 @@ public abstract class Pawn extends Piece {
 
     protected abstract Row startingRow();
 
-    protected abstract Row promotionRow();
-
-    public boolean isOnPromotionRow() {
-        return getRow() == promotionRow();
-    }
+    public abstract boolean isOnPromotionRow();
 
     @Override
     public boolean isPositionTheoreticallyReachable(File file, Row row, Color color) {

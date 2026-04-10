@@ -21,8 +21,8 @@ public class Crab extends Pawn {
     }
 
     @Override
-    protected Row promotionRow() {
-        return color == Color.WHITE ? Row.Eight : Row.One;
+    public boolean isOnPromotionRow() {
+        return (color == Color.WHITE) ? getRow() == Row.Eight : getRow() == Row.One;
     }
 
     @Override

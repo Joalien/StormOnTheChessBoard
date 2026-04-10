@@ -18,8 +18,8 @@ public class WhitePawn extends Pawn {
     }
 
     @Override
-    protected Row promotionRow() {
-        return Row.Eight;
+    public boolean isOnPromotionRow() {
+        return getRow() == Row.Eight;
     }
 
     @Override
