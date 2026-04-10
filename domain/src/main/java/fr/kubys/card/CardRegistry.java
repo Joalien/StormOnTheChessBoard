@@ -11,6 +11,15 @@ public class CardRegistry {
 
     public static List<Card<? extends CardParam>> createAllCards() {
         return List.of(
+                new OhDarlingCard(),
+                new PrivateJetCard(),
+                new FrightCard(),
+                new CannibalCard(),
+                new ShotCard(),
+                new RetaliationCard(),
+                new BigBluesCard(),
+                new StateVisitCard(),
+                new BestFriendsCard(),
                 new RaccoonCard(),
                 new UrbanPlanningCard(),
                 new SwapYourKnightsCard(),
