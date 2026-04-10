@@ -26,7 +26,7 @@ class BanzaiCardTest {
 
     @Test
     void should_advance_white_pawn_three_squares() {
-        WhitePawn pawn = new WhitePawn();
+        Pawn pawn = new Pawn(Color.WHITE);
         board.add(pawn, d2);
 
         card.playOn(board, new PieceCardParam(pawn));
@@ -37,7 +37,7 @@ class BanzaiCardTest {
 
     @Test
     void should_advance_black_pawn_three_squares() {
-        BlackPawn pawn = new BlackPawn();
+        Pawn pawn = new Pawn(Color.BLACK);
         board.add(pawn, d7);
         board.setTurn(Color.BLACK);
 
@@ -48,7 +48,7 @@ class BanzaiCardTest {
 
     @Test
     void should_reject_if_path_blocked() {
-        WhitePawn pawn = new WhitePawn();
+        Pawn pawn = new Pawn(Color.WHITE);
         board.add(pawn, d2);
         board.add(new Knight(Color.WHITE), d4);
 
@@ -58,7 +58,7 @@ class BanzaiCardTest {
 
     @Test
     void should_reject_if_would_go_off_board() {
-        WhitePawn pawn = new WhitePawn();
+        Pawn pawn = new Pawn(Color.WHITE);
         board.add(pawn, d6);
 
         assertThrows(IllegalArgumentException.class,
@@ -67,7 +67,7 @@ class BanzaiCardTest {
 
     @Test
     void should_promote_if_reaching_last_rank() {
-        WhitePawn pawn = new WhitePawn();
+        Pawn pawn = new Pawn(Color.WHITE);
         board.add(pawn, d5);
 
         card.playOn(board, new PieceCardParam(pawn));

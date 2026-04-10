@@ -8,7 +8,6 @@ import fr.kubys.core.Position;
 import fr.kubys.piece.Knight;
 import fr.kubys.piece.Pawn;
 import fr.kubys.piece.Piece;
-import fr.kubys.piece.WhitePawn;
 import fr.kubys.player.Player;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -95,7 +94,7 @@ class PlayCardWithImmutableParamCommandTest {
         currentPlayer.getCards().add(chargeCard);
         Mockito.when(chessBoard.getPieces()).thenReturn(Set.of("e2", "e3", "e4", "h7").stream()
                 .map(position -> {
-                    Pawn p = new WhitePawn();
+                    Pawn p = new Pawn(Color.WHITE);
                     p.setPosition(Position.valueOf(position));
                     return p;
                 }).collect(Collectors.toSet()));

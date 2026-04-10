@@ -26,7 +26,7 @@ class BigBluesCardTest {
 
     @Test
     void should_remove_isolated_enemy_pawn() {
-        BlackPawn pawn = new BlackPawn();
+        Pawn pawn = new Pawn(Color.BLACK);
         board.add(pawn, a6);
 
         card.playOn(board, new PieceCardParam(pawn));
@@ -37,7 +37,7 @@ class BigBluesCardTest {
 
     @Test
     void should_reject_if_neighbor_is_not_empty() {
-        BlackPawn pawn = new BlackPawn();
+        Pawn pawn = new Pawn(Color.BLACK);
         board.add(pawn, d5);
         board.add(new Knight(Color.WHITE), c4);
 
@@ -47,7 +47,7 @@ class BigBluesCardTest {
 
     @Test
     void should_reject_own_pawn() {
-        WhitePawn pawn = new WhitePawn();
+        Pawn pawn = new Pawn(Color.WHITE);
         board.add(pawn, a3);
 
         assertThrows(IllegalArgumentException.class,

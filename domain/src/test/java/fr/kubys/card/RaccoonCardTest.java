@@ -26,46 +26,46 @@ class RaccoonCardTest {
 
     @Test
     void should_swap_own_pawn_and_bishop() {
-        WhitePawn pawn = new WhitePawn();
+        Pawn pawn = new Pawn(Color.WHITE);
         Bishop bishop = new Bishop(Color.WHITE);
         board.add(pawn, d2);
         board.add(bishop, c1);
 
         card.playOn(board, new TwoPieceCardParam(pawn, bishop));
 
-        assertInstanceOf(WhitePawn.class, board.at(c1).getPiece().get());
+        assertInstanceOf(Pawn.class, board.at(c1).getPiece().get());
         assertInstanceOf(Bishop.class, board.at(d2).getPiece().get());
     }
 
     @Test
     void should_swap_own_pawn_and_knight() {
-        WhitePawn pawn = new WhitePawn();
+        Pawn pawn = new Pawn(Color.WHITE);
         Knight knight = new Knight(Color.WHITE);
         board.add(pawn, d2);
         board.add(knight, b1);
 
         card.playOn(board, new TwoPieceCardParam(pawn, knight));
 
-        assertInstanceOf(WhitePawn.class, board.at(b1).getPiece().get());
+        assertInstanceOf(Pawn.class, board.at(b1).getPiece().get());
         assertInstanceOf(Knight.class, board.at(d2).getPiece().get());
     }
 
     @Test
     void should_swap_own_pawn_and_rook() {
-        WhitePawn pawn = new WhitePawn();
+        Pawn pawn = new Pawn(Color.WHITE);
         Rock rook = new Rock(Color.WHITE);
         board.add(pawn, d2);
         board.add(rook, a1);
 
         card.playOn(board, new TwoPieceCardParam(pawn, rook));
 
-        assertInstanceOf(WhitePawn.class, board.at(a1).getPiece().get());
+        assertInstanceOf(Pawn.class, board.at(a1).getPiece().get());
         assertInstanceOf(Rock.class, board.at(d2).getPiece().get());
     }
 
     @Test
     void should_reject_enemy_pieces() {
-        BlackPawn pawn = new BlackPawn();
+        Pawn pawn = new Pawn(Color.BLACK);
         Bishop bishop = new Bishop(Color.BLACK);
         board.add(pawn, d7);
         board.add(bishop, c8);
@@ -76,8 +76,8 @@ class RaccoonCardTest {
 
     @Test
     void should_reject_two_pawns() {
-        WhitePawn pawn1 = new WhitePawn();
-        WhitePawn pawn2 = new WhitePawn();
+        Pawn pawn1 = new Pawn(Color.WHITE);
+        Pawn pawn2 = new Pawn(Color.WHITE);
         board.add(pawn1, d2);
         board.add(pawn2, c2);
 
@@ -87,7 +87,7 @@ class RaccoonCardTest {
 
     @Test
     void should_promote_white_pawn_swapped_to_last_rank() {
-        WhitePawn pawn = new WhitePawn();
+        Pawn pawn = new Pawn(Color.WHITE);
         Rock rook = new Rock(Color.WHITE);
         board.add(pawn, d7);
         board.add(rook, h8);
@@ -103,7 +103,7 @@ class RaccoonCardTest {
 
     @Test
     void should_promote_black_pawn_swapped_to_last_rank() {
-        BlackPawn pawn = new BlackPawn();
+        Pawn pawn = new Pawn(Color.BLACK);
         Rock rook = new Rock(Color.BLACK);
         board.add(pawn, d2);
         board.add(rook, h1);
@@ -118,7 +118,7 @@ class RaccoonCardTest {
 
     @Test
     void should_reject_pawn_and_queen() {
-        WhitePawn pawn = new WhitePawn();
+        Pawn pawn = new Pawn(Color.WHITE);
         Queen queen = new Queen(Color.WHITE);
         board.add(pawn, d2);
         board.add(queen, d1);

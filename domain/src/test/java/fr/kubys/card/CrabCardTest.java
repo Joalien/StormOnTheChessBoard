@@ -29,7 +29,7 @@ class CrabCardTest {
     class PlayCard {
         @Test
         void should_transform_own_pawn_into_crab() {
-            WhitePawn pawn = new WhitePawn();
+            Pawn pawn = new Pawn(Color.WHITE);
             board.add(pawn, d4);
 
             card.playOn(board, new PieceCardParam(pawn));
@@ -50,7 +50,7 @@ class CrabCardTest {
 
         @Test
         void should_reject_enemy_pawn() {
-            BlackPawn pawn = new BlackPawn();
+            Pawn pawn = new Pawn(Color.BLACK);
             board.add(pawn, d5);
 
             assertThrows(CannotMoveThisColorException.class,

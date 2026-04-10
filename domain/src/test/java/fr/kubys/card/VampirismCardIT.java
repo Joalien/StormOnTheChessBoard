@@ -26,7 +26,7 @@ class VampirismCardIT {
 
     @Test
     void pawn_capturing_knight_becomes_knight() {
-        WhitePawn pawn = new WhitePawn();
+        Pawn pawn = new Pawn(Color.WHITE);
         board.add(pawn, d4);
         board.add(new Knight(Color.BLACK), e5);
 
@@ -74,14 +74,14 @@ class VampirismCardIT {
     void knight_capturing_pawn_becomes_pawn() {
         Knight knight = new Knight(Color.WHITE);
         board.add(knight, d4);
-        board.add(new BlackPawn(), e6);
+        board.add(new Pawn(Color.BLACK), e6);
 
         board.move(knight, e6);
 
         card.playOn(board, new PieceCardParam(knight));
 
         Piece transformed = board.at(e6).getPiece().orElseThrow();
-        assertInstanceOf(WhitePawn.class, transformed);
+        assertInstanceOf(Pawn.class, transformed);
         assertEquals(Color.WHITE, transformed.getColor());
     }
 
@@ -150,7 +150,7 @@ class VampirismCardIT {
 
     @Test
     void king_capturing_pawn_becomes_pawn() {
-        board.add(new BlackPawn(), a2);
+        board.add(new Pawn(Color.BLACK), a2);
         King king = (King) board.at(a1).getPiece().orElseThrow();
 
         board.move(king, a2);
@@ -158,7 +158,7 @@ class VampirismCardIT {
         card.playOn(board, new PieceCardParam(king));
 
         Piece transformed = board.at(a2).getPiece().orElseThrow();
-        assertInstanceOf(WhitePawn.class, transformed);
+        assertInstanceOf(Pawn.class, transformed);
         assertEquals(Color.WHITE, transformed.getColor());
     }
 
@@ -167,17 +167,17 @@ class VampirismCardIT {
         board = ChessBoard.createEmpty();
         board.add(new King(Color.WHITE), a1);
         board.add(new King(Color.BLACK), h8);
-        board.add(new BlackPawn(), b7);
+        board.add(new Pawn(Color.BLACK), b7);
         board.setTurn(Color.WHITE);
 
         // Turn 1: King captures pawn on b7
         King king = (King) board.at(a1).getPiece().orElseThrow();
         board.move(king, b7); // illegal in real chess (too far), but move() doesn't validate distance
 
-        // Vampirism: King becomes a WhitePawn on b7
+        // Vampirism: King becomes a Pawn on b7
         card.playOn(board, new PieceCardParam(king));
         Piece pawnOnB7 = board.at(b7).getPiece().orElseThrow();
-        assertInstanceOf(WhitePawn.class, pawnOnB7);
+        assertInstanceOf(Pawn.class, pawnOnB7);
 
         // Turn 2: the pawn advances to b8 and auto-promotes to Queen
         board.move(pawnOnB7, b8);

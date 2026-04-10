@@ -26,7 +26,7 @@ class BreakthroughCardTest {
 
     @Test
     void should_capture_enemy_piece_straight_ahead() {
-        WhitePawn pawn = new WhitePawn();
+        Pawn pawn = new Pawn(Color.WHITE);
         Knight enemy = new Knight(Color.BLACK);
         board.add(pawn, d4);
         board.add(enemy, d5);
@@ -39,7 +39,7 @@ class BreakthroughCardTest {
 
     @Test
     void should_reject_if_no_enemy_ahead() {
-        WhitePawn pawn = new WhitePawn();
+        Pawn pawn = new Pawn(Color.WHITE);
         board.add(pawn, d4);
 
         assertThrows(IllegalArgumentException.class,
@@ -48,7 +48,7 @@ class BreakthroughCardTest {
 
     @Test
     void should_reject_if_own_piece_ahead() {
-        WhitePawn pawn = new WhitePawn();
+        Pawn pawn = new Pawn(Color.WHITE);
         board.add(pawn, d4);
         board.add(new Knight(Color.WHITE), d5);
 
@@ -58,7 +58,7 @@ class BreakthroughCardTest {
 
     @Test
     void should_promote_on_last_rank() {
-        WhitePawn pawn = new WhitePawn();
+        Pawn pawn = new Pawn(Color.WHITE);
         board.add(pawn, d7);
         board.add(new Knight(Color.BLACK), d8);
 

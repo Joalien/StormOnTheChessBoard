@@ -107,7 +107,7 @@ class QuadrilleCardTest {
         @Test
         void white_pawn_on_a1_clockwise_should_promote_on_a8() {
             chessBoard = ChessBoard.createEmpty();
-            WhitePawn pawn = new WhitePawn();
+            Pawn pawn = new Pawn(Color.WHITE);
             chessBoard.add(pawn, a1);
             chessBoard.setTurn(Color.WHITE);
 
@@ -120,7 +120,7 @@ class QuadrilleCardTest {
         @Test
         void white_pawn_on_h1_counterclockwise_should_promote_on_h8() {
             chessBoard = ChessBoard.createEmpty();
-            WhitePawn pawn = new WhitePawn();
+            Pawn pawn = new Pawn(Color.WHITE);
             chessBoard.add(pawn, h1);
             chessBoard.setTurn(Color.WHITE);
 
@@ -133,7 +133,7 @@ class QuadrilleCardTest {
         @Test
         void black_pawn_on_h8_clockwise_should_promote_on_h1() {
             chessBoard = ChessBoard.createEmpty();
-            BlackPawn pawn = new BlackPawn();
+            Pawn pawn = new Pawn(Color.BLACK);
             chessBoard.add(pawn, h8);
             chessBoard.setTurn(Color.BLACK);
 
@@ -146,7 +146,7 @@ class QuadrilleCardTest {
         @Test
         void black_pawn_on_a8_counterclockwise_should_promote_on_a1() {
             chessBoard = ChessBoard.createEmpty();
-            BlackPawn pawn = new BlackPawn();
+            Pawn pawn = new Pawn(Color.BLACK);
             chessBoard.add(pawn, a8);
             chessBoard.setTurn(Color.BLACK);
 

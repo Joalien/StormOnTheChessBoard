@@ -32,7 +32,7 @@ class BombardCardTest {
     class Success {
         @Test
         void should_capture_enemy_immediately_after_piece_to_jump_over_on_file() {
-            board.add(new WhitePawn(), a3);
+            board.add(new Pawn(Color.WHITE), a3);
             Knight enemy = new Knight(Color.BLACK);
             board.add(enemy, a4);
 
@@ -73,7 +73,7 @@ class BombardCardTest {
         void should_reject_non_rook_piece() {
             Bishop bishop = new Bishop(Color.WHITE);
             board.add(bishop, c1);
-            board.add(new WhitePawn(), c3);
+            board.add(new Pawn(Color.WHITE), c3);
             board.add(new Knight(Color.BLACK), c4);
 
             assertThrows(IllegalArgumentException.class,
@@ -84,7 +84,7 @@ class BombardCardTest {
         void should_reject_enemy_rook() {
             Rock enemyRock = new Rock(Color.BLACK);
             board.add(enemyRock, h8);
-            board.add(new WhitePawn(), h5);
+            board.add(new Pawn(Color.WHITE), h5);
             board.add(new Knight(Color.WHITE), h4);
 
             assertThrows(CannotMoveThisColorException.class,
@@ -93,7 +93,7 @@ class BombardCardTest {
 
         @Test
         void should_reject_if_target_not_immediately_after_piece_to_jump_over() {
-            board.add(new WhitePawn(), a3);
+            board.add(new Pawn(Color.WHITE), a3);
             board.add(new Knight(Color.BLACK), a6);
 
             assertThrows(IllegalArgumentException.class,
@@ -102,7 +102,7 @@ class BombardCardTest {
 
         @Test
         void should_reject_if_target_is_empty() {
-            board.add(new WhitePawn(), a3);
+            board.add(new Pawn(Color.WHITE), a3);
 
             assertThrows(IllegalArgumentException.class,
                     () -> card.playOn(board, new PieceToPositionCardParam(rock, a4)));
@@ -110,8 +110,8 @@ class BombardCardTest {
 
         @Test
         void should_reject_if_target_is_ally() {
-            board.add(new WhitePawn(), a3);
-            board.add(new WhitePawn(), a4);
+            board.add(new Pawn(Color.WHITE), a3);
+            board.add(new Pawn(Color.WHITE), a4);
 
             assertThrows(IllegalArgumentException.class,
                     () -> card.playOn(board, new PieceToPositionCardParam(rock, a4)));
@@ -127,8 +127,8 @@ class BombardCardTest {
 
         @Test
         void should_reject_if_two_pieces_to_jump_over() {
-            board.add(new WhitePawn(), a3);
-            board.add(new WhitePawn(), a5);
+            board.add(new Pawn(Color.WHITE), a3);
+            board.add(new Pawn(Color.WHITE), a5);
             board.add(new Knight(Color.BLACK), a6);
 
             assertThrows(IllegalArgumentException.class,
@@ -151,7 +151,7 @@ class BombardCardTest {
             board.add(new King(Color.BLACK), e8);
             board.add(rock, a1);
             board.add(new Queen(Color.BLACK), h1);
-            board.add(new WhitePawn(), a5);
+            board.add(new Pawn(Color.WHITE), a5);
             board.add(new Knight(Color.BLACK), a6);
             board.setTurn(Color.WHITE);
 

@@ -47,7 +47,7 @@ class YouOnlyLiveTwiceCardTest {
 
     @Test
     void should_resurrect_captured_pawn() {
-        WhitePawn pawn = new WhitePawn();
+        Pawn pawn = new Pawn(Color.WHITE);
         board.add(pawn, d5);
         board.removePieceFromTheBoard(pawn);
 

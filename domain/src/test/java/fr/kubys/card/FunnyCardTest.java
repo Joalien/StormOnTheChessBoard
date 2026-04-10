@@ -26,7 +26,7 @@ class FunnyCardTest {
 
     @Test
     void should_capture_backward_diagonally() {
-        WhitePawn pawn = new WhitePawn();
+        Pawn pawn = new Pawn(Color.WHITE);
         Knight enemy = new Knight(Color.BLACK);
         board.add(pawn, d4);
         board.add(enemy, c3);
@@ -39,7 +39,7 @@ class FunnyCardTest {
 
     @Test
     void should_capture_backward_to_first_rank() {
-        WhitePawn pawn = new WhitePawn();
+        Pawn pawn = new Pawn(Color.WHITE);
         Knight enemy = new Knight(Color.BLACK);
         board.add(pawn, b2);
         board.add(enemy, a1);
@@ -47,13 +47,13 @@ class FunnyCardTest {
         card.playOn(board, new PieceToPositionCardParam(pawn, a1));
 
         // Pawn lands on row 1 — NOT its promotion row (promotion is row 8 for white)
-        assertInstanceOf(WhitePawn.class, board.at(a1).getPiece().get());
+        assertInstanceOf(Pawn.class, board.at(a1).getPiece().get());
         assertTrue(board.getOutOfTheBoardPieces().contains(enemy));
     }
 
     @Test
     void should_reject_forward_capture() {
-        WhitePawn pawn = new WhitePawn();
+        Pawn pawn = new Pawn(Color.WHITE);
         board.add(pawn, d4);
         board.add(new Knight(Color.BLACK), c5);
 
@@ -63,7 +63,7 @@ class FunnyCardTest {
 
     @Test
     void should_reject_empty_target() {
-        WhitePawn pawn = new WhitePawn();
+        Pawn pawn = new Pawn(Color.WHITE);
         board.add(pawn, d4);
 
         assertThrows(IllegalArgumentException.class,

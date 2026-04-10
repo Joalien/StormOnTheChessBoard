@@ -5,7 +5,7 @@ import fr.kubys.card.params.PieceToPositionCardParam;
 import fr.kubys.core.Color;
 import fr.kubys.piece.King;
 import fr.kubys.piece.Knight;
-import fr.kubys.piece.WhitePawn;
+import fr.kubys.piece.Pawn;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -50,7 +50,7 @@ class PegasusCardIT {
     void should_not_move_to_occupied_square() {
         Knight knight = new Knight(Color.WHITE);
         chessBoard.add(knight, b1);
-        chessBoard.add(new WhitePawn(), c3); // c3 is opposite color from b1
+        chessBoard.add(new Pawn(Color.WHITE), c3); // c3 is opposite color from b1
 
         assertThrows(IllegalArgumentException.class,
                 () -> pegasusCard.playOn(chessBoard, new PieceToPositionCardParam(knight, c3)));
@@ -58,7 +58,7 @@ class PegasusCardIT {
 
     @Test
     void should_not_move_non_knight_piece() {
-        WhitePawn pawn = new WhitePawn();
+        Pawn pawn = new Pawn(Color.WHITE);
         chessBoard.add(pawn, b2);
 
         assertThrows(IllegalArgumentException.class,

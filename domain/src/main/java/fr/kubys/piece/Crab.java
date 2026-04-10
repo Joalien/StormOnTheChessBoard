@@ -6,33 +6,17 @@ import fr.kubys.core.Position;
 import fr.kubys.core.Row;
 
 import java.util.Collections;
-import java.util.Optional;
 import java.util.Set;
 
-public class Crab extends Pawn {
+public class Crab extends Piece implements Promotable {
 
     public Crab(Color color) {
         super(color);
     }
 
     @Override
-    protected Row startingRow() {
-        return null;
-    }
-
-    @Override
     public boolean isOnPromotionRow() {
         return (color == Color.WHITE) ? getRow() == Row.Eight : getRow() == Row.One;
-    }
-
-    @Override
-    public Optional<Position> oneSquareForward() {
-        return Optional.empty();
-    }
-
-    @Override
-    public Optional<Position> twoSquaresForward() {
-        return Optional.empty();
     }
 
     @Override

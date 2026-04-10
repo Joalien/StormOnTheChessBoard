@@ -43,7 +43,7 @@ public class NeutralityCard extends Card<PieceCardParam> {
         if (param.piece() instanceof Pawn) {
             var position = param.piece().getPosition();
             chessBoard.removePieceFromTheBoard(param.piece());
-            chessBoard.add(new NeutralPawn(), position);
+            chessBoard.add(new Pawn(Color.NONE), position);
         } else {
             param.piece().setColor(Color.NONE);
         }

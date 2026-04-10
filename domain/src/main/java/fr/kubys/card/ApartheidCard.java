@@ -2,9 +2,9 @@ package fr.kubys.card;
 
 import fr.kubys.board.ChessBoard;
 import fr.kubys.card.params.NoCardParam;
-import fr.kubys.piece.BlackPawn;
+import fr.kubys.core.Color;
+import fr.kubys.piece.Pawn;
 import fr.kubys.piece.Piece;
-import fr.kubys.piece.WhitePawn;
 
 public class ApartheidCard extends Card<NoCardParam> {
     public ApartheidCard() {
@@ -35,10 +35,10 @@ public class ApartheidCard extends Card<NoCardParam> {
     }
 
     private static boolean whitePawnOnBlackSquare(Piece piece) {
-        return piece instanceof WhitePawn && !piece.getPosition().isWhiteSquare();
+        return piece instanceof Pawn && piece.getColor() == Color.WHITE && !piece.getPosition().isWhiteSquare();
     }
 
     private static boolean blackPawnOnWhiteSquare(Piece piece) {
-        return piece instanceof BlackPawn && piece.getPosition().isWhiteSquare();
+        return piece instanceof Pawn && piece.getColor() == Color.BLACK && piece.getPosition().isWhiteSquare();
     }
 }

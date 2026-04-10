@@ -26,8 +26,8 @@ class InfiltrationCardTest {
 
     @Test
     void should_swap_own_and_enemy_pawn() {
-        WhitePawn own = new WhitePawn();
-        BlackPawn enemy = new BlackPawn();
+        Pawn own = new Pawn(Color.WHITE);
+        Pawn enemy = new Pawn(Color.BLACK);
         board.add(own, a4);
         board.add(enemy, a5);
 
@@ -40,8 +40,8 @@ class InfiltrationCardTest {
     @Test
     void should_promote_white_pawn_swapped_to_last_rank() {
         // White pawn on a7, black pawn on a8 → swap → white pawn lands on a8 → promotion
-        WhitePawn own = new WhitePawn();
-        BlackPawn enemy = new BlackPawn();
+        Pawn own = new Pawn(Color.WHITE);
+        Pawn enemy = new Pawn(Color.BLACK);
         board.add(own, a7);
         board.add(enemy, a8);
 
@@ -54,8 +54,8 @@ class InfiltrationCardTest {
     @Test
     void should_promote_black_pawn_swapped_to_last_rank() {
         // White pawn on h1, black pawn on h2 → swap → black pawn lands on h1 → promotion
-        WhitePawn own = new WhitePawn();
-        BlackPawn enemy = new BlackPawn();
+        Pawn own = new Pawn(Color.WHITE);
+        Pawn enemy = new Pawn(Color.BLACK);
         board.add(own, h1);
         board.add(enemy, h2);
 
@@ -69,8 +69,8 @@ class InfiltrationCardTest {
     void should_promote_both_pawns_when_both_land_on_last_rank() {
         // White pawn on a8's row? No, white promotes on row 8, black promotes on row 1
         // White pawn on h1, black pawn on h8 → swap → white on h8 (promotes), black on h1 (promotes)
-        WhitePawn own = new WhitePawn();
-        BlackPawn enemy = new BlackPawn();
+        Pawn own = new Pawn(Color.WHITE);
+        Pawn enemy = new Pawn(Color.BLACK);
         board.add(own, h1);
         board.add(enemy, h8);
 
@@ -84,8 +84,8 @@ class InfiltrationCardTest {
 
     @Test
     void should_reject_two_own_pawns() {
-        WhitePawn p1 = new WhitePawn();
-        WhitePawn p2 = new WhitePawn();
+        Pawn p1 = new Pawn(Color.WHITE);
+        Pawn p2 = new Pawn(Color.WHITE);
         board.add(p1, d2);
         board.add(p2, c2);
 
@@ -95,8 +95,8 @@ class InfiltrationCardTest {
 
     @Test
     void should_reject_two_enemy_pawns() {
-        BlackPawn p1 = new BlackPawn();
-        BlackPawn p2 = new BlackPawn();
+        Pawn p1 = new Pawn(Color.BLACK);
+        Pawn p2 = new Pawn(Color.BLACK);
         board.add(p1, d7);
         board.add(p2, c7);
 
@@ -107,7 +107,7 @@ class InfiltrationCardTest {
     @Test
     void should_reject_non_pawns() {
         Knight knight = new Knight(Color.WHITE);
-        BlackPawn pawn = new BlackPawn();
+        Pawn pawn = new Pawn(Color.BLACK);
         board.add(knight, b1);
         board.add(pawn, d7);
 
@@ -117,7 +117,7 @@ class InfiltrationCardTest {
 
     @Test
     void should_reject_non_pawn_enemy_piece() {
-        WhitePawn pawn = new WhitePawn();
+        Pawn pawn = new Pawn(Color.WHITE);
         Rock rook = new Rock(Color.BLACK);
         board.add(pawn, d4);
         board.add(rook, a8);

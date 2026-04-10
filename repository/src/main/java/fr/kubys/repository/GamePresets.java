@@ -6,7 +6,7 @@ import fr.kubys.command.PlayMoveCommand;
 import fr.kubys.core.Color;
 import fr.kubys.core.Position;
 import fr.kubys.piece.King;
-import fr.kubys.piece.WhitePawn;
+import fr.kubys.piece.Pawn;
 
 import java.util.List;
 import java.util.function.Supplier;
@@ -22,8 +22,8 @@ public class GamePresets {
             ChessBoard board = ChessBoard.createEmpty();
             board.add(new King(Color.WHITE), e1);
             board.add(new King(Color.BLACK), e8);
-            board.add(new WhitePawn(), a6);
-            board.add(new WhitePawn(), b6);
+            board.add(new Pawn(Color.WHITE), a6);
+            board.add(new Pawn(Color.WHITE), b6);
             return board;
         });
     }

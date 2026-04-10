@@ -16,7 +16,7 @@ class CavalcadeCardIT {
         ChessBoard chessBoard = ChessBoard.createEmpty();
         chessBoard.add(new King(Color.WHITE), a1);
         chessBoard.add(new King(Color.BLACK), h8);
-        WhitePawn pawn = new WhitePawn();
+        Pawn pawn = new Pawn(Color.WHITE);
         chessBoard.add(pawn, e6); // e6 -> f8 : valid knight move (1 file, 2 rows)
         chessBoard.setTurn(Color.WHITE);
 
@@ -32,7 +32,7 @@ class CavalcadeCardIT {
         ChessBoard chessBoard = ChessBoard.createEmpty();
         chessBoard.add(new King(Color.WHITE), h1);
         chessBoard.add(new King(Color.BLACK), a8);
-        BlackPawn pawn = new BlackPawn();
+        Pawn pawn = new Pawn(Color.BLACK);
         chessBoard.add(pawn, e3); // e3 -> f1 : valid knight move (1 file, 2 rows)
         chessBoard.setTurn(Color.BLACK);
 

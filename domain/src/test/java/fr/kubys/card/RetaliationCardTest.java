@@ -33,7 +33,7 @@ class RetaliationCardTest {
         board.add(whiteRook, d1);
         board.tryToMove(d1, d5); // white rook captures black knight
 
-        WhitePawn pawn = new WhitePawn();
+        Pawn pawn = new Pawn(Color.WHITE);
         board.add(pawn, a2);
 
         card.playOn(board, new PieceCardParam(pawn));
@@ -44,7 +44,7 @@ class RetaliationCardTest {
 
     @Test
     void should_reject_own_pawn() {
-        BlackPawn pawn = new BlackPawn();
+        Pawn pawn = new Pawn(Color.BLACK);
         board.add(pawn, a7);
 
         assertThrows(IllegalArgumentException.class,
@@ -68,7 +68,7 @@ class RetaliationCardTest {
 
     @Test
     void should_reject_if_no_capture_this_turn() {
-        WhitePawn pawn = new WhitePawn();
+        Pawn pawn = new Pawn(Color.WHITE);
         board.add(pawn, a2);
 
         assertThrows(IllegalStateException.class,
@@ -78,13 +78,13 @@ class RetaliationCardTest {
     @Test
     void should_reject_if_only_pawn_was_captured() {
         // White captures a black pawn (not a piece)
-        BlackPawn capturedPawn = new BlackPawn();
+        Pawn capturedPawn = new Pawn(Color.BLACK);
         board.add(capturedPawn, d5);
         Rock whiteRook = new Rock(Color.WHITE);
         board.add(whiteRook, d1);
         board.tryToMove(d1, d5);
 
-        WhitePawn targetPawn = new WhitePawn();
+        Pawn targetPawn = new Pawn(Color.WHITE);
         board.add(targetPawn, a2);
 
         assertThrows(IllegalStateException.class,

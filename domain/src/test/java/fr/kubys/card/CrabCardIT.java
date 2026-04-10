@@ -62,7 +62,7 @@ class CrabCardIT {
         ChessBoard board = ChessBoard.createEmpty();
         board.add(new King(Color.WHITE), a1);
         board.add(new King(Color.BLACK), h8);
-        WhitePawn pawn = new WhitePawn();
+        Pawn pawn = new Pawn(Color.WHITE);
         board.add(pawn, e6);
         board.setTurn(Color.WHITE);
 

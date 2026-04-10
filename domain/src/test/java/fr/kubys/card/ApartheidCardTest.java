@@ -66,7 +66,7 @@ class ApartheidCardTest {
             chessBoard.add(queen, e4);
             King king = new King(Color.WHITE);
             chessBoard.add(king, e1);
-            WhitePawn pawn = new WhitePawn();
+            Pawn pawn = new Pawn(Color.WHITE);
             chessBoard.add(pawn, e2); // white pawn on white square
 
             assertDoesNotThrow(() -> apartheidCard.playOn(chessBoard, new NoCardParam()));
@@ -81,7 +81,7 @@ class ApartheidCardTest {
             chessBoard.add(queen, e4);
             King king = new King(Color.WHITE);
             chessBoard.add(king, e1);
-            WhitePawn pawn = new WhitePawn();
+            Pawn pawn = new Pawn(Color.WHITE);
             chessBoard.add(pawn, e3); // white pawn on black square
 
             assertThrows(CheckException.class, () -> apartheidCard.playOn(chessBoard, new NoCardParam()));

@@ -17,7 +17,7 @@ class OutputMapperTest {
 
     @Test
     void should_convert_piece_to_pieceDto_2() {
-        Piece whiteKing = new WhitePawn();
+        Piece whiteKing = new Pawn(Color.WHITE);
 
         assertEquals("wP", OutputMapper.map(whiteKing));
     }
@@ -31,7 +31,7 @@ class OutputMapperTest {
 
     @Test
     void should_convert_piece_to_pieceDto_4() {
-        Piece blackPawn = new BlackPawn();
+        Piece blackPawn = new Pawn(Color.BLACK);
 
         assertEquals("bP", OutputMapper.map(blackPawn));
     }

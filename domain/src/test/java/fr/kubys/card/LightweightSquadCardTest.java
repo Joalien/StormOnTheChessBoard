@@ -18,8 +18,8 @@ class LightweightSquadCardTest {
         @Test
         void should_move_two_pawns() {
             ChessBoard chessBoard = ChessBoard.createEmpty();
-            Pawn pawn1 = new WhitePawn();
-            Pawn pawn2 = new WhitePawn();
+            Pawn pawn1 = new Pawn(Color.WHITE);
+            Pawn pawn2 = new Pawn(Color.WHITE);
             chessBoard.add(pawn1, g1);
             chessBoard.add(pawn2, e4);
             LightweightSquadCard lightweightSquadCard = new LightweightSquadCard();
@@ -35,8 +35,8 @@ class LightweightSquadCardTest {
         @Test
         void pawns_in_front_of_each_other() {
             ChessBoard chessBoard = ChessBoard.createEmpty();
-            Pawn pawn1 = new BlackPawn();
-            Pawn pawn2 = new BlackPawn();
+            Pawn pawn1 = new Pawn(Color.BLACK);
+            Pawn pawn2 = new Pawn(Color.BLACK);
             chessBoard.add(pawn1, a5);
             chessBoard.add(pawn2, a4);
             LightweightSquadCard lightweightSquadCard = new LightweightSquadCard();
@@ -52,8 +52,8 @@ class LightweightSquadCardTest {
         @Test
         void pawns_in_front_of_each_other_bis() {
             ChessBoard chessBoard = ChessBoard.createEmpty();
-            Pawn pawn1 = new BlackPawn();
-            Pawn pawn2 = new BlackPawn();
+            Pawn pawn1 = new Pawn(Color.BLACK);
+            Pawn pawn2 = new Pawn(Color.BLACK);
             chessBoard.add(pawn1, a5);
             chessBoard.add(pawn2, a4);
             LightweightSquadCard lightweightSquadCard = new LightweightSquadCard();
@@ -73,8 +73,8 @@ class LightweightSquadCardTest {
         @Test
         void should_not_move_pawns_of_different_color() {
             ChessBoard chessBoard = ChessBoard.createEmpty();
-            Pawn pawn1 = new WhitePawn();
-            Pawn pawn2 = new BlackPawn();
+            Pawn pawn1 = new Pawn(Color.WHITE);
+            Pawn pawn2 = new Pawn(Color.BLACK);
             chessBoard.add(pawn1, e4);
             chessBoard.add(pawn2, g3);
             LightweightSquadCard lightweightSquadCard = new LightweightSquadCard();
@@ -88,8 +88,8 @@ class LightweightSquadCardTest {
         @Test
         void should_not_be_on_second_to_last_row() {
             ChessBoard chessBoard = ChessBoard.createEmpty();
-            Pawn pawn1 = new WhitePawn();
-            Pawn pawn2 = new WhitePawn();
+            Pawn pawn1 = new Pawn(Color.WHITE);
+            Pawn pawn2 = new Pawn(Color.WHITE);
             chessBoard.add(pawn1, d7);
             chessBoard.add(pawn2, e7);
             LightweightSquadCard lightweightSquadCard = new LightweightSquadCard();
@@ -103,8 +103,8 @@ class LightweightSquadCardTest {
         @Test
         void white_pawn_on_row_6_should_promote_when_advanced_two_squares() {
             ChessBoard chessBoard = ChessBoard.createEmpty();
-            WhitePawn promotingPawn = new WhitePawn();
-            WhitePawn otherPawn = new WhitePawn();
+            Pawn promotingPawn = new Pawn(Color.WHITE);
+            Pawn otherPawn = new Pawn(Color.WHITE);
             chessBoard.add(promotingPawn, e6);
             chessBoard.add(otherPawn, d4);
 
@@ -119,8 +119,8 @@ class LightweightSquadCardTest {
         @Test
         void black_pawn_on_row_3_should_promote_when_advanced_two_squares() {
             ChessBoard chessBoard = ChessBoard.createEmpty();
-            BlackPawn promotingPawn = new BlackPawn();
-            BlackPawn otherPawn = new BlackPawn();
+            Pawn promotingPawn = new Pawn(Color.BLACK);
+            Pawn otherPawn = new Pawn(Color.BLACK);
             chessBoard.add(promotingPawn, e3);
             chessBoard.add(otherPawn, d5);
 
@@ -135,8 +135,8 @@ class LightweightSquadCardTest {
         @Test
         void both_white_pawns_on_row_6_should_both_promote_when_advanced_two_squares() {
             ChessBoard chessBoard = ChessBoard.createEmpty();
-            WhitePawn pawn1 = new WhitePawn();
-            WhitePawn pawn2 = new WhitePawn();
+            Pawn pawn1 = new Pawn(Color.WHITE);
+            Pawn pawn2 = new Pawn(Color.WHITE);
             chessBoard.add(pawn1, c6);
             chessBoard.add(pawn2, e6);
 

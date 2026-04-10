@@ -55,7 +55,7 @@ class HomeCardTest {
         @Test
         void should_not_be_able_to_rollback_a_pawn() {
             ChessBoard chessBoard = ChessBoard.createEmpty();
-            Pawn pawn = new WhitePawn();
+            Pawn pawn = new Pawn(Color.WHITE);
             chessBoard.add(pawn, e4);
             Queen queen = new Queen(Color.BLACK);
             chessBoard.add(queen, g1);

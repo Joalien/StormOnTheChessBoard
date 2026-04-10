@@ -26,7 +26,7 @@ class MeritPromotionCardTest {
 
     @Test
     void should_promote_pawn_on_sixth_rank() {
-        WhitePawn pawn = new WhitePawn();
+        Pawn pawn = new Pawn(Color.WHITE);
         board.add(pawn, d6);
 
         card.playOn(board, new PieceCardParam(pawn));
@@ -37,7 +37,7 @@ class MeritPromotionCardTest {
 
     @Test
     void should_reject_pawn_not_on_sixth_rank() {
-        WhitePawn pawn = new WhitePawn();
+        Pawn pawn = new Pawn(Color.WHITE);
         board.add(pawn, d5);
 
         assertThrows(IllegalArgumentException.class,
@@ -46,7 +46,7 @@ class MeritPromotionCardTest {
 
     @Test
     void should_work_for_black_on_third_rank() {
-        BlackPawn pawn = new BlackPawn();
+        Pawn pawn = new Pawn(Color.BLACK);
         board.add(pawn, d3);
         board.setTurn(Color.BLACK);
 

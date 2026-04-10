@@ -22,8 +22,8 @@ class ChargeCardTest {
         @Test
         void should_move_two_pawns_forward() {
             ChessBoard chessBoard = ChessBoard.createEmpty();
-            Pawn pawn1 = new WhitePawn();
-            Pawn pawn2 = new WhitePawn();
+            Pawn pawn1 = new Pawn(Color.WHITE);
+            Pawn pawn2 = new Pawn(Color.WHITE);
             chessBoard.add(pawn1, e4);
             chessBoard.add(pawn2, d4);
             ChargeCard chargeCard = new ChargeCard();
@@ -38,9 +38,9 @@ chessBoard.setTurn(Color.WHITE);
         @Test
         void should_move_three_white_pawns_in_front_of_each_other() {
             ChessBoard chessBoard = ChessBoard.createEmpty();
-            Pawn pawn1 = new WhitePawn();
-            Pawn pawn2 = new WhitePawn();
-            Pawn pawn3 = new WhitePawn();
+            Pawn pawn1 = new Pawn(Color.WHITE);
+            Pawn pawn2 = new Pawn(Color.WHITE);
+            Pawn pawn3 = new Pawn(Color.WHITE);
             chessBoard.add(pawn1, e4);
             chessBoard.add(pawn2, e5);
             chessBoard.add(pawn3, e6);
@@ -57,9 +57,9 @@ chessBoard.setTurn(Color.WHITE);
         @Test
         void should_move_three_black_pawns_in_front_of_each_other() {
             ChessBoard chessBoard = ChessBoard.createEmpty();
-            Pawn pawn1 = new BlackPawn();
-            Pawn pawn2 = new BlackPawn();
-            Pawn pawn3 = new BlackPawn();
+            Pawn pawn1 = new Pawn(Color.BLACK);
+            Pawn pawn2 = new Pawn(Color.BLACK);
+            Pawn pawn3 = new Pawn(Color.BLACK);
             chessBoard.add(pawn1, e4);
             chessBoard.add(pawn2, e5);
             chessBoard.add(pawn3, e6);
@@ -102,7 +102,7 @@ chessBoard.setTurn(Color.WHITE);
         @Test
         void white_pawn_on_row_7_should_promote_when_charged() {
             ChessBoard chessBoard = ChessBoard.createEmpty();
-            WhitePawn pawn = new WhitePawn();
+            Pawn pawn = new Pawn(Color.WHITE);
             chessBoard.add(pawn, e7);
             chessBoard.setTurn(Color.WHITE);
 
@@ -116,7 +116,7 @@ chessBoard.setTurn(Color.WHITE);
         @Test
         void black_pawn_on_row_2_should_promote_when_charged() {
             ChessBoard chessBoard = ChessBoard.createEmpty();
-            BlackPawn pawn = new BlackPawn();
+            Pawn pawn = new Pawn(Color.BLACK);
             chessBoard.add(pawn, e2);
             chessBoard.setTurn(Color.BLACK);
 
@@ -130,9 +130,9 @@ chessBoard.setTurn(Color.WHITE);
         @Test
         void three_white_pawns_on_row_7_should_all_promote_when_charged() {
             ChessBoard chessBoard = ChessBoard.createEmpty();
-            WhitePawn pawn1 = new WhitePawn();
-            WhitePawn pawn2 = new WhitePawn();
-            WhitePawn pawn3 = new WhitePawn();
+            Pawn pawn1 = new Pawn(Color.WHITE);
+            Pawn pawn2 = new Pawn(Color.WHITE);
+            Pawn pawn3 = new Pawn(Color.WHITE);
             chessBoard.add(pawn1, c7);
             chessBoard.add(pawn2, e7);
             chessBoard.add(pawn3, g7);
@@ -167,7 +167,7 @@ chessBoard.setTurn(Color.WHITE);
         @Test
         void should_fail_if_pawn_cannot_move() {
             ChessBoard chessBoard = ChessBoard.createEmpty();
-            Pawn pawn = new WhitePawn();
+            Pawn pawn = new Pawn(Color.WHITE);
             Queen queen = new Queen(Color.WHITE);
             chessBoard.add(pawn, e4);
             chessBoard.add(queen, e5);
@@ -194,8 +194,8 @@ chessBoard.setTurn(Color.WHITE);
         @Test
         void should_not_move_pawns_of_enemy_color() {
             ChessBoard chessBoard = ChessBoard.createEmpty();
-            Pawn pawn1 = new WhitePawn();
-            Pawn pawn2 = new BlackPawn();
+            Pawn pawn1 = new Pawn(Color.WHITE);
+            Pawn pawn2 = new Pawn(Color.BLACK);
             chessBoard.add(pawn1, e4);
             chessBoard.add(pawn2, g3);
             ChargeCard chargeCard = new ChargeCard();
@@ -210,7 +210,7 @@ chessBoard.setTurn(Color.WHITE);
         @Test
         void should_not_move_pawns_of_enemy_color_bis() {
             ChessBoard chessBoard = ChessBoard.createEmpty();
-            Pawn pawn2 = new WhitePawn();
+            Pawn pawn2 = new Pawn(Color.WHITE);
             chessBoard.add(pawn2, g5);
             ChargeCard chargeCard = new ChargeCard();
             chessBoard.setTurn(Color.BLACK);

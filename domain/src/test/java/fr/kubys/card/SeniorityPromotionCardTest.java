@@ -26,7 +26,7 @@ class SeniorityPromotionCardTest {
 
     @Test
     void should_promote_last_pawn() {
-        board.add(new WhitePawn(), d4);
+        board.add(new Pawn(Color.WHITE), d4);
 
         card.playOn(board, new NoCardParam());
 
@@ -35,8 +35,8 @@ class SeniorityPromotionCardTest {
 
     @Test
     void should_promote_both_pawns_when_two_remain() {
-        board.add(new WhitePawn(), d4);
-        board.add(new WhitePawn(), f4);
+        board.add(new Pawn(Color.WHITE), d4);
+        board.add(new Pawn(Color.WHITE), f4);
 
         card.playOn(board, new NoCardParam());
 
@@ -46,7 +46,7 @@ class SeniorityPromotionCardTest {
 
     @Test
     void should_allow_under_promotion_to_bishop() {
-        board.add(new WhitePawn(), d4);
+        board.add(new Pawn(Color.WHITE), d4);
 
         card.playOn(board, new NoCardParam());
         board.overridePromotion(d4, PromotionPiece.BISHOP);
@@ -57,7 +57,7 @@ class SeniorityPromotionCardTest {
 
     @Test
     void should_allow_under_promotion_to_knight() {
-        board.add(new WhitePawn(), d4);
+        board.add(new Pawn(Color.WHITE), d4);
 
         card.playOn(board, new NoCardParam());
         board.overridePromotion(d4, PromotionPiece.KNIGHT);
@@ -67,7 +67,7 @@ class SeniorityPromotionCardTest {
 
     @Test
     void should_not_promote_to_queen() {
-        board.add(new WhitePawn(), d4);
+        board.add(new Pawn(Color.WHITE), d4);
 
         card.playOn(board, new NoCardParam());
 
@@ -77,9 +77,9 @@ class SeniorityPromotionCardTest {
 
     @Test
     void should_reject_with_three_pawns() {
-        board.add(new WhitePawn(), d4);
-        board.add(new WhitePawn(), f4);
-        board.add(new WhitePawn(), h4);
+        board.add(new Pawn(Color.WHITE), d4);
+        board.add(new Pawn(Color.WHITE), f4);
+        board.add(new Pawn(Color.WHITE), h4);
 
         assertThrows(IllegalArgumentException.class,
                 () -> card.playOn(board, new NoCardParam()));

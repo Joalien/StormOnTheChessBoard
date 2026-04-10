@@ -16,8 +16,8 @@ class SeniorityPromotionCardIT {
         ChessBoard board = ChessBoard.createEmpty();
         board.add(new King(Color.WHITE), e1);
         board.add(new King(Color.BLACK), e8);
-        board.add(new WhitePawn(), c4);
-        board.add(new WhitePawn(), f5);
+        board.add(new Pawn(Color.WHITE), c4);
+        board.add(new Pawn(Color.WHITE), f5);
         board.setTurn(Color.WHITE);
 
         new SeniorityPromotionCard().playOn(board, new NoCardParam());
@@ -41,7 +41,7 @@ class SeniorityPromotionCardIT {
         ChessBoard board = ChessBoard.createEmpty();
         board.add(new King(Color.WHITE), e1);
         board.add(new King(Color.BLACK), e8);
-        board.add(new WhitePawn(), d4);
+        board.add(new Pawn(Color.WHITE), d4);
         board.setTurn(Color.WHITE);
 
         new SeniorityPromotionCard().playOn(board, new NoCardParam());
@@ -55,8 +55,8 @@ class SeniorityPromotionCardIT {
         ChessBoard board = ChessBoard.createEmpty();
         board.add(new King(Color.WHITE), e1);
         board.add(new King(Color.BLACK), e8);
-        board.add(new BlackPawn(), a5);
-        board.add(new BlackPawn(), h6);
+        board.add(new Pawn(Color.BLACK), a5);
+        board.add(new Pawn(Color.BLACK), h6);
         board.setTurn(Color.BLACK);
 
         new SeniorityPromotionCard().playOn(board, new NoCardParam());
@@ -75,7 +75,7 @@ class SeniorityPromotionCardIT {
         ChessBoard board = ChessBoard.createEmpty();
         board.add(new King(Color.WHITE), e1);
         board.add(new King(Color.BLACK), e8);
-        board.add(new WhitePawn(), d4);
+        board.add(new Pawn(Color.WHITE), d4);
         board.setTurn(Color.WHITE);
 
         new SeniorityPromotionCard().playOn(board, new NoCardParam());

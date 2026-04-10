@@ -45,7 +45,7 @@ class FourCornersCardTest {
         board.add(new Bishop(Color.BLACK), h1);
         board.add(new Bishop(Color.BLACK), a8);
         // h8 is free — last rank for white
-        WhitePawn pawn = new WhitePawn();
+        Pawn pawn = new Pawn(Color.WHITE);
         board.add(pawn, d4);
 
         card.playOn(board, new PieceCardParam(pawn));

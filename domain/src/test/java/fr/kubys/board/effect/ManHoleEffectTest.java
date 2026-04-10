@@ -77,7 +77,7 @@ class ManHoleEffectTest {
     @Test
     void white_pawn_should_promote_when_teleporting_to_row_8_via_manhole() {
         ChessBoard board = ChessBoard.createEmpty();
-        WhitePawn pawn = new WhitePawn();
+        Pawn pawn = new Pawn(Color.WHITE);
         board.add(pawn, c4);
         board.addEffect(new ManHoleEffect(c4, c8));
 
@@ -91,7 +91,7 @@ class ManHoleEffectTest {
     @Test
     void black_pawn_should_promote_when_teleporting_to_row_1_via_manhole() {
         ChessBoard board = ChessBoard.createEmpty();
-        BlackPawn pawn = new BlackPawn();
+        Pawn pawn = new Pawn(Color.BLACK);
         board.add(pawn, f5);
         board.addEffect(new ManHoleEffect(f5, f1));
 

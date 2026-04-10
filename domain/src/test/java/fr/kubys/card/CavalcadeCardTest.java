@@ -65,7 +65,7 @@ class CavalcadeCardTest {
 
         @Test
         void should_move_pawn_like_a_knight() {
-            Pawn pawn = new WhitePawn();
+            Pawn pawn = new Pawn(Color.WHITE);
             chessBoard.add(pawn, e2);
 
             assertDoesNotThrow(() -> cavalcadeCard.playOn(chessBoard, new PieceToPositionCardParam(pawn, f4)));

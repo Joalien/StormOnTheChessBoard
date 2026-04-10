@@ -186,7 +186,7 @@ class CombinedEffectsIT {
 
         @Test
         void crab_card_then_move_crab_through_manhole() {
-            WhitePawn pawn = new WhitePawn();
+            Pawn pawn = new Pawn(Color.WHITE);
             board.add(pawn, d4);
             board.addEffect(new ManHoleEffect(d4, g7));
 
@@ -305,7 +305,7 @@ class CombinedEffectsIT {
         void fright_should_respect_black_hole() {
             board.addEffect(new BlackHoleEffect(d6));
 
-            BlackPawn pawn = new BlackPawn();
+            Pawn pawn = new Pawn(Color.BLACK);
             board.add(pawn, d5);
 
             // d6 is blocked → reject
@@ -320,11 +320,11 @@ class CombinedEffectsIT {
 
         @Test
         @Disabled("BUG: BreakthroughCard removes enemy via card, then adds pawn to same square. " +
-                "Pawn is a WhitePawn, bomb destroys it in afterMoveHook, then add() " +
+                "Pawn is white, bomb destroys it in afterMoveHook, then add() " +
                 "continues to check isOnPromotionRow() on destroyed pawn → NPE. " +
                 "Same root cause as crab_on_bomb.")
         void breakthrough_capture_onto_bomb_should_trigger() {
-            WhitePawn pawn = new WhitePawn();
+            Pawn pawn = new Pawn(Color.WHITE);
             board.add(pawn, d4);
             Knight enemy = new Knight(Color.BLACK);
             board.add(enemy, d5);
@@ -398,7 +398,7 @@ class CombinedEffectsIT {
         void pawn_promoted_via_manhole_teleportation() {
             board.addEffect(new ManHoleEffect(d6, d8));
 
-            WhitePawn pawn = new WhitePawn();
+            Pawn pawn = new Pawn(Color.WHITE);
             board.add(pawn, d6);
 
             board.tryToMove(d6, d8);
@@ -417,7 +417,7 @@ class CombinedEffectsIT {
             board.add(new King(Color.BLACK), h8);
             board.setTurn(Color.WHITE);
 
-            WhitePawn pawn = new WhitePawn();
+            Pawn pawn = new Pawn(Color.WHITE);
             board.add(pawn, d2);
             board.addEffect(new BombingEffect(d5, Color.BLACK));
 
@@ -434,7 +434,7 @@ class CombinedEffectsIT {
             board.add(new King(Color.BLACK), h8);
             board.setTurn(Color.WHITE);
 
-            WhitePawn pawn = new WhitePawn();
+            Pawn pawn = new Pawn(Color.WHITE);
             board.add(pawn, d5);
 
             new BanzaiCard().playOn(board, new PieceCardParam(pawn));

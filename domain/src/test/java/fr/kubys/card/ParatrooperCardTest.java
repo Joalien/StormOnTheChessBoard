@@ -26,7 +26,7 @@ class ParatrooperCardTest {
 
     @Test
     void should_parachute_captured_pawn_to_center() {
-        WhitePawn pawn = new WhitePawn();
+        Pawn pawn = new Pawn(Color.WHITE);
         board.add(pawn, a2);
         board.removePieceFromTheBoard(pawn);
 
@@ -37,7 +37,7 @@ class ParatrooperCardTest {
 
     @Test
     void should_reject_non_center_square() {
-        WhitePawn pawn = new WhitePawn();
+        Pawn pawn = new Pawn(Color.WHITE);
         board.add(pawn, a2);
         board.removePieceFromTheBoard(pawn);
 
@@ -47,7 +47,7 @@ class ParatrooperCardTest {
 
     @Test
     void should_reject_occupied_center() {
-        WhitePawn pawn = new WhitePawn();
+        Pawn pawn = new Pawn(Color.WHITE);
         board.add(pawn, a2);
         board.removePieceFromTheBoard(pawn);
         board.add(new Knight(Color.BLACK), d4);

@@ -108,7 +108,7 @@ class NuclearBombCardTest {
     @Test
     void should_reject_if_last_move_captured() {
         // Simulate a capture: white knight takes black pawn
-        BlackPawn pawn = new BlackPawn();
+        Pawn pawn = new Pawn(Color.BLACK);
         board.add(pawn, d5);
         Knight knight = new Knight(Color.WHITE);
         board.add(knight, c3);

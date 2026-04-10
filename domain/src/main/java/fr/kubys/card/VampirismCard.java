@@ -61,7 +61,7 @@ public class VampirismCard extends Card<PieceCardParam> {
     }
 
     private static Piece createPieceOfSameType(Piece model, Color color) {
-        if (model instanceof Pawn) return color == Color.WHITE ? new WhitePawn() : new BlackPawn();
+        if (model instanceof Pawn) return new Pawn(color);
         if (model instanceof Knight) return new Knight(color);
         if (model instanceof Bishop) return new Bishop(color);
         if (model instanceof Rock) return new Rock(color);

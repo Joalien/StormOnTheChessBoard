@@ -35,7 +35,7 @@ class ChessBoardTest {
         assertDoesNotThrow(() -> cb.tryToMove(e8, g8));
         assertDoesNotThrow(() -> cb.tryToMove(e1, c1));
 
-        assertTrue(cb.at(e4).getPiece().get() instanceof WhitePawn);
+        assertTrue(cb.at(e4).getPiece().get() instanceof Pawn wp && wp.getColor() == Color.WHITE);
         assertTrue(cb.at(e8).getPiece().isEmpty());
         assertTrue(cb.at(f8).getPiece().get() instanceof Rock);
         assertTrue(cb.at(g8).getPiece().get() instanceof King);
@@ -96,7 +96,7 @@ class ChessBoardTest {
             assertTrue(IntStream.rangeClosed(1, 8)
                     .mapToObj(i -> Position.posToSquare(i, 2))
                     .map(position -> chessBoard.at(position).getPiece().get())
-                    .allMatch(pawn -> pawn instanceof WhitePawn));
+                    .allMatch(pawn -> pawn instanceof Pawn wp && wp.getColor() == Color.WHITE));
 
             // Black pieces
             assertTrue(chessBoard.at(a8).getPiece().get() instanceof Rock);
@@ -118,7 +118,7 @@ class ChessBoardTest {
             assertTrue(IntStream.rangeClosed(1, 8)
                     .mapToObj(i -> Position.posToSquare(i, 7))
                     .map(position -> chessBoard.at(position).getPiece().get())
-                    .allMatch(pawn -> pawn instanceof BlackPawn));
+                    .allMatch(pawn -> pawn instanceof Pawn bp && bp.getColor() == Color.BLACK));
 
 
             assertTrue(IntStream.rangeClosed(1, 8)

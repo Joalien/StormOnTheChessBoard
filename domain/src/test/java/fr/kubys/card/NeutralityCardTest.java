@@ -62,13 +62,13 @@ class NeutralityCardTest {
 
         @Test
         void should_neutralize_enemy_pawn_into_neutral_pawn() {
-            BlackPawn pawn = new BlackPawn();
+            Pawn pawn = new Pawn(Color.BLACK);
             board.add(pawn, d5);
 
             card.playOn(board, new PieceCardParam(pawn));
 
             Piece neutralPiece = board.at(d5).getPiece().get();
-            assertInstanceOf(NeutralPawn.class, neutralPiece);
+            assertInstanceOf(Pawn.class, neutralPiece);
             assertEquals(Color.NONE, neutralPiece.getColor());
         }
 
@@ -148,7 +148,7 @@ class NeutralityCardTest {
             Rock rock = new Rock(Color.BLACK);
             board.add(rock, a5);
             rock.setColor(Color.NONE);
-            WhitePawn target = new WhitePawn();
+            Pawn target = new Pawn(Color.WHITE);
             board.add(target, a2);
 
             // Black moves neutral rook to capture white pawn
@@ -162,7 +162,7 @@ class NeutralityCardTest {
             Rock rock = new Rock(Color.BLACK);
             board.add(rock, a5);
             rock.setColor(Color.NONE);
-            WhitePawn ownPiece = new WhitePawn();
+            Pawn ownPiece = new Pawn(Color.WHITE);
             board.add(ownPiece, a2);
 
             // White tries to use neutral rook to capture own white pawn
@@ -211,7 +211,7 @@ class NeutralityCardTest {
     class NeutralPawnMovement {
         @Test
         void neutral_pawn_moves_forward_for_white() {
-            board.add(new NeutralPawn(), d5);
+            board.add(new Pawn(Color.NONE), d5);
             board.setTurn(Color.WHITE);
 
             assertDoesNotThrow(() -> board.tryToMove(d5, d6));
@@ -219,7 +219,7 @@ class NeutralityCardTest {
 
         @Test
         void neutral_pawn_moves_forward_for_black() {
-            board.add(new NeutralPawn(), d5);
+            board.add(new Pawn(Color.NONE), d5);
             board.setTurn(Color.BLACK);
 
             assertDoesNotThrow(() -> board.tryToMove(d5, d4));
@@ -227,7 +227,7 @@ class NeutralityCardTest {
 
         @Test
         void neutral_pawn_cannot_move_backward_for_white() {
-            board.add(new NeutralPawn(), d5);
+            board.add(new Pawn(Color.NONE), d5);
             board.setTurn(Color.WHITE);
 
             assertThrows(Exception.class, () -> board.tryToMove(d5, d4));
@@ -235,7 +235,7 @@ class NeutralityCardTest {
 
         @Test
         void neutral_pawn_cannot_move_backward_for_black() {
-            board.add(new NeutralPawn(), d5);
+            board.add(new Pawn(Color.NONE), d5);
             board.setTurn(Color.BLACK);
 
             assertThrows(Exception.class, () -> board.tryToMove(d5, d6));
@@ -243,7 +243,7 @@ class NeutralityCardTest {
 
         @Test
         void neutral_pawn_can_capture_diagonally_in_player_direction() {
-            board.add(new NeutralPawn(), d5);
+            board.add(new Pawn(Color.NONE), d5);
             board.add(new Knight(Color.BLACK), e6);
             board.setTurn(Color.WHITE);
 
@@ -252,7 +252,7 @@ class NeutralityCardTest {
 
         @Test
         void neutral_pawn_cannot_capture_diagonally_backward() {
-            board.add(new NeutralPawn(), d5);
+            board.add(new Pawn(Color.NONE), d5);
             board.add(new Knight(Color.BLACK), e4);
             board.setTurn(Color.WHITE);
 
@@ -261,7 +261,7 @@ class NeutralityCardTest {
 
         @Test
         void neutral_pawn_promotes_on_row_8_for_white() {
-            board.add(new NeutralPawn(), d7);
+            board.add(new Pawn(Color.NONE), d7);
             board.setTurn(Color.WHITE);
 
             board.tryToMove(d7, d8);
@@ -272,7 +272,7 @@ class NeutralityCardTest {
 
         @Test
         void neutral_pawn_promotes_on_row_1_for_black() {
-            board.add(new NeutralPawn(), d2);
+            board.add(new Pawn(Color.NONE), d2);
             board.setTurn(Color.BLACK);
 
             board.tryToMove(d2, d1);

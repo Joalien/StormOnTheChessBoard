@@ -31,7 +31,7 @@ class MercyCardIT {
         @Test
         void rook_attacks_pawn_from_behind_on_file() {
             Rock whiteRook = new Rock(Color.WHITE);
-            BlackPawn blackPawn = new BlackPawn();
+            Pawn blackPawn = new Pawn(Color.BLACK);
             board.add(whiteRook, e1);
             board.add(blackPawn, e5);
 
@@ -49,7 +49,7 @@ class MercyCardIT {
         @Test
         void rook_attacks_pawn_from_front_on_file() {
             Rock whiteRook = new Rock(Color.WHITE);
-            BlackPawn blackPawn = new BlackPawn();
+            Pawn blackPawn = new Pawn(Color.BLACK);
             board.add(whiteRook, e8);
             board.add(blackPawn, e5);
 
@@ -70,7 +70,7 @@ class MercyCardIT {
         @Test
         void rook_attacks_pawn_on_row() {
             Rock whiteRook = new Rock(Color.WHITE);
-            BlackPawn blackPawn = new BlackPawn();
+            Pawn blackPawn = new Pawn(Color.BLACK);
             board.add(whiteRook, a5);
             board.add(blackPawn, e5);
 
@@ -87,7 +87,7 @@ class MercyCardIT {
         @Test
         void rook_attacks_pawn_from_adjacent_square() {
             Rock whiteRook = new Rock(Color.WHITE);
-            BlackPawn blackPawn = new BlackPawn();
+            Pawn blackPawn = new Pawn(Color.BLACK);
             board.add(whiteRook, e4);
             board.add(blackPawn, e5);
 
@@ -108,7 +108,7 @@ class MercyCardIT {
         @Test
         void bishop_attacks_pawn_on_diagonal() {
             Bishop whiteBishop = new Bishop(Color.WHITE);
-            BlackPawn blackPawn = new BlackPawn();
+            Pawn blackPawn = new Pawn(Color.BLACK);
             board.add(whiteBishop, b2);
             board.add(blackPawn, e5);
 
@@ -128,7 +128,7 @@ class MercyCardIT {
         @Test
         void queen_attacks_pawn_on_file() {
             Queen whiteQueen = new Queen(Color.WHITE);
-            BlackPawn blackPawn = new BlackPawn();
+            Pawn blackPawn = new Pawn(Color.BLACK);
             board.add(whiteQueen, d1);
             board.add(blackPawn, d6);
 
@@ -145,7 +145,7 @@ class MercyCardIT {
         @Test
         void queen_attacks_pawn_on_diagonal() {
             Queen whiteQueen = new Queen(Color.WHITE);
-            BlackPawn blackPawn = new BlackPawn();
+            Pawn blackPawn = new Pawn(Color.BLACK);
             board.add(whiteQueen, a2);
             board.add(blackPawn, d5);
 
@@ -166,7 +166,7 @@ class MercyCardIT {
         void black_rook_attacks_white_pawn_and_white_uses_mercy() {
             board.setTurn(Color.BLACK);
             Rock blackRook = new Rock(Color.BLACK);
-            WhitePawn whitePawn = new WhitePawn();
+            Pawn whitePawn = new Pawn(Color.WHITE);
             board.add(blackRook, e8);
             board.add(whitePawn, e3);
 
@@ -210,7 +210,7 @@ class MercyCardIT {
         @Test
         void should_fail_if_attacker_is_a_knight() {
             Knight whiteKnight = new Knight(Color.WHITE);
-            BlackPawn blackPawn = new BlackPawn();
+            Pawn blackPawn = new Pawn(Color.BLACK);
             board.add(whiteKnight, d4);
             board.add(blackPawn, e6);
 
@@ -222,7 +222,7 @@ class MercyCardIT {
 
         @Test
         void should_fail_if_attacker_is_a_king() {
-            BlackPawn blackPawn = new BlackPawn();
+            Pawn blackPawn = new Pawn(Color.BLACK);
             board.add(blackPawn, b2);
             King whiteKing = (King) board.at(a1).getPiece().orElseThrow();
 

@@ -26,8 +26,8 @@ class MajorettesCardTest {
 
     @Test
     void should_move_two_pawns_laterally() {
-        WhitePawn p1 = new WhitePawn();
-        WhitePawn p2 = new WhitePawn();
+        Pawn p1 = new Pawn(Color.WHITE);
+        Pawn p2 = new Pawn(Color.WHITE);
         board.add(p1, c4);
         board.add(p2, f4);
 
@@ -40,7 +40,7 @@ class MajorettesCardTest {
     @Test
     void should_reject_non_pawns() {
         Knight k = new Knight(Color.WHITE);
-        WhitePawn p = new WhitePawn();
+        Pawn p = new Pawn(Color.WHITE);
         board.add(k, b1);
         board.add(p, c4);
 

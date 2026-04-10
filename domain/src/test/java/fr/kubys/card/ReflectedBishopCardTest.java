@@ -8,7 +8,7 @@ import fr.kubys.core.Color;
 import fr.kubys.piece.Bishop;
 import fr.kubys.piece.King;
 import fr.kubys.piece.Rock;
-import fr.kubys.piece.WhitePawn;
+import fr.kubys.piece.Pawn;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -42,7 +42,7 @@ class ReflectedBishopCardTest {
 
         @Test
         void should_bounce_three_times() {
-            chessBoard.add(new WhitePawn(), f3);
+            chessBoard.add(new Pawn(Color.WHITE), f3);
             assertDoesNotThrow(() -> reflectedBishop.playOn(chessBoard, new ReflectedBishopCardParam(bishop, f7)));
 
             assertEquals(bishop, chessBoard.at(f7).getPiece().get());
@@ -51,9 +51,9 @@ class ReflectedBishopCardTest {
 
         @Test
         void should_bounce_to_g4_after_5_bounces() {
-            chessBoard.add(new WhitePawn(), f1);
-            chessBoard.add(new WhitePawn(), f3);
-            chessBoard.add(new WhitePawn(), f5);
+            chessBoard.add(new Pawn(Color.WHITE), f1);
+            chessBoard.add(new Pawn(Color.WHITE), f3);
+            chessBoard.add(new Pawn(Color.WHITE), f5);
             reflectedBishop = new ReflectedBishopCard();
             assertDoesNotThrow(() -> reflectedBishop.playOn(chessBoard, new ReflectedBishopCardParam(bishop, g4)));
 
@@ -100,8 +100,8 @@ class ReflectedBishopCardTest {
 
         @Test
         void should_never_bounce_to_f7() {
-            chessBoard.add(new WhitePawn(), d1);
-            chessBoard.add(new WhitePawn(), f3);
+            chessBoard.add(new Pawn(Color.WHITE), d1);
+            chessBoard.add(new Pawn(Color.WHITE), f3);
 
             assertThrows(IllegalArgumentException.class, () -> reflectedBishop.playOn(chessBoard, new ReflectedBishopCardParam(bishop, f7)));
 

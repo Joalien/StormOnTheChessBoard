@@ -26,7 +26,7 @@ class FrightCardTest {
 
     @Test
     void should_push_back_black_pawn_one_square() {
-        BlackPawn pawn = new BlackPawn();
+        Pawn pawn = new Pawn(Color.BLACK);
         board.add(pawn, d5);
 
         card.playOn(board, new PieceToPositionCardParam(pawn, d6));
@@ -37,7 +37,7 @@ class FrightCardTest {
 
     @Test
     void should_push_back_black_pawn_two_squares() {
-        BlackPawn pawn = new BlackPawn();
+        Pawn pawn = new Pawn(Color.BLACK);
         board.add(pawn, d5);
 
         card.playOn(board, new PieceToPositionCardParam(pawn, d7));
@@ -48,31 +48,31 @@ class FrightCardTest {
     @Test
     void should_push_back_black_pawn_to_first_rank_and_not_promote() {
         // A black pawn pushed back to row 8 (its starting side) should NOT promote
-        // because promotionRow for BlackPawn is Row.One, not Row.Eight
-        BlackPawn pawn = new BlackPawn();
+        // because promotion row for black pawn is Row.One, not Row.Eight
+        Pawn pawn = new Pawn(Color.BLACK);
         board.add(pawn, a7);
 
         card.playOn(board, new PieceToPositionCardParam(pawn, a8));
 
-        assertInstanceOf(BlackPawn.class, board.at(a8).getPiece().get());
+        assertInstanceOf(Pawn.class, board.at(a8).getPiece().get());
     }
 
     @Test
     void should_push_back_white_pawn_to_first_rank() {
         // Push a white pawn back to row 1 (its starting side)
         // White pawn promotion is Row.Eight, so row 1 should NOT promote
-        WhitePawn pawn = new WhitePawn();
+        Pawn pawn = new Pawn(Color.WHITE);
         board.add(pawn, a3);
         board.setTurn(Color.BLACK);
 
         card.playOn(board, new PieceToPositionCardParam(pawn, a1));
 
-        assertInstanceOf(WhitePawn.class, board.at(a1).getPiece().get());
+        assertInstanceOf(Pawn.class, board.at(a1).getPiece().get());
     }
 
     @Test
     void should_reject_pushing_forward() {
-        BlackPawn pawn = new BlackPawn();
+        Pawn pawn = new Pawn(Color.BLACK);
         board.add(pawn, d5);
 
         assertThrows(IllegalArgumentException.class,
@@ -81,7 +81,7 @@ class FrightCardTest {
 
     @Test
     void should_reject_own_pawn() {
-        WhitePawn pawn = new WhitePawn();
+        Pawn pawn = new Pawn(Color.WHITE);
         board.add(pawn, d4);
 
         assertThrows(IllegalArgumentException.class,
@@ -90,7 +90,7 @@ class FrightCardTest {
 
     @Test
     void should_reject_occupied_target() {
-        BlackPawn pawn = new BlackPawn();
+        Pawn pawn = new Pawn(Color.BLACK);
         board.add(pawn, d5);
         board.add(new Knight(Color.BLACK), d6);
 
@@ -100,7 +100,7 @@ class FrightCardTest {
 
     @Test
     void should_reject_three_squares() {
-        BlackPawn pawn = new BlackPawn();
+        Pawn pawn = new Pawn(Color.BLACK);
         board.add(pawn, d4);
 
         assertThrows(IllegalArgumentException.class,

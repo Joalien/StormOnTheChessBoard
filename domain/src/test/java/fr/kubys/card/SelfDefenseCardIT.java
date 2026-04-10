@@ -31,7 +31,7 @@ class SelfDefenseCardIT {
     class Success {
         @Test
         void pawn_captures_knight_then_self_defense_restores_knight_and_removes_pawn() {
-            WhitePawn pawn = new WhitePawn();
+            Pawn pawn = new Pawn(Color.WHITE);
             Knight blackKnight = new Knight(Color.BLACK);
             board.add(pawn, d4);
             board.add(blackKnight, e5);
@@ -88,7 +88,7 @@ class SelfDefenseCardIT {
         @Test
         void self_defense_before_promotion_choice_removes_auto_promoted_queen() {
             // White pawn on 7th rank captures black piece on 8th rank → auto-promotes to Queen
-            WhitePawn pawn = new WhitePawn();
+            Pawn pawn = new Pawn(Color.WHITE);
             Rock blackRook = new Rock(Color.BLACK);
             board.add(pawn, e7);
             board.add(blackRook, f8);
@@ -112,7 +112,7 @@ class SelfDefenseCardIT {
         @Test
         void self_defense_after_promotion_choice_removes_chosen_piece() {
             // White pawn on 7th rank captures black piece on 8th rank → auto-promotes to Queen
-            WhitePawn pawn = new WhitePawn();
+            Pawn pawn = new Pawn(Color.WHITE);
             Knight blackKnight = new Knight(Color.BLACK);
             board.add(pawn, d7);
             board.add(blackKnight, e8);

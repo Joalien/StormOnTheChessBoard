@@ -60,10 +60,10 @@ public class ChessBoard {
 
         Arrays.stream(File.values())
                 .map(file -> posToSquare(file, Row.Two))
-                .forEach(position -> chessBoard.add(new WhitePawn(), position));
+                .forEach(position -> chessBoard.add(new Pawn(Color.WHITE), position));
         Arrays.stream(File.values())
                 .map(file -> posToSquare(file, Row.Seven))
-                .forEach(position -> chessBoard.add(new BlackPawn(), position));
+                .forEach(position -> chessBoard.add(new Pawn(Color.BLACK), position));
         return chessBoard;
     }
 
@@ -81,8 +81,8 @@ public class ChessBoard {
 
         new ArrayList<>(effects).forEach(effect -> effect.afterMoveHook(this, piece));
 
-        if (piece instanceof Pawn pawn && pawn.isOnPromotionRow()) {
-            promote(pawn);
+        if (piece instanceof Promotable promotable && piece.getPosition() != null && promotable.isOnPromotionRow()) {
+            promote(piece);
         }
     }
 
@@ -210,10 +210,10 @@ public class ChessBoard {
         add(piece, positionToMoveOn);
     }
 
-    private void promote(Pawn pawn) {
-        Position position = pawn.getPosition();
-        removePieceFromTheBoard(pawn);
-        add(new Queen(pawn.getColor()), position);
+    private void promote(Piece piece) {
+        Position position = piece.getPosition();
+        removePieceFromTheBoard(piece);
+        add(new Queen(piece.getColor()), position);
         promotedPositions.add(position);
     }
 

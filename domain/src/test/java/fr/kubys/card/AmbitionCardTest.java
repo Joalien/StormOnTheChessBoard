@@ -26,7 +26,7 @@ class AmbitionCardTest {
 
     @Test
     void should_replace_pawn_with_captured_piece() {
-        WhitePawn pawn = new WhitePawn();
+        Pawn pawn = new Pawn(Color.WHITE);
         board.add(pawn, d4);
         Knight captured = new Knight(Color.WHITE);
         board.add(captured, a3);
@@ -40,7 +40,7 @@ class AmbitionCardTest {
 
     @Test
     void should_reject_queen_resurrection() {
-        WhitePawn pawn = new WhitePawn();
+        Pawn pawn = new Pawn(Color.WHITE);
         board.add(pawn, d4);
         Queen captured = new Queen(Color.WHITE);
         board.add(captured, a3);
@@ -52,7 +52,7 @@ class AmbitionCardTest {
 
     @Test
     void should_reject_piece_still_on_the_board() {
-        WhitePawn pawn = new WhitePawn();
+        Pawn pawn = new Pawn(Color.WHITE);
         board.add(pawn, d4);
         Knight notCaptured = new Knight(Color.WHITE);
         board.add(notCaptured, b1);
@@ -63,7 +63,7 @@ class AmbitionCardTest {
 
     @Test
     void should_allow_neutral_captured_piece() {
-        WhitePawn pawn = new WhitePawn();
+        Pawn pawn = new Pawn(Color.WHITE);
         board.add(pawn, d4);
         Knight neutral = new Knight(Color.WHITE);
         board.add(neutral, a3);
@@ -77,7 +77,7 @@ class AmbitionCardTest {
 
     @Test
     void should_reject_enemy_captured_piece() {
-        WhitePawn pawn = new WhitePawn();
+        Pawn pawn = new Pawn(Color.WHITE);
         board.add(pawn, d4);
         Knight enemyPiece = new Knight(Color.BLACK);
         board.add(enemyPiece, a6);
