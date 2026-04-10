@@ -8,7 +8,6 @@ import fr.kubys.card.params.*;
 import fr.kubys.core.Color;
 import fr.kubys.piece.*;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
@@ -149,9 +148,6 @@ class CombinedEffectsIT {
         }
 
         @Test
-        @Disabled("BUG: Crab extends Pawn, bomb destroys it in afterMoveHook setting position=null, " +
-                "then add() continues to check isOnPromotionRow() → NPE. " +
-                "Fix needed in ChessBoard.add(): guard promotion check against null position.")
         void crab_on_bomb_should_be_destroyed() {
             Crab crab = new Crab(Color.BLACK);
             board.add(crab, c4);
@@ -319,10 +315,6 @@ class CombinedEffectsIT {
         }
 
         @Test
-        @Disabled("BUG: BreakthroughCard removes enemy via card, then adds pawn to same square. " +
-                "Pawn is white, bomb destroys it in afterMoveHook, then add() " +
-                "continues to check isOnPromotionRow() on destroyed pawn → NPE. " +
-                "Same root cause as crab_on_bomb.")
         void breakthrough_capture_onto_bomb_should_trigger() {
             Pawn pawn = new Pawn(Color.WHITE);
             board.add(pawn, d4);
@@ -408,9 +400,6 @@ class CombinedEffectsIT {
         }
 
         @Test
-        @Disabled("BUG: BanzaiCard uses add() which triggers afterMoveHook. " +
-                "Bomb destroys pawn (sets position=null), then add() checks " +
-                "isOnPromotionRow() → NPE. Fix: guard promotion check in ChessBoard.add().")
         void banzai_three_squares_onto_bomb() {
             board = ChessBoard.createEmpty();
             board.add(new King(Color.WHITE), a1);
