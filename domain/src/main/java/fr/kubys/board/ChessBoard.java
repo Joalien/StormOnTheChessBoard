@@ -27,6 +27,7 @@ public class ChessBoard {
     private final List<Position> promotedPositions = new ArrayList<>();
 
     private Color currentTurn = Color.WHITE;
+    private int turnNumber = 0;
 
     public static ChessBoard createEmpty() {
 //        log.debug("create empty chessboard");
@@ -341,6 +342,11 @@ public class ChessBoard {
 
     public void setTurn(Color currentPlayer) {
         this.currentTurn = currentPlayer;
+        this.turnNumber++;
+    }
+
+    public int getTurnNumber() {
+        return turnNumber;
     }
 
 }
