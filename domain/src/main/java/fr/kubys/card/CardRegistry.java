@@ -31,7 +31,8 @@ public class CardRegistry {
                 new NeutralityCard(),
                 new MadHouseCard(),
                 new NuclearBombCard(),
-                new PegasusCard()
+                new PegasusCard(),
+                new VampirismCard()
         );
     }
 }
