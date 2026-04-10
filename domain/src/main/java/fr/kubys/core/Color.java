@@ -1,9 +1,20 @@
 package fr.kubys.core;
 
 public enum Color {
-    BLACK,
-    WHITE,
-    NONE;
+    BLACK(Row.Eight),
+    WHITE(Row.One),
+    NONE(null);
+
+    private final Row homeRow;
+
+    Color(Row homeRow) {
+        this.homeRow = homeRow;
+    }
+
+    public Row homeRow() {
+        if (this == NONE) throw new RuntimeException("Color NONE has no home row");
+        return homeRow;
+    }
 
     public boolean cannotBeMovedBy(Color playerColor) {
         return this != playerColor && this != NONE;
