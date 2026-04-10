@@ -13,10 +13,6 @@ public enum Color {
         return this == NONE;
     }
 
-    public Color resolveFor(Color currentTurn) {
-        return this == NONE ? currentTurn : this;
-    }
-
     public Color opposite() {
         return switch (this) {
             case WHITE -> BLACK;

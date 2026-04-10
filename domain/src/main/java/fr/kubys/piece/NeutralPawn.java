@@ -50,9 +50,9 @@ public class NeutralPawn extends Pawn {
     }
 
     @Override
-    public boolean isPositionTheoreticallyReachable(File file, Row row, Color targetPieceColor, Color movingAs) {
-        if (movingAs == Color.WHITE) return checkDirection(file, row, targetPieceColor, getRow().next());
-        if (movingAs == Color.BLACK) return checkDirection(file, row, targetPieceColor, getRow().previous());
+    public boolean isPositionTheoreticallyReachable(File file, Row row, Color targetPieceColor, Color effectiveColor) {
+        if (effectiveColor == Color.WHITE) return checkDirection(file, row, targetPieceColor, getRow().next());
+        if (effectiveColor == Color.BLACK) return checkDirection(file, row, targetPieceColor, getRow().previous());
         return isPositionTheoreticallyReachable(file, row, targetPieceColor);
     }
 

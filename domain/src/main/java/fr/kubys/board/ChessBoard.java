@@ -219,7 +219,7 @@ public class ChessBoard {
 
     // Throw exception instead of false to send a message to explain why it is not possible to move
     public boolean canMove(Piece piece, Position positionToMoveOn) {
-        if (!canAttack(piece, positionToMoveOn, piece.getColor().resolveFor(currentTurn)))
+        if (!canAttack(piece, positionToMoveOn, piece.getEffectiveColor(currentTurn)))
             throw new IllegalMoveException("You cannot move %s to %s".formatted(piece, positionToMoveOn));
         if (doesMovingPieceCheckOurOwnKing(piece, positionToMoveOn))
             throw new CheckException();
@@ -265,7 +265,7 @@ public class ChessBoard {
         assert fakeSquares.size() == 2; // is that a smell ?
 
         // Check if the king of the player performing the move is under attack
-        boolean enemyCanCheck = isKingUnderAttack(piece.getColor().resolveFor(currentTurn));
+        boolean enemyCanCheck = isKingUnderAttack(piece.getEffectiveColor(currentTurn));
 
         piece.setPosition(piece.getPosition());
         unfakeSquare(piece.getPosition());
