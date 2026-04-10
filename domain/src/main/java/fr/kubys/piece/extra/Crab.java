@@ -1,9 +1,11 @@
-package fr.kubys.piece;
+package fr.kubys.piece.extra;
 
 import fr.kubys.core.Color;
 import fr.kubys.core.File;
 import fr.kubys.core.Position;
 import fr.kubys.core.Row;
+import fr.kubys.piece.Piece;
+import fr.kubys.piece.Promotable;
 
 import java.util.Collections;
 import java.util.Set;
