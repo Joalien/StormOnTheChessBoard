@@ -10,6 +10,7 @@ import lombok.experimental.SuperBuilder;
 
 import java.util.Map;
 import java.util.Objects;
+import java.util.stream.Stream;
 
 @SuperBuilder
 @Getter
@@ -19,11 +20,14 @@ public final class PlayCardWithImmutableParamCommand<T extends CardParam> extend
 
     @Override
     public void execute(ChessBoardService chessBoardWriteService) {
-        Card<T> card = chessBoardWriteService.getCurrentPlayer().getCards().stream()
+        Card<T> card = Stream.of(chessBoardWriteService.getCurrentPlayer(),
+                        chessBoardWriteService.getWhite(), chessBoardWriteService.getBlack())
+                .filter(Objects::nonNull)
+                .flatMap(p -> p.getCards().stream())
                 .filter(c -> Objects.equals(c.getName(), cardName))
                 .findFirst()
                 .map(CardParametersMapper::<T>checkThatCardParametersMatch)
-                .orElseThrow(() -> new CardNotFoundException("Card %s is not in user hand!".formatted(cardName)));
+                .orElseThrow(() -> new CardNotFoundException("Card %s is not in any player's hand!".formatted(cardName)));
         T parameters = CardParametersMapper.mapParamToCardParam(param, card.getClazz(), chessBoardWriteService);
 
         PlayCardWithMutableParam.<T>builder()
