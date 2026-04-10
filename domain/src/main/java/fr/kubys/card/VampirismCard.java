@@ -46,6 +46,7 @@ public class VampirismCard extends Card<PieceCardParam> {
     protected void doAction(ChessBoard chessBoard, PieceCardParam param) {
         Piece capturedPiece = findCapturedPieceThisTurn(chessBoard);
         Piece newPiece = createPieceOfSameType(capturedPiece, param.piece().getColor());
+        newPiece.setCheckMateTarget(param.piece().isKing());
         var position = param.piece().getPosition();
         chessBoard.removePieceFromTheBoard(param.piece());
         chessBoard.add(newPiece, position);

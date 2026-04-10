@@ -27,8 +27,4 @@ public class Knight extends Piece {
         return Collections.emptySet(); // piece.Knight can jump over pieces
     }
 
-    @Override
-    public boolean isKing() {
-        return false;
-    }
 }

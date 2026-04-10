@@ -38,8 +38,4 @@ public class Bishop extends Piece {
         return squaresOnThePath;
     }
 
-    @Override
-    public boolean isKing() {
-        return false;
-    }
 }

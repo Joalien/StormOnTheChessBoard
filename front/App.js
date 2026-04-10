@@ -260,6 +260,7 @@ export default function App() {
     const [pendingPromotions, setPendingPromotions] = useState([]);
     const [promotionSquare, setPromotionSquare] = useState(null);
     const [barricadeEdges, setBarricadeEdges] = useState([]);
+    const [checkMateTargets, setCheckMateTargets] = useState([]);
 
     function loadCustomPieces() {
         const requirePiece = require.context('./component/pieces', false, /\.js$/);
@@ -363,6 +364,7 @@ export default function App() {
                 setBlackPlayer(data.blackPlayer);
                 setWhitePlayer(data.whitePlayer);
                 setPendingPromotions(data.pendingPromotions || []);
+                setCheckMateTargets(data.checkMateTargets || []);
                 setPromotionSquare(null);
             });
     }
@@ -627,6 +629,25 @@ export default function App() {
                                 ))}
                             </svg>
                         ))}
+                        {/* Crown overlay on non-King checkmate targets */}
+                        {checkMateTargets.length > 0 && (
+                            <svg style={{position: 'absolute', top: 0, left: 0, width: 560, height: 560, pointerEvents: 'none', zIndex: 6}}>
+                                {checkMateTargets.map(sq => {
+                                    const {x, y} = squareToCoords(sq, currentPlayerColor);
+                                    return (
+                                        <g key={`crown-${sq}`} transform={`translate(${x + 23}, ${y + 2})`}>
+                                            <path
+                                                d="M2 14 L5 6 L9 10 L14 2 L19 10 L23 6 L26 14 Z"
+                                                fill="#d4a843"
+                                                stroke="#8B6914"
+                                                strokeWidth="1"
+                                                opacity="0.9"
+                                            />
+                                        </g>
+                                    );
+                                })}
+                            </svg>
+                        )}
                         {promotionSquare && (() => {
                             const {x, y} = squareToCoords(promotionSquare, currentPlayerColor);
                             const isWhitePiece = (game[promotionSquare] || '').startsWith('w');

@@ -12,6 +12,7 @@ public class CardRegistry {
     public static List<Card<? extends CardParam>> createAllCards() {
         return List.of(
                 new BarricadeCard(),
+                new VampirismCard(),
                 new ManHoleCard(),
                 new BlackHoleCard(),
                 new BombingCard(),
@@ -31,8 +32,7 @@ public class CardRegistry {
                 new NeutralityCard(),
                 new MadHouseCard(),
                 new NuclearBombCard(),
-                new PegasusCard(),
-                new VampirismCard()
+                new PegasusCard()
         );
     }
 }

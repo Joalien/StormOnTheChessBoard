@@ -49,8 +49,4 @@ public class Kangaroo extends Piece {
             .collect(Collectors.toSet());
     }
 
-    @Override
-    public boolean isKing() {
-        return false;
-    }
 }

@@ -16,6 +16,8 @@ public abstract class Piece {
 
     protected Color color;
     private Position position;
+    private boolean checkMateTarget = false;
+    private boolean canCastle = false;
 
     public Predicate<Stream<Optional<Piece>>> hasEmptyPath() {
         return path -> path.allMatch(Optional::isEmpty);
@@ -23,6 +25,11 @@ public abstract class Piece {
 
     public Piece(Color color) {
         this.color = color;
+    }
+
+    protected Piece(Color color, boolean canCastle) {
+        this.color = color;
+        this.canCastle = canCastle;
     }
 
     public File getFile() {
@@ -83,6 +90,8 @@ public abstract class Piece {
                 throw new InstantiationException("Constructor not found");
             }
             p.setPosition(position);
+            p.setCheckMateTarget(checkMateTarget);
+            if (!canCastle) p.cannotCastleAnymore();
             return p;
         } catch (InstantiationException | IllegalAccessException | NoSuchMethodException |
                  InvocationTargetException e) {
@@ -108,5 +117,19 @@ public abstract class Piece {
         this.color = color;
     }
 
-    public abstract boolean isKing();
+    public boolean isKing() {
+        return checkMateTarget;
+    }
+
+    public void setCheckMateTarget(boolean checkMateTarget) {
+        this.checkMateTarget = checkMateTarget;
+    }
+
+    public boolean canCastle() {
+        return canCastle;
+    }
+
+    public void cannotCastleAnymore() {
+        this.canCastle = false;
+    }
 }

@@ -36,38 +36,6 @@ class KingTest {
         }
 
         @Test
-        void should_return_square_it_will_go_through_when_white_king_side_castling() {
-            King king = new King(Color.WHITE);
-            king.setPosition(e1);
-
-            assertEquals(Set.of(f1), king.squaresOnThePath(g1));
-        }
-
-        @Test
-        void should_return_square_it_will_go_through_when_white_queen_side_castling() {
-            King king = new King(Color.WHITE);
-            king.setPosition(e1);
-
-            assertEquals(Set.of(d1), king.squaresOnThePath(c1));
-        }
-
-        @Test
-        void should_return_square_it_will_go_through_when_black_king_side_castling() {
-            King king = new King(Color.BLACK);
-            king.setPosition(e8);
-
-            assertEquals(Set.of(f8), king.squaresOnThePath(g8));
-        }
-
-        @Test
-        void should_return_square_it_will_go_through_when_black_queen_side_castling() {
-            King king = new King(Color.BLACK);
-            king.setPosition(e8);
-
-            assertEquals(Set.of(d8), king.squaresOnThePath(c8));
-        }
-
-        @Test
         void should_not_be_reachable() {
             King king = new King(Color.WHITE);
             king.setPosition(a1);
@@ -109,24 +77,15 @@ class KingTest {
             assertFalse(king.isPositionTheoreticallyReachable(e5));
         }
 
-        @Nested
-        class Castle {
-            @Test
-            void should_be_able_to_castle() {
-                King king = new King(Color.WHITE);
-                king.setPosition(e1);
+        @Test
+        void should_not_reach_castle_target_by_movement_alone() {
+            King king = new King(Color.WHITE);
+            king.setPosition(e1);
 
-                assertTrue(king.isPositionTheoreticallyReachable(g1));
-            }
-
-            @Test
-            void should_not_be_able_to_castle_if_king_has_moved() {
-                King king = new King(Color.WHITE);
-                king.setPosition(e1);
-                king.cannotCastleAnymore();
-
-                assertFalse(king.isPositionTheoreticallyReachable(g1));
-            }
+            // Castle targets are not reachable by King's own movement (distance > 1)
+            // Castling is handled by ChessBoard, not by King's movement logic
+            assertFalse(king.isPositionTheoreticallyReachable(g1));
+            assertFalse(king.isPositionTheoreticallyReachable(c1));
         }
     }
 

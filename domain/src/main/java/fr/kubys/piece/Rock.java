@@ -9,12 +9,10 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-public class Rock extends Piece implements Castlable {
-
-    private boolean canCastle = true;
+public class Rock extends Piece {
 
     public Rock(Color color) {
-        super(color);
+        super(color, true);
     }
 
     @Override
@@ -54,18 +52,4 @@ public class Rock extends Piece implements Castlable {
         return squaresOnThePath;
     }
 
-    @Override
-    public boolean isKing() {
-        return false;
-    }
-
-    @Override
-    public boolean canCastle() {
-        return canCastle;
-    }
-
-    @Override
-    public void cannotCastleAnymore() {
-        canCastle = false;
-    }
 }

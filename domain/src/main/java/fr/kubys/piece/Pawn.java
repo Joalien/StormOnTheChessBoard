@@ -55,8 +55,4 @@ public abstract class Pawn extends Piece {
         return this.getColor().toString().toLowerCase() + " Pawn";
     }
 
-    @Override
-    public boolean isKing() {
-        return false;
-    }
 }

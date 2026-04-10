@@ -37,6 +37,7 @@ class VampirismCardIT {
         Piece transformed = board.at(e5).getPiece().orElseThrow();
         assertInstanceOf(Knight.class, transformed);
         assertEquals(Color.WHITE, transformed.getColor());
+        assertFalse(transformed.isKing(), "Non-king piece should not become checkmate target");
     }
 
     @Test
@@ -117,9 +118,10 @@ class VampirismCardIT {
     }
 
     @Test
-    void king_capturing_queen_becomes_queen() {
+    void king_capturing_queen_becomes_queen_and_remains_checkmate_target() {
         board.add(new Queen(Color.BLACK), b2);
         King king = (King) board.at(a1).getPiece().orElseThrow();
+        assertTrue(king.isKing());
 
         board.move(king, b2);
 
@@ -128,10 +130,11 @@ class VampirismCardIT {
         Piece transformed = board.at(b2).getPiece().orElseThrow();
         assertInstanceOf(Queen.class, transformed);
         assertEquals(Color.WHITE, transformed.getColor());
+        assertTrue(transformed.isKing(), "Transformed piece should still be the checkmate target");
     }
 
     @Test
-    void king_capturing_knight_becomes_knight() {
+    void king_capturing_knight_becomes_knight_and_remains_checkmate_target() {
         board.add(new Knight(Color.BLACK), b2);
         King king = (King) board.at(a1).getPiece().orElseThrow();
 
@@ -142,6 +145,7 @@ class VampirismCardIT {
         Piece transformed = board.at(b2).getPiece().orElseThrow();
         assertInstanceOf(Knight.class, transformed);
         assertEquals(Color.WHITE, transformed.getColor());
+        assertTrue(transformed.isKing(), "Transformed piece should still be the checkmate target");
     }
 
     @Test

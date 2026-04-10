@@ -22,4 +22,5 @@ public class ChessBoardDto {
     private Set<CardOutputDto> discard;
     private String currentTurn;
     private Set<String> pendingPromotions;
+    private Set<String> checkMateTargets;
 }

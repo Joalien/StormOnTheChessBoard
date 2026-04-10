@@ -167,26 +167,36 @@ public class ChessBoard {
         }
     }
 
+    Optional<Position> getCastleRookPassSquare(Piece piece, Position positionToMoveOn) {
+        if (!piece.isKing() || !piece.canCastle()) return Optional.empty();
+        Row homeRow = piece.getColor().homeRow();
+        Position startingPos = posToSquare(File.E, homeRow);
+        if (!piece.getPosition().equals(startingPos)) return Optional.empty();
+
+        Position kingSideTarget = posToSquare(File.G, homeRow);
+        Position queenSideTarget = posToSquare(File.C, homeRow);
+
+        if (positionToMoveOn.equals(kingSideTarget)) return Optional.of(posToSquare(File.F, homeRow));
+        if (positionToMoveOn.equals(queenSideTarget)) return Optional.of(posToSquare(File.D, homeRow));
+        return Optional.empty();
+    }
+
     void tryToCastle(Piece piece, Position positionToMoveOn) {
-        boolean kingCanCastle = piece instanceof King && ((King) piece).canCastle();
-        boolean kingWantToCastle = piece.squaresOnThePath(positionToMoveOn).size() == 1;
-        if (kingCanCastle && kingWantToCastle) {
-            Position finalPositionOfRock = piece.squaresOnThePath(positionToMoveOn).stream().findFirst().get();
-            Position rockPosition = Castlable.CASTLE_MAP.get(finalPositionOfRock);
+        getCastleRookPassSquare(piece, positionToMoveOn).ifPresent(rookPassSquare -> {
+            Position rockPosition = Castlable.CASTLE_MAP.get(rookPassSquare);
             at(rockPosition)
                     .getPiece()
                     .filter(Rock.class::isInstance)
                     .map(Rock.class::cast)
-                    .filter(Rock::canCastle)
+                    .filter(Piece::canCastle)
                     .ifPresentOrElse(rock -> {
-//                        log.info("{} is castling", piece);
-                        move(rock, finalPositionOfRock);
+                        move(rock, rookPassSquare);
                         rock.cannotCastleAnymore();
-                        ((King) piece).cannotCastleAnymore();
+                        piece.cannotCastleAnymore();
                     }, () -> {
 //                        log.debug("{} can castle but rock cannot", piece)
                     });
-        }
+        });
     }
 
     public void move(Piece piece, Position positionToMoveOn) {
@@ -223,7 +233,7 @@ public class ChessBoard {
     }
 
     public Piece removePieceFromTheBoard(Piece piece, PieceRemoval.RemovalReason reason) {
-        if (piece instanceof King)
+        if (piece.isKing())
             log.warn("{} is removed from the board, are you sure? Or should you throw CannotTakeKingException?", piece);
         at(piece.getPosition()).setPiece(null);
         piece.setPosition(null);
@@ -235,17 +245,12 @@ public class ChessBoard {
 
     // Throw exception instead of false to send a message to explain why it is not possible to move
     public boolean canMove(Piece piece, Position positionToMoveOn) {
-        if (!canAttack(piece, positionToMoveOn, piece.getEffectiveColor(currentTurn)))
+        boolean isCastleMove = getCastleRookPassSquare(piece, positionToMoveOn).isPresent();
+        if (!isCastleMove && !canAttack(piece, positionToMoveOn, piece.getEffectiveColor(currentTurn)))
             throw new IllegalMoveException("You cannot move %s to %s".formatted(piece, positionToMoveOn));
         if (doesMovingPieceCheckOurOwnKing(piece, positionToMoveOn))
             throw new CheckException();
-        if (isInvalidCastle(piece, positionToMoveOn))
-            throw new RuntimeException("You cannot castle!"); // TEST ME
         return true;
-    }
-
-    boolean isInvalidCastle(Piece piece, Position positionToMoveOn) {
-        return false; // TODO
     }
 
     public void fakeSquare(Piece piece, Position position) {
