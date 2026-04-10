@@ -28,7 +28,8 @@ public class CardRegistry {
                 new CavalcadeCard(),
                 new BombardCard(),
                 new MadHorseDiseaseCard(),
-                new NeutralityCard()
+                new NeutralityCard(),
+                new MadHouseCard()
         );
     }
 }
