@@ -235,9 +235,10 @@ public class ChessBoard {
     public Piece removePieceFromTheBoard(Piece piece, PieceRemoval.RemovalReason reason) {
         if (piece.isKing())
             log.warn("{} is removed from the board, are you sure? Or should you throw CannotTakeKingException?", piece);
+        Position removedFrom = piece.getPosition();
         at(piece.getPosition()).setPiece(null);
         piece.setPosition(null);
-        outOfTheBoardPieces.add(new PieceRemoval(piece, turnNumber, reason));
+        outOfTheBoardPieces.add(new PieceRemoval(piece, removedFrom, turnNumber, reason));
 
         new ArrayList<>(effects).forEach(effect -> effect.afterRemovingPieceHook(this, piece));
         return piece;
