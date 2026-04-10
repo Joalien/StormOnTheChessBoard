@@ -34,6 +34,8 @@ public class FrightCard extends Card<PieceToPositionCardParam> {
             throw new IllegalArgumentException("Pawn must move backward");
         if (chessBoard.at(param.positionToMoveOn()).getPiece().isPresent())
             throw new IllegalArgumentException("Target square is not empty");
+        if (chessBoard.getEffects().stream().anyMatch(e -> e.blocksPosition(param.positionToMoveOn())))
+            throw new IllegalArgumentException("Target square is blocked by an effect");
     }
 
     @Override

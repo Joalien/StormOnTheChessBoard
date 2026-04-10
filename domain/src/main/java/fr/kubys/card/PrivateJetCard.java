@@ -18,6 +18,8 @@ public class PrivateJetCard extends Card<PositionCardParam> {
         if (param.position() == null) throw new IllegalStateException();
         if (chessBoard.at(param.position()).getPiece().isPresent())
             throw new IllegalArgumentException("Target square must be empty");
+        if (chessBoard.getEffects().stream().anyMatch(e -> e.blocksPosition(param.position())))
+            throw new IllegalArgumentException("Target square is blocked by an effect");
     }
 
     @Override
