@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.util.List;
 import java.util.Set;
 
 @Getter
@@ -15,4 +16,5 @@ import java.util.Set;
 public class EffectDto {
     private String name;
     private Set<Position> positions;
+    private List<List<String>> edges;
 }

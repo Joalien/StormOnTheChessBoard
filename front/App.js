@@ -2,6 +2,7 @@ import {Chessboard} from "react-chessboard";
 import {useEffect, useState} from "react";
 import {Player} from "./component/Player";
 import {CardParameters} from "./component/CardParameters";
+import {barricadeLines, BarricadeSelectionOverlay} from "./component/barricadeOverlay";
 import {toast, ToastContainer} from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -258,6 +259,7 @@ export default function App() {
     const [effects, setEffects] = useState([]);
     const [pendingPromotions, setPendingPromotions] = useState([]);
     const [promotionSquare, setPromotionSquare] = useState(null);
+    const [barricadeEdges, setBarricadeEdges] = useState([]);
 
     function loadCustomPieces() {
         const requirePiece = require.context('./component/pieces', false, /\.js$/);
@@ -396,8 +398,20 @@ export default function App() {
         return color === "white" ? "black" : "white";
     }
 
+    function isBarricadeCard(card) {
+        return card && card.englishName === 'BarricadeCard';
+    }
+
     function firstUnsetParam(card) {
         if (!card || !card.param) return null;
+        if (isBarricadeCard(card)) {
+            // For barricade, params are grouped: edge1 = from1+to1, edge2 = from2+to2
+            if (card.param.from1 === null) return 'from1';
+            if (card.param.to1 === null) return 'to1';
+            if (card.param.from2 === null) return 'from2';
+            if (card.param.to2 === null) return 'to2';
+            return null;
+        }
         return Object.keys(card.param).find(k => card.param[k] === null) || null;
     }
 
@@ -405,17 +419,39 @@ export default function App() {
         if (card !== selectedCard) {
             setSelectedCard(card);
             setSelectedParam(firstUnsetParam(card));
+            setBarricadeEdges([]);
         } else {
             setSelectedCard(null);
             setSelectedParam(null);
+            setBarricadeEdges([]);
         }
     }
 
+    function onBarricadeEdgeClick(edge) {
+        if (barricadeEdges.length >= 2) return;
+        const newEdges = [...barricadeEdges, edge];
+        setBarricadeEdges(newEdges);
+
+        // Sync to card params
+        const newParam = {...selectedCard.param};
+        if (newEdges.length === 1) {
+            newParam.from1 = edge[0];
+            newParam.to1 = edge[1];
+        } else if (newEdges.length === 2) {
+            newParam.from2 = edge[0];
+            newParam.to2 = edge[1];
+        }
+        const updated = {...selectedCard, param: newParam};
+        setSelectedCard(updated);
+        setSelectedParam(firstUnsetParam(updated));
+    }
+
     function onSquareRightClick(square) {
-        if (selectedCard && selectedParam) {
-            if (selectedCard.param[selectedParam] === square) selectedCard.param[selectedParam] = null;
-            else selectedCard.param[selectedParam] = square;
-            const updated = {...selectedCard};
+        if (selectedCard && selectedParam && !isBarricadeCard(selectedCard)) {
+            const newParam = {...selectedCard.param};
+            if (newParam[selectedParam] === square) newParam[selectedParam] = null;
+            else newParam[selectedParam] = square;
+            const updated = {...selectedCard, param: newParam};
             setSelectedCard(updated);
             setSelectedParam(firstUnsetParam(updated));
         }
@@ -507,6 +543,8 @@ export default function App() {
                             selectedParam={selectedParam}
                             setSelectedParam={setSelectedParam}
                             playCardCallback={playCard}
+                            barricadeEdges={barricadeEdges}
+                            setBarricadeEdges={setBarricadeEdges}
                         />
                     ) : (
                         <div className="sotc-panel" style={{padding: '28px 20px', textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px'}}>
@@ -561,6 +599,34 @@ export default function App() {
                                 customLightSquareStyle={{backgroundColor: '#f0d9b5'}}
                             />
                         </div>
+                        {/* Barricade selection overlay (interactive, when selecting edges) */}
+                        {isBarricadeCard(selectedCard) && barricadeEdges.length < 2 && (
+                            <BarricadeSelectionOverlay
+                                orientation={currentPlayerColor}
+                                selectedEdges={barricadeEdges}
+                                onEdgeClick={onBarricadeEdgeClick}
+                            />
+                        )}
+                        {/* Barricade selection preview (non-interactive, when both edges selected) */}
+                        {isBarricadeCard(selectedCard) && barricadeEdges.length === 2 && (
+                            <svg style={{position: 'absolute', top: 0, left: 0, width: 560, height: 560, pointerEvents: 'none', zIndex: 5}}>
+                                {barricadeEdges.map((edge, i) => {
+                                    const line = barricadeLines({edges: [edge]}, 560, currentPlayerColor)[0];
+                                    return line && <line key={i} x1={line.x1} y1={line.y1} x2={line.x2} y2={line.y2} stroke="#3fb950" strokeWidth={6} strokeLinecap="round" />;
+                                })}
+                            </svg>
+                        )}
+                        {/* Barricade effect display (existing barricades on the board) */}
+                        {effects.filter(e => e.name === 'BarricadeEffect' && e.edges).map((effect, idx) => (
+                            <svg key={`barricade-${idx}`} style={{position: 'absolute', top: 0, left: 0, width: 560, height: 560, pointerEvents: 'none', zIndex: 5}}>
+                                {barricadeLines(effect, 560, currentPlayerColor).map((line, i) => (
+                                    <g key={i}>
+                                        <line x1={line.x1} y1={line.y1} x2={line.x2} y2={line.y2} stroke="#8B4513" strokeWidth={8} strokeLinecap="round" />
+                                        <line x1={line.x1} y1={line.y1} x2={line.x2} y2={line.y2} stroke="#D2691E" strokeWidth={4} strokeLinecap="round" />
+                                    </g>
+                                ))}
+                            </svg>
+                        ))}
                         {promotionSquare && (() => {
                             const {x, y} = squareToCoords(promotionSquare, currentPlayerColor);
                             const isWhitePiece = (game[promotionSquare] || '').startsWith('w');

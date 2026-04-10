@@ -1,10 +1,12 @@
 package fr.kubys.mapper;
 
 import fr.kubys.api.ChessBoardReadService;
+import fr.kubys.board.effect.BarricadeEffect;
 import fr.kubys.board.effect.Effect;
 import fr.kubys.card.Card;
 import fr.kubys.card.params.CardParam;
 import fr.kubys.core.Color;
+import fr.kubys.core.Position;
 import fr.kubys.dto.CardOutputDto;
 import fr.kubys.dto.ChessBoardDto;
 import fr.kubys.dto.EffectDto;
@@ -36,10 +38,15 @@ public class OutputMapper {
     }
 
     public static EffectDto map(Effect e) {
-        return EffectDto.builder()
+        EffectDto.EffectDtoBuilder builder = EffectDto.builder()
                 .name(e.getClass().getSimpleName())
-                .positions(e.getPositions())
-                .build();
+                .positions(e.getPositions());
+        if (e instanceof BarricadeEffect barricade) {
+            builder.edges(barricade.getEdges().stream()
+                    .map(edge -> edge.stream().map(Position::name).toList())
+                    .toList());
+        }
+        return builder.build();
     }
 
     public static <T extends CardParam> CardOutputDto map(Card<T> c) {
