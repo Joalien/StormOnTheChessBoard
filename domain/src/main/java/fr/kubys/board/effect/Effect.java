@@ -33,6 +33,10 @@ public abstract class Effect {
         return false;
     }
 
+    public boolean blocksPath(Position from, Position to, Set<Position> intermediates) {
+        return intermediates.stream().anyMatch(this::blocksPosition);
+    }
+
     public String getName() {
         return this.name;
     }

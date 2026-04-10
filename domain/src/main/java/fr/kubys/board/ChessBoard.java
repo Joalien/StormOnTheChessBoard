@@ -126,8 +126,9 @@ public class ChessBoard {
     }
 
     public boolean emptyPath(Piece piece, Position squareToGo) {
-        if (piece.squaresOnThePath(squareToGo).stream().anyMatch(this::doesEffectBlockSquare)) return false;
-        Stream<Optional<Piece>> piecesOnPath = piece.squaresOnThePath(squareToGo).stream()
+        Set<Position> intermediates = piece.squaresOnThePath(squareToGo);
+        if (effects.stream().anyMatch(e -> e.blocksPath(piece.getPosition(), squareToGo, intermediates))) return false;
+        Stream<Optional<Piece>> piecesOnPath = intermediates.stream()
                 .map(this::at)
                 .map(Square::getPiece);
         return piece.hasEmptyPath().test(piecesOnPath);

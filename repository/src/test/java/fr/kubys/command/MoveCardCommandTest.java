@@ -1,11 +1,6 @@
 package fr.kubys.command;
 
-import fr.kubys.api.ChessBoardReadService;
-import fr.kubys.card.Card;
-import fr.kubys.card.LightweightSquadCard;
-import fr.kubys.card.params.LightweightSquadCardParam;
-import fr.kubys.core.Position;
-import fr.kubys.piece.Pawn;
+import fr.kubys.card.params.BarricadeCardParam;
 import fr.kubys.repository.ChessBoardRepositoryImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -25,36 +20,22 @@ class MoveCardCommandTest {
 
     @Test
     void card_parameter_should_act_as_immutable() {
-        Integer gameId = getGameWithLightweightSquadCardInTheHandOfCurrentPlayer();
-        String cardName = chessBoardRepository.getChessBoardService(gameId).getCurrentPlayer().getCards().stream()
-                .filter(card -> card.getClass() == LightweightSquadCard.class)
-                .findAny().orElseThrow()
-                .getName();
-        PlayCardWithImmutableParamCommand<LightweightSquadCardParam> command = PlayCardWithImmutableParamCommand.<LightweightSquadCardParam>builder()
+        Integer gameId = chessBoardRepository.createNewGame();
+
+        // White moves a pawn first (BarricadeCard is AFTER_TURN, needs a move first)
+        chessBoardRepository.saveCommand(PlayMoveCommand.builder().gameId(gameId).from(fr.kubys.core.Position.e2).to(fr.kubys.core.Position.e4).build());
+
+        // BarricadeCard is first in CardRegistry, so it's the first card dealt to white
+        String cardName = chessBoardRepository.getChessBoardService(gameId)
+                .getCurrentPlayer().getCards().get(0).getName();
+
+        PlayCardWithImmutableParamCommand<BarricadeCardParam> command = PlayCardWithImmutableParamCommand.<BarricadeCardParam>builder()
                 .gameId(gameId)
                 .cardName(cardName)
-                .param(Map.of("pawn1", "e2", "pawn2", "d2"))
+                .param(Map.of("from1", "d4", "to1", "e4", "from2", "d5", "to2", "e5"))
                 .build();
 
         assertDoesNotThrow(() -> chessBoardRepository.saveCommand(command));
         assertDoesNotThrow(() -> chessBoardRepository.getChessBoardService(gameId));
-    }
-
-    private Integer getGameWithLightweightSquadCardInTheHandOfCurrentPlayer() { // FIXME
-        Integer newGame;
-        do {
-            newGame = chessBoardRepository.createNewGame();
-        } while (chessBoardRepository.getChessBoardService(newGame).getCurrentPlayer().getCards().stream()
-                .map(Card::getClass)
-                .noneMatch(aClass -> aClass == LightweightSquadCard.class));
-            return newGame;
-    }
-
-    private static Pawn getPawnOn(ChessBoardReadService chessBoardService, Position position) {
-        return chessBoardService.getPieces().stream()
-                .filter(Pawn.class::isInstance)
-                .map(Pawn.class::cast)
-                .filter(piece -> piece.getPosition()
-                .equals(position)).findAny().orElseThrow();
     }
 }
