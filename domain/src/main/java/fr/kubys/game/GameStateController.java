@@ -3,7 +3,8 @@ package fr.kubys.game;
 import fr.kubys.api.ChessBoardService;
 import fr.kubys.board.ChessBoard;
 import fr.kubys.board.effect.Effect;
-import fr.kubys.card.*;
+import fr.kubys.card.Card;
+import fr.kubys.card.CardNotFoundException;
 import fr.kubys.card.params.CardParam;
 import fr.kubys.core.Color;
 import fr.kubys.core.Position;
@@ -11,7 +12,10 @@ import fr.kubys.piece.Piece;
 import fr.kubys.piece.PromotionPiece;
 import fr.kubys.player.Player;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
@@ -22,8 +26,7 @@ public class GameStateController implements ChessBoardService {
     private ChessBoard chessBoard;
     private Player white;
     private Player black;
-    private List<Card<? extends CardParam>> stack;
-    private List<Card<? extends CardParam>> discard;
+    private CardDeck deck;
     private Player currentPlayer;
     private StateEnum currentState;
     private final Set<Position> pendingPromotions = new HashSet<>();
@@ -52,45 +55,11 @@ public class GameStateController implements ChessBoardService {
         white = new Player("Name1", Color.WHITE);
         black = new Player("Name2", Color.BLACK);
 
-        initDeck(seed);
+        deck = new CardDeck(seed);
         IntStream.range(0, NUMBER_OF_CARDS_IN_HAND)
-                .peek(x -> dealCard(white))
-                .forEach(x -> dealCard(black));
+                .peek(x -> deck.dealCard(white))
+                .forEach(x -> deck.dealCard(black));
         currentState = StateEnum.BEGINNING_OF_THE_TURN;
-    }
-
-    private void initDeck(long seed) {
-        stack = new LinkedList<>();
-        discard = new LinkedList<>();
-        stack.add(new ManHoleCard());
-        stack.add(new BlackHoleCard());
-        stack.add(new BombingCard());
-        stack.add(new ChargeCard());
-        stack.add(new ApartheidCard());
-        stack.add(new CourtlyLoveCard());
-        stack.add(new KangarooCard());
-        stack.add(new HomeCard());
-        stack.add(new LightweightSquadCard());
-        stack.add(new MagnetismCard());
-        stack.add(new QuadrilleCard());
-        stack.add(new ReflectedBishopCard());
-        stack.add(new StableCard());
-        stack.add(new CavalcadeCard());
-        stack.add(new BombardCard());
-        stack.add(new MadHorseDiseaseCard());
-        stack.add(new NeutralityCard());
-
-//        Collections.shuffle(stack, new Random(seed));
-    }
-
-    void dealCard(Player player) {
-        if (stack.isEmpty()) {
-//            log.info("Stack is empty, reshuffling discard");
-            stack.addAll(discard);
-            discard.clear();
-            Collections.shuffle(stack);
-        }
-        player.getCards().add(stack.remove(0));
     }
 
     @Override
@@ -112,8 +81,7 @@ public class GameStateController implements ChessBoardService {
 
         currentState.getState().tryToPlayCard(this, card, params);
         getCurrentPlayer().getCards().remove(card);
-        discard.add(card);
-        dealCard(getCurrentPlayer());
+        deck.discardAndDraw(card, getCurrentPlayer());
     }
 
     @Override
@@ -145,12 +113,12 @@ public class GameStateController implements ChessBoardService {
 
     @Override
     public List<Card<? extends CardParam>> getStack() {
-        return this.stack;
+        return deck.getStack();
     }
 
     @Override
     public List<Card<? extends CardParam>> getDiscard() {
-        return this.discard;
+        return deck.getDiscard();
     }
 
     @Override
@@ -173,6 +141,10 @@ public class GameStateController implements ChessBoardService {
 
     ChessBoard getChessBoard() {
         return this.chessBoard;
+    }
+
+    CardDeck getDeck() {
+        return this.deck;
     }
 
     StateEnum getCurrentState() {

@@ -16,6 +16,8 @@ import java.util.Random;
 import static fr.kubys.core.Position.*;
 import static org.junit.jupiter.api.Assertions.*;
 
+// Note: tests access getStack()/getDiscard() through the public API which delegates to CardDeck
+
 class GameStateControllerTest {
 
     private GameStateController gameStateController;
@@ -78,7 +80,7 @@ class GameStateControllerTest {
         Player player = gameStateController.getCurrentPlayer();
         player.getCards().clear();
 
-        assertDoesNotThrow(() -> gameStateController.dealCard(player));
+        assertDoesNotThrow(() -> gameStateController.getDeck().dealCard(player));
 
         assertTrue(gameStateController.getDiscard().isEmpty());
         assertEquals(1, gameStateController.getStack().size());
