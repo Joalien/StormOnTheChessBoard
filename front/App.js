@@ -1,10 +1,11 @@
 import {Chessboard} from "react-chessboard";
-import {useCallback, useEffect, useMemo, useState} from "react";
+import {useCallback, useEffect, useMemo, useRef, useState} from "react";
 import {Image} from "react-native";
 import {Player} from "./component/Player";
 import {CardParameters} from "./component/CardParameters";
 import {barricadeLines, BarricadeSelectionOverlay} from "./component/barricadeOverlay";
 import {HomeScreen} from "./component/HomeScreen";
+import {WaitingScreen} from "./component/WaitingScreen";
 import {NotFoundScreen} from "./component/NotFoundScreen";
 import {toast, ToastContainer} from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
@@ -279,6 +280,12 @@ function getRouteFromUrl() {
     return {page: '404'};
 }
 
+function getPlayerColorFromUrl() {
+    if (typeof window === 'undefined') return null;
+    const params = new URLSearchParams(window.location.search);
+    return params.get('color');
+}
+
 export default function App() {
     const [game, setGame] = useState({});
     const [route, setRoute] = useState(getRouteFromUrl);
@@ -294,8 +301,11 @@ export default function App() {
     const [barricadeEdges, setBarricadeEdges] = useState([]);
     const [checkMateTargets, setCheckMateTargets] = useState([]);
     const [currentState, setCurrentState] = useState(null);
+    const [myColor, setMyColor] = useState(getPlayerColorFromUrl);
     const [legalMoves, setLegalMoves] = useState([]);
     const [windowWidth, setWindowWidth] = useState(typeof window !== 'undefined' ? window.innerWidth : 900);
+    const matchmakingPollRef = useRef(null);
+    const matchmakingTokenRef = useRef(null);
 
     useEffect(() => {
         function onResize() { setWindowWidth(window.innerWidth); }
@@ -343,17 +353,36 @@ export default function App() {
         fetchPlayer(gameId, "black").then(data => setBlackPlayer(data));
     }, [gameId]);
 
+    // Auto-refresh when waiting for opponent's move
+    useEffect(() => {
+        if (!myColor || gameId === null) return;
+        if (currentPlayerColor === myColor) return;
+        const interval = setInterval(fetchGame, 2000);
+        return () => clearInterval(interval);
+    }, [gameId, myColor, currentPlayerColor]);
+
     function fetchPlayer(gameId, color) {
         return fetch(base + gameId + "/players/" + color).then(res => res.json());
     }
 
-    function navigateToGame(id) {
-        window.history.pushState({}, '', id === null ? '/' : `/${id}`);
-        setRoute(id === null ? {page: 'home'} : {page: 'game', gameId: id});
+    function navigateToGame(id, color = null) {
+        if (id === null) {
+            window.history.pushState({}, '', '/');
+            setRoute({page: 'home'});
+            setMyColor(null);
+        } else {
+            const url = color ? `/${id}?color=${color}` : `/${id}`;
+            window.history.pushState({}, '', url);
+            setRoute({page: 'game', gameId: id});
+            setMyColor(color);
+        }
     }
 
     useEffect(() => {
-        function onPopState() { setRoute(getRouteFromUrl()); }
+        function onPopState() {
+            setRoute(getRouteFromUrl());
+            setMyColor(getPlayerColorFromUrl());
+        }
         window.addEventListener('popstate', onPopState);
         return () => window.removeEventListener('popstate', onPopState);
     }, []);
@@ -361,23 +390,62 @@ export default function App() {
     useEffect(() => {
         function onKeyDown(e) {
             if (e.code === 'Space' && gameId !== null) {
+                if (myColor && myColor !== currentPlayerColor) return;
                 e.preventDefault();
                 endTurn();
             }
             if (e.key === 'z' && (e.ctrlKey || e.metaKey) && gameId !== null) {
+                if (myColor && myColor !== currentPlayerColor) return;
                 e.preventDefault();
                 undo();
             }
         }
         window.addEventListener('keydown', onKeyDown, true);
         return () => window.removeEventListener('keydown', onKeyDown, true);
-    }, [gameId]);
+    }, [gameId, myColor, currentPlayerColor]);
 
     function startNewGame() {
         fetch(backendOrigin + '/chessboard', {method: 'POST'})
             .then(res => res.text())
             .then(text => navigateToGame(parseInt(text, 10)))
             .catch(err => alert(err));
+    }
+
+    function matchmaking() {
+        setRoute({page: 'waiting'});
+        fetch(backendOrigin + '/matchmaking/join', {method: 'POST'})
+            .then(res => res.json())
+            .then(data => {
+                matchmakingTokenRef.current = data.token;
+                matchmakingPollRef.current = setInterval(() => {
+                    fetch(backendOrigin + '/matchmaking/status/' + data.token)
+                        .then(res => res.json())
+                        .then(status => {
+                            if (status.status === 'matched') {
+                                clearInterval(matchmakingPollRef.current);
+                                matchmakingPollRef.current = null;
+                                matchmakingTokenRef.current = null;
+                                navigateToGame(status.gameId, status.color);
+                            }
+                        });
+                }, 2000);
+            })
+            .catch(err => {
+                toast.error("Erreur: " + err);
+                navigateToGame(null);
+            });
+    }
+
+    function cancelMatchmaking() {
+        if (matchmakingPollRef.current) {
+            clearInterval(matchmakingPollRef.current);
+            matchmakingPollRef.current = null;
+        }
+        if (matchmakingTokenRef.current) {
+            fetch(backendOrigin + '/matchmaking/' + matchmakingTokenRef.current, {method: 'DELETE'}).catch(() => {});
+            matchmakingTokenRef.current = null;
+        }
+        navigateToGame(null);
     }
 
     function onPieceDragBegin(piece, sourceSquare) {
@@ -483,6 +551,7 @@ export default function App() {
 
     function playableCardTypes(state, isOpponent) {
         if (isOpponent) return ['ENEMY_TURN'];
+        if (myColor && myColor !== currentPlayerColor) return [];
         const map = {
             'BEGINNING_OF_THE_TURN': ['BEFORE_TURN', 'REPLACE_TURN'],
             'BEFORE_MOVE': [],
@@ -550,9 +619,13 @@ export default function App() {
     }
 
     const isWhiteTurn = currentPlayerColor === "white";
-    const opponentPlayer = isWhiteTurn ? blackPlayer : whitePlayer;
-    const currentPlayer = isWhiteTurn ? whitePlayer : blackPlayer;
-    const opponentColor = isWhiteTurn ? "black" : "white";
+    const isMyTurn = !myColor || myColor === currentPlayerColor;
+
+    // In matchmaking: layout is fixed (my cards at bottom). In solo: follows current turn.
+    const bottomColor = myColor || currentPlayerColor;
+    const topColor = oppositeColor(bottomColor);
+    const bottomPlayer = bottomColor === 'white' ? whitePlayer : blackPlayer;
+    const topPlayer = bottomColor === 'white' ? blackPlayer : whitePlayer;
 
     const promotionHighlight = {boxShadow: "rgba(248, 81, 73, 0.85) 0px 0px 24px 0px inset", cursor: "pointer"};
     const legalMoveDot = {background: "radial-gradient(circle, rgba(0,0,0,0.25) 25%, transparent 25%)"};
@@ -576,7 +649,16 @@ export default function App() {
         return (
             <>
                 <ToastContainer position="top-right" closeOnClick pauseOnFocusLoss draggable pauseOnHover autoClose={3500} />
-                <HomeScreen onPlaySolo={startNewGame} />
+                <HomeScreen onPlaySolo={startNewGame} onMatchmaking={matchmaking} />
+            </>
+        );
+    }
+
+    if (route.page === 'waiting') {
+        return (
+            <>
+                <ToastContainer position="top-right" closeOnClick pauseOnFocusLoss draggable pauseOnHover autoClose={3500} />
+                <WaitingScreen onCancel={cancelMatchmaking} />
             </>
         );
     }
@@ -627,7 +709,7 @@ export default function App() {
                 </div>
                 <div style={{display: 'flex', gap: '8px', alignItems: 'center'}}>
                     <button className="sotc-btn" onClick={() => navigateToGame(null)}>⌂ Accueil</button>
-                    <button className="sotc-btn sotc-btn-danger" onClick={undo}>↩ Undo</button>
+                    <button className="sotc-btn sotc-btn-danger" onClick={undo} disabled={!isMyTurn}>↩ Undo</button>
                 </div>
             </header>
 
@@ -660,7 +742,7 @@ export default function App() {
                         </div>
                     )}
 
-                    <button className="sotc-btn sotc-btn-end" style={{width: '100%', padding: '13px'}} onClick={endTurn}>
+                    <button className="sotc-btn sotc-btn-end" style={{width: '100%', padding: '13px'}} onClick={endTurn} disabled={!isMyTurn}>
                         ✓ End Turn
                     </button>
                 </aside>
@@ -673,12 +755,12 @@ export default function App() {
                         {isWhiteTurn ? "White's turn" : "Black's turn"}
                     </span>
 
-                    {/* Opponent cards (face-up for ENEMY_TURN testing) */}
+                    {/* Top player cards */}
                     <Player
-                        player={opponentPlayer}
+                        player={topPlayer}
                         showCard={showCard}
                         hiddenCards={false}
-                        color={opponentColor}
+                        color={topColor}
                         selectedCard={selectedCard}
                         playableTypes={playableCardTypes(currentState, true)}
                     />
@@ -697,8 +779,8 @@ export default function App() {
                                 onPieceDragBegin={onPieceDragBegin}
                                 onPieceDragEnd={onPieceDragEnd}
                                 position={game}
-                                arePiecesDraggable={selectedCard === null && pendingPromotions.length === 0}
-                                boardOrientation={currentPlayerColor}
+                                arePiecesDraggable={selectedCard === null && pendingPromotions.length === 0 && isMyTurn}
+                                boardOrientation={myColor || currentPlayerColor}
                                 onSquareRightClick={onSquareRightClick}
                                 onSquareClick={onSquareClick}
                                 customPieces={customPieces}
@@ -807,12 +889,12 @@ export default function App() {
                         })()}
                     </div>
 
-                    {/* Current player cards */}
+                    {/* Bottom player cards */}
                     <Player
-                        player={currentPlayer}
+                        player={bottomPlayer}
                         showCard={showCard}
                         hiddenCards={false}
-                        color={currentPlayerColor}
+                        color={bottomColor}
                         selectedCard={selectedCard}
                         playableTypes={playableCardTypes(currentState, false)}
                     />

@@ -1,4 +1,4 @@
-export function HomeScreen({onPlaySolo, onMatchmaking}) {
+export function WaitingScreen({onCancel}) {
     return (
         <div style={{
             minHeight: '100vh',
@@ -25,22 +25,39 @@ export function HomeScreen({onPlaySolo, onMatchmaking}) {
                 </h1>
             </div>
 
-            <div style={{display: 'flex', flexDirection: 'column', gap: '16px', width: '280px', maxWidth: '90vw'}}>
-                <button
-                    className="sotc-btn sotc-btn-gold"
-                    style={{width: '100%', padding: '16px', fontSize: '16px'}}
-                    onClick={onPlaySolo}
-                >
-                    Jouer tout seul
-                </button>
+            <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '24px'}}>
+                <div style={{display: 'flex', alignItems: 'center', gap: '12px'}}>
+                    <div style={{
+                        width: '20px',
+                        height: '20px',
+                        border: '3px solid #c9963a',
+                        borderTopColor: 'transparent',
+                        borderRadius: '50%',
+                        animation: 'spin 1s linear infinite',
+                    }}/>
+                    <span style={{
+                        fontSize: '18px',
+                        color: '#c9d1d9',
+                        fontWeight: '500',
+                    }}>
+                        Recherche d'un adversaire...
+                    </span>
+                </div>
+
                 <button
                     className="sotc-btn"
-                    style={{width: '100%', padding: '16px', fontSize: '16px'}}
-                    onClick={onMatchmaking}
+                    style={{padding: '12px 32px', fontSize: '14px'}}
+                    onClick={onCancel}
                 >
-                    Attendre un adversaire
+                    Annuler
                 </button>
             </div>
+
+            <style>{`
+                @keyframes spin {
+                    to { transform: rotate(360deg); }
+                }
+            `}</style>
         </div>
     );
 }
