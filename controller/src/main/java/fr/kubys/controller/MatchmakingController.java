@@ -9,7 +9,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -27,26 +26,27 @@ public class MatchmakingController {
     }
 
     @PostMapping("/join")
-    public Map<String, String> join() {
+    public JoinResponse join() {
         String token = queue.join();
-        queue.getMatch(token).ifPresent(this::createGameAndNotify);
-        return Map.of("token", token);
+        Optional<MatchResult> match = queue.getMatch(token);
+        if (match.isPresent()) {
+            createGameAndNotify(match.get());
+            MatchResult result = match.get();
+            return new JoinResponse.Matched(token, result.getGameId(), result.getColorForToken(token));
+        }
+        return new JoinResponse.Waiting(token);
     }
 
     @GetMapping("/status/{token}")
-    public Map<String, Object> status(@PathVariable String token) {
+    public MatchmakingStatus status(@PathVariable String token) {
         Optional<MatchResult> match = queue.getMatch(token);
         if (match.isPresent()) {
             MatchResult result = match.get();
             ensureGameCreated(result);
-            return Map.of(
-                    "status", "matched",
-                    "gameId", result.getGameId(),
-                    "color", result.getColorForToken(token)
-            );
+            return new MatchmakingStatus.Matched(result.getGameId(), result.getColorForToken(token));
         }
         if (queue.isWaiting(token)) {
-            return Map.of("status", "waiting");
+            return new MatchmakingStatus.Waiting();
         }
         throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Unknown token");
     }
