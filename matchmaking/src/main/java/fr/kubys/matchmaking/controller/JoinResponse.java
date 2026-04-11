@@ -1,4 +1,4 @@
-package fr.kubys.controller;
+package fr.kubys.matchmaking.controller;
 
 public sealed interface JoinResponse {
     record Waiting(String token, String status) implements JoinResponse {

@@ -8,11 +8,12 @@ services:
       - ./pom.xml:/app/pom.xml
       - ./domain:/app/domain
       - ./repository:/app/repository
+      - ./matchmaking:/app/matchmaking
       - ./controller:/app/controller
       - sotc-maven-cache:/root/.m2
     ports:
       - "9000:9000"
-    command: sh -c "mvn -N install && mvn -pl domain,repository install -DskipTests && mvn -pl controller spring-boot:run"
+    command: sh -c "mvn -N install && mvn -pl domain,repository,matchmaking install -DskipTests && mvn -pl controller spring-boot:run"
     networks:
       - sotc-net
 

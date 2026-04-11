@@ -15,14 +15,8 @@ public class WebSocketConfig implements WebSocketConfigurer {
         return new GameNotifier();
     }
 
-    @Bean
-    public MatchmakingNotifier matchmakingNotifier() {
-        return new MatchmakingNotifier();
-    }
-
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
         registry.addHandler(gameNotifier(), "/ws/game/*").setAllowedOrigins("*");
-        registry.addHandler(matchmakingNotifier(), "/ws/matchmaking/*").setAllowedOrigins("*");
     }
 }

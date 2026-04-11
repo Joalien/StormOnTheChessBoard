@@ -1,4 +1,4 @@
-package fr.kubys.matchmaking;
+package fr.kubys.matchmaking.model;
 
 public class MatchResult {
     private final String whiteToken;

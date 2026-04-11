@@ -1,12 +1,12 @@
-package fr.kubys.controller;
+package fr.kubys.matchmaking.controller;
 
-import fr.kubys.matchmaking.MatchResult;
-import fr.kubys.matchmaking.MatchmakingQueue;
-import fr.kubys.repository.ChessBoardRepository;
-import fr.kubys.websocket.MatchmakingNotifier;
+import fr.kubys.matchmaking.model.MatchResult;
+import fr.kubys.matchmaking.model.MatchmakingQueue;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Optional;
@@ -16,13 +16,16 @@ import java.util.Optional;
 public class MatchmakingController {
 
     private final MatchmakingQueue queue = new MatchmakingQueue();
-    private final ChessBoardRepository chessBoardRepository;
+    private final RestTemplate restTemplate;
     private final MatchmakingNotifier matchmakingNotifier;
+    private final String chessboardBaseUrl;
 
     @Autowired
-    public MatchmakingController(ChessBoardRepository chessBoardRepository, MatchmakingNotifier matchmakingNotifier) {
-        this.chessBoardRepository = chessBoardRepository;
+    public MatchmakingController(RestTemplate restTemplate, MatchmakingNotifier matchmakingNotifier,
+                                 @Value("${chessboard.base-url:http://localhost:9000}") String chessboardBaseUrl) {
+        this.restTemplate = restTemplate;
         this.matchmakingNotifier = matchmakingNotifier;
+        this.chessboardBaseUrl = chessboardBaseUrl;
     }
 
     @PostMapping("/join")
@@ -59,7 +62,7 @@ public class MatchmakingController {
     private void ensureGameCreated(MatchResult result) {
         synchronized (result) {
             if (result.getGameId() == null) {
-                result.setGameId(chessBoardRepository.createNewGame());
+                result.setGameId(restTemplate.postForObject(chessboardBaseUrl + "/chessboard", null, Integer.class));
             }
         }
     }

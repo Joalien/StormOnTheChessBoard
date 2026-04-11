@@ -1,4 +1,4 @@
-package fr.kubys.controller;
+package fr.kubys.matchmaking.controller;
 
 public sealed interface MatchmakingStatus {
     record Waiting(String status) implements MatchmakingStatus {

@@ -1,4 +1,4 @@
-package fr.kubys.matchmaking;
+package fr.kubys.matchmaking.model;
 
 import java.util.HashMap;
 import java.util.Map;

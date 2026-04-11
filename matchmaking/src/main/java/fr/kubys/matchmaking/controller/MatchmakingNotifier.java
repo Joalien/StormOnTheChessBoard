@@ -1,4 +1,4 @@
-package fr.kubys.websocket;
+package fr.kubys.matchmaking.controller;
 
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;

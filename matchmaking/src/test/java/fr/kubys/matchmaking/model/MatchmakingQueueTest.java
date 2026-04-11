@@ -1,4 +1,4 @@
-package fr.kubys.matchmaking;
+package fr.kubys.matchmaking.model;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

@@ -10,8 +10,9 @@
     <packaging>pom</packaging>
     <modules>
         <module>domain</module>
-        <module>controller</module>
         <module>repository</module>
+        <module>matchmaking</module>
+        <module>controller</module>
     </modules>
 
     <properties>

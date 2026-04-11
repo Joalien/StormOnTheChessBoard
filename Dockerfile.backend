@@ -3,8 +3,9 @@ WORKDIR /app
 COPY pom.xml .
 COPY domain domain
 COPY repository repository
+COPY matchmaking matchmaking
 COPY controller controller
-RUN mvn -N install && mvn -pl domain,repository install -DskipTests && mvn -pl controller package -DskipTests
+RUN mvn -N install && mvn -pl domain,repository,matchmaking install -DskipTests && mvn -pl controller package -DskipTests
 
 FROM eclipse-temurin:21-jre
 WORKDIR /app
