@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 @RestController
-@RequestMapping("/chessboard/{gameId}/players")
+@RequestMapping("/api/chessboard/{gameId}/players")
 public class PlayerController {
 
     ChessBoardRepository chessBoardRepository;

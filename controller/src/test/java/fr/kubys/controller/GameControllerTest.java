@@ -40,7 +40,7 @@ class GameControllerTest {
 
     @Test
     void should_create_a_move_command() {
-        ResponseEntity<Object> objectResponseEntity = this.restTemplate.postForEntity("http://localhost:%s/chessboard/%s/move/%s/to/%s".formatted(port, GAME_ID, "e2", "e4"), null, null);
+        ResponseEntity<Object> objectResponseEntity = this.restTemplate.postForEntity("http://localhost:%s/api/chessboard/%s/move/%s/to/%s".formatted(port, GAME_ID, "e2", "e4"), null, null);
 
         assertEquals(HttpStatus.OK, objectResponseEntity.getStatusCode());
         ArgumentCaptor<PlayMoveCommand> argumentCaptor = ArgumentCaptor.forClass(PlayMoveCommand.class);
@@ -53,7 +53,7 @@ class GameControllerTest {
 
     @Test
     void should_end_turn() {
-        ResponseEntity<Object> objectResponseEntity = this.restTemplate.postForEntity("http://localhost:%s/chessboard/%s/endTurn".formatted(port, GAME_ID), null, null);
+        ResponseEntity<Object> objectResponseEntity = this.restTemplate.postForEntity("http://localhost:%s/api/chessboard/%s/endTurn".formatted(port, GAME_ID), null, null);
 
         assertEquals(HttpStatus.OK, objectResponseEntity.getStatusCode());
         ArgumentCaptor<EndTurnCommand> argumentCaptor = ArgumentCaptor.forClass(EndTurnCommand.class);
@@ -65,7 +65,7 @@ class GameControllerTest {
     void fail_to_end_turn_of_not_existing_game() {
         Mockito.doThrow(new GameNotFoundException(GAME_ID)).when(chessBoardRepository).saveCommand(any());
 
-        ResponseEntity<Object> objectResponseEntity = this.restTemplate.postForEntity("http://localhost:%s/chessboard/%s/endTurn".formatted(port, GAME_ID), null, null);
+        ResponseEntity<Object> objectResponseEntity = this.restTemplate.postForEntity("http://localhost:%s/api/chessboard/%s/endTurn".formatted(port, GAME_ID), null, null);
 
         assertEquals(HttpStatus.NOT_FOUND, objectResponseEntity.getStatusCode());
     }

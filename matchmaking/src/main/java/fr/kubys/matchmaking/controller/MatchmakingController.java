@@ -12,7 +12,7 @@ import org.springframework.web.server.ResponseStatusException;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/matchmaking")
+@RequestMapping("/api/matchmaking")
 public class MatchmakingController {
 
     private final MatchmakingQueue queue = new MatchmakingQueue();
@@ -62,7 +62,7 @@ public class MatchmakingController {
     private void ensureGameCreated(MatchResult result) {
         synchronized (result) {
             if (result.getGameId() == null) {
-                result.setGameId(restTemplate.postForObject(chessboardBaseUrl + "/chessboard", null, Integer.class));
+                result.setGameId(restTemplate.postForObject(chessboardBaseUrl + "/api/chessboard", null, Integer.class));
             }
         }
     }

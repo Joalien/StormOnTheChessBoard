@@ -49,14 +49,14 @@ class PlayCardTest {
 
     @Test
     void should_return_400_if_no_param() {
-        ResponseEntity<Void> res = restTemplate.postForEntity("http://localhost:%s/chessboard/%s/card/%s".formatted(port, GAME_ID, bombingCard.getName()), null, Void.class);
+        ResponseEntity<Void> res = restTemplate.postForEntity("http://localhost:%s/api/chessboard/%s/card/%s".formatted(port, GAME_ID, bombingCard.getName()), null, Void.class);
 
         assertTrue(res.getStatusCode().is4xxClientError());
     }
 
     @Test
     void should_return_400_if_no_param_bis() {
-        ResponseEntity<Void> res = restTemplate.postForEntity("http://localhost:%s/chessboard/%s/card/%s".formatted(port, GAME_ID, bombingCard.getName()), "", Void.class);
+        ResponseEntity<Void> res = restTemplate.postForEntity("http://localhost:%s/api/chessboard/%s/card/%s".formatted(port, GAME_ID, bombingCard.getName()), "", Void.class);
 
         assertTrue(res.getStatusCode().is4xxClientError());
     }

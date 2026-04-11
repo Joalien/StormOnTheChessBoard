@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
 import static fr.kubys.mapper.OutputMapper.mapToDto;
 
 @RestController
-@RequestMapping("/chessboard")
+@RequestMapping("/api/chessboard")
 public class GameController {
 
     ChessBoardRepository chessBoardRepository;

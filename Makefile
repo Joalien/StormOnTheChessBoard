@@ -10,7 +10,7 @@ notifier:
 	fi
 
 up: .env
-	docker compose up -d --force-recreate sotc-backend sotc-frontend
+	docker compose up -d --force-recreate sotc-backend sotc-frontend sotc-nginx
 
 claude: up notifier
 	docker compose run --rm sotc-claude

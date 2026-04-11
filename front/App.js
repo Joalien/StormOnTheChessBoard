@@ -10,23 +10,13 @@ import {NotFoundScreen} from "./component/NotFoundScreen";
 import {toast, ToastContainer} from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 
-function resolveBackendOrigin() {
-    if (typeof window === 'undefined') return 'http://localhost:9000';
-    const port = window.location.port;
-    // Behind nginx (port 80/443 or no port) → same origin; otherwise dev mode → backend on 9000
-    if (!port || port === '80' || port === '443') return window.location.origin;
-    return window.location.protocol + '//' + window.location.hostname + ':9000';
-}
-const backendOrigin = resolveBackendOrigin();
+const backendOrigin = typeof window !== 'undefined'
+    ? window.location.origin
+    : 'http://localhost:9000';
 const wsOrigin = typeof window !== 'undefined'
-    ? (() => {
-        const protocol = window.location.protocol === 'https:' ? 'wss://' : 'ws://';
-        const port = window.location.port;
-        if (!port || port === '80' || port === '443') return protocol + window.location.host;
-        return protocol + window.location.hostname + ':9000';
-    })()
+    ? (window.location.protocol === 'https:' ? 'wss://' : 'ws://') + window.location.host
     : 'ws://localhost:9000';
-const base = backendOrigin + "/chessboard/";
+const base = backendOrigin + "/api/chessboard/";
 const highlight = {boxShadow: "rgba(212, 168, 67, 0.85) 0px 0px 24px 0px inset"};
 
 const globalCSS = `
@@ -288,7 +278,7 @@ function getRouteFromUrl() {
     if (typeof window === 'undefined') return {page: 'home'};
     const path = window.location.pathname;
     if (path === '/') return {page: 'home'};
-    const match = path.match(/^\/(\d+)$/);
+    const match = path.match(/^\/chessboard\/(\d+)$/);
     if (match) return {page: 'game', gameId: parseInt(match[1], 10)};
     return {page: '404'};
 }
@@ -369,12 +359,12 @@ export default function App() {
 
     // WebSocket for real-time game updates
     useEffect(() => {
-        if (!myColor || gameId === null) return;
+        if (gameId === null) return;
         const ws = new WebSocket(wsOrigin + '/ws/game/' + gameId);
         ws.onmessage = () => fetchGame();
         ws.onclose = () => {};
         return () => ws.close();
-    }, [gameId, myColor]);
+    }, [gameId]);
 
     function fetchPlayer(gameId, color) {
         return fetch(base + gameId + "/players/" + color).then(res => res.json());
@@ -386,7 +376,7 @@ export default function App() {
             setRoute({page: 'home'});
             setMyColor(null);
         } else {
-            const url = color ? `/${id}?color=${color}` : `/${id}`;
+            const url = color ? `/chessboard/${id}?color=${color}` : `/chessboard/${id}`;
             window.history.pushState({}, '', url);
             setRoute({page: 'game', gameId: id});
             setMyColor(color);
@@ -424,7 +414,7 @@ export default function App() {
     }, [gameId, myColor, currentPlayerColor, selectedCard]);
 
     function startNewGame() {
-        fetch(backendOrigin + '/chessboard', {method: 'POST'})
+        fetch(backendOrigin + '/api/chessboard', {method: 'POST'})
             .then(res => res.text())
             .then(text => navigateToGame(parseInt(text, 10)))
             .catch(err => alert(err));
@@ -432,7 +422,7 @@ export default function App() {
 
     function matchmaking() {
         setRoute({page: 'waiting'});
-        fetch(backendOrigin + '/matchmaking/join', {method: 'POST'})
+        fetch(backendOrigin + '/api/matchmaking/join', {method: 'POST'})
             .then(res => res.json())
             .then(data => {
                 if (data.status === 'matched') {
@@ -464,7 +454,7 @@ export default function App() {
             matchmakingPollRef.current = null;
         }
         if (matchmakingTokenRef.current) {
-            fetch(backendOrigin + '/matchmaking/' + matchmakingTokenRef.current, {method: 'DELETE'}).catch(() => {});
+            fetch(backendOrigin + '/api/matchmaking/' + matchmakingTokenRef.current, {method: 'DELETE'}).catch(() => {});
             matchmakingTokenRef.current = null;
         }
         navigateToGame(null);

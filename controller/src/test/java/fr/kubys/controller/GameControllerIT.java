@@ -28,7 +28,7 @@ class GameControllerIT {
 
     @Test
     void should_create_new_game() {
-        ResponseEntity<Integer> response = this.restTemplate.postForEntity("http://localhost:%s/chessboard".formatted(port), null, Integer.class);
+        ResponseEntity<Integer> response = this.restTemplate.postForEntity("http://localhost:%s/api/chessboard".formatted(port), null, Integer.class);
         Integer gameId = response.getBody();
         ChessBoardReadService chessBoardService = chessBoardRepository.getChessBoardService(gameId);
 
@@ -46,7 +46,7 @@ class GameControllerIT {
     @Test
     public void should_return_404_if_game_does_not_exist() {
         Integer notExistingGameId = chessBoardRepository.createNewGame() + 1;
-        ResponseEntity<Void> response = this.restTemplate.getForEntity("http://localhost:%s/chessboard/%s".formatted(port, notExistingGameId), Void.class);
+        ResponseEntity<Void> response = this.restTemplate.getForEntity("http://localhost:%s/api/chessboard/%s".formatted(port, notExistingGameId), Void.class);
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
     }
 
@@ -54,7 +54,7 @@ class GameControllerIT {
     public void should_return_404_if_play_a_move_on_a_non_existing_game() {
         Integer notExistingGameId = chessBoardRepository.createNewGame() + 1;
 
-        ResponseEntity<ChessBoardDto> response = this.restTemplate.postForEntity("http://localhost:%s/chessboard/%s/move/%s/to/%s".formatted(port, notExistingGameId, "e2", "e4"), null, null);
+        ResponseEntity<ChessBoardDto> response = this.restTemplate.postForEntity("http://localhost:%s/api/chessboard/%s/move/%s/to/%s".formatted(port, notExistingGameId, "e2", "e4"), null, null);
 
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
     }
@@ -63,7 +63,7 @@ class GameControllerIT {
     public void should_return_current_game() {
         Integer gameId = chessBoardRepository.createNewGame();
 
-        ResponseEntity<ChessBoardDto> response = this.restTemplate.getForEntity("http://localhost:%s/chessboard/%s".formatted(port, gameId), ChessBoardDto.class);
+        ResponseEntity<ChessBoardDto> response = this.restTemplate.getForEntity("http://localhost:%s/api/chessboard/%s".formatted(port, gameId), ChessBoardDto.class);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         ChessBoardDto chessBoardDto = response.getBody();
