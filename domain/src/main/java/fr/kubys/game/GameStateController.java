@@ -176,7 +176,7 @@ public class GameStateController implements ChessBoardService {
 
     @Override
     public List<Piece> getCapturedPieces() {
-        return new ArrayList<>(chessBoard.getOutOfTheBoardPieces());
+        return chessBoard.getOutOfTheBoardPieces();
     }
 
     @Override

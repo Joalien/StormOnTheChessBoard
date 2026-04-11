@@ -93,8 +93,8 @@ public class ChessBoard {
     }
 
 
-    public Set<Piece> getOutOfTheBoardPieces() {
-        return outOfTheBoardPieces.stream().map(PieceRemoval::piece).collect(Collectors.toSet());
+    public List<Piece> getOutOfTheBoardPieces() {
+        return outOfTheBoardPieces.stream().map(PieceRemoval::piece).collect(Collectors.toList());
     }
 
     public Set<PieceRemoval> getPieceRemovals() {
