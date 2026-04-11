@@ -17,4 +17,7 @@ public class EffectDto {
     private String name;
     private Set<Position> positions;
     private List<List<String>> edges;
+    private String cardName;
+    private String cardEnglishName;
+    private String cardDescription;
 }

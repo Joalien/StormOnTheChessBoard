@@ -181,7 +181,7 @@ export function CardParameters({card, selectedParam, setSelectedParam, playCardC
                     {allParamsSet ? '▶ Play Card' : 'Set all parameters first'}
                 </button>
             )}
-            {!isPlayable && (
+            {!isPlayable && !card.isEffect && (
                 <p style={{fontSize: '11px', color: '#484f58', textAlign: 'center', margin: 0, fontStyle: 'italic'}}>
                     This card cannot be played right now
                 </p>

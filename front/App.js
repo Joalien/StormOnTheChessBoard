@@ -761,7 +761,7 @@ export default function App() {
                             playCardCallback={playCard}
                             barricadeEdges={barricadeEdges}
                             setBarricadeEdges={setBarricadeEdges}
-                            isPlayable={playableCardTypes(currentState, false).includes(selectedCard.type)}
+                            isPlayable={!selectedCard.isEffect && playableCardTypes(currentState, false).includes(selectedCard.type)}
                         />
                     ) : (
                         <div className="sotc-panel" style={{padding: '28px 20px', textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px'}}>
@@ -775,6 +775,34 @@ export default function App() {
                     <button className="sotc-btn sotc-btn-end" style={{width: '100%', padding: '13px'}} onClick={endTurn} disabled={!isMyTurn}>
                         ✓ End Turn
                     </button>
+
+                    {effects.some(e => e.cardEnglishName) && (
+                        <div className="sotc-panel" style={{padding: '12px 16px', display: 'flex', flexDirection: 'column', gap: '8px'}}>
+                            <span style={{fontSize: '11px', fontWeight: '700', color: '#484f58', textTransform: 'uppercase', letterSpacing: '0.8px'}}>
+                                Active Effects
+                            </span>
+                            <div style={{display: 'flex', gap: '8px', flexWrap: 'wrap'}}>
+                                {effects.filter(e => e.cardEnglishName).map((effect, idx) => {
+                                    const isSelected = selectedCard && selectedCard.englishName === effect.cardEnglishName && selectedCard.isEffect;
+                                    return (
+                                        <Card
+                                            key={idx}
+                                            name={effect.cardEnglishName}
+                                            showCard={() => showCard({
+                                                englishName: effect.cardEnglishName,
+                                                name: effect.cardName,
+                                                description: effect.cardDescription,
+                                                param: {},
+                                                isEffect: true,
+                                            })}
+                                            isSelected={isSelected}
+                                            isPlayable={true}
+                                        />
+                                    );
+                                })}
+                            </div>
+                        </div>
+                    )}
 
                     {capturedPieces.length > 0 && (() => {
                         const pieceSymbols = {P: '♟', N: '♞', B: '♝', R: '♜', Q: '♛', K: '♚', Kangaroo: '🦘', Crab: '🦀'};

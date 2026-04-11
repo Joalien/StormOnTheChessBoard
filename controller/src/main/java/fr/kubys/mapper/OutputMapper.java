@@ -4,6 +4,7 @@ import fr.kubys.api.ChessBoardReadService;
 import fr.kubys.board.effect.BarricadeEffect;
 import fr.kubys.board.effect.Effect;
 import fr.kubys.card.Card;
+import fr.kubys.card.CardRegistry;
 import fr.kubys.card.params.CardParam;
 import fr.kubys.core.Color;
 import fr.kubys.core.Position;
@@ -24,6 +25,12 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 public class OutputMapper {
+    private static final Map<String, Card<?>> EFFECT_TO_CARD = CardRegistry.createAllCards().stream()
+            .collect(Collectors.toMap(
+                    c -> c.getClass().getSimpleName().replace("Card", "Effect"),
+                    c -> c,
+                    (a, b) -> a
+            ));
     public static ChessBoardDto mapToDto(Integer gameId, ChessBoardReadService chessBoard) {
         return ChessBoardDto.builder()
                 .id(gameId)
@@ -52,6 +59,12 @@ public class OutputMapper {
             builder.edges(barricade.getEdges().stream()
                     .map(edge -> edge.stream().map(Position::name).toList())
                     .toList());
+        }
+        Card<?> card = EFFECT_TO_CARD.get(e.getClass().getSimpleName());
+        if (card != null) {
+            builder.cardName(card.getName())
+                    .cardEnglishName(card.getClass().getSimpleName())
+                    .cardDescription(card.getDescription());
         }
         return builder.build();
     }
