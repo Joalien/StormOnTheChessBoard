@@ -319,6 +319,17 @@ export default function App() {
         return () => window.removeEventListener('popstate', onPopState);
     }, []);
 
+    useEffect(() => {
+        function onKeyDown(e) {
+            if (e.code === 'Space' && gameId !== null) {
+                e.preventDefault();
+                endTurn();
+            }
+        }
+        window.addEventListener('keydown', onKeyDown);
+        return () => window.removeEventListener('keydown', onKeyDown);
+    }, [gameId]);
+
     function startNewGame() {
         fetch(backendOrigin + '/chessboard', {method: 'POST'})
             .then(res => res.text())
