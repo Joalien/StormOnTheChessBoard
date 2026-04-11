@@ -27,7 +27,7 @@ export function HomeScreen({onPlaySolo}) {
                 </h1>
             </div>
 
-            <div style={{display: 'flex', flexDirection: 'column', gap: '16px', width: '280px'}}>
+            <div style={{display: 'flex', flexDirection: 'column', gap: '16px', width: '280px', maxWidth: '90vw'}}>
                 <button
                     className="sotc-btn sotc-btn-gold"
                     style={{width: '100%', padding: '16px', fontSize: '16px'}}

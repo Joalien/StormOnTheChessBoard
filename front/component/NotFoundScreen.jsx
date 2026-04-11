@@ -16,7 +16,7 @@ export function NotFoundScreen({onGoHome}) {
             </div>
             <div style={{position: 'relative'}}>
                 <h1 style={{
-                    fontSize: '96px',
+                    fontSize: 'clamp(64px, 15vw, 96px)',
                     fontWeight: '800',
                     margin: 0,
                     background: 'linear-gradient(135deg, #c9963a, #f0c860)',

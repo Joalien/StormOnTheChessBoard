@@ -5,7 +5,7 @@ export function Player({player, hiddenCards, showCard, color, selectedCard}) {
     const cards = player.cards || [];
 
     return (
-        <div style={{width: '560px', display: 'flex', flexDirection: 'column', gap: '8px'}}>
+        <div style={{width: '100%', maxWidth: '560px', display: 'flex', flexDirection: 'column', gap: '8px'}}>
             {/* Player label */}
             <div style={{display: 'flex', alignItems: 'center', gap: '7px', paddingLeft: '2px'}}>
                 <div style={{

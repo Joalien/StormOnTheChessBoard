@@ -1,14 +1,13 @@
 import {useState} from "react";
 
-const BOARD_SIZE = 560;
-const SQUARE = BOARD_SIZE / 8;
+const DEFAULT_BOARD_SIZE = 560;
 
 /**
  * Compute pixel coords for the wall line of an edge between two adjacent squares.
  */
-function edgeLine(sq1, sq2, orientation) {
-    const c1 = squareCenter(sq1, orientation);
-    const c2 = squareCenter(sq2, orientation);
+function edgeLine(sq1, sq2, orientation, size = DEFAULT_BOARD_SIZE) {
+    const c1 = squareCenter(sq1, orientation, size);
+    const c2 = squareCenter(sq2, orientation, size);
     const midX = (c1.x + c2.x) / 2;
     const midY = (c1.y + c2.y) / 2;
     const dx = c2.x - c1.x;
@@ -22,13 +21,14 @@ function edgeLine(sq1, sq2, orientation) {
     };
 }
 
-function squareCenter(square, orientation) {
+function squareCenter(square, orientation, size = DEFAULT_BOARD_SIZE) {
+    const sq = size / 8;
     const file = square.charCodeAt(0) - 97;
     const rank = parseInt(square[1]) - 1;
     if (orientation === 'white') {
-        return {x: file * SQUARE + SQUARE / 2, y: (7 - rank) * SQUARE + SQUARE / 2};
+        return {x: file * sq + sq / 2, y: (7 - rank) * sq + sq / 2};
     } else {
-        return {x: (7 - file) * SQUARE + SQUARE / 2, y: rank * SQUARE + SQUARE / 2};
+        return {x: (7 - file) * sq + sq / 2, y: rank * sq + sq / 2};
     }
 }
 
@@ -36,15 +36,16 @@ function squareCenter(square, orientation) {
  * Convert pixel coordinates to the nearest edge (pair of adjacent squares).
  * Returns null if too far from any edge.
  */
-function nearestEdge(px, py, orientation) {
+function nearestEdge(px, py, orientation, size = DEFAULT_BOARD_SIZE) {
+    const sq = size / 8;
     // Convert pixel to board-relative file/rank (fractional)
     let fFrac, rFrac;
     if (orientation === 'white') {
-        fFrac = px / SQUARE; // 0..8
-        rFrac = (BOARD_SIZE - py) / SQUARE; // 0..8 (rank 1 at bottom)
+        fFrac = px / sq; // 0..8
+        rFrac = (size - py) / sq; // 0..8 (rank 1 at bottom)
     } else {
-        fFrac = (BOARD_SIZE - px) / SQUARE;
-        rFrac = py / SQUARE;
+        fFrac = (size - px) / sq;
+        rFrac = py / sq;
     }
 
     // Find closest horizontal edge (between rows) and vertical edge (between files)
@@ -98,21 +99,21 @@ function nearestEdge(px, py, orientation) {
  */
 export function barricadeLines(effect, boardWidth, orientation) {
     if (!effect.edges) return [];
-    return effect.edges.map(([sq1, sq2]) => edgeLine(sq1, sq2, orientation));
+    return effect.edges.map(([sq1, sq2]) => edgeLine(sq1, sq2, orientation, boardWidth));
 }
 
 /**
  * Interactive overlay for selecting barricade edges.
  * Shows when a BarricadeCard is selected and edges need to be picked.
  */
-export function BarricadeSelectionOverlay({orientation, selectedEdges, onEdgeClick}) {
+export function BarricadeSelectionOverlay({orientation, selectedEdges, onEdgeClick, boardSize = DEFAULT_BOARD_SIZE}) {
     const [hoveredEdge, setHoveredEdge] = useState(null);
 
     function handleMouseMove(e) {
         const rect = e.currentTarget.getBoundingClientRect();
         const px = e.clientX - rect.left;
         const py = e.clientY - rect.top;
-        const edge = nearestEdge(px, py, orientation);
+        const edge = nearestEdge(px, py, orientation, boardSize);
         setHoveredEdge(edge);
     }
 
@@ -130,7 +131,7 @@ export function BarricadeSelectionOverlay({orientation, selectedEdges, onEdgeCli
     const lines = [];
 
     selectedEdges.forEach((edge, i) => {
-        const line = edgeLine(edge[0], edge[1], orientation);
+        const line = edgeLine(edge[0], edge[1], orientation, boardSize);
         lines.push({...line, color: '#3fb950', width: 6, key: `sel-${i}`});
     });
 
@@ -140,7 +141,7 @@ export function BarricadeSelectionOverlay({orientation, selectedEdges, onEdgeCli
                  (e[0] === hoveredEdge[1] && e[1] === hoveredEdge[0])
         );
         if (!alreadySelected) {
-            const line = edgeLine(hoveredEdge[0], hoveredEdge[1], orientation);
+            const line = edgeLine(hoveredEdge[0], hoveredEdge[1], orientation, boardSize);
             lines.push({...line, color: 'rgba(212, 168, 67, 0.7)', width: 6, key: 'hover'});
         }
     }
@@ -149,7 +150,7 @@ export function BarricadeSelectionOverlay({orientation, selectedEdges, onEdgeCli
         <svg
             style={{
                 position: 'absolute', top: 0, left: 0,
-                width: BOARD_SIZE, height: BOARD_SIZE,
+                width: boardSize, height: boardSize,
                 zIndex: 10,
                 cursor: hoveredEdge ? 'pointer' : 'default',
             }}

@@ -1,5 +1,5 @@
 import {Chessboard} from "react-chessboard";
-import {useEffect, useState} from "react";
+import {useCallback, useEffect, useMemo, useState} from "react";
 import {Player} from "./component/Player";
 import {CardParameters} from "./component/CardParameters";
 import {barricadeLines, BarricadeSelectionOverlay} from "./component/barricadeOverlay";
@@ -230,6 +230,18 @@ const globalCSS = `
   .Toastify__toast--error { border-color: rgba(248,81,73,0.3) !important; }
   .Toastify__toast--success { border-color: rgba(63,185,80,0.3) !important; }
   .Toastify__close-button { color: #8b949e !important; }
+
+  @media (max-width: 900px) {
+    .sotc-header-title { display: none; }
+    .sotc-main { flex-direction: column !important; align-items: center !important; padding: 12px 8px !important; }
+    .sotc-aside { width: 100% !important; max-width: 560px; position: static !important; order: 2; }
+    .sotc-board-section { order: 1; }
+  }
+
+  @media (max-width: 480px) {
+    .sotc-btn { padding: 7px 12px; font-size: 12px; }
+    .sotc-header { padding: 0 12px !important; }
+  }
 `;
 
 if (typeof document !== 'undefined') {
@@ -270,6 +282,20 @@ export default function App() {
     const [promotionSquare, setPromotionSquare] = useState(null);
     const [barricadeEdges, setBarricadeEdges] = useState([]);
     const [checkMateTargets, setCheckMateTargets] = useState([]);
+    const [windowWidth, setWindowWidth] = useState(typeof window !== 'undefined' ? window.innerWidth : 900);
+
+    useEffect(() => {
+        function onResize() { setWindowWidth(window.innerWidth); }
+        window.addEventListener('resize', onResize);
+        return () => window.removeEventListener('resize', onResize);
+    }, []);
+
+    const boardSize = useMemo(() => {
+        const maxBoard = 560;
+        const padding = 40;
+        if (windowWidth <= 900) return Math.min(maxBoard, windowWidth - padding);
+        return Math.min(maxBoard, windowWidth - 340 - padding);
+    }, [windowWidth]);
 
     function loadCustomPieces() {
         const requirePiece = require.context('./component/pieces', false, /\.js$/);
@@ -409,7 +435,7 @@ export default function App() {
     function squareToCoords(square, orientation) {
         const file = square.charCodeAt(0) - 97; // 'a' = 0
         const rank = parseInt(square[1]) - 1;   // '1' = 0
-        const size = 70; // 560 / 8
+        const size = boardSize / 8;
         let x, y;
         if (orientation === 'white') {
             x = file * size;
@@ -527,7 +553,7 @@ export default function App() {
             />
 
             {/* ── Header ── */}
-            <header style={{
+            <header className="sotc-header" style={{
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'space-between',
@@ -543,7 +569,7 @@ export default function App() {
             }}>
                 <div style={{display: 'flex', alignItems: 'center', gap: '10px'}}>
                     <span style={{fontSize: '22px', lineHeight: 1}}>♞</span>
-                    <span style={{
+                    <span className="sotc-header-title" style={{
                         fontSize: '15px',
                         fontWeight: '700',
                         letterSpacing: '0.8px',
@@ -562,7 +588,7 @@ export default function App() {
             </header>
 
             {/* ── Main ── */}
-            <main style={{
+            <main className="sotc-main" style={{
                 display: 'flex',
                 alignItems: 'flex-start',
                 justifyContent: 'center',
@@ -571,7 +597,7 @@ export default function App() {
                 flex: 1,
             }}>
                 {/* Left panel */}
-                <aside style={{width: '252px', flexShrink: 0, position: 'sticky', top: '80px', display: 'flex', flexDirection: 'column', gap: '12px'}}>
+                <aside className="sotc-aside" style={{width: '252px', flexShrink: 0, position: 'sticky', top: '80px', display: 'flex', flexDirection: 'column', gap: '12px'}}>
                     {selectedCard ? (
                         <CardParameters
                             card={selectedCard}
@@ -596,7 +622,7 @@ export default function App() {
                 </aside>
 
                 {/* Center: board column */}
-                <section style={{display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '14px'}}>
+                <section className="sotc-board-section" style={{display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '14px'}}>
                     {/* Turn indicator */}
                     <span className={`sotc-turn-indicator sotc-turn-${currentPlayerColor}`}>
                         <span className="dot"/>
@@ -621,7 +647,7 @@ export default function App() {
                         }}>
                             <Chessboard
                                 id="BasicBoard"
-                                boardWidth={560}
+                                boardWidth={boardSize}
                                 onPieceDrop={movePiece}
                                 position={game}
                                 arePiecesDraggable={selectedCard === null && pendingPromotions.length === 0}
@@ -640,21 +666,22 @@ export default function App() {
                                 orientation={currentPlayerColor}
                                 selectedEdges={barricadeEdges}
                                 onEdgeClick={onBarricadeEdgeClick}
+                                boardSize={boardSize}
                             />
                         )}
                         {/* Barricade selection preview (non-interactive, when both edges selected) */}
                         {isBarricadeCard(selectedCard) && barricadeEdges.length === 2 && (
-                            <svg style={{position: 'absolute', top: 0, left: 0, width: 560, height: 560, pointerEvents: 'none', zIndex: 5}}>
+                            <svg style={{position: 'absolute', top: 0, left: 0, width: boardSize, height: boardSize, pointerEvents: 'none', zIndex: 5}}>
                                 {barricadeEdges.map((edge, i) => {
-                                    const line = barricadeLines({edges: [edge]}, 560, currentPlayerColor)[0];
+                                    const line = barricadeLines({edges: [edge]}, boardSize, currentPlayerColor)[0];
                                     return line && <line key={i} x1={line.x1} y1={line.y1} x2={line.x2} y2={line.y2} stroke="#3fb950" strokeWidth={6} strokeLinecap="round" />;
                                 })}
                             </svg>
                         )}
                         {/* Barricade effect display (existing barricades on the board) */}
                         {effects.filter(e => e.name === 'BarricadeEffect' && e.edges).map((effect, idx) => (
-                            <svg key={`barricade-${idx}`} style={{position: 'absolute', top: 0, left: 0, width: 560, height: 560, pointerEvents: 'none', zIndex: 5}}>
-                                {barricadeLines(effect, 560, currentPlayerColor).map((line, i) => (
+                            <svg key={`barricade-${idx}`} style={{position: 'absolute', top: 0, left: 0, width: boardSize, height: boardSize, pointerEvents: 'none', zIndex: 5}}>
+                                {barricadeLines(effect, boardSize, currentPlayerColor).map((line, i) => (
                                     <g key={i}>
                                         <line x1={line.x1} y1={line.y1} x2={line.x2} y2={line.y2} stroke="#8B4513" strokeWidth={8} strokeLinecap="round" />
                                         <line x1={line.x1} y1={line.y1} x2={line.x2} y2={line.y2} stroke="#D2691E" strokeWidth={4} strokeLinecap="round" />
@@ -664,7 +691,7 @@ export default function App() {
                         ))}
                         {/* Crown overlay on non-King checkmate targets */}
                         {checkMateTargets.length > 0 && (
-                            <svg style={{position: 'absolute', top: 0, left: 0, width: 560, height: 560, pointerEvents: 'none', zIndex: 6}}>
+                            <svg style={{position: 'absolute', top: 0, left: 0, width: boardSize, height: boardSize, pointerEvents: 'none', zIndex: 6}}>
                                 {checkMateTargets.map(sq => {
                                     const {x, y} = squareToCoords(sq, currentPlayerColor);
                                     return (
@@ -684,14 +711,14 @@ export default function App() {
                         {promotionSquare && (() => {
                             const {x, y} = squareToCoords(promotionSquare, currentPlayerColor);
                             const isWhitePiece = (game[promotionSquare] || '').startsWith('w');
-                            const popupBelow = y < 280;
+                            const popupBelow = y < boardSize / 2;
                             const pieces = [
                                 {name: 'ROOK',   symbol: isWhitePiece ? '♖' : '♜'},
                                 {name: 'BISHOP', symbol: isWhitePiece ? '♗' : '♝'},
                                 {name: 'KNIGHT', symbol: isWhitePiece ? '♘' : '♞'},
                             ];
                             const popupWidth = 160;
-                            const clampedLeft = Math.min(Math.max(x - (popupWidth / 2 - 35), 0), 560 - popupWidth);
+                            const clampedLeft = Math.min(Math.max(x - (popupWidth / 2 - 35), 0), boardSize - popupWidth);
                             return (
                                 <div style={{
                                     position: 'absolute',
