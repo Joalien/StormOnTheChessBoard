@@ -1,10 +1,8 @@
 import {Image} from "react-native";
-
-const requireCard = require.context('../assets/images/cards/implemented', false, /\.png$/);
+import cardImages from "./cardImages";
 
 export function Card({hidden, name, showCard, isSelected}) {
-    const fileName = `./${name}.png`;
-    const hasImage = requireCard.keys().includes(fileName);
+    const hasImage = name in cardImages;
     const imgStyle = {width: 80, height: 116, borderRadius: 7};
 
     if (hidden) {
@@ -20,7 +18,7 @@ export function Card({hidden, name, showCard, isSelected}) {
     if (hasImage) {
         return (
             <div className={wrapperClass} onClick={showCard}>
-                <Image source={requireCard(fileName)} style={imgStyle}/>
+                <Image source={cardImages[name]} style={imgStyle}/>
             </div>
         );
     }

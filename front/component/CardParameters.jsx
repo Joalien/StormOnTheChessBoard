@@ -1,6 +1,5 @@
 import {Image} from "react-native";
-
-const requireCard = require.context('../assets/images/cards/implemented', false, /\.png$/);
+import cardImages from "./cardImages";
 
 const TYPE_LABELS = {
     BEFORE_TURN:  'Before Move',
@@ -67,8 +66,7 @@ function BarricadeParams({card, selectedParam, setSelectedParam, barricadeEdges,
 }
 
 export function CardParameters({card, selectedParam, setSelectedParam, playCardCallback, barricadeEdges, setBarricadeEdges}) {
-    const fileName = `./${card.englishName}.png`;
-    const hasImage = requireCard.keys().includes(fileName);
+    const hasImage = card.englishName in cardImages;
     const paramKeys = Object.keys(card.param || {});
     const allParamsSet = !Object.values(card.param || {}).some(x => x === null);
     const typeLabel = TYPE_LABELS[card.type] || card.type;
@@ -86,7 +84,7 @@ export function CardParameters({card, selectedParam, setSelectedParam, playCardC
                         display: 'inline-block',
                         lineHeight: 0,
                     }}>
-                        <Image source={requireCard(fileName)} style={{width: 126, height: 180}}/>
+                        <Image source={cardImages[card.englishName]} style={{width: 126, height: 180}}/>
                     </div>
                 </div>
             )}
