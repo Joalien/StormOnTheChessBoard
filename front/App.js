@@ -2,6 +2,7 @@ import {Chessboard} from "react-chessboard";
 import {useCallback, useEffect, useMemo, useRef, useState} from "react";
 import {Image} from "react-native";
 import {Player} from "./component/Player";
+import {Card} from "./component/Card";
 import {CardParameters} from "./component/CardParameters";
 import {barricadeLines, BarricadeSelectionOverlay} from "./component/barricadeOverlay";
 import {HomeScreen} from "./component/HomeScreen";
@@ -308,6 +309,8 @@ export default function App() {
     const [myColor, setMyColor] = useState(getPlayerColorFromUrl);
     const [legalMoves, setLegalMoves] = useState([]);
     const [windowWidth, setWindowWidth] = useState(typeof window !== 'undefined' ? window.innerWidth : 900);
+    const [gameIds, setGameIds] = useState([]);
+    const [expandedGameId, setExpandedGameId] = useState(null);
     const matchmakingPollRef = useRef(null);
     const matchmakingTokenRef = useRef(null);
 
@@ -349,6 +352,13 @@ export default function App() {
         });
         return squares;
     }
+
+    useEffect(() => {
+        fetch(backendOrigin + '/api/chessboard')
+            .then(res => res.json())
+            .then(ids => setGameIds(ids.sort((a, b) => a - b)))
+            .catch(() => {});
+    }, []);
 
     useEffect(() => {
         if (gameId === null) return;
@@ -735,6 +745,37 @@ export default function App() {
                     }}>
                         Storm on the Chess Board
                     </span>
+                </div>
+                <div style={{display: 'flex', gap: '6px', alignItems: 'center', flexWrap: 'wrap'}}>
+                    {gameIds.map(id => (
+                        <div key={id} style={{position: 'relative', display: 'inline-flex'}}>
+                            <button
+                                className={`sotc-btn${id === gameId && !myColor ? ' sotc-btn-gold' : ''}`}
+                                style={{padding: '6px 12px', fontSize: '12px', minWidth: 0}}
+                                onClick={() => { setExpandedGameId(null); navigateToGame(id); }}
+                                onContextMenu={(e) => { e.preventDefault(); setExpandedGameId(expandedGameId === id ? null : id); }}
+                            >
+                                #{id}
+                            </button>
+                            {expandedGameId === id && (
+                                <div style={{
+                                    position: 'absolute', top: '100%', left: '50%', transform: 'translateX(-50%)',
+                                    marginTop: '4px', display: 'flex', gap: '4px', zIndex: 200,
+                                    background: 'rgba(10,13,22,0.95)', borderRadius: '8px', padding: '4px',
+                                    border: '1px solid rgba(255,255,255,0.1)', boxShadow: '0 8px 24px rgba(0,0,0,0.5)',
+                                }}>
+                                    <button className="sotc-btn" style={{padding: '5px 8px', fontSize: '11px', color: '#f0d9b5'}}
+                                        onClick={() => { setExpandedGameId(null); navigateToGame(id, 'white'); }}>
+                                        ♔
+                                    </button>
+                                    <button className="sotc-btn" style={{padding: '5px 8px', fontSize: '11px', color: '#6a5a4a'}}
+                                        onClick={() => { setExpandedGameId(null); navigateToGame(id, 'black'); }}>
+                                        ♚
+                                    </button>
+                                </div>
+                            )}
+                        </div>
+                    ))}
                 </div>
                 <div style={{display: 'flex', gap: '8px', alignItems: 'center'}}>
                     <button className="sotc-btn" onClick={() => navigateToGame(null)}>⌂ Accueil</button>

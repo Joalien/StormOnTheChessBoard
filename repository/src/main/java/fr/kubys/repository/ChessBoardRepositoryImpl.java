@@ -16,6 +16,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 @Slf4j
 @Repository
@@ -63,6 +64,11 @@ public class ChessBoardRepositoryImpl implements ChessBoardRepository {
     @Override
     public boolean gameExists(Integer gameId) {
         return store.containsKey(gameId);
+    }
+
+    @Override
+    public Set<Integer> getGameIds() {
+        return Set.copyOf(store.keySet());
     }
 
     private ChessBoardService computeChessBoard(Integer gameId) {

@@ -4,6 +4,7 @@ import fr.kubys.api.ChessBoardReadService;
 import fr.kubys.board.ChessBoard;
 import fr.kubys.command.Command;
 
+import java.util.Set;
 import java.util.function.Supplier;
 
 public interface ChessBoardRepository {
@@ -19,4 +20,6 @@ public interface ChessBoardRepository {
     void undoLastCommand(Integer gameId);
 
     boolean gameExists(Integer gameId);
+
+    Set<Integer> getGameIds();
 }

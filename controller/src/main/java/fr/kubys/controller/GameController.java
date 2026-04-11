@@ -40,9 +40,14 @@ public class GameController {
     private void createInitialState() {
         GamePresets.createKingsWithPawnsGame(chessBoardRepository); // game 1
         GamePresets.createSicilianGame(chessBoardRepository);       // game 2
+        GamePresets.createEffectShowcaseGame(chessBoardRepository); // game 3
     }
 
-    // FIXME split into smaller endpoints in order to allow front to fetch in multiple requests
+    @GetMapping
+    public Set<Integer> listGames() {
+        return chessBoardRepository.getGameIds();
+    }
+
     @PostMapping
     public ResponseEntity<Integer> startGame() {
         return new ResponseEntity<>(chessBoardRepository.createNewGame(), HttpStatus.CREATED);
