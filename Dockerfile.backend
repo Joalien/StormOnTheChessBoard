@@ -1,0 +1,13 @@
+FROM maven:3.9-eclipse-temurin-21 AS build
+WORKDIR /app
+COPY pom.xml .
+COPY domain domain
+COPY repository repository
+COPY controller controller
+RUN mvn -N install && mvn -pl domain,repository install -DskipTests && mvn -pl controller package -DskipTests
+
+FROM eclipse-temurin:21-jre
+WORKDIR /app
+COPY --from=build /app/controller/target/*.jar app.jar
+EXPOSE 9000
+ENTRYPOINT ["java", "-jar", "app.jar"]
