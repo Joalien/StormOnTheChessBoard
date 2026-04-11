@@ -41,11 +41,15 @@ const globalCSS = `
   html, body, #root {
     margin: 0;
     padding: 0;
+    width: 100%;
     min-height: 100vh;
     background: #0d1117;
     font-family: 'Inter', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
     color: #e6edf3;
   }
+
+  /* Override Expo Web container max-width */
+  #root > div { max-width: 100% !important; }
 
   .sotc-btn {
     display: inline-flex;
