@@ -1,13 +1,10 @@
 package fr.kubys.controller;
 
-import fr.kubys.api.ChessBoardReadService;
-import fr.kubys.board.IllegalMoveException;
 import fr.kubys.card.params.CardParam;
 import fr.kubys.command.*;
 import fr.kubys.core.Position;
-import fr.kubys.piece.PromotionPiece;
 import fr.kubys.dto.ChessBoardDto;
-import fr.kubys.mapper.MappingException;
+import fr.kubys.piece.PromotionPiece;
 import fr.kubys.repository.ChessBoardRepository;
 import fr.kubys.repository.GamePresets;
 import fr.kubys.websocket.GameNotifier;
@@ -15,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Map;
 import java.util.Set;

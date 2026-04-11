@@ -5,9 +5,7 @@ import fr.kubys.core.File;
 import fr.kubys.core.Position;
 import fr.kubys.core.Row;
 import fr.kubys.piece.Piece;
-import fr.kubys.piece.Square;
 
-import java.util.Optional;
 import java.util.Set;
 
 public class FakePieceDecorator extends Piece {

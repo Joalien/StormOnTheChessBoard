@@ -2,7 +2,8 @@ package fr.kubys.card;
 
 import fr.kubys.board.ChessBoard;
 import fr.kubys.card.params.PieceToPositionCardParam;
-import fr.kubys.piece.*;
+import fr.kubys.piece.Piece;
+import fr.kubys.piece.Queen;
 
 import java.util.Set;
 import java.util.stream.Collectors;

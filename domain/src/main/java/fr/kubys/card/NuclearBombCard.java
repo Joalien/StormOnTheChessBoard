@@ -4,7 +4,6 @@ import fr.kubys.board.ChessBoard;
 import fr.kubys.board.PieceRemoval;
 import fr.kubys.card.params.PieceCardParam;
 import fr.kubys.core.Position;
-import fr.kubys.piece.Piece;
 
 import java.util.Set;
 import java.util.stream.Collectors;

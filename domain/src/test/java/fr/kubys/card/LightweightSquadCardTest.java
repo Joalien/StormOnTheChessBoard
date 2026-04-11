@@ -3,7 +3,8 @@ package fr.kubys.card;
 import fr.kubys.board.ChessBoard;
 import fr.kubys.card.params.LightweightSquadCardParam;
 import fr.kubys.core.Color;
-import fr.kubys.piece.*;
+import fr.kubys.piece.Pawn;
+import fr.kubys.piece.Queen;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 

@@ -1,7 +1,7 @@
 package fr.kubys.card;
 
-import fr.kubys.board.ChessBoard;
 import fr.kubys.board.CheckException;
+import fr.kubys.board.ChessBoard;
 import fr.kubys.card.params.PieceToPositionCardParam;
 import fr.kubys.core.Color;
 import fr.kubys.piece.*;

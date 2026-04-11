@@ -5,7 +5,9 @@ import fr.kubys.card.CardRegistry;
 import fr.kubys.card.params.CardParam;
 import fr.kubys.player.Player;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
 
 public class CardDeck {
 

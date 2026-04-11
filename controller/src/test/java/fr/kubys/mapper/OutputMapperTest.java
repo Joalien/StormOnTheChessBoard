@@ -1,7 +1,10 @@
 package fr.kubys.mapper;
 
 import fr.kubys.core.Color;
-import fr.kubys.piece.*;
+import fr.kubys.piece.King;
+import fr.kubys.piece.Knight;
+import fr.kubys.piece.Pawn;
+import fr.kubys.piece.Piece;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;

@@ -37,12 +37,12 @@ class ChessBoardTest {
 
         assertTrue(cb.at(e4).getPiece().get() instanceof Pawn wp && wp.getColor() == Color.WHITE);
         assertTrue(cb.at(e8).getPiece().isEmpty());
-        assertTrue(cb.at(f8).getPiece().get() instanceof Rock);
-        assertTrue(cb.at(g8).getPiece().get() instanceof King);
+        assertInstanceOf(Rock.class, cb.at(f8).getPiece().get());
+        assertInstanceOf(King.class, cb.at(g8).getPiece().get());
         assertTrue(cb.at(h8).getPiece().isEmpty());
         assertTrue(cb.at(e1).getPiece().isEmpty());
-        assertTrue(cb.at(d1).getPiece().get() instanceof Rock);
-        assertTrue(cb.at(c1).getPiece().get() instanceof King);
+        assertInstanceOf(Rock.class, cb.at(d1).getPiece().get());
+        assertInstanceOf(King.class, cb.at(c1).getPiece().get());
         assertTrue(cb.at(b1).getPiece().isEmpty());
         assertTrue(cb.at(a1).getPiece().isEmpty());
 
@@ -77,21 +77,21 @@ class ChessBoardTest {
             assertEquals(Color.WHITE, chessBoard.getCurrentTurn());
 
             // White pieces
-            assertTrue(chessBoard.at(a1).getPiece().get() instanceof Rock);
+            assertInstanceOf(Rock.class, chessBoard.at(a1).getPiece().get());
             assertEquals(Color.WHITE, chessBoard.at(a1).getPiece().get().getColor());
-            assertTrue(chessBoard.at(b1).getPiece().get() instanceof Knight);
+            assertInstanceOf(Knight.class, chessBoard.at(b1).getPiece().get());
             assertEquals(Color.WHITE, chessBoard.at(b1).getPiece().get().getColor());
-            assertTrue(chessBoard.at(c1).getPiece().get() instanceof Bishop);
+            assertInstanceOf(Bishop.class, chessBoard.at(c1).getPiece().get());
             assertEquals(Color.WHITE, chessBoard.at(c1).getPiece().get().getColor());
-            assertTrue(chessBoard.at(d1).getPiece().get() instanceof Queen);
+            assertInstanceOf(Queen.class, chessBoard.at(d1).getPiece().get());
             assertEquals(Color.WHITE, chessBoard.at(d1).getPiece().get().getColor());
-            assertTrue(chessBoard.at(e1).getPiece().get() instanceof King);
+            assertInstanceOf(King.class, chessBoard.at(e1).getPiece().get());
             assertEquals(Color.WHITE, chessBoard.at(e1).getPiece().get().getColor());
-            assertTrue(chessBoard.at(f1).getPiece().get() instanceof Bishop);
+            assertInstanceOf(Bishop.class, chessBoard.at(f1).getPiece().get());
             assertEquals(Color.WHITE, chessBoard.at(f1).getPiece().get().getColor());
-            assertTrue(chessBoard.at(g1).getPiece().get() instanceof Knight);
+            assertInstanceOf(Knight.class, chessBoard.at(g1).getPiece().get());
             assertEquals(Color.WHITE, chessBoard.at(g1).getPiece().get().getColor());
-            assertTrue(chessBoard.at(h1).getPiece().get() instanceof Rock);
+            assertInstanceOf(Rock.class, chessBoard.at(h1).getPiece().get());
             assertEquals(Color.WHITE, chessBoard.at(h1).getPiece().get().getColor());
             assertTrue(IntStream.rangeClosed(1, 8)
                     .mapToObj(i -> Position.posToSquare(i, 2))
@@ -99,21 +99,21 @@ class ChessBoardTest {
                     .allMatch(pawn -> pawn instanceof Pawn wp && wp.getColor() == Color.WHITE));
 
             // Black pieces
-            assertTrue(chessBoard.at(a8).getPiece().get() instanceof Rock);
+            assertInstanceOf(Rock.class, chessBoard.at(a8).getPiece().get());
             assertEquals(Color.BLACK, chessBoard.at(a8).getPiece().get().getColor());
-            assertTrue(chessBoard.at(b8).getPiece().get() instanceof Knight);
+            assertInstanceOf(Knight.class, chessBoard.at(b8).getPiece().get());
             assertEquals(Color.BLACK, chessBoard.at(b8).getPiece().get().getColor());
-            assertTrue(chessBoard.at(c8).getPiece().get() instanceof Bishop);
+            assertInstanceOf(Bishop.class, chessBoard.at(c8).getPiece().get());
             assertEquals(Color.BLACK, chessBoard.at(c8).getPiece().get().getColor());
-            assertTrue(chessBoard.at(d8).getPiece().get() instanceof Queen);
+            assertInstanceOf(Queen.class, chessBoard.at(d8).getPiece().get());
             assertEquals(Color.BLACK, chessBoard.at(d8).getPiece().get().getColor());
-            assertTrue(chessBoard.at(e8).getPiece().get() instanceof King);
+            assertInstanceOf(King.class, chessBoard.at(e8).getPiece().get());
             assertEquals(Color.BLACK, chessBoard.at(e8).getPiece().get().getColor());
-            assertTrue(chessBoard.at(f8).getPiece().get() instanceof Bishop);
+            assertInstanceOf(Bishop.class, chessBoard.at(f8).getPiece().get());
             assertEquals(Color.BLACK, chessBoard.at(f8).getPiece().get().getColor());
-            assertTrue(chessBoard.at(g8).getPiece().get() instanceof Knight);
+            assertInstanceOf(Knight.class, chessBoard.at(g8).getPiece().get());
             assertEquals(Color.BLACK, chessBoard.at(g8).getPiece().get().getColor());
-            assertTrue(chessBoard.at(h8).getPiece().get() instanceof Rock);
+            assertInstanceOf(Rock.class, chessBoard.at(h8).getPiece().get());
             assertEquals(Color.BLACK, chessBoard.at(h8).getPiece().get().getColor());
             assertTrue(IntStream.rangeClosed(1, 8)
                     .mapToObj(i -> Position.posToSquare(i, 7))

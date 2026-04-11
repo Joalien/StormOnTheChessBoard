@@ -6,9 +6,7 @@ import fr.kubys.core.Position;
 import fr.kubys.core.Row;
 import fr.kubys.piece.Knight;
 import fr.kubys.piece.Piece;
-import fr.kubys.piece.Square;
 
-import java.util.Collections;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Predicate;

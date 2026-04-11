@@ -2,7 +2,6 @@ package fr.kubys.board;
 
 import fr.kubys.core.Color;
 import fr.kubys.piece.Knight;
-import fr.kubys.piece.Square;
 import org.junit.jupiter.api.Test;
 
 import static fr.kubys.core.Position.*;

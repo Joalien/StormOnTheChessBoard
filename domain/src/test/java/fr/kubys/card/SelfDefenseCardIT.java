@@ -4,7 +4,6 @@ import fr.kubys.board.ChessBoard;
 import fr.kubys.card.params.NoCardParam;
 import fr.kubys.core.Color;
 import fr.kubys.piece.*;
-import fr.kubys.piece.PromotionPiece;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;

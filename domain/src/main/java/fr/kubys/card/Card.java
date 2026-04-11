@@ -3,7 +3,6 @@ package fr.kubys.card;
 import fr.kubys.board.CheckException;
 import fr.kubys.board.ChessBoard;
 import fr.kubys.card.params.CardParam;
-import fr.kubys.core.Color;
 
 import java.util.Objects;
 

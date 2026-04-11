@@ -2,20 +2,15 @@ package fr.kubys.card;
 
 import fr.kubys.board.ChessBoard;
 import fr.kubys.card.params.KnightCardParam;
-import fr.kubys.core.Color;
-import fr.kubys.core.Position;
 import fr.kubys.piece.Knight;
-import fr.kubys.piece.Piece;
-import fr.kubys.piece.Queen;
 import fr.kubys.piece.extra.Kangaroo;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
-import java.util.Set;
-
-import static fr.kubys.core.Position.*;
-import static org.junit.jupiter.api.Assertions.*;
+import static fr.kubys.core.Position.b1;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 
 
 class KangarooTest {

@@ -6,7 +6,6 @@ import fr.kubys.core.File;
 import fr.kubys.core.Position;
 import fr.kubys.core.Row;
 import fr.kubys.piece.*;
-import fr.kubys.piece.PromotionPiece;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

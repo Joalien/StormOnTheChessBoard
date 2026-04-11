@@ -3,12 +3,15 @@ package fr.kubys.card;
 import fr.kubys.board.ChessBoard;
 import fr.kubys.card.params.TwoPieceCardParam;
 import fr.kubys.core.Color;
-import fr.kubys.piece.*;
+import fr.kubys.piece.King;
+import fr.kubys.piece.Knight;
+import fr.kubys.piece.Queen;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static fr.kubys.core.Position.*;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class SwapYourKnightsCardTest {
 

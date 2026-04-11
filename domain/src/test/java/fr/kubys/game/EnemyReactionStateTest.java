@@ -1,12 +1,10 @@
 package fr.kubys.game;
 
 import fr.kubys.board.ChessBoard;
-import fr.kubys.card.BombingCard;
 import fr.kubys.card.Card;
 import fr.kubys.card.CardType;
 import fr.kubys.card.QuadrilleCard;
 import fr.kubys.card.params.NoCardParam;
-import fr.kubys.card.params.PositionCardParam;
 import fr.kubys.card.params.QuadrilleCardParam;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -14,7 +12,8 @@ import org.junit.jupiter.api.Test;
 import java.util.Random;
 
 import static fr.kubys.core.Position.*;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class EnemyReactionStateTest {
 

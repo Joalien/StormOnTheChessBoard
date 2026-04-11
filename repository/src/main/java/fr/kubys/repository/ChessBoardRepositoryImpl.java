@@ -2,21 +2,15 @@ package fr.kubys.repository;
 
 import fr.kubys.api.ChessBoardReadService;
 import fr.kubys.api.ChessBoardService;
-import fr.kubys.api.ChessBoardWriteService;
 import fr.kubys.board.ChessBoard;
 import fr.kubys.command.Command;
 import fr.kubys.command.StartGameCommand;
-
-import java.util.function.Supplier;
 import fr.kubys.game.ChessBoardServiceFactory;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
+import java.util.function.Supplier;
 
 @Slf4j
 @Repository

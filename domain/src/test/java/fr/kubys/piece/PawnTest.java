@@ -3,7 +3,6 @@ package fr.kubys.piece;
 import fr.kubys.core.Color;
 import fr.kubys.core.File;
 import fr.kubys.core.Row;
-import fr.kubys.piece.Pawn;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 

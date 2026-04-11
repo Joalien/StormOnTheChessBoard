@@ -2,8 +2,8 @@ package fr.kubys.card;
 
 import fr.kubys.board.ChessBoard;
 import fr.kubys.card.params.PieceCardParam;
-import fr.kubys.piece.extra.Crab;
 import fr.kubys.piece.Pawn;
+import fr.kubys.piece.extra.Crab;
 
 public class CrabCard extends Card<PieceCardParam> {
 

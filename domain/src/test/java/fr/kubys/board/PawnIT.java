@@ -2,7 +2,9 @@ package fr.kubys.board;
 
 import fr.kubys.core.Color;
 import fr.kubys.core.Position;
-import fr.kubys.piece.*;
+import fr.kubys.piece.Knight;
+import fr.kubys.piece.Pawn;
+import fr.kubys.piece.Queen;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 

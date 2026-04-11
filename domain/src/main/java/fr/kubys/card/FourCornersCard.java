@@ -5,7 +5,6 @@ import fr.kubys.card.params.PieceCardParam;
 import fr.kubys.core.Position;
 
 import java.util.List;
-import java.util.stream.Stream;
 
 public class FourCornersCard extends Card<PieceCardParam> {
 

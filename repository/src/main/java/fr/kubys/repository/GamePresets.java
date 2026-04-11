@@ -3,7 +3,6 @@ package fr.kubys.repository;
 import fr.kubys.board.ChessBoard;
 import fr.kubys.board.effect.*;
 import fr.kubys.command.EndTurnCommand;
-import fr.kubys.command.PlayCardWithImmutableParamCommand;
 import fr.kubys.command.PlayMoveCommand;
 import fr.kubys.core.Color;
 import fr.kubys.core.Position;
@@ -12,7 +11,6 @@ import fr.kubys.piece.extra.Crab;
 import fr.kubys.piece.extra.Kangaroo;
 
 import java.util.List;
-import java.util.Map;
 import java.util.function.Supplier;
 
 import static fr.kubys.core.Position.*;

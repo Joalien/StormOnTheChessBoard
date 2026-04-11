@@ -1,25 +1,18 @@
 package fr.kubys.piece.extra;
 
 import fr.kubys.board.ChessBoard;
-import fr.kubys.card.KangarooCard;
-import fr.kubys.card.params.KnightCardParam;
 import fr.kubys.core.Color;
 import fr.kubys.core.File;
-import fr.kubys.core.Position;
 import fr.kubys.core.Row;
-import fr.kubys.piece.Bishop;
-import fr.kubys.piece.Knight;
-import fr.kubys.piece.Piece;
 import fr.kubys.piece.Queen;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
-import java.util.Collections;
 import java.util.Set;
 
 import static fr.kubys.core.Position.*;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class KangarooTest {
     private ChessBoard chessBoard;

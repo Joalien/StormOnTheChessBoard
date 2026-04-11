@@ -2,7 +2,9 @@ package fr.kubys.card;
 
 import fr.kubys.board.ChessBoard;
 import fr.kubys.card.params.PieceToPositionCardParam;
-import fr.kubys.piece.*;
+import fr.kubys.piece.Pawn;
+import fr.kubys.piece.Piece;
+import fr.kubys.piece.Queen;
 
 public class AmbitionCard extends Card<PieceToPositionCardParam> {
 

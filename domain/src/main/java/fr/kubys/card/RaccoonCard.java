@@ -3,7 +3,10 @@ package fr.kubys.card;
 import fr.kubys.board.ChessBoard;
 import fr.kubys.card.params.TwoPieceCardParam;
 import fr.kubys.core.Position;
-import fr.kubys.piece.*;
+import fr.kubys.piece.Bishop;
+import fr.kubys.piece.Knight;
+import fr.kubys.piece.Pawn;
+import fr.kubys.piece.Rock;
 
 public class RaccoonCard extends Card<TwoPieceCardParam> {
 

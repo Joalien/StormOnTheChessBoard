@@ -4,7 +4,9 @@ import fr.kubys.board.CheckException;
 import fr.kubys.board.ChessBoard;
 import fr.kubys.card.params.NoCardParam;
 import fr.kubys.core.Color;
-import fr.kubys.piece.*;
+import fr.kubys.piece.Bishop;
+import fr.kubys.piece.King;
+import fr.kubys.piece.Piece;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
