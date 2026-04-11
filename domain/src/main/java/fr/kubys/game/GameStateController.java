@@ -13,6 +13,7 @@ import fr.kubys.piece.Piece;
 import fr.kubys.piece.PromotionPiece;
 import fr.kubys.player.Player;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -174,8 +175,8 @@ public class GameStateController implements ChessBoardService {
     }
 
     @Override
-    public Set<Piece> getCapturedPieces() {
-        return chessBoard.getOutOfTheBoardPieces();
+    public List<Piece> getCapturedPieces() {
+        return new ArrayList<>(chessBoard.getOutOfTheBoardPieces());
     }
 
     @Override

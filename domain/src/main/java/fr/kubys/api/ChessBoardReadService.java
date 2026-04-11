@@ -30,5 +30,5 @@ public interface ChessBoardReadService {
 
     Set<Position> getLegalMoves(Position position);
 
-    Set<Piece> getCapturedPieces();
+    List<Piece> getCapturedPieces();
 }

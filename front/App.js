@@ -620,6 +620,18 @@ export default function App() {
         }
     }
 
+    function onCapturedPieceClick(index) {
+        if (selectedCard && selectedParam && !isBarricadeCard(selectedCard)) {
+            const value = "captured:" + index;
+            const newParam = {...selectedCard.param};
+            if (newParam[selectedParam] === value) newParam[selectedParam] = null;
+            else newParam[selectedParam] = value;
+            const updated = {...selectedCard, param: newParam};
+            setSelectedCard(updated);
+            setSelectedParam(firstUnsetParam(updated));
+        }
+    }
+
     const isWhiteTurn = currentPlayerColor === "white";
     const isMyTurn = !myColor || myColor === currentPlayerColor;
 
@@ -750,31 +762,47 @@ export default function App() {
 
                     {capturedPieces.length > 0 && (() => {
                         const pieceSymbols = {P: '♟', N: '♞', B: '♝', R: '♜', Q: '♛', K: '♚', Kangaroo: '🦘', Crab: '🦀'};
-                        const whiteCaptured = capturedPieces.filter(p => p.startsWith('w'));
-                        const blackCaptured = capturedPieces.filter(p => p.startsWith('b'));
-                        const renderGroup = (pieces, color) => (
-                            <div style={{display: 'flex', flexWrap: 'wrap', gap: '2px'}}>
-                                {pieces.map((p, i) => {
-                                    const type = p.slice(1);
-                                    return (
-                                        <span key={i} style={{
-                                            fontSize: '20px',
-                                            color: color === 'w' ? '#f0d9b5' : '#6a5a4a',
-                                            lineHeight: 1,
-                                        }}>
-                                            {pieceSymbols[type] || '?'}
-                                        </span>
-                                    );
-                                })}
-                            </div>
-                        );
+                        const canSelect = selectedCard && selectedParam && !isBarricadeCard(selectedCard);
+                        const renderPiece = (code, globalIndex) => {
+                            const type = code.slice(1);
+                            const color = code[0];
+                            const paramValue = "captured:" + globalIndex;
+                            const isSelected = canSelect && selectedCard.param[selectedParam] === paramValue;
+                            return (
+                                <span
+                                    key={globalIndex}
+                                    onClick={canSelect ? () => onCapturedPieceClick(globalIndex) : undefined}
+                                    style={{
+                                        fontSize: '20px',
+                                        color: color === 'w' ? '#f0d9b5' : '#6a5a4a',
+                                        lineHeight: 1,
+                                        cursor: canSelect ? 'pointer' : 'default',
+                                        background: isSelected ? 'rgba(212,168,67,0.25)' : 'transparent',
+                                        borderRadius: '4px',
+                                        padding: '2px 3px',
+                                        transition: 'background 0.15s',
+                                    }}>
+                                    {pieceSymbols[type] || '?'}
+                                </span>
+                            );
+                        };
+                        const whiteIndices = capturedPieces.map((p, i) => ({code: p, index: i})).filter(e => e.code.startsWith('w'));
+                        const blackIndices = capturedPieces.map((p, i) => ({code: p, index: i})).filter(e => e.code.startsWith('b'));
                         return (
                             <div className="sotc-panel" style={{padding: '12px 16px', display: 'flex', flexDirection: 'column', gap: '8px'}}>
                                 <span style={{fontSize: '11px', fontWeight: '700', color: '#484f58', textTransform: 'uppercase', letterSpacing: '0.8px'}}>
-                                    Captured
+                                    {canSelect ? 'Click a captured piece' : 'Captured'}
                                 </span>
-                                {whiteCaptured.length > 0 && renderGroup(whiteCaptured, 'w')}
-                                {blackCaptured.length > 0 && renderGroup(blackCaptured, 'b')}
+                                {whiteIndices.length > 0 && (
+                                    <div style={{display: 'flex', flexWrap: 'wrap', gap: '2px'}}>
+                                        {whiteIndices.map(e => renderPiece(e.code, e.index))}
+                                    </div>
+                                )}
+                                {blackIndices.length > 0 && (
+                                    <div style={{display: 'flex', flexWrap: 'wrap', gap: '2px'}}>
+                                        {blackIndices.map(e => renderPiece(e.code, e.index))}
+                                    </div>
+                                )}
                             </div>
                         );
                     })()}

@@ -22,7 +22,7 @@ public class ChessBoard {
 
     private final Map<Position, Square> board = new HashMap<>(64);
     private final Map<Position, Square> fakeSquares = new HashMap<>();
-    private final Set<PieceRemoval> outOfTheBoardPieces = new HashSet<>();
+    private final Set<PieceRemoval> outOfTheBoardPieces = new LinkedHashSet<>();
     private final Set<Effect> effects = new HashSet<>();
     private final List<Position> promotedPositions = new ArrayList<>();
 

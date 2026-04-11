@@ -54,10 +54,17 @@ public class CardParametersMapper {
         throw new CardParamException("No mapping found for class %s".formatted(field.getType()));
     }
 
-    private static Piece getPieceFromChessboard(ChessBoardReadService chessboard, String position) {
+    private static Piece getPieceFromChessboard(ChessBoardReadService chessboard, String value) {
+        if (value.startsWith("captured:")) {
+            int index = Integer.parseInt(value.substring("captured:".length()));
+            List<Piece> captured = chessboard.getCapturedPieces();
+            if (index < 0 || index >= captured.size())
+                throw new CardParamException("Invalid captured piece index %d".formatted(index));
+            return captured.get(index);
+        }
         return chessboard.getPieces().stream()
-                .filter(piece -> piece.getPosition() == Position.valueOf(position))
+                .filter(piece -> piece.getPosition() == Position.valueOf(value))
                 .findFirst()
-                .orElseThrow(() -> new CardParamException("No piece found on square %s".formatted(position)));
+                .orElseThrow(() -> new CardParamException("No piece found on square %s".formatted(value)));
     }
 }
