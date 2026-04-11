@@ -4,7 +4,7 @@
 notifier:
 	@if ! lsof -i :8787 -sTCP:LISTEN >/dev/null 2>&1; then \
 		echo "Starting notifier on :8787..."; \
-		python3 notifier/server.py & \
+		python3 notifier/server.py >/dev/null 2>&1 & \
 	else \
 		echo "Notifier already running on :8787"; \
 	fi
