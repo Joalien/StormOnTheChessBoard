@@ -4,6 +4,7 @@ import {Player} from "./component/Player";
 import {CardParameters} from "./component/CardParameters";
 import {barricadeLines, BarricadeSelectionOverlay} from "./component/barricadeOverlay";
 import {HomeScreen} from "./component/HomeScreen";
+import {NotFoundScreen} from "./component/NotFoundScreen";
 import {toast, ToastContainer} from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -246,15 +247,19 @@ async function showErrorMessage(res) {
     toast.error(errorMessage);
 }
 
-function getGameIdFromUrl() {
-    if (typeof window === 'undefined') return null;
-    const match = window.location.pathname.match(/^\/(\d+)$/);
-    return match ? parseInt(match[1], 10) : null;
+function getRouteFromUrl() {
+    if (typeof window === 'undefined') return {page: 'home'};
+    const path = window.location.pathname;
+    if (path === '/') return {page: 'home'};
+    const match = path.match(/^\/(\d+)$/);
+    if (match) return {page: 'game', gameId: parseInt(match[1], 10)};
+    return {page: '404'};
 }
 
 export default function App() {
     const [game, setGame] = useState({});
-    const [gameId, setGameId] = useState(getGameIdFromUrl);
+    const [route, setRoute] = useState(getRouteFromUrl);
+    const gameId = route.page === 'game' ? route.gameId : null;
     const [currentPlayerColor, setCurrentPlayerColor] = useState("white");
     const [whitePlayer, setWhitePlayer] = useState({cards: []});
     const [blackPlayer, setBlackPlayer] = useState({cards: []});
@@ -305,11 +310,11 @@ export default function App() {
 
     function navigateToGame(id) {
         window.history.pushState({}, '', id === null ? '/' : `/${id}`);
-        setGameId(id);
+        setRoute(id === null ? {page: 'home'} : {page: 'game', gameId: id});
     }
 
     useEffect(() => {
-        function onPopState() { setGameId(getGameIdFromUrl()); }
+        function onPopState() { setRoute(getRouteFromUrl()); }
         window.addEventListener('popstate', onPopState);
         return () => window.removeEventListener('popstate', onPopState);
     }, []);
@@ -482,13 +487,17 @@ export default function App() {
         ...pendingPromotions.reduce((obj, sq) => { obj[sq] = promotionHighlight; return obj; }, {}),
     };
 
-    if (gameId === null) {
+    if (route.page === 'home') {
         return (
             <>
                 <ToastContainer position="top-right" closeOnClick pauseOnFocusLoss draggable pauseOnHover autoClose={3500} />
                 <HomeScreen onPlaySolo={startNewGame} />
             </>
         );
+    }
+
+    if (route.page === '404') {
+        return <NotFoundScreen onGoHome={() => navigateToGame(null)} />;
     }
 
     return (
