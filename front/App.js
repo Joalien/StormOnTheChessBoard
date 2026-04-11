@@ -397,7 +397,11 @@ export default function App() {
             if (e.code === 'Space' && gameId !== null) {
                 if (myColor && myColor !== currentPlayerColor) return;
                 e.preventDefault();
-                endTurn();
+                if (selectedCard && !Object.values(selectedCard.param || {}).some(x => x === null)) {
+                    playCard();
+                } else {
+                    endTurn();
+                }
             }
             if (e.key === 'z' && (e.ctrlKey || e.metaKey) && gameId !== null) {
                 if (myColor && myColor !== currentPlayerColor) return;
@@ -407,7 +411,7 @@ export default function App() {
         }
         window.addEventListener('keydown', onKeyDown, true);
         return () => window.removeEventListener('keydown', onKeyDown, true);
-    }, [gameId, myColor, currentPlayerColor]);
+    }, [gameId, myColor, currentPlayerColor, selectedCard]);
 
     function startNewGame() {
         fetch(backendOrigin + '/chessboard', {method: 'POST'})
