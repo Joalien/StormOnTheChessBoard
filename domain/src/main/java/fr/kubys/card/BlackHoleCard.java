@@ -4,10 +4,10 @@ import fr.kubys.board.ChessBoard;
 import fr.kubys.board.effect.BlackHoleEffect;
 import fr.kubys.card.params.PositionCardParam;
 
-public class BlackHoleCard extends Card<PositionCardParam> {
+public class BlackHoleCard extends Card<PositionCardParam> implements Effectable<BlackHoleEffect> {
 
     public BlackHoleCard() {
-        super("Trou noir", "Désignez une case vide qui est \"retirée\" de l'échiquier juqu'à la fin de la partie. Il sera impossible pendant la suite du jeu de s'y arrêter ou de la traverser.", CardType.AFTER_TURN, PositionCardParam.class, true);
+        super("Trou noir", "Désignez une case vide qui est \"retirée\" de l'échiquier juqu'à la fin de la partie. Il sera impossible pendant la suite du jeu de s'y arrêter ou de la traverser.", CardType.AFTER_TURN, PositionCardParam.class);
     }
 
     @Override

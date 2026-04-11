@@ -4,10 +4,10 @@ import fr.kubys.board.ChessBoard;
 import fr.kubys.board.effect.MagnetismEffect;
 import fr.kubys.card.params.PieceCardParam;
 
-public class MagnetismCard extends Card<PieceCardParam> {
+public class MagnetismCard extends Card<PieceCardParam> implements Effectable<MagnetismEffect> {
 
     public MagnetismCard() {
-        super("Magnetisme", "", CardType.AFTER_TURN, PieceCardParam.class, true);
+        super("Magnetisme", "", CardType.AFTER_TURN, PieceCardParam.class);
     }
 
     @Override

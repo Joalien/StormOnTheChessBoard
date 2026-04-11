@@ -13,18 +13,12 @@ public abstract class Card<T extends CardParam> {
     protected final String description;
     protected final CardType type;
     protected final Class<T> clazz;
-    protected final boolean persistent;
 
     protected Card(String name, String description, CardType type, Class<T> clazz) {
-        this(name, description, type, clazz, false);
-    }
-
-    protected Card(String name, String description, CardType type, Class<T> clazz, boolean persistent) {
         this.name = name;
         this.description = description;
         this.type = type;
         this.clazz = clazz;
-        this.persistent = persistent;
     }
 
     public final void playOn(ChessBoard chessBoard, T param) {
@@ -73,9 +67,5 @@ public abstract class Card<T extends CardParam> {
 
     public Class<T> getClazz() {
         return this.clazz;
-    }
-
-    public boolean isPersistent() {
-        return this.persistent;
     }
 }

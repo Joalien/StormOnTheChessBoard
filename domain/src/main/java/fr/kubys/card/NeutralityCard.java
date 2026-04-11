@@ -1,19 +1,21 @@
 package fr.kubys.card;
 
 import fr.kubys.board.ChessBoard;
+import fr.kubys.board.effect.PieceTransformationEffect;
 import fr.kubys.card.params.PieceCardParam;
 import fr.kubys.core.Color;
 import fr.kubys.piece.King;
 import fr.kubys.piece.Pawn;
+import fr.kubys.piece.Piece;
 import fr.kubys.piece.Queen;
 
-public class NeutralityCard extends Card<PieceCardParam> {
+public class NeutralityCard extends Card<PieceCardParam> implements Effectable<PieceTransformationEffect> {
 
     public NeutralityCard() {
         super("Neutralité",
                 "Transformez une pièce adverse (sauf Roi ou Dame) en pièce neutre. Une pièce neutre peut être utilisée par les deux joueurs et peut prendre des pièces appartenant aux deux joueurs.",
                 CardType.AFTER_TURN,
-                PieceCardParam.class, true);
+                PieceCardParam.class);
     }
 
     @Override
@@ -42,12 +44,16 @@ public class NeutralityCard extends Card<PieceCardParam> {
 
     @Override
     protected void doAction(ChessBoard chessBoard, PieceCardParam param) {
+        Piece affectedPiece;
         if (param.piece() instanceof Pawn) {
             var position = param.piece().getPosition();
             chessBoard.removePieceFromTheBoard(param.piece());
-            chessBoard.add(new Pawn(Color.NONE), position);
+            affectedPiece = new Pawn(Color.NONE);
+            chessBoard.add(affectedPiece, position);
         } else {
             param.piece().setColor(Color.NONE);
+            affectedPiece = param.piece();
         }
+        chessBoard.addEffect(new PieceTransformationEffect("Neutralité", affectedPiece));
     }
 }

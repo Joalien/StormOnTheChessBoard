@@ -7,10 +7,10 @@ import fr.kubys.piece.Piece;
 
 import java.util.Optional;
 
-public class ManHoleCard extends Card<ManHoleCardParam> {
+public class ManHoleCard extends Card<ManHoleCardParam> implements Effectable<ManHoleEffect> {
 
     public ManHoleCard() {
-        super("Bouche d'égout", "Placez des bouches d'égout sur deux cases de l'échiquier. Une pièce se trouvant sur une bouche d'égout peut désormais se rendre sur n'importe quelle autre bouche d'égout, occupée ou non", CardType.AFTER_TURN, ManHoleCardParam.class, true);
+        super("Bouche d'égout", "Placez des bouches d'égout sur deux cases de l'échiquier. Une pièce se trouvant sur une bouche d'égout peut désormais se rendre sur n'importe quelle autre bouche d'égout, occupée ou non", CardType.AFTER_TURN, ManHoleCardParam.class);
     }
 
     @Override

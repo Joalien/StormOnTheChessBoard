@@ -4,12 +4,12 @@ import fr.kubys.board.ChessBoard;
 import fr.kubys.board.effect.BarricadeEffect;
 import fr.kubys.card.params.BarricadeCardParam;
 
-public class BarricadeCard extends Card<BarricadeCardParam> {
+public class BarricadeCard extends Card<BarricadeCardParam> implements Effectable<BarricadeEffect> {
 
     public BarricadeCard() {
         super("Barricade",
                 "Placez une barrière de deux cases de long, rectiligne ou à angle droit, entre n'importe quelles cases de l'échiquier. Cette barrière ne peut être franchie par aucune pièce, excepté les cavaliers ou toute pièce ayant acquis la capacité de sauter d'une manière similaire.",
-                CardType.AFTER_TURN, BarricadeCardParam.class, true);
+                CardType.AFTER_TURN, BarricadeCardParam.class);
     }
 
     @Override

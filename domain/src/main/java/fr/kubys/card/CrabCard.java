@@ -1,17 +1,18 @@
 package fr.kubys.card;
 
 import fr.kubys.board.ChessBoard;
+import fr.kubys.board.effect.PieceTransformationEffect;
 import fr.kubys.card.params.PieceCardParam;
 import fr.kubys.piece.Pawn;
 import fr.kubys.piece.extra.Crab;
 
-public class CrabCard extends Card<PieceCardParam> {
+public class CrabCard extends Card<PieceCardParam> implements Effectable<PieceTransformationEffect> {
 
     public CrabCard() {
         super("Crabe",
                 "Transformez l'un de vos Pions en Crabe, et ce définitivement. Le Crabe se déplace en diagonale, comme un Fou, mais d'une case seulement, en avançant ou en reculant. Parvenu sur la dernière rangée, il est promu comme un pion ordinaire.",
                 CardType.AFTER_TURN,
-                PieceCardParam.class, true);
+                PieceCardParam.class);
     }
 
     @Override
@@ -35,6 +36,8 @@ public class CrabCard extends Card<PieceCardParam> {
         var position = param.piece().getPosition();
         var color = param.piece().getColor();
         chessBoard.removePieceFromTheBoard(param.piece());
-        chessBoard.add(new Crab(color), position);
+        Crab crab = new Crab(color);
+        chessBoard.add(crab, position);
+        chessBoard.addEffect(new PieceTransformationEffect("Crabe", crab));
     }
 }
