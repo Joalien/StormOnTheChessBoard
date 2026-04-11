@@ -8,8 +8,9 @@ services:
     ports:
       - "3000:80"
     depends_on:
-      - sotc-backend
       - sotc-frontend
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     networks:
       - sotc-net
 

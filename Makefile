@@ -9,8 +9,13 @@ notifier:
 		echo "Notifier already running on :8787"; \
 	fi
 
+back:
+	@-pkill -f "spring-boot:run" 2>/dev/null
+	@mvn -N install -q && mvn -pl domain,repository,matchmaking install -DskipTests -q && mvn -pl controller spring-boot:run &
+	@echo "Backend starting in background (port 9000)"
+
 up: .env
-	docker compose up -d --force-recreate sotc-backend sotc-frontend sotc-nginx
+	docker compose up -d --force-recreate sotc-frontend sotc-nginx
 
 claude: up notifier
 	docker compose run --rm sotc-claude
@@ -22,4 +27,4 @@ down:
 	docker compose down
 	@-pkill -f "python3 notifier/server.py" 2>/dev/null && echo "Notifier stopped" || true
 
-.PHONY: up claude claude-only down notifier
+.PHONY: up back claude claude-only down notifier
