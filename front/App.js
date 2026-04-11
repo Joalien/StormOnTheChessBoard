@@ -3,10 +3,14 @@ import {useEffect, useState} from "react";
 import {Player} from "./component/Player";
 import {CardParameters} from "./component/CardParameters";
 import {barricadeLines, BarricadeSelectionOverlay} from "./component/barricadeOverlay";
+import {HomeScreen} from "./component/HomeScreen";
 import {toast, ToastContainer} from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 
-const base = (typeof window !== 'undefined' ? window.location.origin : 'http://localhost:9000') + "/chessboard/";
+const backendOrigin = typeof window !== 'undefined'
+    ? window.location.protocol + '//' + window.location.hostname + ':9000'
+    : 'http://localhost:9000';
+const base = backendOrigin + "/chessboard/";
 const highlight = {boxShadow: "rgba(212, 168, 67, 0.85) 0px 0px 24px 0px inset"};
 
 const globalCSS = `
@@ -243,9 +247,9 @@ async function showErrorMessage(res) {
 }
 
 function getGameIdFromUrl() {
-    if (typeof window === 'undefined') return 1;
+    if (typeof window === 'undefined') return null;
     const match = window.location.pathname.match(/^\/(\d+)$/);
-    return match ? parseInt(match[1], 10) : 1;
+    return match ? parseInt(match[1], 10) : null;
 }
 
 export default function App() {
@@ -289,6 +293,7 @@ export default function App() {
     }
 
     useEffect(() => {
+        if (gameId === null) return;
         fetchGame(gameId);
         fetchPlayer(gameId, "white").then(data => setWhitePlayer(data));
         fetchPlayer(gameId, "black").then(data => setBlackPlayer(data));
@@ -299,7 +304,7 @@ export default function App() {
     }
 
     function navigateToGame(id) {
-        window.history.pushState({}, '', `/${id}`);
+        window.history.pushState({}, '', id === null ? '/' : `/${id}`);
         setGameId(id);
     }
 
@@ -310,9 +315,9 @@ export default function App() {
     }, []);
 
     function startNewGame() {
-        fetch(base.replace(/\/$/, ''), {method: 'POST'})
-            .then(res => res.json())
-            .then(id => navigateToGame(id))
+        fetch(backendOrigin + '/chessboard', {method: 'POST'})
+            .then(res => res.text())
+            .then(text => navigateToGame(parseInt(text, 10)))
             .catch(err => alert(err));
     }
 
@@ -477,6 +482,15 @@ export default function App() {
         ...pendingPromotions.reduce((obj, sq) => { obj[sq] = promotionHighlight; return obj; }, {}),
     };
 
+    if (gameId === null) {
+        return (
+            <>
+                <ToastContainer position="top-right" closeOnClick pauseOnFocusLoss draggable pauseOnHover autoClose={3500} />
+                <HomeScreen onPlaySolo={startNewGame} />
+            </>
+        );
+    }
+
     return (
         <div style={{minHeight: '100vh', display: 'flex', flexDirection: 'column', background: 'linear-gradient(160deg, #0a0d16 0%, #111520 50%, #0d1117 100%)'}}>
             <ToastContainer
@@ -518,13 +532,8 @@ export default function App() {
                     </span>
                 </div>
                 <div style={{display: 'flex', gap: '8px', alignItems: 'center'}}>
-                    {[1, 2].map(id => (
-                        <button key={id} onClick={() => navigateToGame(id)} className="sotc-btn" style={gameId === id ? {borderColor: 'rgba(212,168,67,0.6)', color: '#d4a843'} : {}}>
-                            #{id}
-                        </button>
-                    ))}
+                    <button className="sotc-btn" onClick={() => navigateToGame(null)}>⌂ Accueil</button>
                     <button className="sotc-btn sotc-btn-danger" onClick={undo}>↩ Undo</button>
-                    <button className="sotc-btn" onClick={startNewGame}>＋ New Game</button>
                 </div>
             </header>
 
