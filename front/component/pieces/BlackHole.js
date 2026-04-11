@@ -18,7 +18,7 @@ export const BlackHole = ({ squareWidth }) => {
     injectStyles();
     return (
         <img
-            src={require('../../assets/images/effects/BlackHoleEffect.png')}
+            src={require('../../assets/images/effects/BlackHoleEffect.svg')}
             alt="BlackHole"
             style={{
                 width: squareWidth,

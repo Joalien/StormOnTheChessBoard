@@ -89,6 +89,11 @@ public class GamePresets {
 
             // Neutral piece (bishop on e6 made neutral via NeutralityCard effect)
             board.at(e6).getPiece().orElseThrow().setColor(Color.NONE);
+            board.at(a5).getPiece().orElseThrow().setColor(Color.NONE);
+            board.at(c3).getPiece().orElseThrow().setColor(Color.NONE);
+//            board.at(d4).getPiece().orElseThrow().setColor(Color.NONE);
+            board.at(b7).getPiece().orElseThrow().setColor(Color.NONE);
+            board.at(h1).getPiece().orElseThrow().setColor(Color.NONE);
 
             // === Persistent Effects ===
 

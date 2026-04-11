@@ -22,7 +22,7 @@ export const ManHoleEffect = {
     applyStyle: () => {
         injectStyles();
         return {
-            backgroundImage: `url(${require('../../assets/images/effects/ManHoleEffect.png')})`,
+            backgroundImage: `url(${require('../../assets/images/effects/ManHoleEffect.svg')})`,
             backgroundSize: 'cover',
             animation: 'float 2s ease-in-out infinite'
         };

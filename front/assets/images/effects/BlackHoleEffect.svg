@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <defs>
+    <radialGradient id="bh1" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#0d0800"/>
+      <stop offset="40%" stop-color="#1a0a00" stop-opacity="0.9"/>
+      <stop offset="70%" stop-color="#E65100" stop-opacity="0.3"/>
+      <stop offset="100%" stop-color="#FFB300" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <!-- Outer halo -->
+  <circle cx="50" cy="50" r="46" fill="none" stroke="#FFB300" stroke-width="1.5" opacity="0.25"/>
+  <circle cx="50" cy="50" r="40" fill="none" stroke="#FF8F00" stroke-width="1" opacity="0.2"/>
+  <!-- Swirl arms -->
+  <path d="M50,50 Q65,30 80,35 Q70,15 50,20" fill="none" stroke="#E65100" stroke-width="3" stroke-linecap="round" opacity="0.6"/>
+  <path d="M50,50 Q35,70 20,65 Q30,85 50,80" fill="none" stroke="#E65100" stroke-width="3" stroke-linecap="round" opacity="0.6"/>
+  <path d="M50,50 Q70,65 65,80 Q85,70 80,50" fill="none" stroke="#BF360C" stroke-width="2.5" stroke-linecap="round" opacity="0.5"/>
+  <path d="M50,50 Q30,35 35,20 Q15,30 20,50" fill="none" stroke="#BF360C" stroke-width="2.5" stroke-linecap="round" opacity="0.5"/>
+  <!-- Core -->
+  <circle cx="50" cy="50" r="18" fill="url(#bh1)"/>
+  <circle cx="50" cy="50" r="10" fill="#0d0800"/>
+  <!-- Orange ring -->
+  <circle cx="50" cy="50" r="14" fill="none" stroke="#FF8F00" stroke-width="1.5" opacity="0.5"/>
+  <!-- Sparkle accents -->
+  <circle cx="78" cy="32" r="2" fill="#FFD740" opacity="0.6"/>
+  <circle cx="22" cy="68" r="2" fill="#FFD740" opacity="0.6"/>
+  <circle cx="72" cy="74" r="1.5" fill="#FFB300" opacity="0.5"/>
+  <circle cx="28" cy="26" r="1.5" fill="#FFB300" opacity="0.5"/>
+</svg>

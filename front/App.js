@@ -341,18 +341,7 @@ export default function App() {
     const customPieces = loadCustomPieces();
 
     function customSquares() {
-        const squares = {};
-        const loadEffect = require.context('./component/effects', false, /\.js$/);
-        effects.forEach(effect => {
-            const effectFileName = `./${effect.name}.js`;
-            if (loadEffect.keys().includes(effectFileName)) {
-                const effectConfig = Object.values(loadEffect(effectFileName))[0];
-                effect.positions.forEach(position => {
-                    squares[position] = effectConfig.applyStyle(position);
-                });
-            }
-        });
-        return squares;
+        return {};
     }
 
     useEffect(() => {
@@ -913,12 +902,34 @@ export default function App() {
                             <svg key={`barricade-${idx}`} style={{position: 'absolute', top: 0, left: 0, width: boardSize, height: boardSize, pointerEvents: 'none', zIndex: 5}}>
                                 {barricadeLines(effect, boardSize, currentPlayerColor).map((line, i) => (
                                     <g key={i}>
-                                        <line x1={line.x1} y1={line.y1} x2={line.x2} y2={line.y2} stroke="#8B4513" strokeWidth={8} strokeLinecap="round" />
-                                        <line x1={line.x1} y1={line.y1} x2={line.x2} y2={line.y2} stroke="#D2691E" strokeWidth={4} strokeLinecap="round" />
+                                        <line x1={line.x1} y1={line.y1} x2={line.x2} y2={line.y2} stroke="#BF360C" strokeWidth={8} strokeLinecap="round" />
+                                        <line x1={line.x1} y1={line.y1} x2={line.x2} y2={line.y2} stroke="#FFB300" strokeWidth={4} strokeLinecap="round" />
                                     </g>
                                 ))}
                             </svg>
                         ))}
+                        {/* Effect overlays (rendered above pieces) */}
+                        {effects.filter(e => e.name !== 'BarricadeEffect' && e.positions && e.positions.length > 0).map((effect, idx) => {
+                            const loadEffect = require.context('./component/effects', false, /\.js$/);
+                            const effectFileName = `./${effect.name}.js`;
+                            if (!loadEffect.keys().includes(effectFileName)) return null;
+                            const effectConfig = Object.values(loadEffect(effectFileName))[0];
+                            const sqSize = boardSize / 8;
+                            return effect.positions.map((pos, pi) => {
+                                const {x, y} = squareToCoords(pos, currentPlayerColor);
+                                const style = effectConfig.applyStyle(pos);
+                                return (
+                                    <div key={`eff-${idx}-${pi}`} style={{
+                                        position: 'absolute',
+                                        left: x, top: y,
+                                        width: sqSize, height: sqSize,
+                                        pointerEvents: 'none',
+                                        zIndex: 5,
+                                        ...style,
+                                    }}/>
+                                );
+                            });
+                        })}
                         {/* Crown overlay on non-King checkmate targets */}
                         {checkMateTargets.length > 0 && (
                             <svg style={{position: 'absolute', top: 0, left: 0, width: boardSize, height: boardSize, pointerEvents: 'none', zIndex: 6}}>

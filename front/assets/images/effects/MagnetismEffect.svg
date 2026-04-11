@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <!-- 4 magnet emojis in corners, all pointing outward from center -->
+  <text x="12" y="22" font-size="18" text-anchor="middle" transform="rotate(-135, 12, 16)">🧲</text>
+  <text x="88" y="22" font-size="18" text-anchor="middle" transform="rotate(-45, 88, 16)">🧲</text>
+  <text x="12" y="90" font-size="18" text-anchor="middle" transform="rotate(135, 12, 84)">🧲</text>
+  <text x="88" y="90" font-size="18" text-anchor="middle" transform="rotate(45, 88, 84)">🧲</text>
+  <!-- Sparkles between magnets -->
+  <circle cx="50" cy="5" r="2.5" fill="#FFD740" opacity="0.8"/>
+  <circle cx="50" cy="95" r="2.5" fill="#FFD740" opacity="0.8"/>
+  <circle cx="5" cy="50" r="2.5" fill="#FFB300" opacity="0.8"/>
+  <circle cx="95" cy="50" r="2.5" fill="#FFB300" opacity="0.8"/>
+</svg>
