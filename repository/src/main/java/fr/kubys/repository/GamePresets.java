@@ -60,7 +60,7 @@ public class GamePresets {
             board.add(new Queen(Color.WHITE), d2);
             board.add(new Rock(Color.WHITE), d1);
             board.add(new Rock(Color.WHITE), h1);
-            board.add(new Kangaroo(Color.WHITE), d4);
+            board.add(new Kangaroo(Color.WHITE), c7);
             board.add(new Knight(Color.WHITE), c3);
             board.add(new Bishop(Color.WHITE), e3);
             board.add(new Pawn(Color.WHITE), a2);
@@ -91,9 +91,10 @@ public class GamePresets {
             board.at(e6).getPiece().orElseThrow().setColor(Color.NONE);
             board.at(a5).getPiece().orElseThrow().setColor(Color.NONE);
             board.at(c3).getPiece().orElseThrow().setColor(Color.NONE);
-//            board.at(d4).getPiece().orElseThrow().setColor(Color.NONE);
+            board.at(c7).getPiece().orElseThrow().setColor(Color.NONE);
             board.at(b7).getPiece().orElseThrow().setColor(Color.NONE);
             board.at(h1).getPiece().orElseThrow().setColor(Color.NONE);
+            board.at(g6).getPiece().orElseThrow().setColor(Color.NONE);
 
             // === Persistent Effects ===
 
