@@ -25,6 +25,19 @@ const globalCSS = `
 
   *, *::before, *::after { box-sizing: border-box; }
 
+  @keyframes magnetPulse {
+    0%, 100% { transform: scale(1); opacity: 0.9; }
+    50% { transform: scale(1.04); opacity: 1; }
+  }
+  @keyframes magN  { 0%,100%{ transform:translateY(0); } 50%{ transform:translateY(-6px); } }
+  @keyframes magS  { 0%,100%{ transform:translateY(0); } 50%{ transform:translateY(6px); } }
+  @keyframes magE  { 0%,100%{ transform:translateX(0); } 50%{ transform:translateX(6px); } }
+  @keyframes magW  { 0%,100%{ transform:translateX(0); } 50%{ transform:translateX(-6px); } }
+  @keyframes magNE { 0%,100%{ transform:translate(0,0); } 50%{ transform:translate(4px,-4px); } }
+  @keyframes magNW { 0%,100%{ transform:translate(0,0); } 50%{ transform:translate(-4px,-4px); } }
+  @keyframes magSE { 0%,100%{ transform:translate(0,0); } 50%{ transform:translate(4px,4px); } }
+  @keyframes magSW { 0%,100%{ transform:translate(0,0); } 50%{ transform:translate(-4px,4px); } }
+
   html, body, #root {
     margin: 0;
     padding: 0;
@@ -341,7 +354,30 @@ export default function App() {
     const customPieces = loadCustomPieces();
 
     function customSquares() {
-        return {};
+        const squares = {};
+        const white = (myColor || currentPlayerColor) === 'white';
+        effects.filter(e => e.name === 'MagnetismEffect').forEach(effect => {
+            effect.positions.forEach(pos => {
+                const file = pos.charCodeAt(0) - 97;
+                const rank = parseInt(pos[1]) - 1;
+                const deltas = [[-1,1],[0,1],[1,1],[-1,0],[1,0],[-1,-1],[0,-1],[1,-1]];
+                deltas.forEach(([df, dr]) => {
+                    const nf = file + df, nr = rank + dr;
+                    if (nf < 0 || nf > 7 || nr < 0 || nr > 7) return;
+                    const adjSq = String.fromCharCode(97 + nf) + (nr + 1);
+                    if (!game[adjSq]) return;
+                    const vdx = white ? -df : df;
+                    const vdy = white ? dr : -dr;
+                    const animMap = {
+                        '0,-1': 'magN', '0,1': 'magS', '1,0': 'magE', '-1,0': 'magW',
+                        '1,-1': 'magNE', '-1,-1': 'magNW', '1,1': 'magSE', '-1,1': 'magSW',
+                    };
+                    const anim = animMap[`${vdx},${vdy}`] || '';
+                    squares[adjSq] = { animation: `${anim} 4s ease-in-out infinite` };
+                });
+            });
+        });
+        return squares;
     }
 
     useEffect(() => {
@@ -908,8 +944,63 @@ export default function App() {
                                 ))}
                             </svg>
                         ))}
-                        {/* Effect overlays (rendered above pieces) */}
-                        {effects.filter(e => e.name !== 'BarricadeEffect' && e.positions && e.positions.length > 0).map((effect, idx) => {
+                        {/* Magnetism: center magnets + adjacent pulse overlay */}
+                        {effects.filter(e => e.name === 'MagnetismEffect' && e.positions && e.positions.length > 0).map((effect, idx) => {
+                            const sqSize = boardSize / 8;
+                            const orientation = myColor || currentPlayerColor;
+                            const white = orientation === 'white';
+                            const elements = [];
+                            effect.positions.forEach((pos, pi) => {
+                                const {x: cx, y: cy} = squareToCoords(pos, orientation);
+                                const magSize = sqSize * 0.16;
+                                const magStyle = { position: 'absolute', fontSize: magSize, lineHeight: 1 };
+                                elements.push(
+                                    <div key={`mag-center-${idx}-${pi}`} style={{
+                                        position: 'absolute',
+                                        left: cx, top: cy,
+                                        width: sqSize, height: sqSize,
+                                        pointerEvents: 'none',
+                                        zIndex: 6,
+                                        animation: 'magnetPulse 4s ease-in-out infinite',
+                                    }}>
+                                        <span style={{ ...magStyle, top: 2, left: 2, transform: 'rotate(-135deg)' }}>🧲</span>
+                                        <span style={{ ...magStyle, top: 2, right: 2, transform: 'rotate(-45deg)' }}>🧲</span>
+                                        <span style={{ ...magStyle, bottom: 2, left: 2, transform: 'rotate(135deg)' }}>🧲</span>
+                                        <span style={{ ...magStyle, bottom: 2, right: 2, transform: 'rotate(45deg)' }}>🧲</span>
+                                    </div>
+                                );
+                                const file = pos.charCodeAt(0) - 97;
+                                const rank = parseInt(pos[1]) - 1;
+                                const deltas = [[-1,-1],[-1,0],[-1,1],[0,-1],[0,1],[1,-1],[1,0],[1,1]];
+                                deltas.forEach(([df, dr], di) => {
+                                    const nf = file + df, nr = rank + dr;
+                                    if (nf < 0 || nf > 7 || nr < 0 || nr > 7) return;
+                                    const adjSq = String.fromCharCode(97 + nf) + (nr + 1);
+                                    if (!game[adjSq]) return;
+                                    const {x: ax, y: ay} = squareToCoords(adjSq, orientation);
+                                    const vdx = white ? -df : df;
+                                    const vdy = white ? dr : -dr;
+                                    const animMap = {
+                                        '0,-1': 'magN', '0,1': 'magS', '1,0': 'magE', '-1,0': 'magW',
+                                        '1,-1': 'magNE', '-1,-1': 'magNW', '1,1': 'magSE', '-1,1': 'magSW',
+                                    };
+                                    const anim = animMap[`${vdx},${vdy}`] || '';
+                                    elements.push(
+                                        <div key={`mag-adj-${idx}-${pi}-${di}`} style={{
+                                            position: 'absolute',
+                                            left: ax, top: ay,
+                                            width: sqSize, height: sqSize,
+                                            pointerEvents: 'none',
+                                            zIndex: 4,
+                                            animation: `${anim} 4s ease-in-out infinite`,
+                                        }}/>
+                                    );
+                                });
+                            });
+                            return elements;
+                        })}
+                        {/* Other effect overlays (rendered above pieces) */}
+                        {effects.filter(e => e.name !== 'BarricadeEffect' && e.name !== 'MagnetismEffect' && e.positions && e.positions.length > 0).map((effect, idx) => {
                             const loadEffect = require.context('./component/effects', false, /\.js$/);
                             const effectFileName = `./${effect.name}.js`;
                             if (!loadEffect.keys().includes(effectFileName)) return null;
