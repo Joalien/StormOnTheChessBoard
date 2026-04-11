@@ -10,7 +10,8 @@ setup:
 deploy:
 	ssh $(REMOTE_USER)@$(REMOTE_HOST) "\
 		cd $(REMOTE_DIR) \
-		&& git pull origin master \
+		&& git fetch origin master \
+		&& git reset --hard origin/master \
 		&& $(COMPOSE_PROD) up --build -d"
 
 logs:

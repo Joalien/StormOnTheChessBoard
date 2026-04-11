@@ -61,7 +61,7 @@ Ce script idempotent se connecte au Pi en SSH et :
 make deploy
 ```
 
-Fait un `git pull origin master` sur le Pi puis `docker compose up --build -d`.
+Fait un `git fetch origin master && git reset --hard origin/master` sur le Pi puis `docker compose up --build -d`.
 Idempotent : relancer ne casse rien, seul ce qui a change est reconstruit.
 
 ### Autres commandes
