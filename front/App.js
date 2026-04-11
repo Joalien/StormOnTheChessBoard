@@ -325,9 +325,13 @@ export default function App() {
                 e.preventDefault();
                 endTurn();
             }
+            if (e.key === 'z' && (e.ctrlKey || e.metaKey) && gameId !== null) {
+                e.preventDefault();
+                undo();
+            }
         }
-        window.addEventListener('keydown', onKeyDown);
-        return () => window.removeEventListener('keydown', onKeyDown);
+        window.addEventListener('keydown', onKeyDown, true);
+        return () => window.removeEventListener('keydown', onKeyDown, true);
     }, [gameId]);
 
     function startNewGame() {
