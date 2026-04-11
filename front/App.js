@@ -698,15 +698,22 @@ export default function App() {
     const legalMoveCapture = {
         background: "radial-gradient(circle, transparent 80%, rgba(0,0,0,0.25) 80%)",
     };
+    const effectHighlight = { boxShadow: 'rgba(255,143,0,0.6) 0px 0px 20px 0px inset' };
+    const selectedEffectPositions = selectedCard && selectedCard.isEffect
+        ? effects
+            .filter(e => e.cardEnglishName === selectedCard.englishName && e.positions)
+            .flatMap(e => e.positions)
+        : [];
     const customSquareStyles = {
         ...customSquares(),
-        ...(selectedCard
+        ...(selectedCard && !selectedCard.isEffect
             ? Object.values(selectedCard.param || {}).reduce((obj, square) => {
                 if (square) obj[square] = highlight;
                 return obj;
             }, {})
             : {}
         ),
+        ...selectedEffectPositions.reduce((obj, sq) => { obj[sq] = effectHighlight; return obj; }, {}),
         ...pendingPromotions.reduce((obj, sq) => { obj[sq] = promotionHighlight; return obj; }, {}),
         ...legalMoves.reduce((obj, sq) => { obj[sq] = game[sq] ? legalMoveCapture : legalMoveDot; return obj; }, {}),
     };
