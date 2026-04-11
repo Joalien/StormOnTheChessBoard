@@ -48,7 +48,7 @@ export function Player({player, hiddenCards, showCard, color, selectedCard, play
                             key={index}
                             hidden={hiddenCards}
                             name={card.englishName}
-                            showCard={() => isPlayable ? showCard(card) : null}
+                            showCard={() => showCard(card)}
                             isSelected={!hiddenCards && selectedCard && selectedCard.englishName === card.englishName}
                             isPlayable={isPlayable}
                         />

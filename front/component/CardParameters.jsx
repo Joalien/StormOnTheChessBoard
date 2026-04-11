@@ -65,7 +65,7 @@ function BarricadeParams({card, selectedParam, setSelectedParam, barricadeEdges,
     })}</>);
 }
 
-export function CardParameters({card, selectedParam, setSelectedParam, playCardCallback, barricadeEdges, setBarricadeEdges}) {
+export function CardParameters({card, selectedParam, setSelectedParam, playCardCallback, barricadeEdges, setBarricadeEdges, isPlayable = true}) {
     const hasImage = card.englishName in cardImages;
     const paramKeys = Object.keys(card.param || {});
     const allParamsSet = !Object.values(card.param || {}).some(x => x === null);
@@ -114,7 +114,7 @@ export function CardParameters({card, selectedParam, setSelectedParam, playCardC
             )}
 
             {/* Parameters */}
-            {paramKeys.length > 0 && (
+            {isPlayable && paramKeys.length > 0 && (
                 <div>
                     <p style={{
                         fontSize: '10px',
@@ -171,14 +171,21 @@ export function CardParameters({card, selectedParam, setSelectedParam, playCardC
             )}
 
             {/* Play button */}
-            <button
-                className="sotc-btn sotc-btn-gold"
-                style={{width: '100%', padding: '13px', fontSize: '14px'}}
-                onClick={playCardCallback}
-                disabled={!allParamsSet}
-            >
-                {allParamsSet ? '▶ Play Card' : 'Set all parameters first'}
-            </button>
+            {isPlayable && (
+                <button
+                    className="sotc-btn sotc-btn-gold"
+                    style={{width: '100%', padding: '13px', fontSize: '14px'}}
+                    onClick={playCardCallback}
+                    disabled={!allParamsSet}
+                >
+                    {allParamsSet ? '▶ Play Card' : 'Set all parameters first'}
+                </button>
+            )}
+            {!isPlayable && (
+                <p style={{fontSize: '11px', color: '#484f58', textAlign: 'center', margin: 0, fontStyle: 'italic'}}>
+                    This card cannot be played right now
+                </p>
+            )}
         </div>
     );
 }

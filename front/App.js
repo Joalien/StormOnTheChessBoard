@@ -435,6 +435,10 @@ export default function App() {
         fetch(backendOrigin + '/matchmaking/join', {method: 'POST'})
             .then(res => res.json())
             .then(data => {
+                if (data.status === 'matched') {
+                    navigateToGame(data.gameId, data.color);
+                    return;
+                }
                 matchmakingTokenRef.current = data.token;
                 const ws = new WebSocket(wsOrigin + '/ws/matchmaking/' + data.token);
                 matchmakingPollRef.current = ws;
@@ -626,8 +630,12 @@ export default function App() {
         setSelectedParam(firstUnsetParam(updated));
     }
 
+    function isSelectedCardPlayable() {
+        return selectedCard && playableCardTypes(currentState, false).includes(selectedCard.type);
+    }
+
     function onSquareRightClick(square) {
-        if (selectedCard && selectedParam && !isBarricadeCard(selectedCard)) {
+        if (selectedCard && selectedParam && isSelectedCardPlayable() && !isBarricadeCard(selectedCard)) {
             const newParam = {...selectedCard.param};
             if (newParam[selectedParam] === square) newParam[selectedParam] = null;
             else newParam[selectedParam] = square;
@@ -638,7 +646,7 @@ export default function App() {
     }
 
     function onCapturedPieceClick(index) {
-        if (selectedCard && selectedParam && !isBarricadeCard(selectedCard)) {
+        if (selectedCard && selectedParam && isSelectedCardPlayable() && !isBarricadeCard(selectedCard)) {
             const value = "captured:" + index;
             const newParam = {...selectedCard.param};
             if (newParam[selectedParam] === value) newParam[selectedParam] = null;
@@ -763,6 +771,7 @@ export default function App() {
                             playCardCallback={playCard}
                             barricadeEdges={barricadeEdges}
                             setBarricadeEdges={setBarricadeEdges}
+                            isPlayable={playableCardTypes(currentState, false).includes(selectedCard.type)}
                         />
                     ) : (
                         <div className="sotc-panel" style={{padding: '28px 20px', textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px'}}>
@@ -857,7 +866,7 @@ export default function App() {
                                 onPieceDragBegin={onPieceDragBegin}
                                 onPieceDragEnd={onPieceDragEnd}
                                 position={game}
-                                arePiecesDraggable={selectedCard === null && pendingPromotions.length === 0 && isMyTurn}
+                                arePiecesDraggable={pendingPromotions.length === 0 && isMyTurn}
                                 boardOrientation={myColor || currentPlayerColor}
                                 onSquareRightClick={onSquareRightClick}
                                 onSquareClick={onSquareClick}
@@ -868,7 +877,7 @@ export default function App() {
                             />
                         </div>
                         {/* Barricade selection overlay (interactive, when selecting edges) */}
-                        {isBarricadeCard(selectedCard) && barricadeEdges.length < 2 && (
+                        {isBarricadeCard(selectedCard) && isSelectedCardPlayable() && barricadeEdges.length < 2 && (
                             <BarricadeSelectionOverlay
                                 orientation={currentPlayerColor}
                                 selectedEdges={barricadeEdges}
