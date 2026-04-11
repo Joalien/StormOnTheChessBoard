@@ -73,6 +73,18 @@ class NeutralityCardTest {
         }
 
         @Test
+        void should_promote_neutralized_pawn_on_back_rank() {
+            Pawn pawn = new Pawn(Color.BLACK);
+            board.add(pawn, a8);
+
+            card.playOn(board, new PieceCardParam(pawn));
+
+            Piece piece = board.at(a8).getPiece().get();
+            assertInstanceOf(Queen.class, piece);
+            assertEquals(Color.NONE, piece.getColor());
+        }
+
+        @Test
         void should_reject_king() {
             // Can't neutralize: king is already on the board from setUp
             King blackKing = (King) board.at(e8).getPiece().get();

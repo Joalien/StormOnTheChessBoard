@@ -5,7 +5,6 @@ import fr.kubys.board.effect.PieceTransformationEffect;
 import fr.kubys.card.params.PieceCardParam;
 import fr.kubys.core.Color;
 import fr.kubys.piece.King;
-import fr.kubys.piece.Pawn;
 import fr.kubys.piece.Piece;
 import fr.kubys.piece.Queen;
 
@@ -44,16 +43,12 @@ public class NeutralityCard extends Card<PieceCardParam> implements Effectable<P
 
     @Override
     protected void doAction(ChessBoard chessBoard, PieceCardParam param) {
-        Piece affectedPiece;
-        if (param.piece() instanceof Pawn) {
-            var position = param.piece().getPosition();
-            chessBoard.removePieceFromTheBoard(param.piece());
-            affectedPiece = new Pawn(Color.NONE);
-            chessBoard.add(affectedPiece, position);
-        } else {
-            param.piece().setColor(Color.NONE);
-            affectedPiece = param.piece();
-        }
-        chessBoard.addEffect(new PieceTransformationEffect("Neutralité", affectedPiece));
+        var position = param.piece().getPosition();
+        // Remove and re-add the piece so that ChessBoard.add() triggers promotion check
+        // (a neutral pawn on row 1 or 8 must be promoted)
+        chessBoard.removePieceFromTheBoard(param.piece());
+        param.piece().setColor(Color.NONE);
+        chessBoard.add(param.piece(), position);
+        chessBoard.addEffect(new PieceTransformationEffect("Neutralité", param.piece()));
     }
 }
