@@ -7,7 +7,7 @@ import fr.kubys.card.params.PositionCardParam;
 public class BlackHoleCard extends Card<PositionCardParam> {
 
     public BlackHoleCard() {
-        super("Trou noir", "Désignez une case vide qui est \"retirée\" de l'échiquier juqu'à la fin de la partie. Il sera impossible pendant la suite du jeu de s'y arrêter ou de la traverser.", CardType.AFTER_TURN, PositionCardParam.class);
+        super("Trou noir", "Désignez une case vide qui est \"retirée\" de l'échiquier juqu'à la fin de la partie. Il sera impossible pendant la suite du jeu de s'y arrêter ou de la traverser.", CardType.AFTER_TURN, PositionCardParam.class, true);
     }
 
     @Override

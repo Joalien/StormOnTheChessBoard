@@ -9,7 +9,7 @@ public class BarricadeCard extends Card<BarricadeCardParam> {
     public BarricadeCard() {
         super("Barricade",
                 "Placez une barrière de deux cases de long, rectiligne ou à angle droit, entre n'importe quelles cases de l'échiquier. Cette barrière ne peut être franchie par aucune pièce, excepté les cavaliers ou toute pièce ayant acquis la capacité de sauter d'une manière similaire.",
-                CardType.AFTER_TURN, BarricadeCardParam.class);
+                CardType.AFTER_TURN, BarricadeCardParam.class, true);
     }
 
     @Override

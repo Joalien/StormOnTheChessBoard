@@ -13,7 +13,7 @@ public class NeutralityCard extends Card<PieceCardParam> {
         super("Neutralité",
                 "Transformez une pièce adverse (sauf Roi ou Dame) en pièce neutre. Une pièce neutre peut être utilisée par les deux joueurs et peut prendre des pièces appartenant aux deux joueurs.",
                 CardType.AFTER_TURN,
-                PieceCardParam.class);
+                PieceCardParam.class, true);
     }
 
     @Override

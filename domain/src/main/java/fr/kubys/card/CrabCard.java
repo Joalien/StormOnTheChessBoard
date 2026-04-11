@@ -11,7 +11,7 @@ public class CrabCard extends Card<PieceCardParam> {
         super("Crabe",
                 "Transformez l'un de vos Pions en Crabe, et ce définitivement. Le Crabe se déplace en diagonale, comme un Fou, mais d'une case seulement, en avançant ou en reculant. Parvenu sur la dernière rangée, il est promu comme un pion ordinaire.",
                 CardType.AFTER_TURN,
-                PieceCardParam.class);
+                PieceCardParam.class, true);
     }
 
     @Override

@@ -10,7 +10,7 @@ import java.util.Optional;
 public class ManHoleCard extends Card<ManHoleCardParam> {
 
     public ManHoleCard() {
-        super("Bouche d'égout", "Placez des bouches d'égout sur deux cases de l'échiquier. Une pièce se trouvant sur une bouche d'égout peut désormais se rendre sur n'importe quelle autre bouche d'égout, occupée ou non", CardType.AFTER_TURN, ManHoleCardParam.class);
+        super("Bouche d'égout", "Placez des bouches d'égout sur deux cases de l'échiquier. Une pièce se trouvant sur une bouche d'égout peut désormais se rendre sur n'importe quelle autre bouche d'égout, occupée ou non", CardType.AFTER_TURN, ManHoleCardParam.class, true);
     }
 
     @Override

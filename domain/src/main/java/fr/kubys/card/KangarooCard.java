@@ -8,7 +8,7 @@ import fr.kubys.piece.extra.Kangaroo;
 public class KangarooCard extends Card<KnightCardParam> {
 
     public KangarooCard() {
-        super("Kangourou", "Transformez définitivement l'un de vos cavaliers, ou un cavalier adverse en kangourou. Le kangourou se déplace en faisant deux sauts de cavalier consécutifs.", CardType.AFTER_TURN, KnightCardParam.class);
+        super("Kangourou", "Transformez définitivement l'un de vos cavaliers, ou un cavalier adverse en kangourou. Le kangourou se déplace en faisant deux sauts de cavalier consécutifs.", CardType.AFTER_TURN, KnightCardParam.class, true);
     }
 
     @Override
