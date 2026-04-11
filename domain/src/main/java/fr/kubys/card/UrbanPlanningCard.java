@@ -16,7 +16,7 @@ public class UrbanPlanningCard extends Card<TwoPieceCardParam> {
 
     @Override
     protected void validInput(ChessBoard chessBoard, TwoPieceCardParam param) {
-        if (param.piece1() == null || param.piece2() == null) throw new IllegalStateException();
+        if (param.piece1() == null || param.piece2() == null) throw new IllegalStateException("Missing required card parameter");
         if (param.piece1() == param.piece2()) throw new IllegalArgumentException("Pieces must be different");
         if (chessBoard.getOutOfTheBoardPieces().contains(param.piece1()))
             throw new IllegalArgumentException("%s should be on the board".formatted(param.piece1()));

@@ -1,7 +1,9 @@
 package fr.kubys.controller;
 
+import fr.kubys.board.CannotTakeKingException;
 import fr.kubys.board.CheckException;
 import fr.kubys.board.IllegalMoveException;
+import fr.kubys.board.effect.MagnetismException;
 import fr.kubys.card.CardNotFoundException;
 import fr.kubys.card.params.CardParamException;
 import fr.kubys.mapper.MappingException;
@@ -22,7 +24,7 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
         return handleExceptionInternal(e, e.getMessage(), new HttpHeaders(), HttpStatus.NOT_FOUND, request);
     }
 
-    @ExceptionHandler({CardNotFoundException.class, IllegalStateException.class, MappingException.class, IllegalArgumentException.class, IllegalMoveException.class, CardParamException.class, CheckException.class})
+    @ExceptionHandler({CardNotFoundException.class, IllegalStateException.class, MappingException.class, IllegalArgumentException.class, IllegalMoveException.class, CardParamException.class, CheckException.class, CannotTakeKingException.class, MagnetismException.class})
     protected ResponseEntity<Object> handleBadRequestException(Exception e, WebRequest request) {
         return createResponseEntity(e.getMessage(), new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
     }

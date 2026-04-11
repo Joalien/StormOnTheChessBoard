@@ -15,7 +15,7 @@ public class BarricadeCard extends Card<BarricadeCardParam> {
     @Override
     protected void validInput(ChessBoard chessBoard, BarricadeCardParam param) {
         if (param.from1() == null || param.to1() == null || param.from2() == null || param.to2() == null)
-            throw new IllegalStateException();
+            throw new IllegalStateException("Missing required card parameter");
         if (!BarricadeEffect.areOrthogonallyAdjacent(param.from1(), param.to1()))
             throw new IllegalArgumentException("Edge 1: positions must be orthogonally adjacent");
         if (!BarricadeEffect.areOrthogonallyAdjacent(param.from2(), param.to2()))

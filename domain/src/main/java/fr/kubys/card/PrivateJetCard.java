@@ -15,7 +15,7 @@ public class PrivateJetCard extends Card<PositionCardParam> {
 
     @Override
     protected void validInput(ChessBoard chessBoard, PositionCardParam param) {
-        if (param.position() == null) throw new IllegalStateException();
+        if (param.position() == null) throw new IllegalStateException("Missing required card parameter");
         if (chessBoard.at(param.position()).getPiece().isPresent())
             throw new IllegalArgumentException("Target square must be empty");
         if (chessBoard.getEffects().stream().anyMatch(e -> e.blocksPosition(param.position())))

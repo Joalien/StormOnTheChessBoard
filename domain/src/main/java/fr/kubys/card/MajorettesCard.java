@@ -16,7 +16,7 @@ public class MajorettesCard extends Card<TwoPieceCardParam> {
 
     @Override
     protected void validInput(ChessBoard chessBoard, TwoPieceCardParam param) {
-        if (param.piece1() == null || param.piece2() == null) throw new IllegalStateException();
+        if (param.piece1() == null || param.piece2() == null) throw new IllegalStateException("Missing required card parameter");
         if (param.piece1() == param.piece2()) throw new IllegalArgumentException("Must select two different pawns");
         if (!(param.piece1() instanceof Pawn) || !(param.piece2() instanceof Pawn))
             throw new IllegalArgumentException("Both pieces must be Pawns");

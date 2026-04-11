@@ -13,8 +13,8 @@ public class CourtlyLoveCard extends Card<CourtlyLoveCardParam> {
 
     @Override
     protected void validInput(ChessBoard chessBoard, CourtlyLoveCardParam param) {
-        if (param.knight() == null) throw new IllegalStateException();
-        if (param.positionToMoveOn() == null) throw new IllegalStateException();
+        if (param.knight() == null) throw new IllegalStateException("Missing required card parameter");
+        if (param.positionToMoveOn() == null) throw new IllegalStateException("Missing required card parameter");
         if (param.knight().getColor().cannotBeMovedBy(chessBoard.getCurrentTurn())) throw new CannotMoveThisColorException(param.knight().getColor());
         boolean isNearbyQueen = chessBoard.allyPieces(param.knight().getColor()).stream()
                 .filter(Queen.class::isInstance)

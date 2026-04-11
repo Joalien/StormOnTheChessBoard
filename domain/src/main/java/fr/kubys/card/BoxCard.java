@@ -17,7 +17,7 @@ public class BoxCard extends Card<TwoPieceCardParam> {
 
     @Override
     protected void validInput(ChessBoard chessBoard, TwoPieceCardParam param) {
-        if (param.piece1() == null || param.piece2() == null) throw new IllegalStateException();
+        if (param.piece1() == null || param.piece2() == null) throw new IllegalStateException("Missing required card parameter");
         if (param.piece1().getColor() == chessBoard.getCurrentTurn())
             throw new CannotMoveThisColorException(param.piece1().getColor());
         if (param.piece2().getColor() == chessBoard.getCurrentTurn())

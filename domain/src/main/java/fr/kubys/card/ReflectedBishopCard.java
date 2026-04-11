@@ -21,8 +21,8 @@ public class ReflectedBishopCard extends Card<ReflectedBishopCardParam> {
 
     @Override
     protected void validInput(ChessBoard chessBoard, ReflectedBishopCardParam param) {
-        if (param.bishop() == null) throw new IllegalStateException();
-        if (param.positionToMoveOn() == null) throw new IllegalStateException();
+        if (param.bishop() == null) throw new IllegalStateException("Missing required card parameter");
+        if (param.positionToMoveOn() == null) throw new IllegalStateException("Missing required card parameter");
 
         Set<Position> reachablePositions = new HashSet<>(chessBoard.getAllAttackablePosition(param.bishop()));
 

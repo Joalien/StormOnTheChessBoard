@@ -12,8 +12,8 @@ public class CavalcadeCard extends Card<PieceToPositionCardParam> {
 
     @Override
     protected void validInput(ChessBoard chessBoard, PieceToPositionCardParam param) {
-        if (param.piece() == null) throw new IllegalStateException();
-        if (param.positionToMoveOn() == null) throw new IllegalStateException();
+        if (param.piece() == null) throw new IllegalStateException("Missing required card parameter");
+        if (param.positionToMoveOn() == null) throw new IllegalStateException("Missing required card parameter");
         if (param.piece().getColor().cannotBeMovedBy(chessBoard.getCurrentTurn()))
             throw new CannotMoveThisColorException(param.piece().getColor());
 

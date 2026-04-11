@@ -18,7 +18,7 @@ public class YouOnlyLiveTwiceCard extends Card<PieceToPositionCardParam> {
 
     @Override
     protected void validInput(ChessBoard chessBoard, PieceToPositionCardParam param) {
-        if (param.piece() == null || param.positionToMoveOn() == null) throw new IllegalStateException();
+        if (param.piece() == null || param.positionToMoveOn() == null) throw new IllegalStateException("Missing required card parameter");
         if (!chessBoard.getOutOfTheBoardPieces().contains(param.piece()))
             throw new IllegalArgumentException("Piece must have been captured");
         if (param.piece().getColor().cannotBeMovedBy(chessBoard.getCurrentTurn()))

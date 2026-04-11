@@ -9,6 +9,7 @@ import fr.kubys.card.CardType;
 import fr.kubys.card.params.CardParam;
 import fr.kubys.core.Color;
 import fr.kubys.core.Position;
+import fr.kubys.game.exception.InvalidGameActionException;
 import fr.kubys.piece.Piece;
 import fr.kubys.piece.PromotionPiece;
 import fr.kubys.player.Player;
@@ -53,7 +54,7 @@ public class GameStateController implements ChessBoardService {
 
     private void startWith(ChessBoard board, long seed) {
         if (this.chessBoard != null)
-            throw new IllegalStateException("Game has already started!");
+            throw new InvalidGameActionException("Game has already started!");
 
         this.chessBoard = board;
         white = new Player("Name1", Color.WHITE);
@@ -73,7 +74,7 @@ public class GameStateController implements ChessBoardService {
         Optional<Piece> pieceToMove = chessBoard.at(from).getPiece();
         if (pieceToMove.isEmpty()) throw new IllegalArgumentException("There is no piece on %s".formatted(from));
         if (pieceToMove.get().getColor().cannotBeMovedBy(getCurrentPlayer().getColor()))
-            throw new IllegalStateException("%s player cannot move %s piece".formatted(getCurrentPlayer().getColor(), pieceToMove.get().getColor()));
+            throw new InvalidGameActionException("%s player cannot move %s piece".formatted(getCurrentPlayer().getColor(), pieceToMove.get().getColor()));
 
         currentState.getState().tryToMove(this, from, to);
     }
@@ -125,7 +126,7 @@ public class GameStateController implements ChessBoardService {
     }
 
     private void assertGameHasAlreadyStarted() {
-        if (chessBoard == null) throw new IllegalStateException("Game has not started yet!");
+        if (chessBoard == null) throw new InvalidGameActionException("Game has not started yet!");
     }
 
     @Override

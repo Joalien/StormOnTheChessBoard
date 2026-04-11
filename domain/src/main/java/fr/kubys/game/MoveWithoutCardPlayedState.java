@@ -5,6 +5,7 @@ import fr.kubys.card.CardType;
 import fr.kubys.card.params.CardParam;
 import fr.kubys.core.Position;
 import fr.kubys.game.exception.AlreadyMovedException;
+import fr.kubys.game.exception.InvalidGameActionException;
 
 public final class MoveWithoutCardPlayedState implements TurnState {
     @Override
@@ -14,7 +15,7 @@ public final class MoveWithoutCardPlayedState implements TurnState {
 
     @Override
     public <T extends CardParam> void tryToPlayCard(GameStateController gameStateController, Card<T> card, T params) {
-        if (card.getType() != CardType.AFTER_TURN) throw new IllegalStateException();
+        if (card.getType() != CardType.AFTER_TURN) throw new InvalidGameActionException("You can only play AFTER_TURN cards after moving");
         card.playOn(gameStateController.getChessBoard(), params);
         gameStateController.transitionToState(StateEnum.END_OF_THE_TURN);
     }

@@ -16,8 +16,8 @@ public class BombingCard extends Card<PositionCardParam> {
 
     @Override
     protected void validInput(ChessBoard chessBoard, PositionCardParam param) {
-        if (param.position() == null) throw new IllegalStateException();
-        if (chessBoard.getCurrentTurn() == null) throw new IllegalStateException();
+        if (param.position() == null) throw new IllegalStateException("Missing required card parameter");
+        if (chessBoard.getCurrentTurn() == null) throw new IllegalStateException("Missing required card parameter");
         boolean thereIsEnemyPieceOnPosition = chessBoard.at(param.position()).getPiece()
                 .map(Piece::getColor)
                 .map(c -> c != chessBoard.getCurrentTurn())

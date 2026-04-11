@@ -12,8 +12,8 @@ public class MadHouseCard extends Card<MadHouseCardParam> {
 
     @Override
     protected void validInput(ChessBoard chessBoard, MadHouseCardParam param) {
-        if (param.rock() == null) throw new IllegalStateException();
-        if (param.bishop() == null) throw new IllegalStateException();
+        if (param.rock() == null) throw new IllegalStateException("Missing required card parameter");
+        if (param.bishop() == null) throw new IllegalStateException("Missing required card parameter");
         if (param.rock().getColor() != chessBoard.getCurrentTurn())
             throw new IllegalArgumentException("You can only swap your own pieces");
         if (param.bishop().getColor() != chessBoard.getCurrentTurn())

@@ -12,8 +12,8 @@ public class PegasusCard extends Card<PieceToPositionCardParam> {
 
     @Override
     protected void validInput(ChessBoard chessBoard, PieceToPositionCardParam param) {
-        if (param.piece() == null) throw new IllegalStateException();
-        if (param.positionToMoveOn() == null) throw new IllegalStateException();
+        if (param.piece() == null) throw new IllegalStateException("Missing required card parameter");
+        if (param.positionToMoveOn() == null) throw new IllegalStateException("Missing required card parameter");
         if (!(param.piece() instanceof Knight))
             throw new IllegalArgumentException("Pegasus card can only move a Knight!");
         if (param.piece().getColor().cannotBeMovedBy(chessBoard.getCurrentTurn()))

@@ -12,7 +12,7 @@ public class MagnetismCard extends Card<PieceCardParam> {
 
     @Override
     protected void validInput(ChessBoard chessBoard, PieceCardParam param) {
-        if (param.piece() == null) throw new IllegalStateException();
+        if (param.piece() == null) throw new IllegalStateException("Missing required card parameter");
         if (param.piece().getPosition() == null)
             throw new IllegalArgumentException("%s is not on the board!".formatted(param.piece()));
         if (param.piece().getColor().cannotBeMovedBy(chessBoard.getCurrentTurn())) throw new CannotMoveThisColorException(chessBoard.getCurrentTurn().opposite());

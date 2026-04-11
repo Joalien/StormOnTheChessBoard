@@ -22,7 +22,7 @@ public class QuadrilleCard extends Card<QuadrilleCardParam> {
 
     @Override
     protected void validInput(ChessBoard chessBoard, QuadrilleCardParam param) {
-        if (param.direction() == null) throw new IllegalStateException();
+        if (param.direction() == null) throw new IllegalStateException("Missing required card parameter");
     }
 
     @Override

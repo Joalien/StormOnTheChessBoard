@@ -15,7 +15,7 @@ public class DisintegrationCard extends Card<PieceCardParam> {
 
     @Override
     protected void validInput(ChessBoard chessBoard, PieceCardParam param) {
-        if (param.piece() == null) throw new IllegalStateException();
+        if (param.piece() == null) throw new IllegalStateException("Missing required card parameter");
         if (chessBoard.getOutOfTheBoardPieces().contains(param.piece()))
             throw new IllegalArgumentException("%s should be on the board".formatted(param.piece()));
         if (param.piece().getColor() != chessBoard.getCurrentTurn())

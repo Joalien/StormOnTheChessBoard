@@ -4,6 +4,7 @@ import fr.kubys.card.Card;
 import fr.kubys.card.params.CardParam;
 import fr.kubys.core.Position;
 import fr.kubys.game.exception.CardAlreadyPlayedException;
+import fr.kubys.game.exception.InvalidGameActionException;
 
 public final class BeforeMoveCardPlayedState implements TurnState {
     @Override
@@ -19,6 +20,6 @@ public final class BeforeMoveCardPlayedState implements TurnState {
 
     @Override
     public void tryToPass(GameStateController gameStateController) {
-        throw new IllegalStateException("You cannot pass before playing a move");
+        throw new InvalidGameActionException("You cannot pass before playing a move");
     }
 }

@@ -15,8 +15,8 @@ public class ManHoleCard extends Card<ManHoleCardParam> {
 
     @Override
     protected void validInput(ChessBoard chessBoard, ManHoleCardParam param) {
-        if (param.position1() == null) throw new IllegalStateException();
-        if (param.position2() == null) throw new IllegalStateException();
+        if (param.position1() == null) throw new IllegalStateException("Missing required card parameter");
+        if (param.position2() == null) throw new IllegalStateException("Missing required card parameter");
         if (param.position1().equals(param.position2()))
             throw new IllegalArgumentException("You should select two different positions");
     }

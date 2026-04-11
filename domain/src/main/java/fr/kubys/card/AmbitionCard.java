@@ -15,7 +15,7 @@ public class AmbitionCard extends Card<PieceToPositionCardParam> {
 
     @Override
     protected void validInput(ChessBoard chessBoard, PieceToPositionCardParam param) {
-        if (param.piece() == null || param.positionToMoveOn() == null) throw new IllegalStateException();
+        if (param.piece() == null || param.positionToMoveOn() == null) throw new IllegalStateException("Missing required card parameter");
         // piece = the captured piece to resurrect; positionToMoveOn = the pawn's position
         if (!chessBoard.getOutOfTheBoardPieces().contains(param.piece()))
             throw new IllegalArgumentException("Piece must have been captured");

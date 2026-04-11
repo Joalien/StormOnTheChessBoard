@@ -12,7 +12,7 @@ public class BlackHoleCard extends Card<PositionCardParam> {
 
     @Override
     protected void validInput(ChessBoard chessBoard, PositionCardParam param) {
-        if (param.position() == null) throw new IllegalStateException();
+        if (param.position() == null) throw new IllegalStateException("Missing required card parameter");
         if (chessBoard.getEffects().stream().anyMatch(effect -> effect.blocksPosition(param.position())))
             throw new IllegalArgumentException("You should select an empty square");
         if (chessBoard.at(param.position()).getPiece().isPresent())

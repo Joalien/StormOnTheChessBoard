@@ -19,8 +19,8 @@ public class BombardCard extends Card<PieceToPositionCardParam> {
 
     @Override
     protected void validInput(ChessBoard chessBoard, PieceToPositionCardParam param) {
-        if (param.piece() == null) throw new IllegalStateException();
-        if (param.positionToMoveOn() == null) throw new IllegalStateException();
+        if (param.piece() == null) throw new IllegalStateException("Missing required card parameter");
+        if (param.positionToMoveOn() == null) throw new IllegalStateException("Missing required card parameter");
         if (!(param.piece() instanceof Rock))
             throw new IllegalArgumentException("You must select a Rook");
         if (param.piece().getColor().cannotBeMovedBy(chessBoard.getCurrentTurn()))

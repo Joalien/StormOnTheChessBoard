@@ -20,7 +20,7 @@ public class ParatrooperCard extends Card<PieceToPositionCardParam> {
 
     @Override
     protected void validInput(ChessBoard chessBoard, PieceToPositionCardParam param) {
-        if (param.piece() == null || param.positionToMoveOn() == null) throw new IllegalStateException();
+        if (param.piece() == null || param.positionToMoveOn() == null) throw new IllegalStateException("Missing required card parameter");
         if (!chessBoard.getOutOfTheBoardPieces().contains(param.piece()))
             throw new IllegalArgumentException("Pawn must have been captured");
         if (!(param.piece() instanceof Pawn))

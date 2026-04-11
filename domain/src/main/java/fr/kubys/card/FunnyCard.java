@@ -17,7 +17,7 @@ public class FunnyCard extends Card<PieceToPositionCardParam> {
 
     @Override
     protected void validInput(ChessBoard chessBoard, PieceToPositionCardParam param) {
-        if (param.piece() == null || param.positionToMoveOn() == null) throw new IllegalStateException();
+        if (param.piece() == null || param.positionToMoveOn() == null) throw new IllegalStateException("Missing required card parameter");
         if (!(param.piece() instanceof Pawn))
             throw new IllegalArgumentException("You can only use a Pawn");
         if (param.piece().getColor().cannotBeMovedBy(chessBoard.getCurrentTurn()))
