@@ -25,9 +25,9 @@ public class SeniorityPromotionCard extends Card<NoCardParam> {
                 .filter(p -> p instanceof Pawn)
                 .count();
         if (pawnCount == 0)
-            throw new IllegalArgumentException("You have no pawns to promote");
+            throw new IllegalArgumentException("Vous n'avez aucun pion à promouvoir");
         if (pawnCount > 2)
-            throw new IllegalArgumentException("You can only use this card if you have 1 or 2 pawns left");
+            throw new IllegalArgumentException("Vous ne pouvez utiliser cette carte que si vous avez 1 ou 2 pions restants");
     }
 
     @Override

@@ -9,12 +9,12 @@ import fr.kubys.game.exception.InvalidGameActionException;
 public final class EnemyReactionState implements TurnState {
     @Override
     public void tryToMove(GameStateController gameStateController, Position from, Position to) {
-        throw new InvalidGameActionException("Cannot move during enemy reaction");
+        throw new InvalidGameActionException("Impossible de se déplacer pendant la réaction adverse");
     }
 
     @Override
     public <T extends CardParam> void tryToPlayCard(GameStateController gameStateController, Card<T> card, T params) {
-        if (card.getType() != CardType.ENEMY_TURN) throw new InvalidGameActionException("Can only play ENEMY_TURN cards during enemy reaction");
+        if (card.getType() != CardType.ENEMY_TURN) throw new InvalidGameActionException("Seules les cartes TOUR ADVERSE peuvent être jouées pendant la réaction adverse");
         card.playOn(gameStateController.getChessBoard(), params);
         gameStateController.setEnemyCardPlayedThisTurn(true);
         gameStateController.setCurrentState(gameStateController.getReturnStateAfterEnemyReaction());
@@ -22,6 +22,6 @@ public final class EnemyReactionState implements TurnState {
 
     @Override
     public void tryToPass(GameStateController gameStateController) {
-        throw new InvalidGameActionException("Enemy reaction should be auto-resolved by controller");
+        throw new InvalidGameActionException("La réaction adverse devrait être résolue automatiquement");
     }
 }

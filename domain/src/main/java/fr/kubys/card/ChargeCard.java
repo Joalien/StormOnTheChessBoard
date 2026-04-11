@@ -19,8 +19,8 @@ public class ChargeCard extends Card<ChargeCardParam> {
 
     @Override
     protected void validInput(ChessBoard chessBoard, ChargeCardParam param) {
-        if (param.pawns() == null) throw new IllegalStateException("Missing required card parameter");
-        if (param.pawns().isEmpty()) throw new IllegalArgumentException("You should select at least one pawn");
+        if (param.pawns() == null) throw new IllegalStateException("Paramètre de carte manquant");
+        if (param.pawns().isEmpty()) throw new IllegalArgumentException("Vous devez sélectionner au moins un pion");
         if (param.pawns().stream().map(Piece::getColor).anyMatch(color -> color.cannotBeMovedBy(chessBoard.getCurrentTurn())))
             throw new CannotMoveThisColorException(chessBoard.getCurrentTurn().opposite());
 
@@ -68,6 +68,6 @@ public class ChargeCard extends Card<ChargeCardParam> {
     }
 
     private static void throwsCannotMoveOneSquareForwardException(Piece p) {
-        throw new IllegalArgumentException(p + " cannot move one square forward!");
+        throw new IllegalArgumentException(p + " ne peut pas avancer d'une case !");
     }
 }

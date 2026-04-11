@@ -20,6 +20,6 @@ public final class BeforeMoveCardPlayedState implements TurnState {
 
     @Override
     public void tryToPass(GameStateController gameStateController) {
-        throw new InvalidGameActionException("You cannot pass before playing a move");
+        throw new InvalidGameActionException("Vous ne pouvez pas passer avant de jouer un coup");
     }
 }

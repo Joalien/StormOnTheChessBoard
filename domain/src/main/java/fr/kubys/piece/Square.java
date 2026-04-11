@@ -23,7 +23,7 @@ public class Square {
 
     public Piece removePiece() {
         if (this.piece == null)
-            throw new IllegalStateException("You can not remove piece from a square that does not contain piece");
+            throw new IllegalStateException("Impossible de retirer une pièce d'une case vide");
         Piece p = this.piece;
         p.setPosition(null);
         this.piece = null;

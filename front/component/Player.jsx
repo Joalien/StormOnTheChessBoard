@@ -23,7 +23,7 @@ export function Player({player, hiddenCards, showCard, color, selectedCard, play
                     textTransform: 'uppercase',
                     letterSpacing: '0.9px',
                 }}>
-                    {isBlack ? 'Black' : 'White'}
+                    {isBlack ? 'Noirs' : 'Blancs'}
                 </span>
                 {!hiddenCards && (
                     <span style={{
@@ -34,7 +34,7 @@ export function Player({player, hiddenCards, showCard, color, selectedCard, play
                         borderRadius: '8px',
                         border: '1px solid rgba(255,255,255,0.06)',
                     }}>
-                        {cards.length} card{cards.length !== 1 ? 's' : ''}
+                        {cards.length} carte{cards.length !== 1 ? 's' : ''}
                     </span>
                 )}
             </div>
@@ -55,7 +55,7 @@ export function Player({player, hiddenCards, showCard, color, selectedCard, play
                     );
                 })}
                 {cards.length === 0 && (
-                    <span style={{fontSize: '12px', color: '#484f58', alignSelf: 'center', fontStyle: 'italic'}}>No cards</span>
+                    <span style={{fontSize: '12px', color: '#484f58', alignSelf: 'center', fontStyle: 'italic'}}>Aucune carte</span>
                 )}
             </div>
         </div>

@@ -16,17 +16,17 @@ public class NeutralityCard extends Card<PieceCardParam> {
 
     @Override
     protected void validInput(ChessBoard chessBoard, PieceCardParam param) {
-        if (param.piece() == null) throw new IllegalStateException("Missing required card parameter");
+        if (param.piece() == null) throw new IllegalStateException("Paramètre de carte manquant");
         if (chessBoard.getOutOfTheBoardPieces().contains(param.piece()))
-            throw new IllegalArgumentException("%s should be on the board".formatted(param.piece()));
+            throw new IllegalArgumentException("%s devrait être sur le plateau".formatted(param.piece()));
         if (param.piece() instanceof King)
-            throw new IllegalArgumentException("Cannot neutralize a King");
+            throw new IllegalArgumentException("Impossible de neutraliser un Roi");
         if (param.piece() instanceof Queen)
-            throw new IllegalArgumentException("Cannot neutralize a Queen");
+            throw new IllegalArgumentException("Impossible de neutraliser une Dame");
         if (param.piece().getColor() == chessBoard.getCurrentTurn())
-            throw new IllegalArgumentException("Cannot neutralize your own piece");
+            throw new IllegalArgumentException("Impossible de neutraliser votre propre pièce");
         if (param.piece().getColor() == Color.NONE)
-            throw new IllegalArgumentException("Piece is already neutral");
+            throw new IllegalArgumentException("La pièce est déjà neutre");
     }
 
     @Override

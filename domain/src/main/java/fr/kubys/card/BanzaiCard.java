@@ -20,21 +20,21 @@ public class BanzaiCard extends Card<PieceCardParam> {
 
     @Override
     protected void validInput(ChessBoard chessBoard, PieceCardParam param) {
-        if (param.piece() == null) throw new IllegalStateException("Missing required card parameter");
+        if (param.piece() == null) throw new IllegalStateException("Paramètre de carte manquant");
         if (!(param.piece() instanceof Pawn))
-            throw new IllegalArgumentException("You can only advance a Pawn");
+            throw new IllegalArgumentException("Vous ne pouvez avancer qu'un Pion");
         if (param.piece().getColor().cannotBeMovedBy(chessBoard.getCurrentTurn()))
             throw new CannotMoveThisColorException(param.piece().getColor());
         Position target = threeSquaresForward(param.piece());
         if (target == null)
-            throw new IllegalArgumentException("Pawn cannot advance 3 squares (would go off the board)");
+            throw new IllegalArgumentException("Le Pion ne peut pas avancer de 3 cases (sortirait du plateau)");
         // Check all 3 squares are empty
         Position pos = param.piece().getPosition();
         for (int i = 0; i < 3; i++) {
             pos = oneForward(pos, param.piece().getColor());
-            if (pos == null) throw new IllegalArgumentException("Pawn cannot advance 3 squares");
+            if (pos == null) throw new IllegalArgumentException("Le Pion ne peut pas avancer de 3 cases");
             if (chessBoard.at(pos).getPiece().isPresent())
-                throw new IllegalArgumentException("Square %s is not empty".formatted(pos));
+                throw new IllegalArgumentException("La case %s n'est pas vide".formatted(pos));
         }
     }
 

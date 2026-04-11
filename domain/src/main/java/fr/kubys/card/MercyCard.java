@@ -27,10 +27,10 @@ public class MercyCard extends Card<NoCardParam> {
         Position capturedPosition = removal.position();
 
         Piece attackingPiece = chessBoard.at(capturedPosition).getPiece()
-                .orElseThrow(() -> new IllegalStateException("No piece found on captured position"));
+                .orElseThrow(() -> new IllegalStateException("Aucune pièce trouvée sur la position capturée"));
 
         if (!(attackingPiece instanceof Rock || attackingPiece instanceof Bishop || attackingPiece instanceof Queen))
-            throw new IllegalArgumentException("Only Rook, Bishop or Queen can trigger Mercy");
+            throw new IllegalArgumentException("Seule une Tour, un Fou ou une Dame peut déclencher Grâce");
     }
 
     @Override
@@ -57,7 +57,7 @@ public class MercyCard extends Card<NoCardParam> {
         Position capturedPosition = removal.position();
         Position mercySquare = computeMercySquare(capturedPosition, chessBoard.getLastMoveFrom());
         Piece attackingPiece = chessBoard.at(capturedPosition).getPiece()
-                .orElseThrow(() -> new IllegalStateException("No piece found on captured position"));
+                .orElseThrow(() -> new IllegalStateException("Aucune pièce trouvée sur la position capturée"));
 
         chessBoard.removePieceFromTheBoard(attackingPiece);
         chessBoard.add(capturedPawn, capturedPosition);
@@ -73,7 +73,7 @@ public class MercyCard extends Card<NoCardParam> {
                 .filter(r -> r.piece().getColor() == cardPlayerColor)
                 .filter(r -> r.piece() instanceof Pawn)
                 .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("No pawn of yours was captured this turn"));
+                .orElseThrow(() -> new IllegalArgumentException("Aucun de vos pions n'a été capturé ce tour"));
     }
 
     static Position computeMercySquare(Position pawnPosition, Position attackerOrigin) {

@@ -15,7 +15,7 @@ public final class MoveWithoutCardPlayedState implements TurnState {
 
     @Override
     public <T extends CardParam> void tryToPlayCard(GameStateController gameStateController, Card<T> card, T params) {
-        if (card.getType() != CardType.AFTER_TURN) throw new InvalidGameActionException("You can only play AFTER_TURN cards after moving");
+        if (card.getType() != CardType.AFTER_TURN) throw new InvalidGameActionException("Vous ne pouvez jouer qu'une carte APRÈS le coup");
         card.playOn(gameStateController.getChessBoard(), params);
         gameStateController.transitionToState(StateEnum.END_OF_THE_TURN);
     }

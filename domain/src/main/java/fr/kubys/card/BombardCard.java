@@ -19,41 +19,41 @@ public class BombardCard extends Card<PieceToPositionCardParam> {
 
     @Override
     protected void validInput(ChessBoard chessBoard, PieceToPositionCardParam param) {
-        if (param.piece() == null) throw new IllegalStateException("Missing required card parameter");
-        if (param.positionToMoveOn() == null) throw new IllegalStateException("Missing required card parameter");
+        if (param.piece() == null) throw new IllegalStateException("Paramètre de carte manquant");
+        if (param.positionToMoveOn() == null) throw new IllegalStateException("Paramètre de carte manquant");
         if (!(param.piece() instanceof Rock))
-            throw new IllegalArgumentException("You must select a Rook");
+            throw new IllegalArgumentException("Vous devez sélectionner une Tour");
         if (param.piece().getColor().cannotBeMovedBy(chessBoard.getCurrentTurn()))
             throw new CannotMoveThisColorException(param.piece().getColor());
         if (chessBoard.getOutOfTheBoardPieces().contains(param.piece()))
-            throw new IllegalArgumentException("The selected Rook must be on the board");
+            throw new IllegalArgumentException("La Tour sélectionnée doit être sur le plateau");
 
         Position from = param.piece().getPosition();
         Position to = param.positionToMoveOn();
 
         // Must be on same rank or file
         if (from.getFile() != to.getFile() && from.getRow() != to.getRow())
-            throw new IllegalArgumentException("The Rook must move in a straight line");
+            throw new IllegalArgumentException("La Tour doit se déplacer en ligne droite");
 
         // Exactly one piece on the path (the piece to jump over)
         List<Position> piecesOnPath = param.piece().squaresOnThePath(to).stream()
                 .filter(pos -> chessBoard.at(pos).getPiece().isPresent())
                 .toList();
         if (piecesOnPath.size() != 1)
-            throw new IllegalArgumentException("There must be exactly one piece to jump over");
+            throw new IllegalArgumentException("Il doit y avoir exactement une pièce à sauter");
 
         // Target must be immediately after the piece to jump over
         Position pieceToJumpOver = piecesOnPath.get(0);
         if (!isAdjacent(pieceToJumpOver, to))
-            throw new IllegalArgumentException("Target must be immediately beyond the jumped piece");
+            throw new IllegalArgumentException("La cible doit être juste après la pièce sautée");
 
         // Target must have an enemy piece
         Piece target = chessBoard.at(to).getPiece()
-                .orElseThrow(() -> new IllegalArgumentException("Target square must contain an enemy piece"));
+                .orElseThrow(() -> new IllegalArgumentException("La case cible doit contenir une pièce adverse"));
         if (target.getColor() == param.piece().getColor())
-            throw new IllegalArgumentException("Cannot capture your own piece");
+            throw new IllegalArgumentException("Impossible de capturer votre propre pièce");
         if (target.isKing())
-            throw new IllegalArgumentException("Cannot capture the King");
+            throw new IllegalArgumentException("Impossible de capturer le Roi");
     }
 
     @Override

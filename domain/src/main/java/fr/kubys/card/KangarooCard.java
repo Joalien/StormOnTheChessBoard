@@ -13,9 +13,9 @@ public class KangarooCard extends Card<KnightCardParam> {
 
     @Override
     protected void validInput(ChessBoard chessBoard, KnightCardParam param) {
-        if (param.knight() == null) throw new IllegalStateException("Missing required card parameter");
+        if (param.knight() == null) throw new IllegalStateException("Paramètre de carte manquant");
         if (chessBoard.getOutOfTheBoardPieces().contains(param.knight()))
-            throw new IllegalArgumentException("%s should be on the board".formatted(param.knight()));
+            throw new IllegalArgumentException("%s devrait être sur le plateau".formatted(param.knight()));
     }
 
     @Override

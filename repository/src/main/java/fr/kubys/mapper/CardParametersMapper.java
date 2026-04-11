@@ -27,7 +27,7 @@ public class CardParametersMapper {
         Set<String> inputParameterKeys = param.keySet();
         Set<String> modelKeys = Arrays.stream(clazz.getDeclaredFields()).map(Field::getName).collect(Collectors.toSet());
         if (!inputParameterKeys.equals(modelKeys)) {
-            throw new CardParamException("Input dto %s does not match card parameter %s".formatted(inputParameterKeys, modelKeys));
+            throw new CardParamException("Le paramètre %s ne correspond pas au paramètre de carte %s".formatted(inputParameterKeys, modelKeys));
         }
 
         List<Object> list = Arrays.stream(clazz.getDeclaredFields())
@@ -51,7 +51,7 @@ public class CardParametersMapper {
                     .collect(Collectors.toSet());
         if (QuadrilleCard.Direction.class.equals(field.getType()))
             return QuadrilleCard.Direction.valueOf((String) param.get(field.getName()));
-        throw new CardParamException("No mapping found for class %s".formatted(field.getType()));
+        throw new CardParamException("Aucun mapping trouvé pour la classe %s".formatted(field.getType()));
     }
 
     private static Piece getPieceFromChessboard(ChessBoardReadService chessboard, String value) {
@@ -59,7 +59,7 @@ public class CardParametersMapper {
             int index = Integer.parseInt(value.substring("captured:".length()));
             List<Piece> captured = chessboard.getCapturedPieces();
             if (index < 0 || index >= captured.size())
-                throw new CardParamException("Invalid captured piece index %d".formatted(index));
+                throw new CardParamException("Index de pièce capturée invalide %d".formatted(index));
             return captured.get(index);
         }
         return chessboard.getPieces().stream()

@@ -18,14 +18,14 @@ public class MeritPromotionCard extends Card<PieceCardParam> {
 
     @Override
     protected void validInput(ChessBoard chessBoard, PieceCardParam param) {
-        if (param.piece() == null) throw new IllegalStateException("Missing required card parameter");
+        if (param.piece() == null) throw new IllegalStateException("Paramètre de carte manquant");
         if (!(param.piece() instanceof Pawn))
-            throw new IllegalArgumentException("You can only promote a Pawn");
+            throw new IllegalArgumentException("Vous ne pouvez promouvoir qu'un Pion");
         if (param.piece().getColor().cannotBeMovedBy(chessBoard.getCurrentTurn()))
             throw new CannotMoveThisColorException(param.piece().getColor());
         Row sixthRank = (chessBoard.getCurrentTurn() == Color.WHITE) ? Row.Six : Row.Three;
         if (param.piece().getRow() != sixthRank)
-            throw new IllegalArgumentException("Pawn must be on the 6th rank");
+            throw new IllegalArgumentException("Le Pion doit être sur la 6ème rangée");
     }
 
     @Override

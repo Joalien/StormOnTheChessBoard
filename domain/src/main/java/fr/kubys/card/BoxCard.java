@@ -17,17 +17,17 @@ public class BoxCard extends Card<TwoPieceCardParam> {
 
     @Override
     protected void validInput(ChessBoard chessBoard, TwoPieceCardParam param) {
-        if (param.piece1() == null || param.piece2() == null) throw new IllegalStateException("Missing required card parameter");
+        if (param.piece1() == null || param.piece2() == null) throw new IllegalStateException("Paramètre de carte manquant");
         if (param.piece1().getColor() == chessBoard.getCurrentTurn())
             throw new CannotMoveThisColorException(param.piece1().getColor());
         if (param.piece2().getColor() == chessBoard.getCurrentTurn())
             throw new CannotMoveThisColorException(param.piece2().getColor());
         if (param.piece1().getPosition() == null || param.piece2().getPosition() == null)
-            throw new IllegalStateException("Both pieces must be on the board");
+            throw new IllegalStateException("Les deux pièces doivent être sur le plateau");
         boolean hasKnight = param.piece1() instanceof Knight || param.piece2() instanceof Knight;
         boolean hasRook = param.piece1() instanceof Rock || param.piece2() instanceof Rock;
         if (!hasKnight || !hasRook)
-            throw new IllegalArgumentException("You must select one Knight and one Rook");
+            throw new IllegalArgumentException("Vous devez sélectionner un Cavalier et une Tour");
     }
 
     @Override

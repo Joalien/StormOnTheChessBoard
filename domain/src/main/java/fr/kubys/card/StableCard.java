@@ -13,10 +13,10 @@ public class StableCard extends Card<StableCardParam> {
 
     @Override
     protected void validInput(ChessBoard chessBoard, StableCardParam param) {
-        if (param.rock() == null) throw new IllegalStateException("Missing required card parameter");
-        if (param.knight() == null) throw new IllegalStateException("Missing required card parameter");
+        if (param.rock() == null) throw new IllegalStateException("Paramètre de carte manquant");
+        if (param.knight() == null) throw new IllegalStateException("Paramètre de carte manquant");
         if (param.rock().getColor() != param.knight().getColor())
-            throw new IllegalArgumentException("You should swap pieces of the same color");
+            throw new IllegalArgumentException("Vous devez échanger des pièces de la même couleur");
     }
 
     @Override

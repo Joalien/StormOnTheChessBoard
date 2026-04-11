@@ -19,15 +19,15 @@ public class NuclearBombCard extends Card<PieceCardParam> {
 
     @Override
     protected void validInput(ChessBoard chessBoard, PieceCardParam param) {
-        if (param.piece() == null) throw new IllegalStateException("Missing required card parameter");
+        if (param.piece() == null) throw new IllegalStateException("Paramètre de carte manquant");
         if (param.piece().getColor().cannotBeMovedBy(chessBoard.getCurrentTurn()))
-            throw new IllegalArgumentException("You can only explode your own pieces");
+            throw new IllegalArgumentException("Vous ne pouvez exploser que vos propres pièces");
         if (param.piece().isKing())
-            throw new IllegalArgumentException("You cannot explode a King");
+            throw new IllegalArgumentException("Vous ne pouvez pas exploser un Roi");
         boolean capturedThisTurn = chessBoard.getPieceRemovals().stream()
                 .anyMatch(r -> r.turn() == chessBoard.getTurnNumber() && r.reason() == PieceRemoval.RemovalReason.CAPTURED);
         if (capturedThisTurn)
-            throw new IllegalArgumentException("You cannot explode a piece that just captured");
+            throw new IllegalArgumentException("Vous ne pouvez pas exploser une pièce qui vient de capturer");
     }
 
     @Override

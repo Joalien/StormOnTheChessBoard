@@ -2,10 +2,10 @@ import {Image} from "react-native";
 import cardImages from "./cardImages";
 
 const TYPE_LABELS = {
-    BEFORE_TURN:  'Before Move',
-    AFTER_TURN:   'After Move',
-    REPLACE_TURN: 'Replaces Move',
-    ENEMY_TURN:   "Enemy's Turn",
+    BEFORE_TURN:  'Avant le coup',
+    AFTER_TURN:   'Après le coup',
+    REPLACE_TURN: 'Remplace le coup',
+    ENEMY_TURN:   'Tour adverse',
 };
 
 function isBarricadeCard(card) {
@@ -14,8 +14,8 @@ function isBarricadeCard(card) {
 
 function BarricadeParams({card, selectedParam, setSelectedParam, barricadeEdges, setBarricadeEdges}) {
     const edgeDefs = [
-        {label: 'Edge 1', index: 0, fromKey: 'from1', toKey: 'to1'},
-        {label: 'Edge 2', index: 1, fromKey: 'from2', toKey: 'to2'},
+        {label: 'Côté 1', index: 0, fromKey: 'from1', toKey: 'to1'},
+        {label: 'Côté 2', index: 1, fromKey: 'from2', toKey: 'to2'},
     ];
 
     return (<>{edgeDefs.map(({label, index, fromKey, toKey}) => {
@@ -57,13 +57,34 @@ function BarricadeParams({card, selectedParam, setSelectedParam, barricadeEdges,
                         fontFamily: 'monospace',
                         letterSpacing: '0.3px',
                     }}>
-                        {display || (isActive ? 'click an edge on the board...' : '—')}
+                        {display || (isActive ? 'cliquez sur un bord du plateau...' : '—')}
                     </div>
                 </div>
             </div>
         );
     })}</>);
 }
+
+const PARAM_LABELS = {
+    position: 'Position',
+    positionToMoveOn: 'Case de destination',
+    piece: 'Pièce',
+    piece1: 'Pièce 1',
+    piece2: 'Pièce 2',
+    knight: 'Cavalier',
+    bishop: 'Fou',
+    rock: 'Tour',
+    pawn1: 'Pion 1',
+    pawn2: 'Pion 2',
+    pawns: 'Pions',
+    position1: 'Position 1',
+    position2: 'Position 2',
+    direction: 'Direction',
+    from1: 'Depuis 1',
+    to1: 'Vers 1',
+    from2: 'Depuis 2',
+    to2: 'Vers 2',
+};
 
 export function CardParameters({card, selectedParam, setSelectedParam, playCardCallback, barricadeEdges, setBarricadeEdges, isPlayable = true}) {
     const hasImage = card.englishName in cardImages;
@@ -124,7 +145,7 @@ export function CardParameters({card, selectedParam, setSelectedParam, playCardC
                         fontWeight: '700',
                         margin: '0 0 10px 2px',
                     }}>
-                        {barricade ? 'Right-click 2 adjacent squares per edge' : 'Right-click squares to set'}
+                        {barricade ? 'Clic droit sur 2 cases adjacentes par côté' : 'Clic droit sur les cases pour définir'}
                     </p>
                     {barricade ? (
                         <BarricadeParams card={card} selectedParam={selectedParam} setSelectedParam={setSelectedParam} barricadeEdges={barricadeEdges} setBarricadeEdges={setBarricadeEdges} />
@@ -152,7 +173,7 @@ export function CardParameters({card, selectedParam, setSelectedParam, playCardC
                                     }}/>
                                     <div style={{flex: 1, minWidth: 0}}>
                                         <div style={{fontSize: '12px', fontWeight: '600', color: '#c9d1d9', marginBottom: '3px'}}>
-                                            {key}
+                                            {PARAM_LABELS[key] || key}
                                         </div>
                                         <div style={{
                                             fontSize: '11px',
@@ -160,7 +181,7 @@ export function CardParameters({card, selectedParam, setSelectedParam, playCardC
                                             fontFamily: 'monospace',
                                             letterSpacing: '0.3px',
                                         }}>
-                                            {isSet ? value : isActive ? 'awaiting...' : '—'}
+                                            {isSet ? value : isActive ? 'en attente...' : '—'}
                                         </div>
                                     </div>
                                 </div>
@@ -178,12 +199,12 @@ export function CardParameters({card, selectedParam, setSelectedParam, playCardC
                     onClick={playCardCallback}
                     disabled={!allParamsSet}
                 >
-                    {allParamsSet ? '▶ Play Card' : 'Set all parameters first'}
+                    {allParamsSet ? '▶ Jouer la carte' : 'Définissez tous les paramètres'}
                 </button>
             )}
             {!isPlayable && !card.isEffect && (
                 <p style={{fontSize: '11px', color: '#484f58', textAlign: 'center', margin: 0, fontStyle: 'italic'}}>
-                    This card cannot be played right now
+                    Cette carte ne peut pas être jouée pour le moment
                 </p>
             )}
         </div>

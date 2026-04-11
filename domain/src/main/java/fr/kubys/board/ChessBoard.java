@@ -70,11 +70,11 @@ public class ChessBoard {
     public void add(Piece piece, Position position) {
         if (!fakeSquares.isEmpty())
             // Should never happen
-            throw new IllegalStateException("You cannot update board if there are fake pieces on");
+            throw new IllegalStateException("Impossible de mettre à jour le plateau avec des pièces factices");
         if (doesEffectBlockSquare(position))
-            throw new IllegalArgumentException("Cannot add %s because %s is blocked".formatted(piece, position));
+            throw new IllegalArgumentException("Impossible d'ajouter %s car %s est bloquée".formatted(piece, position));
         if (at(position).getPiece().isPresent())
-            throw new IllegalArgumentException("Cannot add %s because %s is not empty".formatted(piece, position));
+            throw new IllegalArgumentException("Impossible d'ajouter %s car %s n'est pas vide".formatted(piece, position));
         outOfTheBoardPieces.removeIf(r -> r.piece() == piece);
         piece.setPosition(position);
         at(position).setPiece(piece);
@@ -161,7 +161,7 @@ public class ChessBoard {
         at(from)
                 .getPiece()
                 .ifPresentOrElse(p -> tryToMove(p, to), () -> {
-                    throw new IllegalArgumentException("There is no piece on %s".formatted(from));
+                    throw new IllegalArgumentException("Il n'y a pas de pièce sur %s".formatted(from));
                 });
     }
 
@@ -256,7 +256,7 @@ public class ChessBoard {
     public boolean canMove(Piece piece, Position positionToMoveOn) {
         boolean isCastleMove = getCastleRookPassSquare(piece, positionToMoveOn).isPresent();
         if (!isCastleMove && !canAttack(piece, positionToMoveOn, piece.getEffectiveColor(currentTurn)))
-            throw new IllegalMoveException("You cannot move %s to %s".formatted(piece, positionToMoveOn));
+            throw new IllegalMoveException("Impossible de déplacer %s vers %s".formatted(piece, positionToMoveOn));
         if (doesMovingPieceCheckOurOwnKing(piece, positionToMoveOn))
             throw new CheckException();
         return true;
@@ -264,7 +264,7 @@ public class ChessBoard {
 
     public void fakeSquare(Piece piece, Position position) {
         if (fakeSquares.containsKey(position) && fakeSquares.get(position) == null)
-            throw new IllegalArgumentException("You cannot re-fake over a fake piece");
+            throw new IllegalArgumentException("Impossible de simuler par-dessus une pièce factice");
 //        log.debug("fake that {} is on {}", Optional.ofNullable(piece).map(Objects::toString).orElse("nothing"), position);
         Square fakeSquare = new Square(position);
         Optional.ofNullable(piece).ifPresent(p -> fakeSquare.setPiece(new FakePieceDecorator(p, position)));

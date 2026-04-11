@@ -781,7 +781,7 @@ export default function App() {
                 </div>
                 <div style={{display: 'flex', gap: '8px', alignItems: 'center'}}>
                     <button className="sotc-btn" onClick={() => navigateToGame(null)}>⌂ Accueil</button>
-                    <button className="sotc-btn sotc-btn-danger" onClick={undo} disabled={!isMyTurn}>↩ Undo</button>
+                    <button className="sotc-btn sotc-btn-danger" onClick={undo} disabled={!isMyTurn}>↩ Annuler</button>
                 </div>
             </header>
 
@@ -797,7 +797,7 @@ export default function App() {
                 {/* Left panel: End Turn + Captured pieces */}
                 <aside className="sotc-aside sotc-aside-left" style={{width: '252px', flexShrink: 0, position: 'sticky', top: '80px', display: 'flex', flexDirection: 'column', gap: '12px'}}>
                     <button className="sotc-btn sotc-btn-end" style={{width: '100%', padding: '13px'}} onClick={endTurn} disabled={!isMyTurn}>
-                        ✓ End Turn
+                        ✓ Fin du tour
                     </button>
 
                     {capturedPieces.length > 0 && (() => {
@@ -831,7 +831,7 @@ export default function App() {
                         return (
                             <div className="sotc-panel" style={{padding: '12px 16px', display: 'flex', flexDirection: 'column', gap: '8px'}}>
                                 <span style={{fontSize: '11px', fontWeight: '700', color: '#484f58', textTransform: 'uppercase', letterSpacing: '0.8px'}}>
-                                    {canSelect ? 'Click a captured piece' : 'Captured'}
+                                    {canSelect ? 'Cliquez sur une pièce capturée' : 'Pièces capturées'}
                                 </span>
                                 {whiteIndices.length > 0 && (
                                     <div style={{display: 'flex', flexWrap: 'wrap', gap: '2px'}}>
@@ -853,7 +853,7 @@ export default function App() {
                     {/* Turn indicator */}
                     <span className={`sotc-turn-indicator sotc-turn-${currentPlayerColor}`}>
                         <span className="dot"/>
-                        {isWhiteTurn ? "White's turn" : "Black's turn"}
+                        {isWhiteTurn ? "Tour des Blancs" : "Tour des Noirs"}
                     </span>
 
                     {/* Top player cards */}
@@ -1017,7 +1017,7 @@ export default function App() {
                         <div className="sotc-panel" style={{padding: '28px 20px', textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px'}}>
                             <Image source={require('./assets/images/cards/back.png')} style={{width: 80, height: 116, borderRadius: 6, opacity: 0.25}}/>
                             <p style={{color: '#484f58', fontSize: '13px', lineHeight: '1.7', margin: 0}}>
-                                Click one of your cards to view its details and play it.
+                                Cliquez sur une de vos cartes pour voir ses détails et la jouer.
                             </p>
                         </div>
                     )}
@@ -1025,7 +1025,7 @@ export default function App() {
                     {effects.some(e => e.cardEnglishName) && (
                         <div className="sotc-panel" style={{padding: '12px 16px', display: 'flex', flexDirection: 'column', gap: '8px'}}>
                             <span style={{fontSize: '11px', fontWeight: '700', color: '#484f58', textTransform: 'uppercase', letterSpacing: '0.8px'}}>
-                                Active Effects
+                                Effets actifs
                             </span>
                             <div style={{display: 'flex', gap: '8px', flexWrap: 'wrap'}}>
                                 {effects.filter(e => e.cardEnglishName).map((effect, idx) => {

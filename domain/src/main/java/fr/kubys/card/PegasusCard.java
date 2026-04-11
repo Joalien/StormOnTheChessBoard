@@ -12,19 +12,19 @@ public class PegasusCard extends Card<PieceToPositionCardParam> {
 
     @Override
     protected void validInput(ChessBoard chessBoard, PieceToPositionCardParam param) {
-        if (param.piece() == null) throw new IllegalStateException("Missing required card parameter");
-        if (param.positionToMoveOn() == null) throw new IllegalStateException("Missing required card parameter");
+        if (param.piece() == null) throw new IllegalStateException("Paramètre de carte manquant");
+        if (param.positionToMoveOn() == null) throw new IllegalStateException("Paramètre de carte manquant");
         if (!(param.piece() instanceof Knight))
-            throw new IllegalArgumentException("Pegasus card can only move a Knight!");
+            throw new IllegalArgumentException("La carte Pégase ne peut déplacer qu'un Cavalier !");
         if (param.piece().getColor().cannotBeMovedBy(chessBoard.getCurrentTurn()))
             throw new CannotMoveThisColorException(param.piece().getColor());
 
         boolean sameColor = param.piece().getPosition().isWhiteSquare() == param.positionToMoveOn().isWhiteSquare();
         if (sameColor)
-            throw new IllegalArgumentException("Target square must be of opposite color to the knight's current square");
+            throw new IllegalArgumentException("La case cible doit être de couleur opposée à la case actuelle du cavalier");
 
         chessBoard.at(param.positionToMoveOn()).getPiece().ifPresent(piece -> {
-            throw new IllegalArgumentException("Target square must be free");
+            throw new IllegalArgumentException("La case cible doit être libre");
         });
     }
 

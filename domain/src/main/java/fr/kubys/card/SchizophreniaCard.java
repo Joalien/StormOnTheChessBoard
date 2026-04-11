@@ -16,18 +16,18 @@ public class SchizophreniaCard extends Card<TwoPieceCardParam> {
 
     @Override
     protected void validInput(ChessBoard chessBoard, TwoPieceCardParam param) {
-        if (param.piece1() == null || param.piece2() == null) throw new IllegalStateException("Missing required card parameter");
-        if (param.piece1() == param.piece2()) throw new IllegalArgumentException("Pieces must be different");
+        if (param.piece1() == null || param.piece2() == null) throw new IllegalStateException("Paramètre de carte manquant");
+        if (param.piece1() == param.piece2()) throw new IllegalArgumentException("Les pièces doivent être différentes");
         if (chessBoard.getOutOfTheBoardPieces().contains(param.piece1()))
-            throw new IllegalArgumentException("%s should be on the board".formatted(param.piece1()));
+            throw new IllegalArgumentException("%s devrait être sur le plateau".formatted(param.piece1()));
         if (chessBoard.getOutOfTheBoardPieces().contains(param.piece2()))
-            throw new IllegalArgumentException("%s should be on the board".formatted(param.piece2()));
+            throw new IllegalArgumentException("%s devrait être sur le plateau".formatted(param.piece2()));
         boolean piece1IsOwn = !param.piece1().getColor().cannotBeMovedBy(chessBoard.getCurrentTurn());
         boolean piece2IsOwn = !param.piece2().getColor().cannotBeMovedBy(chessBoard.getCurrentTurn());
         if (piece1IsOwn == piece2IsOwn)
-            throw new IllegalArgumentException("You must select one of your pieces and one enemy piece");
+            throw new IllegalArgumentException("Vous devez sélectionner une de vos pièces et une pièce adverse");
         if (!(param.piece1() instanceof Bishop) || !(param.piece2() instanceof Bishop))
-            throw new IllegalArgumentException("Both pieces must be Bishops");
+            throw new IllegalArgumentException("Les deux pièces doivent être des Fous");
     }
 
     @Override

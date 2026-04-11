@@ -15,11 +15,11 @@ public class PrivateJetCard extends Card<PositionCardParam> {
 
     @Override
     protected void validInput(ChessBoard chessBoard, PositionCardParam param) {
-        if (param.position() == null) throw new IllegalStateException("Missing required card parameter");
+        if (param.position() == null) throw new IllegalStateException("Paramètre de carte manquant");
         if (chessBoard.at(param.position()).getPiece().isPresent())
-            throw new IllegalArgumentException("Target square must be empty");
+            throw new IllegalArgumentException("La case cible doit être vide");
         if (chessBoard.getEffects().stream().anyMatch(e -> e.blocksPosition(param.position())))
-            throw new IllegalArgumentException("Target square is blocked by an effect");
+            throw new IllegalArgumentException("La case cible est bloquée par un effet");
     }
 
     @Override

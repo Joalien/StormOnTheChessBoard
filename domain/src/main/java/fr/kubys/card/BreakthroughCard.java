@@ -21,18 +21,18 @@ public class BreakthroughCard extends Card<PieceCardParam> {
 
     @Override
     protected void validInput(ChessBoard chessBoard, PieceCardParam param) {
-        if (param.piece() == null) throw new IllegalStateException("Missing required card parameter");
+        if (param.piece() == null) throw new IllegalStateException("Paramètre de carte manquant");
         if (!(param.piece() instanceof Pawn))
-            throw new IllegalArgumentException("You can only use a Pawn");
+            throw new IllegalArgumentException("Vous ne pouvez utiliser qu'un Pion");
         if (param.piece().getColor().cannotBeMovedBy(chessBoard.getCurrentTurn()))
             throw new CannotMoveThisColorException(param.piece().getColor());
         Position target = oneForward(param.piece());
         if (target == null)
-            throw new IllegalArgumentException("Pawn cannot advance");
+            throw new IllegalArgumentException("Le Pion ne peut pas avancer");
         Piece targetPiece = chessBoard.at(target).getPiece()
-                .orElseThrow(() -> new IllegalArgumentException("No enemy piece in front of the pawn"));
+                .orElseThrow(() -> new IllegalArgumentException("Aucune pièce adverse devant le pion"));
         if (targetPiece.getColor() == chessBoard.getCurrentTurn())
-            throw new IllegalArgumentException("Cannot capture your own piece");
+            throw new IllegalArgumentException("Impossible de capturer votre propre pièce");
     }
 
     @Override

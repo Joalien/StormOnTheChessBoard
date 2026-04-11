@@ -54,7 +54,7 @@ public class GameStateController implements ChessBoardService {
 
     private void startWith(ChessBoard board, long seed) {
         if (this.chessBoard != null)
-            throw new InvalidGameActionException("Game has already started!");
+            throw new InvalidGameActionException("La partie a déjà commencé !");
 
         this.chessBoard = board;
         white = new Player("Name1", Color.WHITE);
@@ -72,9 +72,9 @@ public class GameStateController implements ChessBoardService {
         assertGameHasAlreadyStarted();
         autoResolveEnemyReaction();
         Optional<Piece> pieceToMove = chessBoard.at(from).getPiece();
-        if (pieceToMove.isEmpty()) throw new IllegalArgumentException("There is no piece on %s".formatted(from));
+        if (pieceToMove.isEmpty()) throw new IllegalArgumentException("Il n'y a pas de pièce sur %s".formatted(from));
         if (pieceToMove.get().getColor().cannotBeMovedBy(getCurrentPlayer().getColor()))
-            throw new InvalidGameActionException("%s player cannot move %s piece".formatted(getCurrentPlayer().getColor(), pieceToMove.get().getColor()));
+            throw new InvalidGameActionException("Le joueur %s ne peut pas déplacer une pièce %s".formatted(getCurrentPlayer().getColor(), pieceToMove.get().getColor()));
 
         currentState.getState().tryToMove(this, from, to);
     }
@@ -87,7 +87,7 @@ public class GameStateController implements ChessBoardService {
             // Opponent is reacting with an ENEMY_TURN card — check opponent's hand
             Player opponent = getOpponent();
             if (!opponent.getCards().contains(card))
-                throw new CardNotFoundException("Player %s does not have %s in hand!".formatted(opponent, card));
+                throw new CardNotFoundException("Le joueur %s n'a pas %s en main !".formatted(opponent, card));
             currentState.getState().tryToPlayCard(this, card, params);
             opponent.getCards().remove(card);
             deck.discardAndDraw(card, opponent);
@@ -97,7 +97,7 @@ public class GameStateController implements ChessBoardService {
         autoResolveEnemyReaction();
         Player player = getCurrentPlayer();
         if (!player.getCards().contains(card))
-            throw new CardNotFoundException("Player %s does not have %s in hand!".formatted(player, card));
+            throw new CardNotFoundException("Le joueur %s n'a pas %s en main !".formatted(player, card));
 
         currentState.getState().tryToPlayCard(this, card, params);
         player.getCards().remove(card);
@@ -126,7 +126,7 @@ public class GameStateController implements ChessBoardService {
     }
 
     private void assertGameHasAlreadyStarted() {
-        if (chessBoard == null) throw new InvalidGameActionException("Game has not started yet!");
+        if (chessBoard == null) throw new InvalidGameActionException("La partie n'a pas encore commencé !");
     }
 
     @Override
@@ -222,7 +222,7 @@ public class GameStateController implements ChessBoardService {
     public void promote(Position position, PromotionPiece piece) {
         assertGameHasAlreadyStarted();
         if (!pendingPromotions.remove(position))
-            throw new IllegalArgumentException("No pending promotion on %s".formatted(position));
+            throw new IllegalArgumentException("Pas de promotion en attente sur %s".formatted(position));
         chessBoard.overridePromotion(position, piece);
         if (pendingPromotions.isEmpty()) {
             transitionToStateAfterPromotion(returnStateAfterPromotion);

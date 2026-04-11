@@ -8,12 +8,12 @@ import fr.kubys.game.exception.InvalidGameActionException;
 public final class PromotionPendingState implements TurnState {
     @Override
     public void tryToMove(GameStateController gameStateController, Position from, Position to) {
-        throw new InvalidGameActionException("Cannot move while a promotion is pending");
+        throw new InvalidGameActionException("Impossible de se déplacer pendant une promotion en attente");
     }
 
     @Override
     public <T extends CardParam> void tryToPlayCard(GameStateController gameStateController, Card<T> card, T params) {
-        throw new InvalidGameActionException("Cannot play a card while a promotion is pending");
+        throw new InvalidGameActionException("Impossible de jouer une carte pendant une promotion en attente");
     }
 
     @Override

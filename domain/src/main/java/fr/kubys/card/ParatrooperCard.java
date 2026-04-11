@@ -20,17 +20,17 @@ public class ParatrooperCard extends Card<PieceToPositionCardParam> {
 
     @Override
     protected void validInput(ChessBoard chessBoard, PieceToPositionCardParam param) {
-        if (param.piece() == null || param.positionToMoveOn() == null) throw new IllegalStateException("Missing required card parameter");
+        if (param.piece() == null || param.positionToMoveOn() == null) throw new IllegalStateException("Paramètre de carte manquant");
         if (!chessBoard.getOutOfTheBoardPieces().contains(param.piece()))
-            throw new IllegalArgumentException("Pawn must have been captured");
+            throw new IllegalArgumentException("Le Pion doit avoir été capturé");
         if (!(param.piece() instanceof Pawn))
-            throw new IllegalArgumentException("Must be a Pawn");
+            throw new IllegalArgumentException("Doit être un Pion");
         if (param.piece().getColor().cannotBeMovedBy(chessBoard.getCurrentTurn()))
-            throw new IllegalArgumentException("Must parachute your own captured Pawn");
+            throw new IllegalArgumentException("Vous devez parachuter votre propre Pion capturé");
         if (!CENTER.contains(param.positionToMoveOn()))
-            throw new IllegalArgumentException("Target must be one of the four central squares");
+            throw new IllegalArgumentException("La cible doit être une des quatre cases centrales");
         if (chessBoard.at(param.positionToMoveOn()).getPiece().isPresent())
-            throw new IllegalArgumentException("Target square must be empty");
+            throw new IllegalArgumentException("La case cible doit être vide");
     }
 
     @Override

@@ -12,7 +12,7 @@ public enum Color {
     }
 
     public Row homeRow() {
-        if (this == NONE) throw new RuntimeException("Color NONE has no home row");
+        if (this == NONE) throw new RuntimeException("La couleur NONE n'a pas de rangée de départ");
         return homeRow;
     }
 
@@ -28,7 +28,7 @@ public enum Color {
         return switch (this) {
             case WHITE -> BLACK;
             case BLACK -> WHITE;
-            case NONE -> throw new RuntimeException("Color NONE has no opposite");
+            case NONE -> throw new RuntimeException("La couleur NONE n'a pas d'opposé");
         };
     }
 }

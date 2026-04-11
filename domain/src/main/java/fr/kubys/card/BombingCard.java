@@ -16,14 +16,14 @@ public class BombingCard extends Card<PositionCardParam> {
 
     @Override
     protected void validInput(ChessBoard chessBoard, PositionCardParam param) {
-        if (param.position() == null) throw new IllegalStateException("Missing required card parameter");
-        if (chessBoard.getCurrentTurn() == null) throw new IllegalStateException("Missing required card parameter");
+        if (param.position() == null) throw new IllegalStateException("Paramètre de carte manquant");
+        if (chessBoard.getCurrentTurn() == null) throw new IllegalStateException("Paramètre de carte manquant");
         boolean thereIsEnemyPieceOnPosition = chessBoard.at(param.position()).getPiece()
                 .map(Piece::getColor)
                 .map(c -> c != chessBoard.getCurrentTurn())
                 .orElse(false);
         if (thereIsEnemyPieceOnPosition)
-            throw new IllegalArgumentException("You cannot select a square occupied by an enemy piece");
+            throw new IllegalArgumentException("Vous ne pouvez pas sélectionner une case occupée par une pièce adverse");
     }
 
     @Override

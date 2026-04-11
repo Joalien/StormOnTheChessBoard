@@ -17,12 +17,12 @@ public class CrazyKnightCard extends Card<TwoPieceCardParam> {
 
     @Override
     protected void validInput(ChessBoard chessBoard, TwoPieceCardParam param) {
-        if (param.piece1() == null || param.piece2() == null) throw new IllegalStateException("Missing required card parameter");
-        if (param.piece1() == param.piece2()) throw new IllegalArgumentException("Pieces must be different");
+        if (param.piece1() == null || param.piece2() == null) throw new IllegalStateException("Paramètre de carte manquant");
+        if (param.piece1() == param.piece2()) throw new IllegalArgumentException("Les pièces doivent être différentes");
         if (chessBoard.getOutOfTheBoardPieces().contains(param.piece1()))
-            throw new IllegalArgumentException("%s should be on the board".formatted(param.piece1()));
+            throw new IllegalArgumentException("%s devrait être sur le plateau".formatted(param.piece1()));
         if (chessBoard.getOutOfTheBoardPieces().contains(param.piece2()))
-            throw new IllegalArgumentException("%s should be on the board".formatted(param.piece2()));
+            throw new IllegalArgumentException("%s devrait être sur le plateau".formatted(param.piece2()));
         if (param.piece1().getColor().cannotBeMovedBy(chessBoard.getCurrentTurn()))
             throw new CannotMoveThisColorException(param.piece1().getColor());
         if (param.piece2().getColor().cannotBeMovedBy(chessBoard.getCurrentTurn()))
@@ -30,7 +30,7 @@ public class CrazyKnightCard extends Card<TwoPieceCardParam> {
         boolean hasBishop = param.piece1() instanceof Bishop || param.piece2() instanceof Bishop;
         boolean hasKnight = param.piece1() instanceof Knight || param.piece2() instanceof Knight;
         if (!hasBishop || !hasKnight)
-            throw new IllegalArgumentException("You must select one Bishop and one Knight");
+            throw new IllegalArgumentException("Vous devez sélectionner un Fou et un Cavalier");
     }
 
     @Override

@@ -16,19 +16,19 @@ public class MajorettesCard extends Card<TwoPieceCardParam> {
 
     @Override
     protected void validInput(ChessBoard chessBoard, TwoPieceCardParam param) {
-        if (param.piece1() == null || param.piece2() == null) throw new IllegalStateException("Missing required card parameter");
-        if (param.piece1() == param.piece2()) throw new IllegalArgumentException("Must select two different pawns");
+        if (param.piece1() == null || param.piece2() == null) throw new IllegalStateException("Paramètre de carte manquant");
+        if (param.piece1() == param.piece2()) throw new IllegalArgumentException("Vous devez sélectionner deux pions différents");
         if (!(param.piece1() instanceof Pawn) || !(param.piece2() instanceof Pawn))
-            throw new IllegalArgumentException("Both pieces must be Pawns");
+            throw new IllegalArgumentException("Les deux pièces doivent être des Pions");
         if (param.piece1().getColor().cannotBeMovedBy(chessBoard.getCurrentTurn()))
             throw new CannotMoveThisColorException(param.piece1().getColor());
         if (param.piece2().getColor().cannotBeMovedBy(chessBoard.getCurrentTurn()))
             throw new CannotMoveThisColorException(param.piece2().getColor());
         // Check each pawn has a free lateral square
         if (lateralTarget(chessBoard, param.piece1()) == null)
-            throw new IllegalArgumentException("%s has no free lateral square".formatted(param.piece1()));
+            throw new IllegalArgumentException("%s n'a pas de case latérale libre".formatted(param.piece1()));
         if (lateralTarget(chessBoard, param.piece2()) == null)
-            throw new IllegalArgumentException("%s has no free lateral square".formatted(param.piece2()));
+            throw new IllegalArgumentException("%s n'a pas de case latérale libre".formatted(param.piece2()));
     }
 
     @Override

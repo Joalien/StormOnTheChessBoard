@@ -15,13 +15,13 @@ public class BarricadeCard extends Card<BarricadeCardParam> {
     @Override
     protected void validInput(ChessBoard chessBoard, BarricadeCardParam param) {
         if (param.from1() == null || param.to1() == null || param.from2() == null || param.to2() == null)
-            throw new IllegalStateException("Missing required card parameter");
+            throw new IllegalStateException("Paramètre de carte manquant");
         if (!BarricadeEffect.areOrthogonallyAdjacent(param.from1(), param.to1()))
-            throw new IllegalArgumentException("Edge 1: positions must be orthogonally adjacent");
+            throw new IllegalArgumentException("Côté 1 : les positions doivent être orthogonalement adjacentes");
         if (!BarricadeEffect.areOrthogonallyAdjacent(param.from2(), param.to2()))
-            throw new IllegalArgumentException("Edge 2: positions must be orthogonally adjacent");
+            throw new IllegalArgumentException("Côté 2 : les positions doivent être orthogonalement adjacentes");
         if (!BarricadeEffect.areEdgesConnected(param.from1(), param.to1(), param.from2(), param.to2()))
-            throw new IllegalArgumentException("The two edges must be connected (share a grid vertex)");
+            throw new IllegalArgumentException("Les deux côtés doivent être connectés (partager un sommet)");
     }
 
     @Override

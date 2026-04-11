@@ -20,15 +20,15 @@ public class BigBluesCard extends Card<PieceCardParam> {
 
     @Override
     protected void validInput(ChessBoard chessBoard, PieceCardParam param) {
-        if (param.piece() == null) throw new IllegalStateException("Missing required card parameter");
+        if (param.piece() == null) throw new IllegalStateException("Paramètre de carte manquant");
         if (!(param.piece() instanceof Pawn))
-            throw new IllegalArgumentException("You can only target a Pawn");
+            throw new IllegalArgumentException("Vous ne pouvez cibler qu'un Pion");
         if (!param.piece().getColor().cannotBeMovedBy(chessBoard.getCurrentTurn()))
-            throw new IllegalArgumentException("You must target an enemy Pawn");
+            throw new IllegalArgumentException("Vous devez cibler un Pion adverse");
         if (chessBoard.getOutOfTheBoardPieces().contains(param.piece()))
-            throw new IllegalArgumentException("Pawn is not on the board");
+            throw new IllegalArgumentException("Le Pion n'est pas sur le plateau");
         if (!allNeighborsEmpty(chessBoard, param.piece().getPosition()))
-            throw new IllegalArgumentException("Not all neighboring squares are empty");
+            throw new IllegalArgumentException("Toutes les cases voisines ne sont pas vides");
     }
 
     @Override

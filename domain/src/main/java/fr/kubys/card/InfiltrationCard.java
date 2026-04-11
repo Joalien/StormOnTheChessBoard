@@ -16,13 +16,13 @@ public class InfiltrationCard extends Card<TwoPieceCardParam> {
 
     @Override
     protected void validInput(ChessBoard chessBoard, TwoPieceCardParam param) {
-        if (param.piece1() == null || param.piece2() == null) throw new IllegalStateException("Missing required card parameter");
+        if (param.piece1() == null || param.piece2() == null) throw new IllegalStateException("Paramètre de carte manquant");
         if (!(param.piece1() instanceof Pawn) || !(param.piece2() instanceof Pawn))
-            throw new IllegalArgumentException("Both pieces must be Pawns");
+            throw new IllegalArgumentException("Les deux pièces doivent être des Pions");
         boolean isFirstPawnAlly = !param.piece1().getColor().cannotBeMovedBy(chessBoard.getCurrentTurn());
         boolean isSecondPawnAlly = !param.piece2().getColor().cannotBeMovedBy(chessBoard.getCurrentTurn());
         if (isFirstPawnAlly == isSecondPawnAlly)
-            throw new IllegalArgumentException("You must select one of your pawns and one enemy pawn");
+            throw new IllegalArgumentException("Vous devez sélectionner un de vos pions et un pion adverse");
     }
 
     @Override

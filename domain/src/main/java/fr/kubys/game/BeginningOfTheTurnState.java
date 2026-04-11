@@ -17,7 +17,7 @@ public final class BeginningOfTheTurnState implements TurnState {
         StateEnum nextState = switch (card.getType()) {
             case BEFORE_TURN -> StateEnum.BEFORE_MOVE;
             case REPLACE_TURN -> StateEnum.END_OF_THE_TURN;
-            default -> throw new InvalidGameActionException("You can only play BEFORE or REPLACE card!");
+            default -> throw new InvalidGameActionException("Vous ne pouvez jouer qu'une carte AVANT ou REMPLACE le coup !");
         };
         card.playOn(gameStateController.getChessBoard(), params); // FIXME
         gameStateController.transitionToState(nextState);
@@ -25,6 +25,6 @@ public final class BeginningOfTheTurnState implements TurnState {
 
     @Override
     public void tryToPass(GameStateController gameStateController) {
-        throw new InvalidGameActionException("You cannot pass before playing a move");
+        throw new InvalidGameActionException("Vous ne pouvez pas passer avant de jouer un coup");
     }
 }
