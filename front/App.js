@@ -10,11 +10,21 @@ import {NotFoundScreen} from "./component/NotFoundScreen";
 import {toast, ToastContainer} from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 
-const backendOrigin = typeof window !== 'undefined'
-    ? window.location.protocol + '//' + window.location.hostname + ':9000'
-    : 'http://localhost:9000';
+function resolveBackendOrigin() {
+    if (typeof window === 'undefined') return 'http://localhost:9000';
+    const port = window.location.port;
+    // Behind nginx (port 80/443 or no port) → same origin; otherwise dev mode → backend on 9000
+    if (!port || port === '80' || port === '443') return window.location.origin;
+    return window.location.protocol + '//' + window.location.hostname + ':9000';
+}
+const backendOrigin = resolveBackendOrigin();
 const wsOrigin = typeof window !== 'undefined'
-    ? (window.location.protocol === 'https:' ? 'wss://' : 'ws://') + window.location.hostname + ':9000'
+    ? (() => {
+        const protocol = window.location.protocol === 'https:' ? 'wss://' : 'ws://';
+        const port = window.location.port;
+        if (!port || port === '80' || port === '443') return protocol + window.location.host;
+        return protocol + window.location.hostname + ':9000';
+    })()
     : 'ws://localhost:9000';
 const base = backendOrigin + "/chessboard/";
 const highlight = {boxShadow: "rgba(212, 168, 67, 0.85) 0px 0px 24px 0px inset"};
