@@ -1,5 +1,6 @@
 import {Chessboard} from "react-chessboard";
 import {useCallback, useEffect, useMemo, useState} from "react";
+import {Image} from "react-native";
 import {Player} from "./component/Player";
 import {CardParameters} from "./component/CardParameters";
 import {barricadeLines, BarricadeSelectionOverlay} from "./component/barricadeOverlay";
@@ -609,7 +610,7 @@ export default function App() {
                         />
                     ) : (
                         <div className="sotc-panel" style={{padding: '28px 20px', textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px'}}>
-                            <div style={{fontSize: '36px', opacity: 0.2}}>🃏</div>
+                            <Image source={require('./assets/images/cards/back.png')} style={{width: 60, height: 87, borderRadius: 6, opacity: 0.25}}/>
                             <p style={{color: '#484f58', fontSize: '13px', lineHeight: '1.7', margin: 0}}>
                                 Click one of your cards to view its details and play it.
                             </p>
