@@ -1,0 +1,116 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <!-- Proposal 3: Chessboard with 3 cards in fan + curving magic effects -->
+  <defs>
+    <linearGradient id="boardLight" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#FFF3E0"/>
+      <stop offset="100%" stop-color="#FFE0B2"/>
+    </linearGradient>
+    <linearGradient id="boardDark" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#E65100"/>
+      <stop offset="100%" stop-color="#BF360C"/>
+    </linearGradient>
+    <linearGradient id="cardGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#FFFDE7"/>
+      <stop offset="100%" stop-color="#FFF9C4"/>
+    </linearGradient>
+    <linearGradient id="effectGrad1" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#FFD740" stop-opacity="0.95"/>
+      <stop offset="100%" stop-color="#FF8F00" stop-opacity="0.05"/>
+    </linearGradient>
+    <linearGradient id="effectGrad2" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#FFC107" stop-opacity="0.9"/>
+      <stop offset="100%" stop-color="#FFB300" stop-opacity="0.05"/>
+    </linearGradient>
+    <linearGradient id="effectGrad3" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#FFB300" stop-opacity="0.85"/>
+      <stop offset="100%" stop-color="#FF6F00" stop-opacity="0.05"/>
+    </linearGradient>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="3" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    <filter id="softGlow">
+      <feGaussianBlur stdDeviation="5" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- === CHESSBOARD (center, strong perspective) === -->
+  <g transform="translate(230, 300) rotate(-20) skewY(15) scale(1, 0.65)">
+    <!-- Light squares -->
+    <rect x="-100" y="-100" width="100" height="100" fill="url(#boardLight)" stroke="#F57C00" stroke-width="2.5"/>
+    <rect x="0" y="0" width="100" height="100" fill="url(#boardLight)" stroke="#F57C00" stroke-width="2.5"/>
+    <!-- Dark squares -->
+    <rect x="0" y="-100" width="100" height="100" fill="url(#boardDark)" stroke="#F57C00" stroke-width="2.5"/>
+    <rect x="-100" y="0" width="100" height="100" fill="url(#boardDark)" stroke="#F57C00" stroke-width="2.5"/>
+    <!-- Border -->
+    <rect x="-100" y="-100" width="200" height="200" fill="none" stroke="#BF360C" stroke-width="5" rx="2"/>
+  </g>
+
+  <!-- === MAGIC EFFECTS (curving out from card sides then looping back to board) === -->
+  <g filter="url(#softGlow)">
+    <!-- From left card: exits left side, swings wide left, lands on board -->
+    <path d="M230,215 C200,180 140,170 120,210 C95,255 115,285 160,305" fill="none" stroke="url(#effectGrad1)" stroke-width="9" stroke-linecap="round" opacity="0.75"/>
+    <path d="M228,220 C195,175 125,165 105,220 C80,270 110,295 148,315" fill="none" stroke="url(#effectGrad1)" stroke-width="4.5" stroke-linecap="round" opacity="0.5"/>
+
+    <!-- From center card: exits left side, swings wide left, lands on board center -->
+    <path d="M250,195 C215,155 155,140 130,185 C100,235 135,275 185,300" fill="none" stroke="url(#effectGrad2)" stroke-width="11" stroke-linecap="round" opacity="0.7"/>
+    <path d="M253,200 C225,150 145,130 115,190 C80,250 125,290 172,310" fill="none" stroke="url(#effectGrad2)" stroke-width="5" stroke-linecap="round" opacity="0.4"/>
+
+    <!-- From right card: exits right side, swings wide right, lands on board -->
+    <path d="M315,210 C355,185 390,195 395,235 C400,275 340,300 265,310" fill="none" stroke="url(#effectGrad3)" stroke-width="8" stroke-linecap="round" opacity="0.7"/>
+    <path d="M318,215 C360,180 405,192 408,245 C412,290 350,310 275,320" fill="none" stroke="url(#effectGrad3)" stroke-width="4" stroke-linecap="round" opacity="0.45"/>
+  </g>
+
+  <!-- Sparkle particles along the effect curves -->
+  <g filter="url(#glow)">
+    <circle cx="135" cy="195" r="4" fill="#FFD740" opacity="0.8"/>
+    <circle cx="110" cy="250" r="3.5" fill="#FFC107" opacity="0.7"/>
+    <circle cx="140" cy="310" r="4.5" fill="#FFD740" opacity="0.6"/>
+    <circle cx="125" cy="170" r="3" fill="#FFE082" opacity="0.75"/>
+    <circle cx="395" cy="210" r="3.5" fill="#FFB300" opacity="0.7"/>
+    <circle cx="400" cy="270" r="4" fill="#FFC107" opacity="0.6"/>
+    <circle cx="340" cy="340" r="3" fill="#FFD740" opacity="0.65"/>
+    <circle cx="165" cy="350" r="3" fill="#FFE082" opacity="0.7"/>
+    <circle cx="100" cy="230" r="2.5" fill="#FFD740" opacity="0.6"/>
+    <circle cx="420" cy="250" r="3" fill="#FFB300" opacity="0.55"/>
+  </g>
+
+  <!-- === THREE CARDS IN FAN (overlapping the board, standing up) === -->
+
+  <!-- Card 1 (left of fan, tilted left) -->
+  <g transform="translate(235, 195) rotate(-22)">
+    <rect x="-34" y="-55" width="68" height="110" rx="7" ry="7" fill="url(#cardGrad)" stroke="#F57C00" stroke-width="2.5"/>
+    <rect x="-27" y="-48" width="54" height="96" rx="3" fill="none" stroke="#FFB74D" stroke-width="1"/>
+    <polygon points="0,-20 13,-6 0,8 -13,-6" fill="#E65100" opacity="0.7"/>
+  </g>
+
+  <!-- Card 2 (center of fan, upright) -->
+  <g transform="translate(270, 180) rotate(0)">
+    <rect x="-34" y="-55" width="68" height="110" rx="7" ry="7" fill="url(#cardGrad)" stroke="#F57C00" stroke-width="2.5"/>
+    <rect x="-27" y="-48" width="54" height="96" rx="3" fill="none" stroke="#FFB74D" stroke-width="1"/>
+    <polygon points="0,-24 7,-9 22,-9 10,2 14,17 0,9 -14,17 -10,2 -22,-9 -7,-9" fill="#FF8F00" opacity="0.8"/>
+  </g>
+
+  <!-- Card 3 (right of fan, tilted right) -->
+  <g transform="translate(305, 195) rotate(22)">
+    <rect x="-34" y="-55" width="68" height="110" rx="7" ry="7" fill="url(#cardGrad)" stroke="#F57C00" stroke-width="2.5"/>
+    <rect x="-27" y="-48" width="54" height="96" rx="3" fill="none" stroke="#FFB74D" stroke-width="1"/>
+    <polygon points="-5,-18 7,-4 0,-4 9,16 -3,1 4,1" fill="#FFB300" opacity="0.8"/>
+  </g>
+
+  <!-- Extra sparkles around cards -->
+  <g filter="url(#glow)">
+    <circle cx="210" cy="145" r="3" fill="#FFD740" opacity="0.6"/>
+    <circle cx="340" cy="145" r="2.5" fill="#FFC107" opacity="0.55"/>
+    <circle cx="270" cy="115" r="3.5" fill="#FFD740" opacity="0.7"/>
+    <circle cx="195" cy="185" r="2" fill="#FFE082" opacity="0.5"/>
+    <circle cx="345" cy="185" r="2" fill="#FFE082" opacity="0.5"/>
+  </g>
+</svg>
