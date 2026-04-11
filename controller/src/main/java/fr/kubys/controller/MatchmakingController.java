@@ -27,7 +27,6 @@ public class MatchmakingController {
     }
 
     @PostMapping("/join")
-    @CrossOrigin(origins = "*")
     public Map<String, String> join() {
         String token = queue.join();
         queue.getMatch(token).ifPresent(this::createGameAndNotify);
@@ -35,7 +34,6 @@ public class MatchmakingController {
     }
 
     @GetMapping("/status/{token}")
-    @CrossOrigin(origins = "*")
     public Map<String, Object> status(@PathVariable String token) {
         Optional<MatchResult> match = queue.getMatch(token);
         if (match.isPresent()) {
@@ -54,7 +52,6 @@ public class MatchmakingController {
     }
 
     @DeleteMapping("/{token}")
-    @CrossOrigin(origins = "*")
     public void cancel(@PathVariable String token) {
         queue.cancel(token);
     }

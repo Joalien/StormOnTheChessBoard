@@ -21,7 +21,6 @@ public class PlayerController {
     }
 
     @GetMapping("/{playerId}")
-    @CrossOrigin(origins = "*")
     public PlayerDto getPlayerById(@PathVariable Integer gameId, @PathVariable String playerId) {
         final ChessBoardReadService chessBoardService = chessBoardRepository.getChessBoardService(gameId);
         return switch (playerId) {

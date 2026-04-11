@@ -44,13 +44,11 @@ public class GameController {
 
     // FIXME split into smaller endpoints in order to allow front to fetch in multiple requests
     @PostMapping
-    @CrossOrigin(origins = "*")
     public ResponseEntity<Integer> startGame() {
         return new ResponseEntity<>(chessBoardRepository.createNewGame(), HttpStatus.CREATED);
     }
 
     @PostMapping("/{gameId}/endTurn")
-    @CrossOrigin(origins = "*")
     public ResponseEntity<Integer> endTurn(@PathVariable Integer gameId) {
         EndTurnCommand endTurnCommand = EndTurnCommand.builder().gameId(gameId).build();
         chessBoardRepository.saveCommand(endTurnCommand);
@@ -59,7 +57,6 @@ public class GameController {
     }
 
     @PostMapping("/{gameId}/undo")
-    @CrossOrigin(origins = "*")
     public ResponseEntity<Integer> undo(@PathVariable Integer gameId) {
         chessBoardRepository.undoLastCommand(gameId);
         gameNotifier.notifyGame(gameId);
@@ -67,13 +64,11 @@ public class GameController {
     }
 
     @GetMapping("/{gameId}")
-    @CrossOrigin(origins = "*")
     public ChessBoardDto getGameById(@PathVariable Integer gameId) {
         return mapToDto(gameId, chessBoardRepository.getChessBoardService(gameId));
     }
 
     @PostMapping("/{gameId}/card/{cardName}")
-    @CrossOrigin(origins = "*")
     public <T extends CardParam> ResponseEntity<Void> updateGame(@PathVariable Integer gameId, @PathVariable String cardName, @RequestBody Map<String, Object> param) {
         PlayCardWithImmutableParamCommand<T> command = PlayCardWithImmutableParamCommand.<T>builder()
                 .gameId(gameId)
@@ -86,7 +81,6 @@ public class GameController {
     }
 
     @PostMapping("/{gameId}/promote/{position}/{piece}")
-    @CrossOrigin(origins = "*")
     public ResponseEntity<Void> promote(@PathVariable Integer gameId, @PathVariable String position, @PathVariable PromotionPiece piece) {
         chessBoardRepository.saveCommand(
             PromoteCommand.builder()
@@ -100,7 +94,6 @@ public class GameController {
     }
 
     @GetMapping("/{gameId}/legalMoves/{position}")
-    @CrossOrigin(origins = "*")
     public Set<String> getLegalMoves(@PathVariable Integer gameId, @PathVariable String position) {
         return chessBoardRepository.getChessBoardService(gameId)
                 .getLegalMoves(Position.valueOf(position))
@@ -110,7 +103,6 @@ public class GameController {
     }
 
     @PostMapping("/{gameId}/move/{from}/to/{to}")
-    @CrossOrigin(origins = "*")
     public ResponseEntity<Void> move(@PathVariable Integer gameId, @PathVariable String from, @PathVariable String to) {
         Command command = PlayMoveCommand.builder()
                 .gameId(gameId)
