@@ -283,6 +283,7 @@ export default function App() {
     const [promotionSquare, setPromotionSquare] = useState(null);
     const [barricadeEdges, setBarricadeEdges] = useState([]);
     const [checkMateTargets, setCheckMateTargets] = useState([]);
+    const [legalMoves, setLegalMoves] = useState([]);
     const [windowWidth, setWindowWidth] = useState(typeof window !== 'undefined' ? window.innerWidth : 900);
 
     useEffect(() => {
@@ -368,7 +369,19 @@ export default function App() {
             .catch(err => alert(err));
     }
 
+    function onPieceDragBegin(piece, sourceSquare) {
+        fetch(base + gameId + "/legalMoves/" + sourceSquare)
+            .then(res => res.json())
+            .then(moves => setLegalMoves(moves))
+            .catch(() => setLegalMoves([]));
+    }
+
+    function onPieceDragEnd() {
+        setLegalMoves([]);
+    }
+
     async function movePiece(sourceSquare, targetSquare) {
+        setLegalMoves([]);
         const res = await fetch(base + gameId + "/move/" + sourceSquare + "/to/" + targetSquare, {method: 'POST'});
         if (res.ok) fetchGame();
         else await showErrorMessage(res);
@@ -517,6 +530,10 @@ export default function App() {
     const opponentColor = isWhiteTurn ? "black" : "white";
 
     const promotionHighlight = {boxShadow: "rgba(248, 81, 73, 0.85) 0px 0px 24px 0px inset", cursor: "pointer"};
+    const legalMoveDot = {background: "radial-gradient(circle, rgba(0,0,0,0.25) 25%, transparent 25%)"};
+    const legalMoveCapture = {
+        background: "radial-gradient(circle, transparent 80%, rgba(0,0,0,0.25) 80%)",
+    };
     const customSquareStyles = {
         ...customSquares(),
         ...(selectedCard
@@ -527,6 +544,7 @@ export default function App() {
             : {}
         ),
         ...pendingPromotions.reduce((obj, sq) => { obj[sq] = promotionHighlight; return obj; }, {}),
+        ...legalMoves.reduce((obj, sq) => { obj[sq] = game[sq] ? legalMoveCapture : legalMoveDot; return obj; }, {}),
     };
 
     if (route.page === 'home') {
@@ -650,6 +668,8 @@ export default function App() {
                                 id="BasicBoard"
                                 boardWidth={boardSize}
                                 onPieceDrop={movePiece}
+                                onPieceDragBegin={onPieceDragBegin}
+                                onPieceDragEnd={onPieceDragEnd}
                                 position={game}
                                 arePiecesDraggable={selectedCard === null && pendingPromotions.length === 0}
                                 boardOrientation={currentPlayerColor}

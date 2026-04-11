@@ -222,6 +222,13 @@ public class GameStateController implements ChessBoardService {
         return Set.copyOf(pendingPromotions);
     }
 
+    @Override
+    public Set<Position> getLegalMoves(Position position) {
+        Piece piece = chessBoard.at(position).getPiece()
+                .orElseThrow(() -> new IllegalArgumentException("No piece on %s".formatted(position)));
+        return chessBoard.getLegalMoves(piece);
+    }
+
     Player getOpponent() {
         return Stream.of(white, black)
                 .filter(player -> player.getColor() != chessBoard.getCurrentTurn())

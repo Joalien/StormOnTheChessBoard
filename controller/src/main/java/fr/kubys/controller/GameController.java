@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import static fr.kubys.mapper.OutputMapper.mapToDto;
 
@@ -88,6 +90,16 @@ public class GameController {
                 .build()
         );
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/{gameId}/legalMoves/{position}")
+    @CrossOrigin(origins = "*")
+    public Set<String> getLegalMoves(@PathVariable Integer gameId, @PathVariable String position) {
+        return chessBoardRepository.getChessBoardService(gameId)
+                .getLegalMoves(Position.valueOf(position))
+                .stream()
+                .map(Position::name)
+                .collect(Collectors.toSet());
     }
 
     @PostMapping("/{gameId}/move/{from}/to/{to}")

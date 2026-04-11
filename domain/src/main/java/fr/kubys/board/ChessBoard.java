@@ -108,6 +108,12 @@ public class ChessBoard {
                 .collect(Collectors.toSet());
     }
 
+    public Set<Position> getLegalMoves(Piece piece) {
+        return getAllAttackablePosition(piece).stream()
+                .filter(pos -> !doesMovingPieceCheckOurOwnKing(piece, pos))
+                .collect(Collectors.toSet());
+    }
+
     public boolean canAttack(Piece piece, Position positionToMoveOn) {
         return canAttack(piece, positionToMoveOn, piece.getColor());
     }

@@ -26,4 +26,6 @@ public interface ChessBoardReadService {
     Player getBlack();
 
     Set<Position> getPendingPromotions();
+
+    Set<Position> getLegalMoves(Position position);
 }
