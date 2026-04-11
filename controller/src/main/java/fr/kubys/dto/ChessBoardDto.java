@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -24,4 +25,5 @@ public class ChessBoardDto {
     private String currentState;
     private Set<String> pendingPromotions;
     private Set<String> checkMateTargets;
+    private List<String> capturedPieces;
 }

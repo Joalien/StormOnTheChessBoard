@@ -174,6 +174,11 @@ public class GameStateController implements ChessBoardService {
     }
 
     @Override
+    public Set<Piece> getCapturedPieces() {
+        return chessBoard.getOutOfTheBoardPieces();
+    }
+
+    @Override
     public String getCurrentStateName() {
         return this.currentState.name();
     }

@@ -29,4 +29,6 @@ public interface ChessBoardReadService {
     Set<Position> getPendingPromotions();
 
     Set<Position> getLegalMoves(Position position);
+
+    Set<Piece> getCapturedPieces();
 }

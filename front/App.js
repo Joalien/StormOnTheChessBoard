@@ -301,6 +301,7 @@ export default function App() {
     const [barricadeEdges, setBarricadeEdges] = useState([]);
     const [checkMateTargets, setCheckMateTargets] = useState([]);
     const [currentState, setCurrentState] = useState(null);
+    const [capturedPieces, setCapturedPieces] = useState([]);
     const [myColor, setMyColor] = useState(getPlayerColorFromUrl);
     const [legalMoves, setLegalMoves] = useState([]);
     const [windowWidth, setWindowWidth] = useState(typeof window !== 'undefined' ? window.innerWidth : 900);
@@ -510,6 +511,7 @@ export default function App() {
                 setPendingPromotions(data.pendingPromotions || []);
                 setCheckMateTargets(data.checkMateTargets || []);
                 setCurrentState(data.currentState);
+                setCapturedPieces(data.capturedPieces || []);
                 setPromotionSquare(null);
             });
     }
@@ -745,6 +747,37 @@ export default function App() {
                     <button className="sotc-btn sotc-btn-end" style={{width: '100%', padding: '13px'}} onClick={endTurn} disabled={!isMyTurn}>
                         ✓ End Turn
                     </button>
+
+                    {capturedPieces.length > 0 && (() => {
+                        const pieceSymbols = {P: '♟', N: '♞', B: '♝', R: '♜', Q: '♛', K: '♚', Kangaroo: '🦘', Crab: '🦀'};
+                        const whiteCaptured = capturedPieces.filter(p => p.startsWith('w'));
+                        const blackCaptured = capturedPieces.filter(p => p.startsWith('b'));
+                        const renderGroup = (pieces, color) => (
+                            <div style={{display: 'flex', flexWrap: 'wrap', gap: '2px'}}>
+                                {pieces.map((p, i) => {
+                                    const type = p.slice(1);
+                                    return (
+                                        <span key={i} style={{
+                                            fontSize: '20px',
+                                            color: color === 'w' ? '#f0d9b5' : '#6a5a4a',
+                                            lineHeight: 1,
+                                        }}>
+                                            {pieceSymbols[type] || '?'}
+                                        </span>
+                                    );
+                                })}
+                            </div>
+                        );
+                        return (
+                            <div className="sotc-panel" style={{padding: '12px 16px', display: 'flex', flexDirection: 'column', gap: '8px'}}>
+                                <span style={{fontSize: '11px', fontWeight: '700', color: '#484f58', textTransform: 'uppercase', letterSpacing: '0.8px'}}>
+                                    Captured
+                                </span>
+                                {whiteCaptured.length > 0 && renderGroup(whiteCaptured, 'w')}
+                                {blackCaptured.length > 0 && renderGroup(blackCaptured, 'b')}
+                            </div>
+                        );
+                    })()}
                 </aside>
 
                 {/* Center: board column */}
