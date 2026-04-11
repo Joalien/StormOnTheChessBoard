@@ -6,7 +6,7 @@ import {barricadeLines, BarricadeSelectionOverlay} from "./component/barricadeOv
 import {toast, ToastContainer} from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 
-const base = "http://localhost:9000/chessboard/";
+const base = (typeof window !== 'undefined' ? window.location.origin : 'http://localhost:9000') + "/chessboard/";
 const highlight = {boxShadow: "rgba(212, 168, 67, 0.85) 0px 0px 24px 0px inset"};
 
 const globalCSS = `
@@ -310,7 +310,7 @@ export default function App() {
     }, []);
 
     function startNewGame() {
-        fetch("http://localhost:9000/chessboard", {method: 'POST'})
+        fetch(base.replace(/\/$/, ''), {method: 'POST'})
             .then(res => res.json())
             .then(id => navigateToGame(id))
             .catch(err => alert(err));
