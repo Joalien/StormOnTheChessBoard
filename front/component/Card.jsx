@@ -3,7 +3,7 @@ import cardImages from "./cardImages";
 
 export function Card({hidden, name, showCard, isSelected, isPlayable = true}) {
     const hasImage = name in cardImages;
-    const imgStyle = {width: 80, height: 116, borderRadius: 7};
+    const imgStyle = {width: 100, height: 145, borderRadius: 8};
 
     if (hidden) {
         return (
@@ -25,8 +25,8 @@ export function Card({hidden, name, showCard, isSelected, isPlayable = true}) {
 
     return (
         <div className={wrapperClass} onClick={showCard} style={{
-            width: 80,
-            height: 116,
+            width: 100,
+            height: 145,
             background: 'rgba(255,255,255,0.04)',
             border: '1px solid rgba(255,255,255,0.1)',
             borderRadius: 7,

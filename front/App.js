@@ -247,10 +247,12 @@ const globalCSS = `
   .Toastify__toast--success { border-color: rgba(63,185,80,0.3) !important; }
   .Toastify__close-button { color: #8b949e !important; }
 
-  @media (max-width: 900px) {
+  @media (max-width: 1200px) {
     .sotc-header-title { display: none; }
     .sotc-main { flex-direction: column !important; align-items: center !important; padding: 12px 8px !important; }
-    .sotc-aside { width: 100% !important; max-width: 560px; position: static !important; order: 2; }
+    .sotc-aside { width: 100% !important; max-width: 560px; position: static !important; }
+    .sotc-aside-left { order: 3; }
+    .sotc-aside-right { order: 2; }
     .sotc-board-section { order: 1; }
   }
 
@@ -792,58 +794,11 @@ export default function App() {
                 padding: '28px 20px',
                 flex: 1,
             }}>
-                {/* Left panel */}
-                <aside className="sotc-aside" style={{width: '252px', flexShrink: 0, position: 'sticky', top: '80px', display: 'flex', flexDirection: 'column', gap: '12px'}}>
-                    {selectedCard ? (
-                        <CardParameters
-                            card={selectedCard}
-                            selectedParam={selectedParam}
-                            setSelectedParam={setSelectedParam}
-                            playCardCallback={playCard}
-                            barricadeEdges={barricadeEdges}
-                            setBarricadeEdges={setBarricadeEdges}
-                            isPlayable={!selectedCard.isEffect && playableCardTypes(currentState, false).includes(selectedCard.type)}
-                        />
-                    ) : (
-                        <div className="sotc-panel" style={{padding: '28px 20px', textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px'}}>
-                            <Image source={require('./assets/images/cards/back.png')} style={{width: 60, height: 87, borderRadius: 6, opacity: 0.25}}/>
-                            <p style={{color: '#484f58', fontSize: '13px', lineHeight: '1.7', margin: 0}}>
-                                Click one of your cards to view its details and play it.
-                            </p>
-                        </div>
-                    )}
-
+                {/* Left panel: End Turn + Captured pieces */}
+                <aside className="sotc-aside sotc-aside-left" style={{width: '252px', flexShrink: 0, position: 'sticky', top: '80px', display: 'flex', flexDirection: 'column', gap: '12px'}}>
                     <button className="sotc-btn sotc-btn-end" style={{width: '100%', padding: '13px'}} onClick={endTurn} disabled={!isMyTurn}>
                         ✓ End Turn
                     </button>
-
-                    {effects.some(e => e.cardEnglishName) && (
-                        <div className="sotc-panel" style={{padding: '12px 16px', display: 'flex', flexDirection: 'column', gap: '8px'}}>
-                            <span style={{fontSize: '11px', fontWeight: '700', color: '#484f58', textTransform: 'uppercase', letterSpacing: '0.8px'}}>
-                                Active Effects
-                            </span>
-                            <div style={{display: 'flex', gap: '8px', flexWrap: 'wrap'}}>
-                                {effects.filter(e => e.cardEnglishName).map((effect, idx) => {
-                                    const isSelected = selectedCard && selectedCard.englishName === effect.cardEnglishName && selectedCard.isEffect;
-                                    return (
-                                        <Card
-                                            key={idx}
-                                            name={effect.cardEnglishName}
-                                            showCard={() => showCard({
-                                                englishName: effect.cardEnglishName,
-                                                name: effect.cardName,
-                                                description: effect.cardDescription,
-                                                param: {},
-                                                isEffect: true,
-                                            })}
-                                            isSelected={isSelected}
-                                            isPlayable={true}
-                                        />
-                                    );
-                                })}
-                            </div>
-                        </div>
-                    )}
 
                     {capturedPieces.length > 0 && (() => {
                         const pieceSymbols = {P: '♟', N: '♞', B: '♝', R: '♜', Q: '♛', K: '♚', Kangaroo: '🦘', Crab: '🦀'};
@@ -1045,6 +1000,56 @@ export default function App() {
                         playableTypes={playableCardTypes(currentState, false)}
                     />
                 </section>
+
+                {/* Right panel: Selected card + Active effects */}
+                <aside className="sotc-aside sotc-aside-right" style={{width: '280px', flexShrink: 0, position: 'sticky', top: '80px', display: 'flex', flexDirection: 'column', gap: '12px'}}>
+                    {selectedCard ? (
+                        <CardParameters
+                            card={selectedCard}
+                            selectedParam={selectedParam}
+                            setSelectedParam={setSelectedParam}
+                            playCardCallback={playCard}
+                            barricadeEdges={barricadeEdges}
+                            setBarricadeEdges={setBarricadeEdges}
+                            isPlayable={!selectedCard.isEffect && playableCardTypes(currentState, false).includes(selectedCard.type)}
+                        />
+                    ) : (
+                        <div className="sotc-panel" style={{padding: '28px 20px', textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px'}}>
+                            <Image source={require('./assets/images/cards/back.png')} style={{width: 80, height: 116, borderRadius: 6, opacity: 0.25}}/>
+                            <p style={{color: '#484f58', fontSize: '13px', lineHeight: '1.7', margin: 0}}>
+                                Click one of your cards to view its details and play it.
+                            </p>
+                        </div>
+                    )}
+
+                    {effects.some(e => e.cardEnglishName) && (
+                        <div className="sotc-panel" style={{padding: '12px 16px', display: 'flex', flexDirection: 'column', gap: '8px'}}>
+                            <span style={{fontSize: '11px', fontWeight: '700', color: '#484f58', textTransform: 'uppercase', letterSpacing: '0.8px'}}>
+                                Active Effects
+                            </span>
+                            <div style={{display: 'flex', gap: '8px', flexWrap: 'wrap'}}>
+                                {effects.filter(e => e.cardEnglishName).map((effect, idx) => {
+                                    const isSelected = selectedCard && selectedCard.englishName === effect.cardEnglishName && selectedCard.isEffect;
+                                    return (
+                                        <Card
+                                            key={idx}
+                                            name={effect.cardEnglishName}
+                                            showCard={() => showCard({
+                                                englishName: effect.cardEnglishName,
+                                                name: effect.cardName,
+                                                description: effect.cardDescription,
+                                                param: {},
+                                                isEffect: true,
+                                            })}
+                                            isSelected={isSelected}
+                                            isPlayable={true}
+                                        />
+                                    );
+                                })}
+                            </div>
+                        </div>
+                    )}
+                </aside>
             </main>
         </div>
     );

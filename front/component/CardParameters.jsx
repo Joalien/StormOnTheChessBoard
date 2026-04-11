@@ -84,7 +84,7 @@ export function CardParameters({card, selectedParam, setSelectedParam, playCardC
                         display: 'inline-block',
                         lineHeight: 0,
                     }}>
-                        <Image source={cardImages[card.englishName]} style={{width: 126, height: 180}}/>
+                        <Image source={cardImages[card.englishName]} style={{width: 160, height: 230}}/>
                     </div>
                 </div>
             )}
