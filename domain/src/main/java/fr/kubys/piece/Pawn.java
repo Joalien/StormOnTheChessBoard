@@ -71,8 +71,8 @@ public class Pawn extends Piece implements Promotable {
 
     private boolean checkDirection(File file, Row row, Color targetPieceColor, Optional<Row> forwardRow) {
         boolean moveTwoSquaresFromStart = getRow() == startingRow()
-                && twoSquaresForward().map(pos -> pos.getRow() == row).orElse(false);
-        boolean moveOneSquare = forwardRow.map(r -> r == row).orElse(false);
+                && twoSquaresForward().stream().anyMatch(pos -> pos.getRow() == row);
+        boolean moveOneSquare = forwardRow.stream().anyMatch(r -> r == row);
         boolean moveForward = targetPieceColor == null && file == getFile() && (moveTwoSquaresFromStart || moveOneSquare);
 
         boolean takePiece = moveOneSquare && getFile().distanceTo(file) == 1;
@@ -86,7 +86,7 @@ public class Pawn extends Piece implements Promotable {
         if (color.isNeutral()) return Collections.emptySet();
         boolean moveForwardTwoSquaresFromStart = isPositionTheoreticallyReachable(squareToMoveOn)
                 && getRow() == startingRow()
-                && twoSquaresForward().map(squareToMoveOn::equals).orElse(false);
+                && twoSquaresForward().stream().anyMatch(squareToMoveOn::equals);
         return moveForwardTwoSquaresFromStart
                 ? oneSquareForward().map(Set::of).orElse(Collections.emptySet())
                 : Collections.emptySet();

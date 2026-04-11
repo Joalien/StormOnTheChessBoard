@@ -41,7 +41,7 @@ public class ReflectedBishopCard extends Card<ReflectedBishopCardParam> {
 
         if (!reachablePositions.contains(param.positionToMoveOn()))
             throw new IllegalArgumentException("%s cannot reflect to %s".formatted(param.bishop(), param.positionToMoveOn()));
-        if (chessBoard.at(param.positionToMoveOn()).getPiece().map(Piece::isKing).orElse(false)) {
+        if (chessBoard.at(param.positionToMoveOn()).getPiece().filter(Piece::isKing).isPresent()) {
             throw new CannotTakeKingException();
         }
     }

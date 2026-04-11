@@ -86,14 +86,12 @@ public class ChessBoard {
     }
 
     public Square at(Position position) {
-        if (fakeSquares.containsKey(position)) return fakeSquares.get(position);
-        board.putIfAbsent(position, new Square(position)); // TODO inline return ?
-        return board.get(position);
+        return fakeSquares.getOrDefault(position, board.computeIfAbsent(position, Square::new));
     }
 
 
     public List<Piece> getOutOfTheBoardPieces() {
-        return outOfTheBoardPieces.stream().map(PieceRemoval::piece).collect(Collectors.toList());
+        return outOfTheBoardPieces.stream().map(PieceRemoval::piece).toList();
     }
 
     public Set<PieceRemoval> getPieceRemovals() {
@@ -323,8 +321,7 @@ public class ChessBoard {
         pieces.putAll(fakeSquares);
         return pieces.values().stream()
                 .map(Square::getPiece)
-                .filter(Optional::isPresent)
-                .map(Optional::get)
+                .flatMap(Optional::stream)
                 .collect(Collectors.toSet());
     }
 

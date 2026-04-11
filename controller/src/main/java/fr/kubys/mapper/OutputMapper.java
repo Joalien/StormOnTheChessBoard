@@ -43,7 +43,7 @@ public class OutputMapper {
                 .currentState(chessBoard.getCurrentStateName())
                 .pieces(chessBoard.getPieces().stream().collect(Collectors.toMap(piece -> piece.getPosition().name(), OutputMapper::map)))
                 .pendingPromotions(chessBoard.getPendingPromotions().stream().map(p -> p.name()).collect(Collectors.toSet()))
-                .capturedPieces(chessBoard.getCapturedPieces().stream().map(OutputMapper::map).collect(Collectors.toList()))
+                .capturedPieces(chessBoard.getCapturedPieces().stream().map(OutputMapper::map).toList())
                 .checkMateTargets(chessBoard.getPieces().stream()
                         .filter(p -> p.isKing() && !(p instanceof King))
                         .map(p -> p.getPosition().name())
@@ -86,7 +86,7 @@ public class OutputMapper {
         return PlayerDto.builder()
                 .name(p.getName())
                 .color(p.getColor())
-                .cards(p.getCards().stream().map(OutputMapper::map).collect(Collectors.toList()))
+                .cards(p.getCards().stream().map(OutputMapper::map).toList())
                 .build();
     }
 

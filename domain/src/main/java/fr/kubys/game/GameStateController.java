@@ -70,10 +70,10 @@ public class GameStateController implements ChessBoardService {
     public void tryToMove(Position from, Position to) {
         assertGameHasAlreadyStarted();
         autoResolveEnemyReaction();
-        Optional<Piece> pieceToMove = chessBoard.at(from).getPiece();
-        if (pieceToMove.isEmpty()) throw new IllegalArgumentException("Il n'y a pas de pièce sur %s".formatted(from));
-        if (pieceToMove.get().getColor().cannotBeMovedBy(getCurrentPlayer().getColor()))
-            throw new InvalidGameActionException("Le joueur %s ne peut pas déplacer une pièce %s".formatted(getCurrentPlayer().getColor(), pieceToMove.get().getColor()));
+        Piece pieceToMove = chessBoard.at(from).getPiece()
+                .orElseThrow(() -> new IllegalArgumentException("Il n'y a pas de pièce sur %s".formatted(from)));
+        if (pieceToMove.getColor().cannotBeMovedBy(getCurrentPlayer().getColor()))
+            throw new InvalidGameActionException("Le joueur %s ne peut pas déplacer une pièce %s".formatted(getCurrentPlayer().getColor(), pieceToMove.getColor()));
 
         currentState.getState().tryToMove(this, from, to);
     }

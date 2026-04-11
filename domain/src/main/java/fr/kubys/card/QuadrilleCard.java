@@ -45,8 +45,7 @@ public class QuadrilleCard extends Card<QuadrilleCardParam> {
         CORNERS.stream()
                 .map(chessBoard::at)
                 .map(Square::getPiece)
-                .filter(Optional::isPresent)
-                .map(Optional::get)
+                .flatMap(Optional::stream)
                 .forEach(chessBoard::removePieceFromTheBoard);
     }
 

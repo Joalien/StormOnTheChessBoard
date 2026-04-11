@@ -27,14 +27,13 @@ public class HomeCard extends Card<PieceToPositionCardParam> {
         if (positionToMoveOnIsNotStartingPositionOfPiece)
             throw new IllegalArgumentException("%s didn't start the game on square %s".formatted(param.piece(), param.positionToMoveOn()));
 
-        Boolean positionToMoveOnHasSameColorPiece = chessBoard.at(param.positionToMoveOn())
+        boolean positionToMoveOnHasSameColorPiece = chessBoard.at(param.positionToMoveOn())
                 .getPiece()
-                .map(Piece::getColor)
-                .map(color -> color == param.piece().getColor())
-                .orElse(false);
+                .filter(p -> p.getColor() == param.piece().getColor())
+                .isPresent();
         if (positionToMoveOnHasSameColorPiece)
             throw new IllegalArgumentException("You cannot rollback on a square occupied by an ally piece");
-        if (chessBoard.at(param.positionToMoveOn()).getPiece().map(Piece::isKing).orElse(false)) {
+        if (chessBoard.at(param.positionToMoveOn()).getPiece().filter(Piece::isKing).isPresent()) {
             throw new CannotTakeKingException();
         }
 
