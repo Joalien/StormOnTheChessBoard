@@ -33,6 +33,7 @@ public class OutputMapper {
                 .whitePlayer(map(chessBoard.getWhite()))
                 .blackPlayer(map(chessBoard.getBlack()))
                 .currentTurn(chessBoard.getCurrentPlayer().getColor().name().toLowerCase())
+                .currentState(chessBoard.getCurrentStateName())
                 .pieces(chessBoard.getPieces().stream().collect(Collectors.toMap(piece -> piece.getPosition().name(), OutputMapper::map)))
                 .pendingPromotions(chessBoard.getPendingPromotions().stream().map(p -> p.name()).collect(Collectors.toSet()))
                 .checkMateTargets(chessBoard.getPieces().stream()

@@ -1,7 +1,7 @@
 import {Image} from "react-native";
 import cardImages from "./cardImages";
 
-export function Card({hidden, name, showCard, isSelected}) {
+export function Card({hidden, name, showCard, isSelected, isPlayable = true}) {
     const hasImage = name in cardImages;
     const imgStyle = {width: 80, height: 116, borderRadius: 7};
 
@@ -13,7 +13,7 @@ export function Card({hidden, name, showCard, isSelected}) {
         );
     }
 
-    const wrapperClass = `sotc-card-wrapper${isSelected ? ' selected' : ''}`;
+    const wrapperClass = `sotc-card-wrapper${isSelected ? ' selected' : ''}${!isPlayable ? ' disabled' : ''}`;
 
     if (hasImage) {
         return (

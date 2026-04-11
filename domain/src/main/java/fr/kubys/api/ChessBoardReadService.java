@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Set;
 
 public interface ChessBoardReadService {
+    String getCurrentStateName();
     Set<Piece> getPieces();
 
     Set<Effect> getEffects();

@@ -1,6 +1,6 @@
 import {Card} from "./Card";
 
-export function Player({player, hiddenCards, showCard, color, selectedCard}) {
+export function Player({player, hiddenCards, showCard, color, selectedCard, playableTypes}) {
     const isBlack = color === 'black';
     const cards = player.cards || [];
 
@@ -41,15 +41,19 @@ export function Player({player, hiddenCards, showCard, color, selectedCard}) {
 
             {/* Cards row */}
             <div style={{display: 'flex', gap: '8px', flexWrap: 'wrap', minHeight: '116px', alignItems: 'flex-end'}}>
-                {cards.map((card, index) =>
-                    <Card
-                        key={index}
-                        hidden={hiddenCards}
-                        name={card.englishName}
-                        showCard={() => showCard(card)}
-                        isSelected={!hiddenCards && selectedCard && selectedCard.englishName === card.englishName}
-                    />
-                )}
+                {cards.map((card, index) => {
+                    const isPlayable = !playableTypes || playableTypes.includes(card.type);
+                    return (
+                        <Card
+                            key={index}
+                            hidden={hiddenCards}
+                            name={card.englishName}
+                            showCard={() => isPlayable ? showCard(card) : null}
+                            isSelected={!hiddenCards && selectedCard && selectedCard.englishName === card.englishName}
+                            isPlayable={isPlayable}
+                        />
+                    );
+                })}
                 {cards.length === 0 && (
                     <span style={{fontSize: '12px', color: '#484f58', alignSelf: 'center', fontStyle: 'italic'}}>No cards</span>
                 )}

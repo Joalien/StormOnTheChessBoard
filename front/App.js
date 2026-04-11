@@ -123,6 +123,16 @@ const globalCSS = `
     z-index: 10;
     box-shadow: 0 0 0 2px #d4a843, 0 0 24px rgba(212,168,67,0.55), 0 16px 32px rgba(0,0,0,0.5);
   }
+  .sotc-card-wrapper.disabled {
+    opacity: 0.35;
+    filter: grayscale(0.6);
+    cursor: default;
+  }
+  .sotc-card-wrapper.disabled:hover {
+    transform: none;
+    box-shadow: none;
+    z-index: auto;
+  }
   .sotc-card-hidden {
     opacity: 0.7;
     pointer-events: none;
@@ -283,6 +293,7 @@ export default function App() {
     const [promotionSquare, setPromotionSquare] = useState(null);
     const [barricadeEdges, setBarricadeEdges] = useState([]);
     const [checkMateTargets, setCheckMateTargets] = useState([]);
+    const [currentState, setCurrentState] = useState(null);
     const [legalMoves, setLegalMoves] = useState([]);
     const [windowWidth, setWindowWidth] = useState(typeof window !== 'undefined' ? window.innerWidth : 900);
 
@@ -430,6 +441,7 @@ export default function App() {
                 setWhitePlayer(data.whitePlayer);
                 setPendingPromotions(data.pendingPromotions || []);
                 setCheckMateTargets(data.checkMateTargets || []);
+                setCurrentState(data.currentState);
                 setPromotionSquare(null);
             });
     }
@@ -467,6 +479,19 @@ export default function App() {
 
     function isBarricadeCard(card) {
         return card && card.englishName === 'BarricadeCard';
+    }
+
+    function playableCardTypes(state, isOpponent) {
+        if (isOpponent) return ['ENEMY_TURN'];
+        const map = {
+            'BEGINNING_OF_THE_TURN': ['BEFORE_TURN', 'REPLACE_TURN'],
+            'BEFORE_MOVE': [],
+            'MOVE_WITHOUT_CARD_PLAYED': ['AFTER_TURN'],
+            'END_OF_THE_TURN': [],
+            'ENEMY_REACTION': [],
+            'PROMOTION_PENDING': [],
+        };
+        return map[state] || [];
     }
 
     function firstUnsetParam(card) {
@@ -655,6 +680,7 @@ export default function App() {
                         hiddenCards={false}
                         color={opponentColor}
                         selectedCard={selectedCard}
+                        playableTypes={playableCardTypes(currentState, true)}
                     />
 
                     {/* Board */}
@@ -788,6 +814,7 @@ export default function App() {
                         hiddenCards={false}
                         color={currentPlayerColor}
                         selectedCard={selectedCard}
+                        playableTypes={playableCardTypes(currentState, false)}
                     />
                 </section>
             </main>
