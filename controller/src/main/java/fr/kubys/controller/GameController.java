@@ -10,6 +10,7 @@ import fr.kubys.dto.ChessBoardDto;
 import fr.kubys.mapper.MappingException;
 import fr.kubys.repository.ChessBoardRepository;
 import fr.kubys.repository.GamePresets;
+import fr.kubys.websocket.GameNotifier;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,10 +28,12 @@ import static fr.kubys.mapper.OutputMapper.mapToDto;
 public class GameController {
 
     ChessBoardRepository chessBoardRepository;
+    GameNotifier gameNotifier;
 
     @Autowired
-    public GameController(ChessBoardRepository chessBoardRepository) {
+    public GameController(ChessBoardRepository chessBoardRepository, GameNotifier gameNotifier) {
         this.chessBoardRepository = chessBoardRepository;
+        this.gameNotifier = gameNotifier;
         createInitialState(); // FIXME remove me later on
     }
 
@@ -51,6 +54,7 @@ public class GameController {
     public ResponseEntity<Integer> endTurn(@PathVariable Integer gameId) {
         EndTurnCommand endTurnCommand = EndTurnCommand.builder().gameId(gameId).build();
         chessBoardRepository.saveCommand(endTurnCommand);
+        gameNotifier.notifyGame(gameId);
         return ResponseEntity.ok().build();
     }
 
@@ -58,6 +62,7 @@ public class GameController {
     @CrossOrigin(origins = "*")
     public ResponseEntity<Integer> undo(@PathVariable Integer gameId) {
         chessBoardRepository.undoLastCommand(gameId);
+        gameNotifier.notifyGame(gameId);
         return ResponseEntity.ok().build();
     }
 
@@ -76,6 +81,7 @@ public class GameController {
                 .param(param)
                 .build();
         chessBoardRepository.saveCommand(command);
+        gameNotifier.notifyGame(gameId);
         return ResponseEntity.ok().build();
     }
 
@@ -89,6 +95,7 @@ public class GameController {
                 .piece(piece)
                 .build()
         );
+        gameNotifier.notifyGame(gameId);
         return ResponseEntity.ok().build();
     }
 
@@ -111,6 +118,7 @@ public class GameController {
                 .to(Position.valueOf(to))
                 .build();
         chessBoardRepository.saveCommand(command);
+        gameNotifier.notifyGame(gameId);
         return ResponseEntity.ok().build();
     }
 }

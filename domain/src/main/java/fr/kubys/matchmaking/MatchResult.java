@@ -16,6 +16,14 @@ public class MatchResult {
         throw new IllegalArgumentException("Token not part of this match: " + token);
     }
 
+    public String getWhiteToken() {
+        return whiteToken;
+    }
+
+    public String getBlackToken() {
+        return blackToken;
+    }
+
     public Integer getGameId() {
         return gameId;
     }

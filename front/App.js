@@ -13,6 +13,9 @@ import 'react-toastify/dist/ReactToastify.css';
 const backendOrigin = typeof window !== 'undefined'
     ? window.location.protocol + '//' + window.location.hostname + ':9000'
     : 'http://localhost:9000';
+const wsOrigin = typeof window !== 'undefined'
+    ? (window.location.protocol === 'https:' ? 'wss://' : 'ws://') + window.location.hostname + ':9000'
+    : 'ws://localhost:9000';
 const base = backendOrigin + "/chessboard/";
 const highlight = {boxShadow: "rgba(212, 168, 67, 0.85) 0px 0px 24px 0px inset"};
 
@@ -354,13 +357,14 @@ export default function App() {
         fetchPlayer(gameId, "black").then(data => setBlackPlayer(data));
     }, [gameId]);
 
-    // Auto-refresh when waiting for opponent's move
+    // WebSocket for real-time game updates
     useEffect(() => {
         if (!myColor || gameId === null) return;
-        if (currentPlayerColor === myColor) return;
-        const interval = setInterval(fetchGame, 2000);
-        return () => clearInterval(interval);
-    }, [gameId, myColor, currentPlayerColor]);
+        const ws = new WebSocket(wsOrigin + '/ws/game/' + gameId);
+        ws.onmessage = () => fetchGame();
+        ws.onclose = () => {};
+        return () => ws.close();
+    }, [gameId, myColor]);
 
     function fetchPlayer(gameId, color) {
         return fetch(base + gameId + "/players/" + color).then(res => res.json());
@@ -418,18 +422,17 @@ export default function App() {
             .then(res => res.json())
             .then(data => {
                 matchmakingTokenRef.current = data.token;
-                matchmakingPollRef.current = setInterval(() => {
-                    fetch(backendOrigin + '/matchmaking/status/' + data.token)
-                        .then(res => res.json())
-                        .then(status => {
-                            if (status.status === 'matched') {
-                                clearInterval(matchmakingPollRef.current);
-                                matchmakingPollRef.current = null;
-                                matchmakingTokenRef.current = null;
-                                navigateToGame(status.gameId, status.color);
-                            }
-                        });
-                }, 2000);
+                const ws = new WebSocket(wsOrigin + '/ws/matchmaking/' + data.token);
+                matchmakingPollRef.current = ws;
+                ws.onmessage = (event) => {
+                    const status = JSON.parse(event.data);
+                    if (status.status === 'matched') {
+                        ws.close();
+                        matchmakingPollRef.current = null;
+                        matchmakingTokenRef.current = null;
+                        navigateToGame(status.gameId, status.color);
+                    }
+                };
             })
             .catch(err => {
                 toast.error("Erreur: " + err);
@@ -439,7 +442,7 @@ export default function App() {
 
     function cancelMatchmaking() {
         if (matchmakingPollRef.current) {
-            clearInterval(matchmakingPollRef.current);
+            matchmakingPollRef.current.close();
             matchmakingPollRef.current = null;
         }
         if (matchmakingTokenRef.current) {
