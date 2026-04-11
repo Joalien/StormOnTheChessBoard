@@ -76,9 +76,9 @@ export function HomeScreen({onPlaySolo, onMatchmaking}) {
                     <button
                         className="sotc-btn sotc-btn-gold"
                         style={{width: '100%', padding: '18px', fontSize: '17px', letterSpacing: '0.5px'}}
-                        onClick={onPlaySolo}
+                        onClick={onMatchmaking}
                     >
-                        Jouer tout seul
+                        Jouer !
                     </button>
                     <button
                         className="sotc-btn"
@@ -90,9 +90,9 @@ export function HomeScreen({onPlaySolo, onMatchmaking}) {
                             borderColor: 'rgba(201,150,58,0.3)',
                             color: '#d4a843',
                         }}
-                        onClick={onMatchmaking}
+                        onClick={onPlaySolo}
                     >
-                        Attendre un adversaire
+                        S'entraîner
                     </button>
                 </div>
             </div>
