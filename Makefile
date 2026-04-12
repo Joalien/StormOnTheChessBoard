@@ -24,7 +24,7 @@ back:
 	@mvn -N install -q && mvn -pl domain,repository,matchmaking install -DskipTests -q && mvn -pl controller spring-boot:run &
 	@echo "Backend starting in background (port 9000)"
 
-up: .env
+up: .env back
 	docker compose up -d --force-recreate sotc-frontend sotc-nginx
 
 claude: up notifier
