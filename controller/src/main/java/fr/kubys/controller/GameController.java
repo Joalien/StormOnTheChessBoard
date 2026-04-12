@@ -8,7 +8,6 @@ import fr.kubys.piece.PromotionPiece;
 import fr.kubys.repository.ChessBoardRepository;
 import fr.kubys.repository.GamePresets;
 import fr.kubys.websocket.GameNotifier;
-import fr.kubys.websocket.PresenceNotifier;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,13 +25,11 @@ public class GameController {
 
     ChessBoardRepository chessBoardRepository;
     GameNotifier gameNotifier;
-    PresenceNotifier presenceNotifier;
 
     @Autowired
-    public GameController(ChessBoardRepository chessBoardRepository, GameNotifier gameNotifier, PresenceNotifier presenceNotifier) {
+    public GameController(ChessBoardRepository chessBoardRepository, GameNotifier gameNotifier) {
         this.chessBoardRepository = chessBoardRepository;
         this.gameNotifier = gameNotifier;
-        this.presenceNotifier = presenceNotifier;
         createInitialState(); // FIXME remove me later on
     }
 
@@ -45,11 +42,6 @@ public class GameController {
     @GetMapping
     public Set<Integer> listGames() {
         return chessBoardRepository.getGameIds();
-    }
-
-    @GetMapping("/connected")
-    public int getConnectedCount() {
-        return presenceNotifier.getConnectedCount();
     }
 
     @PostMapping

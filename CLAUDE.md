@@ -179,7 +179,6 @@ Base: `http://localhost:9000/chessboard/`
 | POST | `/{gameId}/card/{cardName}` | Play card |
 | POST | `/{gameId}/endTurn` | End turn |
 | POST | `/{gameId}/undo` | Undo last action |
-| GET | `/connected` | Connected players count |
 | POST | `/matchmaking/join` | Join matchmaking queue |
 | GET | `/matchmaking/status/{token}` | Poll match status (fallback) |
 | DELETE | `/matchmaking/{token}` | Cancel matchmaking |

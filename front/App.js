@@ -426,34 +426,32 @@ export default function App() {
         return squares;
     }
 
+    // Fetch initial data
     useEffect(() => {
         fetch(backendOrigin + '/api/chessboard')
             .then(res => res.json())
             .then(ids => setGameIds(ids.sort((a, b) => a - b)))
             .catch(() => {});
-        function fetchStats() {
-            Promise.all([
-                fetch(backendOrigin + '/api/matchmaking/stats').then(res => res.json()),
-                fetch(backendOrigin + '/api/chessboard/connected').then(res => res.json()),
-            ])
-                .then(([mm, connected]) => setMatchmakingStats({...mm, connectedCount: connected}))
-                .catch(() => {});
-        }
-        fetchStats(); // immediate fetch for fast display
-        // Presence WebSocket — keeps connection alive, also used for matchmaking notifications
+        fetch(backendOrigin + '/api/matchmaking/stats')
+            .then(res => res.json())
+            .then(stats => setMatchmakingStats(prev => ({...prev, ...stats})))
+            .catch(() => {});
+    }, []);
+
+    // Presence WebSocket — real-time connected count + matchmaking notifications
+    useEffect(() => {
         const ws = new WebSocket(wsOrigin + '/ws/presence');
         presenceWsRef.current = ws;
-        ws.onopen = () => fetchStats(); // re-fetch after WS connected to include self
         ws.onmessage = (event) => {
             try {
                 const data = JSON.parse(event.data);
+                if (data.connected != null) {
+                    setMatchmakingStats(prev => ({...prev, connectedCount: data.connected}));
+                }
                 if (data.status === 'matched') {
                     matchmakingTokenRef.current = null;
                     notifyMatchFound();
                     navigateToGame(data.gameId, data.color);
-                }
-                if (data.connected != null) {
-                    setMatchmakingStats(prev => prev ? {...prev, connectedCount: data.connected} : {connectedCount: data.connected});
                 }
             } catch (e) {}
         };

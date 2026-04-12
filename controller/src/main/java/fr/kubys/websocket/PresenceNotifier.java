@@ -27,12 +27,14 @@ public class PresenceNotifier extends TextWebSocketHandler implements MatchNotif
     @Override
     public void afterConnectionEstablished(WebSocketSession session) {
         sessions.add(session);
+        log.info("Presence connected: {} (total: {})", session.getRemoteAddress(), getConnectedCount());
         broadcastConnectedCount();
     }
 
     @Override
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status) {
         sessions.remove(session);
+        log.info("Presence disconnected: {} status={} (total: {})", session.getRemoteAddress(), status, getConnectedCount());
         broadcastConnectedCount();
         // Cancel any matchmaking token associated with this session
         matchmakingSessions.entrySet().removeIf(entry -> {
