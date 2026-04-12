@@ -10,6 +10,7 @@ import {WaitingScreen} from "./component/WaitingScreen";
 import {NotFoundScreen} from "./component/NotFoundScreen";
 import {toast, ToastContainer} from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
+import {useCardSelection} from "./hooks/useCardSelection";
 
 const backendOrigin = typeof window !== 'undefined'
     ? window.location.origin
@@ -318,17 +319,30 @@ export default function App() {
     const [currentPlayerColor, setCurrentPlayerColor] = useState("white");
     const [whitePlayer, setWhitePlayer] = useState({cards: []});
     const [blackPlayer, setBlackPlayer] = useState({cards: []});
-    const [selectedCard, setSelectedCard] = useState(null);
-    const [selectedParam, setSelectedParam] = useState(null);
     const [effects, setEffects] = useState([]);
     const [pendingPromotions, setPendingPromotions] = useState([]);
     const [promotionSquare, setPromotionSquare] = useState(null);
-    const [barricadeEdges, setBarricadeEdges] = useState([]);
     const [checkMateTargets, setCheckMateTargets] = useState([]);
     const [currentState, setCurrentState] = useState(null);
     const [capturedPieces, setCapturedPieces] = useState([]);
     const [myColor, setMyColor] = useState(getPlayerColorFromUrl);
     const [legalMoves, setLegalMoves] = useState([]);
+
+    const {
+        selectedCard, setSelectedCard,
+        selectedParam, setSelectedParam,
+        barricadeEdges, setBarricadeEdges,
+        selectedEffectPositions,
+        showCard, clearSelection,
+        selectEffectByIndices,
+        onSquareRightClick,
+        onBarricadeEdgeClick,
+        onCapturedPieceClick,
+        playableCardTypes,
+        isSelectedCardPlayable,
+        isBarricadeCard,
+        firstUnsetParam,
+    } = useCardSelection(effects, currentState, myColor, currentPlayerColor);
     const [windowWidth, setWindowWidth] = useState(typeof window !== 'undefined' ? window.innerWidth : 900);
     const [gameIds, setGameIds] = useState([]);
     const [expandedGameId, setExpandedGameId] = useState(null);
@@ -659,29 +673,6 @@ export default function App() {
         }
     }
 
-    function selectEffectByIndices(indices) {
-        if (!indices.length) return;
-        const alreadySelected = selectedCard && selectedCard.isEffect &&
-            selectedCard.effectIndices && selectedCard.effectIndices.length === indices.length &&
-            selectedCard.effectIndices.every((v, i) => v === indices[i]);
-        if (alreadySelected) {
-            setSelectedCard(null);
-            setSelectedParam(null);
-        } else {
-            const effect = effects[indices[0]];
-            setSelectedCard({
-                englishName: effect.cardEnglishName,
-                name: effect.cardName,
-                description: effect.cardDescription,
-                param: {},
-                isEffect: true,
-                effectIndices: indices,
-            });
-            setSelectedParam(null);
-            setBarricadeEdges([]);
-        }
-    }
-
     function squareToCoords(square, orientation) {
         const file = square.charCodeAt(0) - 97; // 'a' = 0
         const rank = parseInt(square[1]) - 1;   // '1' = 0
@@ -701,103 +692,6 @@ export default function App() {
         return color === "white" ? "black" : "white";
     }
 
-    function isBarricadeCard(card) {
-        return card && card.englishName === 'BarricadeCard';
-    }
-
-    function playableCardTypes(state, isOpponent) {
-        if (isOpponent) return ['ENEMY_TURN'];
-        if (myColor && myColor !== currentPlayerColor) return [];
-        const map = {
-            'BEGINNING_OF_THE_TURN': ['BEFORE_TURN', 'REPLACE_TURN'],
-            'BEFORE_MOVE': [],
-            'MOVE_WITHOUT_CARD_PLAYED': ['AFTER_TURN'],
-            'END_OF_THE_TURN': [],
-            'ENEMY_REACTION': [],
-            'PROMOTION_PENDING': [],
-        };
-        return map[state] || [];
-    }
-
-    function firstUnsetParam(card) {
-        if (!card || !card.param) return null;
-        if (isBarricadeCard(card)) {
-            // For barricade, params are grouped: edge1 = from1+to1, edge2 = from2+to2
-            if (card.param.from1 === null) return 'from1';
-            if (card.param.to1 === null) return 'to1';
-            if (card.param.from2 === null) return 'from2';
-            if (card.param.to2 === null) return 'to2';
-            return null;
-        }
-        return Object.keys(card.param).find(k => card.param[k] === null) || null;
-    }
-
-    function showCard(card) {
-        if (card !== selectedCard) {
-            setSelectedCard(card);
-            setSelectedParam(firstUnsetParam(card));
-            setBarricadeEdges([]);
-        } else {
-            setSelectedCard(null);
-            setSelectedParam(null);
-            setBarricadeEdges([]);
-        }
-    }
-
-    function onBarricadeEdgeClick(edge) {
-        if (barricadeEdges.length >= 2) return;
-        const newEdges = [...barricadeEdges, edge];
-        setBarricadeEdges(newEdges);
-
-        // Sync to card params
-        const newParam = {...selectedCard.param};
-        if (newEdges.length === 1) {
-            newParam.from1 = edge[0];
-            newParam.to1 = edge[1];
-        } else if (newEdges.length === 2) {
-            newParam.from2 = edge[0];
-            newParam.to2 = edge[1];
-        }
-        const updated = {...selectedCard, param: newParam};
-        setSelectedCard(updated);
-        setSelectedParam(firstUnsetParam(updated));
-    }
-
-    function isSelectedCardPlayable() {
-        return selectedCard && playableCardTypes(currentState, false).includes(selectedCard.type);
-    }
-
-    function onSquareRightClick(square) {
-        if (selectedCard && selectedParam && isSelectedCardPlayable() && !isBarricadeCard(selectedCard)) {
-            const newParam = {...selectedCard.param};
-            if (newParam[selectedParam] === square) newParam[selectedParam] = null;
-            else newParam[selectedParam] = square;
-            const updated = {...selectedCard, param: newParam};
-            setSelectedCard(updated);
-            setSelectedParam(firstUnsetParam(updated));
-            return;
-        }
-        // Right-click on an effect position → select all effects on that square
-        const matchingIndices = effects.reduce((acc, e, i) => {
-            if (e.cardEnglishName && e.positions && e.positions.includes(square)) acc.push(i);
-            return acc;
-        }, []);
-        if (matchingIndices.length > 0) {
-            selectEffectByIndices(matchingIndices);
-        }
-    }
-
-    function onCapturedPieceClick(index) {
-        if (selectedCard && selectedParam && isSelectedCardPlayable() && !isBarricadeCard(selectedCard)) {
-            const value = "captured:" + index;
-            const newParam = {...selectedCard.param};
-            if (newParam[selectedParam] === value) newParam[selectedParam] = null;
-            else newParam[selectedParam] = value;
-            const updated = {...selectedCard, param: newParam};
-            setSelectedCard(updated);
-            setSelectedParam(firstUnsetParam(updated));
-        }
-    }
 
     const isWhiteTurn = currentPlayerColor === "white";
     const isMyTurn = !myColor || myColor === currentPlayerColor;
@@ -814,13 +708,6 @@ export default function App() {
         background: "radial-gradient(circle, transparent 80%, rgba(0,0,0,0.25) 80%)",
     };
     const effectHighlight = { boxShadow: 'rgba(255,143,0,0.85) 0px 0px 28px 4px inset', background: 'rgba(255,143,0,0.15)' };
-    const selectedEffectPositions = selectedCard && selectedCard.isEffect && selectedCard.effectIndices
-        ? selectedCard.effectIndices.flatMap(i => {
-            const e = effects[i];
-            if (!e || !e.positions) return [];
-            return [...e.positions];
-        })
-        : [];
     const customSquareStyles = {
         ...customSquares(),
         ...(selectedCard && !selectedCard.isEffect
@@ -948,7 +835,7 @@ export default function App() {
 
             {/* Dimming overlay when an effect is selected */}
             {selectedCard && selectedCard.isEffect && (
-                <div onClick={() => { setSelectedCard(null); setSelectedParam(null); setBarricadeEdges([]); }} style={{
+                <div onClick={clearSelection} style={{
                     position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
                     background: 'rgba(0,0,0,0.7)',
                     zIndex: 50,
@@ -956,7 +843,7 @@ export default function App() {
             )}
 
             {/* ── Main ── */}
-            <main className="sotc-main" onClick={() => { if (selectedCard) { setSelectedCard(null); setSelectedParam(null); setBarricadeEdges([]); } }} style={{
+            <main className="sotc-main" onClick={clearSelection} style={{
                 display: 'flex',
                 alignItems: 'flex-start',
                 justifyContent: 'center',
