@@ -384,6 +384,66 @@ class CombinedEffectsIT {
     }
 
     // ========================================================================
+    // Infiltration + Magnetism interactions
+    // ========================================================================
+    @Nested
+    class InfiltrationAndMagnetism {
+
+        @Test
+        void magnetism_should_prevent_infiltration_when_pawn_is_adjacent() {
+            Pawn whitePawn = new Pawn(Color.WHITE);
+            Pawn blackPawn = new Pawn(Color.BLACK);
+            Knight magnetized = new Knight(Color.BLACK);
+
+            board.add(whitePawn, d4);
+            board.add(blackPawn, d5);
+            board.add(magnetized, e4);
+            board.addEffect(new MagnetismEffect(magnetized));
+
+            assertThrows(MagnetismException.class,
+                    () -> new InfiltrationCard().playOn(board, new TwoPieceCardParam(whitePawn, blackPawn)));
+
+            // Pawns should not have moved
+            assertEquals(whitePawn, board.at(d4).getPiece().get());
+            assertEquals(blackPawn, board.at(d5).getPiece().get());
+        }
+
+        @Test
+        void magnetism_should_prevent_infiltration_when_only_enemy_pawn_is_adjacent() {
+            Pawn whitePawn = new Pawn(Color.WHITE);
+            Pawn blackPawn = new Pawn(Color.BLACK);
+            Knight magnetized = new Knight(Color.WHITE);
+
+            board.add(whitePawn, b4);
+            board.add(blackPawn, d5);
+            board.add(magnetized, e5);
+            board.addEffect(new MagnetismEffect(magnetized));
+
+            // blackPawn on d5 is adjacent to magnetized on e5
+            assertThrows(MagnetismException.class,
+                    () -> new InfiltrationCard().playOn(board, new TwoPieceCardParam(whitePawn, blackPawn)));
+        }
+
+        @Test
+        void infiltration_should_work_when_pawns_are_not_adjacent_to_magnetism() {
+            Pawn whitePawn = new Pawn(Color.WHITE);
+            Pawn blackPawn = new Pawn(Color.BLACK);
+            Knight magnetized = new Knight(Color.BLACK);
+
+            board.add(whitePawn, c3);
+            board.add(blackPawn, f6);
+            board.add(magnetized, a5);
+            board.addEffect(new MagnetismEffect(magnetized));
+
+            assertDoesNotThrow(
+                    () -> new InfiltrationCard().playOn(board, new TwoPieceCardParam(whitePawn, blackPawn)));
+
+            assertEquals(whitePawn, board.at(f6).getPiece().get());
+            assertEquals(blackPawn, board.at(c3).getPiece().get());
+        }
+    }
+
+    // ========================================================================
     // Promotion edge cases with effects
     // ========================================================================
     @Nested

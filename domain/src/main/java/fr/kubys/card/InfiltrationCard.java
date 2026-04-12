@@ -23,6 +23,8 @@ public class InfiltrationCard extends Card<TwoPieceCardParam> {
         boolean isSecondPawnAlly = !param.piece2().getColor().cannotBeMovedBy(chessBoard.getCurrentTurn());
         if (isFirstPawnAlly == isSecondPawnAlly)
             throw new IllegalArgumentException("Vous devez sélectionner un de vos pions et un pion adverse");
+        chessBoard.getEffects().forEach(effect -> effect.beforeMoveHook(chessBoard, param.piece1()));
+        chessBoard.getEffects().forEach(effect -> effect.beforeMoveHook(chessBoard, param.piece2()));
     }
 
     @Override
