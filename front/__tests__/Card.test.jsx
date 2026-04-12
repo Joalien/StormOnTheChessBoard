@@ -52,4 +52,17 @@ describe('Card', () => {
         expect(container.querySelector('.sotc-card-hidden')).toBeInTheDocument();
         expect(container.querySelector('.sotc-card-wrapper')).not.toBeInTheDocument();
     });
+
+    test('click does not propagate to parent', () => {
+        const parentClick = jest.fn();
+        const showCard = jest.fn();
+        const {container} = render(
+            <div onClick={parentClick}>
+                <Card name="TestCard" showCard={showCard} />
+            </div>
+        );
+        fireEvent.click(screen.getByText('TestCard'));
+        expect(showCard).toHaveBeenCalledTimes(1);
+        expect(parentClick).not.toHaveBeenCalled();
+    });
 });

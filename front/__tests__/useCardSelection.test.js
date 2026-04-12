@@ -28,18 +28,47 @@ describe('useCardSelection', () => {
         expect(result.current.selectedParam).toBe('position');
     });
 
-    test('selecting the same card again deselects it', () => {
+    test('selecting the same card again does nothing (same reference)', () => {
         const {result} = setup();
         const card = {englishName: 'BombingCard', name: 'Attentat', param: {position: null}, type: 'AFTER_TURN'};
 
         act(() => result.current.showCard(card));
         act(() => result.current.showCard(card));
 
-        expect(result.current.selectedCard).toBeNull();
-        expect(result.current.selectedParam).toBeNull();
+        expect(result.current.selectedCard).toEqual(card);
+        expect(result.current.selectedParam).toBe('position');
     });
 
-    test('selecting a different card replaces the selection', () => {
+    test('selecting the same card again does nothing (different reference, same englishName)', () => {
+        const {result} = setup();
+        const card1 = {englishName: 'BombingCard', name: 'Attentat', param: {position: null}, type: 'AFTER_TURN'};
+        const card2 = {englishName: 'BombingCard', name: 'Attentat', param: {position: null}, type: 'AFTER_TURN'};
+
+        act(() => result.current.showCard(card1));
+        act(() => result.current.showCard(card2));
+
+        expect(result.current.selectedCard).toEqual(card1);
+    });
+
+    test('selecting a card when an effect is selected replaces the selection', () => {
+        const effects = [
+            {cardEnglishName: 'MagnetismCard', cardName: 'Magnétisme', cardDescription: 'd', positions: ['f6']},
+        ];
+        const {result} = setup(effects);
+
+        // Select an effect first
+        act(() => result.current.onSquareRightClick('f6'));
+        expect(result.current.selectedCard.isEffect).toBe(true);
+
+        // Click on a hand card
+        const card = {englishName: 'BombingCard', param: {position: null}, type: 'AFTER_TURN'};
+        act(() => result.current.showCard(card));
+
+        expect(result.current.selectedCard).toEqual(card);
+        expect(result.current.selectedCard.isEffect).toBeUndefined();
+    });
+
+    test('selecting a card when another card is selected replaces the selection', () => {
         const {result} = setup();
         const card1 = {englishName: 'Card1', param: {a: null}};
         const card2 = {englishName: 'Card2', param: {b: null}};
@@ -179,6 +208,68 @@ describe('useCardSelection', () => {
     test('selectedEffectPositions is empty when no effect selected', () => {
         const {result} = setup();
         expect(result.current.selectedEffectPositions).toEqual([]);
+    });
+
+    // ── Neutral crab scenario (2 effects on same piece) ──
+
+    test('neutral crab: right-click selects both NeutralityCard and CrabCard effects', () => {
+        const effects = [
+            {cardEnglishName: 'NeutralityCard', cardName: 'Neutralité', cardDescription: 'Pièce neutre', positions: ['b7']},
+            {cardEnglishName: 'CrabCard', cardName: 'Crabe', cardDescription: 'Se déplace en diagonale', positions: ['b7']},
+        ];
+        const {result} = setup(effects);
+
+        act(() => result.current.onSquareRightClick('b7'));
+
+        expect(result.current.selectedCard.isEffect).toBe(true);
+        expect(result.current.selectedCard.effectIndices).toEqual([0, 1]);
+        // First effect's card info is used as primary
+        expect(result.current.selectedCard.englishName).toBe('NeutralityCard');
+    });
+
+    test('neutral crab: selectedEffectPositions contains the shared position once', () => {
+        const effects = [
+            {cardEnglishName: 'NeutralityCard', cardName: 'Neutralité', cardDescription: 'n', positions: ['b7']},
+            {cardEnglishName: 'CrabCard', cardName: 'Crabe', cardDescription: 'c', positions: ['b7']},
+        ];
+        const {result} = setup(effects);
+
+        act(() => result.current.onSquareRightClick('b7'));
+
+        // b7 appears twice (once per effect), both are valid for spotlight
+        expect(result.current.selectedEffectPositions).toEqual(['b7', 'b7']);
+    });
+
+    test('neutral crab: clicking individual CrabCard effect from panel selects only crab', () => {
+        const effects = [
+            {cardEnglishName: 'NeutralityCard', cardName: 'Neutralité', cardDescription: 'n', positions: ['b7']},
+            {cardEnglishName: 'CrabCard', cardName: 'Crabe', cardDescription: 'c', positions: ['b7']},
+        ];
+        const {result} = setup(effects);
+
+        act(() => result.current.selectEffectByIndices([1]));
+
+        expect(result.current.selectedCard.englishName).toBe('CrabCard');
+        expect(result.current.selectedCard.effectIndices).toEqual([1]);
+    });
+
+    test('neutral crab: selecting hand card after effect replaces selection', () => {
+        const effects = [
+            {cardEnglishName: 'NeutralityCard', cardName: 'Neutralité', cardDescription: 'n', positions: ['b7']},
+            {cardEnglishName: 'CrabCard', cardName: 'Crabe', cardDescription: 'c', positions: ['b7']},
+        ];
+        const {result} = setup(effects);
+
+        // Select both effects via right-click
+        act(() => result.current.onSquareRightClick('b7'));
+        expect(result.current.selectedCard.effectIndices).toEqual([0, 1]);
+
+        // Click a hand card
+        const card = {englishName: 'BombingCard', param: {position: null}, type: 'AFTER_TURN'};
+        act(() => result.current.showCard(card));
+
+        expect(result.current.selectedCard.englishName).toBe('BombingCard');
+        expect(result.current.selectedCard.isEffect).toBeUndefined();
     });
 
     // ── Right-click priority: card param > effect ──
