@@ -43,7 +43,7 @@ class BeginningOfTheTurnStateTest {
     void should_be_able_to_play_valid_move() {
         assertDoesNotThrow(() -> gameStateController.tryToMove(e2, e4));
 
-        assertEquals(StateEnum.ENEMY_REACTION, gameStateController.getCurrentState());
+        assertEquals(StateEnum.MOVE_WITHOUT_CARD_PLAYED, gameStateController.getCurrentState());
     }
 
     @Test
@@ -66,7 +66,7 @@ class BeginningOfTheTurnStateTest {
         void should_be_able_to_play_valid_before_move_card() {
             assertDoesNotThrow(() -> gameStateController.tryToPlayCard(beforeMoveCard, new PositionCardParam(e4)));
 
-            assertEquals(StateEnum.ENEMY_REACTION, gameStateController.getCurrentState());
+            assertEquals(StateEnum.BEFORE_MOVE, gameStateController.getCurrentState());
         }
 
         @Test
@@ -76,7 +76,7 @@ class BeginningOfTheTurnStateTest {
 
             assertDoesNotThrow(() -> gameStateController.tryToPlayCard(replaceMoveCard, new LightweightSquadCardParam(e2Pawn, d2Pawn)));
 
-            assertEquals(StateEnum.ENEMY_REACTION, gameStateController.getCurrentState());
+            assertEquals(StateEnum.END_OF_THE_TURN, gameStateController.getCurrentState());
         }
 
         @Test

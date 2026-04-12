@@ -10,7 +10,7 @@ public class VultureCard extends Card<NoCardParam> {
     public VultureCard() {
         super("Vautour",
                 "Récupérez la carte que votre adversaire vient de jouer, et mettez-la dans votre main.",
-                CardType.ENEMY_TURN,
+                CardType.ENEMY_TURN_AFTER_CARD,
                 NoCardParam.class);
     }
 

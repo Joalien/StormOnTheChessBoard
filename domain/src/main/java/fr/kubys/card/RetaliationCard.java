@@ -10,7 +10,7 @@ public class RetaliationCard extends Card<PieceCardParam> {
     public RetaliationCard() {
         super("Représailles",
                 "Jouez cette carte lorsque votre adversaire vient de vous prendre une pièce (pas un Pion). Vous vous vengez alors en retirant l'un de ses pions de l'échiquier.",
-                CardType.ENEMY_TURN,
+                CardType.ENEMY_TURN_AFTER_MOVE,
                 PieceCardParam.class);
     }
 

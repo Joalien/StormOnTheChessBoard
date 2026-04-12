@@ -10,7 +10,7 @@ public class CancellationCard extends Card<NoCardParam> {
     public CancellationCard() {
         super("Annulation",
                 "Le déplacement de votre adversaire est annulé. Il doit rejouer un autre coup, avec la même pièce ou une autre.",
-                CardType.ENEMY_TURN,
+                CardType.ENEMY_TURN_AFTER_MOVE,
                 NoCardParam.class);
     }
 

@@ -10,7 +10,7 @@ public class YouTooBrutusCard extends Card<NoCardParam> {
     public YouTooBrutusCard() {
         super("Toi aussi, mon fils !",
                 "Jouez cette carte lorsque votre adversaire vous annonce un échec, même mat. La pièce qui vous met en échec change alors de couleur et passe dans votre camp.",
-                CardType.ENEMY_TURN,
+                CardType.ENEMY_TURN_AFTER_MOVE,
                 NoCardParam.class);
     }
 

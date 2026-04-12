@@ -22,14 +22,13 @@ export function useCardSelection(effects, currentState, myColor, currentPlayerCo
     const [barricadeEdges, setBarricadeEdges] = useState([]);
 
     function playableCardTypes(state, isOpponent) {
-        if (isOpponent) return ['ENEMY_TURN'];
+        if (isOpponent) return ['ENEMY_TURN_AFTER_MOVE', 'ENEMY_TURN_AFTER_CARD'];
         if (myColor && myColor !== currentPlayerColor) return [];
         const map = {
             'BEGINNING_OF_THE_TURN': ['BEFORE_TURN', 'REPLACE_TURN'],
             'BEFORE_MOVE': [],
             'MOVE_WITHOUT_CARD_PLAYED': ['AFTER_TURN'],
             'END_OF_THE_TURN': [],
-            'ENEMY_REACTION': [],
             'PROMOTION_PENDING': [],
         };
         return map[state] || [];

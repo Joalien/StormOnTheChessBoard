@@ -10,7 +10,7 @@ public class CustomsCard extends Card<NoCardParam> {
     public CustomsCard() {
         super("Douane",
                 "Jouez cette carte lorsque votre adversaire vient de faire franchir à l'une de ses pièces la frontière séparant votre moitié de l'échiquier de la sienne. Il doit alors payer en perdant un de ses pions, de son choix, ou renoncer à son coup.",
-                CardType.ENEMY_TURN,
+                CardType.ENEMY_TURN_AFTER_MOVE,
                 NoCardParam.class);
     }
 

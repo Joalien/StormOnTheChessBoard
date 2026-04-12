@@ -10,7 +10,7 @@ public class GuardianAngelCard extends Card<NoCardParam> {
     public GuardianAngelCard() {
         super("Ange Gardien",
                 "Jouez cette carte lorsque vous êtes en échec, même mat. Vous reprenez alors l'une des pièces que vous a prises votre adversaire pour l'intercaler sur une case libre entre votre Roi et la pièce qui le menace.",
-                CardType.ENEMY_TURN,
+                CardType.ENEMY_TURN_AFTER_MOVE,
                 NoCardParam.class);
     }
 

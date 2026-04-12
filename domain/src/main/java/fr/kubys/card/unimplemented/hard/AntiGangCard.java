@@ -10,7 +10,7 @@ public class AntiGangCard extends Card<NoCardParam> {
     public AntiGangCard() {
         super("Anti-Gang",
                 "Jouez cette carte lorsque votre adversaire vous annonce un échec, même mat. Il doit alors remettre la pièce qu'il vient de jouer là où elle était avant, et ne peut rien jouer d'autre.",
-                CardType.ENEMY_TURN,
+                CardType.ENEMY_TURN_AFTER_MOVE,
                 NoCardParam.class);
     }
 

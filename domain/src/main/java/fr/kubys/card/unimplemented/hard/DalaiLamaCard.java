@@ -10,7 +10,7 @@ public class DalaiLamaCard extends Card<NoCardParam> {
     public DalaiLamaCard() {
         super("Dalaï Lama",
                 "La pièce que votre adversaire vient de prendre se réincarne immédiatement en une autre pièce identique, qui apparaît sur une case libre où elle pouvait se trouver en début de partie.",
-                CardType.ENEMY_TURN,
+                CardType.ENEMY_TURN_AFTER_MOVE,
                 NoCardParam.class);
     }
 

@@ -10,7 +10,7 @@ public class FogCard extends Card<NoCardParam> {
     public FogCard() {
         super("Brouillard",
                 "Jouez cette carte lorsque votre adversaire vient de jouer un Fou, une Tour ou une Dame. Sa pièce ne peut effectuer le mouvement prévu, et s'immobilise après avoir avancé d'une case dans la direction voulue.",
-                CardType.ENEMY_TURN,
+                CardType.ENEMY_TURN_AFTER_MOVE,
                 NoCardParam.class);
     }
 

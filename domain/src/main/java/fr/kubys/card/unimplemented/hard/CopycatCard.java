@@ -10,7 +10,7 @@ public class CopycatCard extends Card<NoCardParam> {
     public CopycatCard() {
         super("Vous en êtes un Autre",
                 "Cette carte reproduit l'effet de la dernière carte jouée par votre adversaire.",
-                CardType.ENEMY_TURN,
+                CardType.ENEMY_TURN_AFTER_CARD,
                 NoCardParam.class);
     }
 

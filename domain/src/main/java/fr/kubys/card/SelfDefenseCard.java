@@ -16,7 +16,7 @@ public class SelfDefenseCard extends Card<NoCardParam> {
     public SelfDefenseCard() {
         super("Autodéfense",
                 "Votre adversaire veut prendre l'une de vos pièces, mais celle-ci se défend. La pièce attaquée reste en place, et c'est la pièce attaquante qui est éliminée.",
-                CardType.ENEMY_TURN,
+                CardType.ENEMY_TURN_AFTER_MOVE,
                 NoCardParam.class);
     }
 

@@ -259,7 +259,8 @@ const globalCSS = `
   .type-BEFORE_TURN  { background: rgba(88,166,255,0.12); color: #58a6ff; border: 1px solid rgba(88,166,255,0.28); }
   .type-AFTER_TURN   { background: rgba(63,185,80,0.12);  color: #3fb950; border: 1px solid rgba(63,185,80,0.28); }
   .type-REPLACE_TURN { background: rgba(210,153,34,0.12); color: #d4a843; border: 1px solid rgba(210,153,34,0.28); }
-  .type-ENEMY_TURN   { background: rgba(248,81,73,0.12);  color: #f85149; border: 1px solid rgba(248,81,73,0.28); }
+  .type-ENEMY_TURN_AFTER_MOVE  { background: rgba(248,81,73,0.12);  color: #f85149; border: 1px solid rgba(248,81,73,0.28); }
+  .type-ENEMY_TURN_AFTER_CARD  { background: rgba(248,81,73,0.12);  color: #f85149; border: 1px solid rgba(248,81,73,0.28); }
 
   .Toastify__toast {
     border-radius: 10px !important;

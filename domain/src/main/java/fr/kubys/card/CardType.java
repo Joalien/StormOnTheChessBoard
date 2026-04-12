@@ -4,7 +4,6 @@ public enum CardType {
     BEFORE_TURN,
     REPLACE_TURN,
     AFTER_TURN,
-    ENEMY_TURN,
-
-
+    ENEMY_TURN_AFTER_MOVE,
+    ENEMY_TURN_AFTER_CARD,
 }

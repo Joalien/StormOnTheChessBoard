@@ -24,7 +24,6 @@ import java.util.stream.Stream;
 public class GameStateController implements ChessBoardService {
 
     private static final int NUMBER_OF_CARDS_IN_HAND = 5;
-    //    private static final Logger log = org.slf4j.LoggerFactory.getLogger(GameStateController.class);
     private ChessBoard chessBoard;
     private Player white;
     private Player black;
@@ -33,8 +32,6 @@ public class GameStateController implements ChessBoardService {
     private StateEnum currentState;
     private final Set<Position> pendingPromotions = new HashSet<>();
     private StateEnum returnStateAfterPromotion;
-    private boolean enemyCardPlayedThisTurn = false;
-    private StateEnum returnStateAfterEnemyReaction;
 
     private final java.util.function.Supplier<ChessBoard> boardFactory;
 
@@ -69,7 +66,6 @@ public class GameStateController implements ChessBoardService {
     @Override
     public void tryToMove(Position from, Position to) {
         assertGameHasAlreadyStarted();
-        autoResolveEnemyReaction();
         Piece pieceToMove = chessBoard.at(from).getPiece()
                 .orElseThrow(() -> new IllegalArgumentException("Il n'y a pas de pièce sur %s".formatted(from)));
         if (pieceToMove.getColor().cannotBeMovedBy(getCurrentPlayer().getColor()))
@@ -82,18 +78,16 @@ public class GameStateController implements ChessBoardService {
     public <T extends CardParam> void tryToPlayCard(Card<T> card, T params) {
         assertGameHasAlreadyStarted();
 
-        if (currentState == StateEnum.ENEMY_REACTION && card.getType() == CardType.ENEMY_TURN) {
-            // Opponent is reacting with an ENEMY_TURN card — check opponent's hand
+        if (isEnemyCard(card.getType())) {
             Player opponent = getOpponent();
             if (!opponent.getCards().contains(card))
                 throw new CardNotFoundException("Le joueur %s n'a pas %s en main !".formatted(opponent, card));
-            currentState.getState().tryToPlayCard(this, card, params);
+            card.playOn(chessBoard, params);
             opponent.getCards().remove(card);
             deck.discardAndDraw(card, opponent);
             return;
         }
 
-        autoResolveEnemyReaction();
         Player player = getCurrentPlayer();
         if (!player.getCards().contains(card))
             throw new CardNotFoundException("Le joueur %s n'a pas %s en main !".formatted(player, card));
@@ -103,21 +97,17 @@ public class GameStateController implements ChessBoardService {
         deck.discardAndDraw(card, player);
     }
 
+    private boolean isEnemyCard(CardType type) {
+        return type == CardType.ENEMY_TURN_AFTER_MOVE || type == CardType.ENEMY_TURN_AFTER_CARD;
+    }
+
     @Override
     public void tryToPass() {
         assertGameHasAlreadyStarted();
-        autoResolveEnemyReaction();
         currentState.getState().tryToPass(this);
-        enemyCardPlayedThisTurn = false;
         setCurrentState(StateEnum.BEGINNING_OF_THE_TURN);
         swapCurrentPlayer();
         chessBoard.setTurn(getCurrentPlayer().getColor());
-    }
-
-    private void autoResolveEnemyReaction() {
-        if (currentState == StateEnum.ENEMY_REACTION) {
-            setCurrentState(returnStateAfterEnemyReaction);
-        }
     }
 
     private void swapCurrentPlayer() {
@@ -193,7 +183,6 @@ public class GameStateController implements ChessBoardService {
     }
 
     void setCurrentState(StateEnum currentState) {
-//        log.debug("{} is now in state {}", this.currentPlayer, currentState);
         this.currentState = currentState;
     }
 
@@ -203,15 +192,6 @@ public class GameStateController implements ChessBoardService {
             pendingPromotions.addAll(promoted);
             returnStateAfterPromotion = nextState;
             setCurrentState(StateEnum.PROMOTION_PENDING);
-        } else {
-            transitionToStateAfterPromotion(nextState);
-        }
-    }
-
-    void transitionToStateAfterPromotion(StateEnum nextState) {
-        if (!enemyCardPlayedThisTurn) {
-            returnStateAfterEnemyReaction = nextState;
-            setCurrentState(StateEnum.ENEMY_REACTION);
         } else {
             setCurrentState(nextState);
         }
@@ -224,7 +204,7 @@ public class GameStateController implements ChessBoardService {
             throw new IllegalArgumentException("Pas de promotion en attente sur %s".formatted(position));
         chessBoard.overridePromotion(position, piece);
         if (pendingPromotions.isEmpty()) {
-            transitionToStateAfterPromotion(returnStateAfterPromotion);
+            setCurrentState(returnStateAfterPromotion);
         }
     }
 
@@ -245,13 +225,5 @@ public class GameStateController implements ChessBoardService {
                 .filter(player -> player.getColor() != chessBoard.getCurrentTurn())
                 .findAny()
                 .orElseThrow(IllegalStateException::new);
-    }
-
-    void setEnemyCardPlayedThisTurn(boolean played) {
-        this.enemyCardPlayedThisTurn = played;
-    }
-
-    StateEnum getReturnStateAfterEnemyReaction() {
-        return returnStateAfterEnemyReaction;
     }
 }

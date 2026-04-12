@@ -10,7 +10,7 @@ public class OleCard extends Card<NoCardParam> {
     public OleCard() {
         super("Olé !",
                 "Jouez cette carte lorsque votre adversaire veut prendre l'une de vos pièces avec un Fou, une Tour ou une Dame. La pièce attaquée reste en place. La pièce attaquante passe au travers et doit poursuivre son déplacement jusqu'à ce qu'elle capture une autre de vos pièces, s'immobilise devant une autre pièce adverse, ou tombe au-delà du bord de l'échiquier.",
-                CardType.ENEMY_TURN,
+                CardType.ENEMY_TURN_AFTER_MOVE,
                 NoCardParam.class);
     }
 

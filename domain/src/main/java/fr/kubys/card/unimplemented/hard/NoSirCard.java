@@ -10,7 +10,7 @@ public class NoSirCard extends Card<NoCardParam> {
     public NoSirCard() {
         super("Que Nenni !",
                 "Cette carte annule toute autre carte au moment où elle est jouée. Jouez-la juste après la carte de votre adversaire que vous voulez annuler.",
-                CardType.ENEMY_TURN,
+                CardType.ENEMY_TURN_AFTER_CARD,
                 NoCardParam.class);
     }
 

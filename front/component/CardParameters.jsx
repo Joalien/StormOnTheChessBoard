@@ -5,7 +5,8 @@ const TYPE_LABELS = {
     BEFORE_TURN:  'Avant le coup',
     AFTER_TURN:   'Après le coup',
     REPLACE_TURN: 'Remplace le coup',
-    ENEMY_TURN:   'Tour adverse',
+    ENEMY_TURN_AFTER_MOVE: 'Tour adverse (après coup)',
+    ENEMY_TURN_AFTER_CARD: 'Tour adverse (après carte)',
 };
 
 function isBarricadeCard(card) {

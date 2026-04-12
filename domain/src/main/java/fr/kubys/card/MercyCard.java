@@ -17,7 +17,7 @@ public class MercyCard extends Card<NoCardParam> {
     public MercyCard() {
         super("Pitié",
                 "Lorsqu'une pièce adverse (Tour, Fou ou Dame) se rue sauvagement sur l'un de vos pions, ce dernier l'implore à genoux. La pièce adverse, émue, s'immobilise alors sur la case précédente, juste avant votre pion.",
-                CardType.ENEMY_TURN,
+                CardType.ENEMY_TURN_AFTER_MOVE,
                 NoCardParam.class);
     }
 

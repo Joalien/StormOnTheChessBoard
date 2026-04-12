@@ -10,7 +10,7 @@ public class KickCard extends Card<NoCardParam> {
     public KickCard() {
         super("Ruade",
                 "Annulez le coup que vient de jouer votre adversaire avec l'un de ses Cavaliers. Déplacez vous-même à sa place ce même Cavalier. Vous pouvez même prendre ainsi une pièce adverse... ou l'une de vos pièces.",
-                CardType.ENEMY_TURN,
+                CardType.ENEMY_TURN_AFTER_MOVE,
                 NoCardParam.class);
     }
 

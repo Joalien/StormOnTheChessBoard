@@ -4,7 +4,7 @@ import fr.kubys.card.Card;
 import fr.kubys.card.params.CardParam;
 import fr.kubys.core.Position;
 
-public sealed interface TurnState permits BeforeMoveCardPlayedState, BeginningOfTheTurnState, EndOfTheTurnState, EnemyReactionState, MoveWithoutCardPlayedState, PromotionPendingState {
+public sealed interface TurnState permits BeforeMoveCardPlayedState, BeginningOfTheTurnState, EndOfTheTurnState, MoveWithoutCardPlayedState, PromotionPendingState {
 
     void tryToMove(GameStateController gameStateController, Position from, Position to);
 

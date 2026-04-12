@@ -400,8 +400,8 @@ describe('useCardSelection', () => {
         expect(result.current.playableCardTypes('MOVE_WITHOUT_CARD_PLAYED', false)).toEqual(['AFTER_TURN']);
     });
 
-    test('opponent always gets ENEMY_TURN', () => {
+    test('opponent always gets ENEMY_TURN types', () => {
         const {result} = setup();
-        expect(result.current.playableCardTypes('BEGINNING_OF_THE_TURN', true)).toEqual(['ENEMY_TURN']);
+        expect(result.current.playableCardTypes('BEGINNING_OF_THE_TURN', true)).toEqual(['ENEMY_TURN_AFTER_MOVE', 'ENEMY_TURN_AFTER_CARD']);
     });
 });

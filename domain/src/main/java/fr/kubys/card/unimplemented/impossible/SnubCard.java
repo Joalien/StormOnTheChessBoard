@@ -10,7 +10,7 @@ public class SnubCard extends Card<NoCardParam> {
     public SnubCard() {
         super("Camouflet",
                 "Jouez cette carte lorsque votre adversaire fait un geste ou une réflexion qui vous paraît désobligeant. Vous enlevez alors l'un de ses pions de l'échiquier.",
-                CardType.ENEMY_TURN,
+                CardType.ENEMY_TURN_AFTER_MOVE,
                 NoCardParam.class);
     }
 

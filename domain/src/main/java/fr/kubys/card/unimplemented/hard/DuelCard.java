@@ -10,7 +10,7 @@ public class DuelCard extends Card<NoCardParam> {
     public DuelCard() {
         super("Duel",
                 "Jouez cette carte lorsque votre adversaire veut prendre l'une de vos pièces. Le combat entre les deux pièces est résolu au 421, à pile ou face, ou à Pierre, feuille, ciseaux, selon votre choix.",
-                CardType.ENEMY_TURN,
+                CardType.ENEMY_TURN_AFTER_MOVE,
                 NoCardParam.class);
     }
 
