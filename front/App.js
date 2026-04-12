@@ -431,15 +431,18 @@ export default function App() {
             .then(res => res.json())
             .then(ids => setGameIds(ids.sort((a, b) => a - b)))
             .catch(() => {});
-        Promise.all([
-            fetch(backendOrigin + '/api/matchmaking/stats').then(res => res.json()),
-            fetch(backendOrigin + '/api/chessboard/connected').then(res => res.json()),
-        ])
-            .then(([mm, connected]) => setMatchmakingStats({...mm, connectedCount: connected}))
-            .catch(() => {});
         // Presence WebSocket — keeps connection alive, also used for matchmaking notifications
         const ws = new WebSocket(wsOrigin + '/ws/presence');
         presenceWsRef.current = ws;
+        function fetchStats() {
+            Promise.all([
+                fetch(backendOrigin + '/api/matchmaking/stats').then(res => res.json()),
+                fetch(backendOrigin + '/api/chessboard/connected').then(res => res.json()),
+            ])
+                .then(([mm, connected]) => setMatchmakingStats({...mm, connectedCount: connected}))
+                .catch(() => {});
+        }
+        ws.onopen = () => fetchStats();
         ws.onmessage = (event) => {
             try {
                 const data = JSON.parse(event.data);
