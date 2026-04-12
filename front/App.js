@@ -886,7 +886,7 @@ export default function App() {
             </header>
 
             {/* ── Main ── */}
-            <main className="sotc-main" style={{
+            <main className="sotc-main" onClick={() => { if (selectedCard) { setSelectedCard(null); setSelectedParam(null); setBarricadeEdges([]); } }} style={{
                 display: 'flex',
                 alignItems: 'flex-start',
                 justifyContent: 'center',
@@ -1150,7 +1150,7 @@ export default function App() {
                 </section>
 
                 {/* Right panel: Actions + Card details + Effects + Captured */}
-                <aside className="sotc-aside sotc-aside-right" style={{width: '300px', flexShrink: 0, position: 'sticky', top: '80px', display: 'flex', flexDirection: 'column', gap: '12px'}}>
+                <aside className="sotc-aside sotc-aside-right" onClick={e => e.stopPropagation()} style={{width: '320px', flexShrink: 0, position: 'sticky', top: '80px', display: 'flex', flexDirection: 'column', gap: '12px'}}>
                     {/* Action buttons */}
                     <div style={{display: 'flex', gap: '8px'}}>
                         <button className="sotc-btn sotc-btn-end" style={{flex: 1, padding: '13px'}} onClick={endTurn} disabled={!isMyTurn}>
@@ -1181,8 +1181,8 @@ export default function App() {
                         </div>
                     )}
 
-                    {/* Active effects */}
-                    {effects.some(e => e.cardEnglishName) && (
+                    {/* Active effects (hidden when a hand card is selected) */}
+                    {!(selectedCard && !selectedCard.isEffect) && effects.some(e => e.cardEnglishName) && (
                         <div className="sotc-panel" style={{padding: '12px 16px', display: 'flex', flexDirection: 'column', gap: '8px'}}>
                             <span style={{fontSize: '11px', fontWeight: '700', color: '#484f58', textTransform: 'uppercase', letterSpacing: '0.8px'}}>
                                 Effets actifs
