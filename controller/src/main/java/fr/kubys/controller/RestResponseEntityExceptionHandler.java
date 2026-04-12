@@ -26,6 +26,6 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
 
     @ExceptionHandler({CardNotFoundException.class, IllegalStateException.class, MappingException.class, IllegalArgumentException.class, IllegalMoveException.class, CardParamException.class, CheckException.class, CannotTakeKingException.class, MagnetismException.class})
     protected ResponseEntity<Object> handleBadRequestException(Exception e, WebRequest request) {
-        return createResponseEntity(e.getMessage(), new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
+        return handleExceptionInternal(e, e.getMessage(), new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
     }
 }
