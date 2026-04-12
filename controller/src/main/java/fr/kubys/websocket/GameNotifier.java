@@ -46,6 +46,10 @@ public class GameNotifier extends TextWebSocketHandler {
         }
     }
 
+    public int getConnectedCount() {
+        return sessions.values().stream().mapToInt(Set::size).sum();
+    }
+
     private Integer extractGameId(WebSocketSession session) {
         String path = session.getUri().getPath();
         String[] parts = path.split("/");

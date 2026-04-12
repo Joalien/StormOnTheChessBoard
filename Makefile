@@ -1,3 +1,13 @@
+test:
+	mvn test
+	cd front && npx jest
+
+test-back:
+	mvn test
+
+test-front:
+	cd front && npx jest
+
 .env:
 	printf "UID=%s\nGID=%s\n" $$(id -u) $$(id -g) > .env
 
@@ -27,4 +37,4 @@ down:
 	docker compose down
 	@-pkill -f "python3 notifier/server.py" 2>/dev/null && echo "Notifier stopped" || true
 
-.PHONY: up back claude claude-only down notifier
+.PHONY: test test-back test-front up back claude claude-only down notifier

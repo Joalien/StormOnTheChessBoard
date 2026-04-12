@@ -32,6 +32,21 @@ npm start          # Expo dev server
 npm run web        # Run in browser
 ```
 
+### Frontend Tests (Jest + React Testing Library)
+```bash
+cd front && npx jest                    # Run all frontend tests
+cd front && npx jest --watch            # Watch mode (re-run on change)
+cd front && npx jest Card              # Run tests matching "Card"
+cd front && npx jest useCardSelection  # Run tests matching "useCardSelection"
+```
+
+### All Tests
+```bash
+make test          # Backend + frontend tests
+make test-back     # Backend only
+make test-front    # Frontend only
+```
+
 ## Architecture
 
 ### Module Structure
