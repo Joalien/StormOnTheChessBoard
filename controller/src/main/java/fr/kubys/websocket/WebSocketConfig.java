@@ -1,7 +1,5 @@
 package fr.kubys.websocket;
 
-import fr.kubys.matchmaking.model.MatchmakingQueue;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.socket.config.annotation.EnableWebSocket;
@@ -12,9 +10,6 @@ import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry
 @EnableWebSocket
 public class WebSocketConfig implements WebSocketConfigurer {
 
-    @Autowired
-    private MatchmakingQueue matchmakingQueue;
-
     @Bean
     public GameNotifier gameNotifier() {
         return new GameNotifier();
@@ -22,9 +17,7 @@ public class WebSocketConfig implements WebSocketConfigurer {
 
     @Bean
     public PresenceNotifier presenceNotifier() {
-        PresenceNotifier notifier = new PresenceNotifier();
-        notifier.setQueue(matchmakingQueue);
-        return notifier;
+        return new PresenceNotifier();
     }
 
     @Override

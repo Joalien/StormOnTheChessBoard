@@ -25,9 +25,6 @@ const wsOrigin = typeof window !== 'undefined'
 const base = backendOrigin + "/api/chessboard/";
 const highlight = {boxShadow: "rgba(212, 168, 67, 0.85) 0px 0px 24px 0px inset"};
 
-// Open presence WebSocket at module load (before React mounts)
-const presenceWs = typeof window !== 'undefined' ? new WebSocket(wsOrigin + '/ws/presence') : null;
-
 const globalCSS = `
   @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
@@ -341,7 +338,6 @@ export default function App() {
     const [expandedGameId, setExpandedGameId] = useState(null);
     const [matchmakingStats, setMatchmakingStats] = useState(null);
     const matchmakingTokenRef = useRef(null);
-    const presenceWsRef = useRef(null);
     const [userBoardSize, setUserBoardSize] = useState(() => {
         if (typeof localStorage !== 'undefined') {
             const saved = localStorage.getItem('sotc-board-size');
@@ -441,24 +437,18 @@ export default function App() {
             .catch(() => {});
     }, []);
 
-    // Presence WebSocket — real-time connected count + matchmaking notifications
+    // Presence WebSocket — real-time connected count
     useEffect(() => {
-        if (!presenceWs) return;
-        presenceWsRef.current = presenceWs;
-        presenceWs.onmessage = (event) => {
+        const ws = new WebSocket(wsOrigin + '/ws/presence');
+        ws.onmessage = (event) => {
             try {
                 const data = JSON.parse(event.data);
                 if (data.connected != null) {
                     setMatchmakingStats(prev => ({...prev, connectedCount: data.connected}));
                 }
-                if (data.status === 'matched') {
-                    matchmakingTokenRef.current = null;
-                    notifyMatchFound();
-                    navigateToGame(data.gameId, data.color);
-                }
             } catch (e) {}
         };
-        return () => { presenceWs.close(); presenceWsRef.current = null; };
+        return () => ws.close();
     }, []);
 
     useEffect(() => {
@@ -554,21 +544,30 @@ export default function App() {
                     return;
                 }
                 matchmakingTokenRef.current = data.token;
-                // Register token on existing presence WebSocket
-                if (presenceWsRef.current && presenceWsRef.current.readyState === WebSocket.OPEN) {
-                    presenceWsRef.current.send(JSON.stringify({matchmaking: data.token}));
-                }
-                // Check status in case match happened before WS registration
-                fetch(backendOrigin + '/api/matchmaking/status/' + data.token)
-                    .then(res => res.json())
-                    .then(status => {
-                        if (status.status === 'matched') {
-                            matchmakingTokenRef.current = null;
-                            notifyMatchFound();
-                            navigateToGame(status.gameId, status.color);
-                        }
-                    })
-                    .catch(() => {});
+                const ws = new WebSocket(wsOrigin + '/ws/matchmaking/' + data.token);
+                ws.onmessage = (event) => {
+                    const status = JSON.parse(event.data);
+                    if (status.status === 'matched') {
+                        ws.close();
+                        matchmakingTokenRef.current = null;
+                        notifyMatchFound();
+                        navigateToGame(status.gameId, status.color);
+                    }
+                };
+                // Check status once WS is open in case match happened during connection
+                ws.onopen = () => {
+                    fetch(backendOrigin + '/api/matchmaking/status/' + data.token)
+                        .then(res => res.json())
+                        .then(status => {
+                            if (status.status === 'matched') {
+                                ws.close();
+                                matchmakingTokenRef.current = null;
+                                notifyMatchFound();
+                                navigateToGame(status.gameId, status.color);
+                            }
+                        })
+                        .catch(() => {});
+                };
             })
             .catch(err => {
                 toast.error("Erreur: " + err);
