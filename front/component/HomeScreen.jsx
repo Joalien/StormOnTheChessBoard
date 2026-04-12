@@ -86,7 +86,7 @@ export function HomeScreen({onPlaySolo, onMatchmaking, stats}) {
                         <span style={{width: '1px', height: '16px', background: 'rgba(255,255,255,0.15)'}}/>
                         <div style={{display: 'flex', alignItems: 'center', gap: '6px', fontSize: '13px', color: '#8b949e'}}>
                             <span style={{fontSize: '15px'}}>👥</span>
-                            <span style={{color: '#e6edf3', fontWeight: 600}}>{stats.connectedCount}</span> connect&eacute;{stats.connectedCount !== 1 ? 's' : ''}
+                            <span style={{color: '#e6edf3', fontWeight: 600}}>{stats.connected}</span> connect&eacute;{stats.connected !== 1 ? 's' : ''}
                         </div>
                     </div>
                 )}
