@@ -38,8 +38,7 @@ services:
       - sotc-node-modules:/app/node_modules
     environment:
       - CI=true
-      - EXPO_NO_DOCTOR=1
-    command: sh -c "npm install --omit=dev --legacy-peer-deps && npx expo start --web --host lan"
+    command: sh -c "npm install --legacy-peer-deps && npx expo start --web --host lan"
     networks:
       - sotc-net
 
