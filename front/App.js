@@ -437,6 +437,9 @@ export default function App() {
         ])
             .then(([mm, connected]) => setMatchmakingStats({...mm, connectedCount: connected}))
             .catch(() => {});
+        // Presence WebSocket — keeps connection alive so server counts us
+        const ws = new WebSocket(wsOrigin + '/ws/presence');
+        return () => ws.close();
     }, []);
 
     useEffect(() => {

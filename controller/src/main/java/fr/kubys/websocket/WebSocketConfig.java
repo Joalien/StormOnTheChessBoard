@@ -15,8 +15,14 @@ public class WebSocketConfig implements WebSocketConfigurer {
         return new GameNotifier();
     }
 
+    @Bean
+    public PresenceNotifier presenceNotifier() {
+        return new PresenceNotifier();
+    }
+
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
         registry.addHandler(gameNotifier(), "/ws/game/*").setAllowedOrigins("*");
+        registry.addHandler(presenceNotifier(), "/ws/presence").setAllowedOrigins("*");
     }
 }
