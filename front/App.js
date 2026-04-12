@@ -15,6 +15,7 @@ import {clusterSpotlights} from "./hooks/clusterPositions";
 import {getRouteFromUrl, getPlayerColorFromUrl, squareToCoords as squareToCoordsUtil, oppositeColor} from "./utils/boardUtils";
 import {useGameActions} from "./hooks/useGameActions";
 import {resolveKeyAction} from "./utils/keyboardActions";
+import {parsePresenceMessage, parseMatchmakingMessage} from "./utils/wsHandlers";
 
 const backendOrigin = typeof window !== 'undefined'
     ? window.location.origin
@@ -441,10 +442,8 @@ export default function App() {
     useEffect(() => {
         const ws = new WebSocket(wsOrigin + '/ws/presence');
         ws.onmessage = (event) => {
-            try {
-                const data = JSON.parse(event.data);
-                setMatchmakingStats(prev => ({...prev, ...data}));
-            } catch (e) {}
+            const data = parsePresenceMessage(event.data);
+            if (data) setMatchmakingStats(prev => ({...prev, ...data}));
         };
         return () => ws.close();
     }, []);
@@ -544,12 +543,12 @@ export default function App() {
                 matchmakingTokenRef.current = data.token;
                 const ws = new WebSocket(wsOrigin + '/ws/matchmaking/' + data.token);
                 ws.onmessage = (event) => {
-                    const status = JSON.parse(event.data);
-                    if (status.status === 'matched') {
+                    const match = parseMatchmakingMessage(event.data);
+                    if (match) {
                         ws.close();
                         matchmakingTokenRef.current = null;
                         notifyMatchFound();
-                        navigateToGame(status.gameId, status.color);
+                        navigateToGame(match.gameId, match.color);
                     }
                 };
                 // Check status once WS is open in case match happened during connection
