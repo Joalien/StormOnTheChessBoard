@@ -25,6 +25,7 @@ public class MatchmakingController {
                                  @Value("${chessboard.base-url:http://localhost:9000}") String chessboardBaseUrl) {
         this.restTemplate = restTemplate;
         this.matchmakingNotifier = matchmakingNotifier;
+        this.matchmakingNotifier.setQueue(queue);
         this.chessboardBaseUrl = chessboardBaseUrl;
     }
 

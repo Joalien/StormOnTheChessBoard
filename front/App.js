@@ -503,6 +503,16 @@ export default function App() {
             .catch(err => alert(err));
     }
 
+    useEffect(() => {
+        function onBeforeUnload() {
+            if (matchmakingTokenRef.current) {
+                fetch(backendOrigin + '/api/matchmaking/' + matchmakingTokenRef.current, {method: 'DELETE', keepalive: true}).catch(() => {});
+            }
+        }
+        window.addEventListener('beforeunload', onBeforeUnload);
+        return () => window.removeEventListener('beforeunload', onBeforeUnload);
+    }, []);
+
     function matchmaking() {
         setRoute({page: 'waiting'});
         fetch(backendOrigin + '/api/matchmaking/join', {method: 'POST'})

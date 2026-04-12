@@ -1,5 +1,6 @@
 package fr.kubys.matchmaking.controller;
 
+import fr.kubys.matchmaking.model.MatchmakingQueue;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
@@ -11,6 +12,11 @@ import java.util.concurrent.ConcurrentHashMap;
 public class MatchmakingNotifier extends TextWebSocketHandler {
 
     private final ConcurrentHashMap<String, WebSocketSession> sessions = new ConcurrentHashMap<>();
+    private MatchmakingQueue queue;
+
+    public void setQueue(MatchmakingQueue queue) {
+        this.queue = queue;
+    }
 
     @Override
     public void afterConnectionEstablished(WebSocketSession session) {
@@ -25,6 +31,9 @@ public class MatchmakingNotifier extends TextWebSocketHandler {
         String token = extractToken(session);
         if (token != null) {
             sessions.remove(token);
+            if (queue != null) {
+                queue.cancel(token);
+            }
         }
     }
 
