@@ -1059,11 +1059,13 @@ export default function App() {
                 <aside className="sotc-aside sotc-aside-right" onClick={e => e.stopPropagation()} style={{width: '320px', flexShrink: 0, position: 'sticky', top: '80px', display: 'flex', flexDirection: 'column', gap: '12px', zIndex: selectedCard && selectedCard.isEffect ? 51 : undefined}}>
                     {/* Action buttons */}
                     <div style={{display: 'flex', gap: '8px'}}>
-                        <button className="sotc-btn sotc-btn-end" style={{flex: 1, padding: '13px'}} onClick={endTurn} disabled={!isMyTurn}>
-                            ✓ Fin du tour
+                        <button className="sotc-btn sotc-btn-end" style={{flex: 1, padding: '10px 13px 8px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '2px'}} onClick={endTurn} disabled={!isMyTurn}>
+                            <span>✓ Fin du tour</span>
+                            <span style={{fontSize: '9px', opacity: 0.5, fontWeight: 400}}>Espace</span>
                         </button>
-                        <button className="sotc-btn sotc-btn-danger" style={{flex: 1, padding: '13px'}} onClick={undo} disabled={!isMyTurn}>
-                            ↩ Annuler
+                        <button className="sotc-btn sotc-btn-danger" style={{flex: 1, padding: '10px 13px 8px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '2px'}} onClick={undo} disabled={!isMyTurn}>
+                            <span>↩ Annuler</span>
+                            <span style={{fontSize: '9px', opacity: 0.5, fontWeight: 400}}>Ctrl+Z</span>
                         </button>
                     </div>
 
