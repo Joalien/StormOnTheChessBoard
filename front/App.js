@@ -12,7 +12,9 @@ import {toast, ToastContainer} from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 import {useCardSelection} from "./hooks/useCardSelection";
 import {clusterSpotlights} from "./hooks/clusterPositions";
-import {getRouteFromUrl, getPlayerColorFromUrl, squareToCoords as squareToCoordsUtil, oppositeColor, parseRoute} from "./utils/boardUtils";
+import {getRouteFromUrl, getPlayerColorFromUrl, squareToCoords as squareToCoordsUtil, oppositeColor} from "./utils/boardUtils";
+import {useGameActions} from "./hooks/useGameActions";
+import {resolveKeyAction} from "./utils/keyboardActions";
 
 const backendOrigin = typeof window !== 'undefined'
     ? window.location.origin
@@ -479,20 +481,12 @@ export default function App() {
 
     useEffect(() => {
         function onKeyDown(e) {
-            if (e.code === 'Space' && gameId !== null) {
-                if (myColor && myColor !== currentPlayerColor) return;
-                e.preventDefault();
-                if (selectedCard && !Object.values(selectedCard.param || {}).some(x => x === null)) {
-                    playCard();
-                } else {
-                    endTurn();
-                }
-            }
-            if (e.key === 'z' && (e.ctrlKey || e.metaKey) && gameId !== null) {
-                if (myColor && myColor !== currentPlayerColor) return;
-                e.preventDefault();
-                undo();
-            }
+            const action = resolveKeyAction(e, {gameId, myColor, currentPlayerColor, selectedCard});
+            if (!action) return;
+            e.preventDefault();
+            if (action === 'playCard') playCard();
+            else if (action === 'endTurn') endTurn();
+            else if (action === 'undo') undo();
         }
         window.addEventListener('keydown', onKeyDown, true);
         return () => window.removeEventListener('keydown', onKeyDown, true);
@@ -582,56 +576,6 @@ export default function App() {
         navigateToGame(null);
     }
 
-    function onPieceDragBegin(piece, sourceSquare) {
-        fetch(base + gameId + "/legalMoves/" + sourceSquare)
-            .then(res => res.json())
-            .then(moves => setLegalMoves(moves))
-            .catch(() => setLegalMoves([]));
-    }
-
-    function onPieceDragEnd() {
-        setLegalMoves([]);
-    }
-
-    async function movePiece(sourceSquare, targetSquare) {
-        setLegalMoves([]);
-        const res = await fetch(base + gameId + "/move/" + sourceSquare + "/to/" + targetSquare, {method: 'POST'});
-        if (res.ok) fetchGame();
-        else await showErrorMessage(res);
-    }
-
-    async function playCard() {
-        const params = {
-            method: 'POST',
-            headers: {"Content-Type": "application/json"},
-            body: JSON.stringify(selectedCard.param)
-        };
-        const res = await fetch(base + gameId + "/card/" + selectedCard.name, params);
-        if (res.ok) {
-            setSelectedCard(null);
-            setSelectedParam(null);
-            fetchGame();
-        } else await showErrorMessage(res);
-    }
-
-    async function endTurn() {
-        const res = await fetch(base + gameId + "/endTurn", {method: 'POST'});
-        if (res.ok) {
-            setCurrentPlayerColor(oppositeColor(currentPlayerColor));
-            setSelectedCard(null);
-            fetchGame();
-        } else await showErrorMessage(res);
-    }
-
-    async function undo() {
-        const res = await fetch(base + gameId + "/undo", {method: 'POST'});
-        if (res.ok) {
-            setSelectedCard(null);
-            setSelectedParam(null);
-            fetchGame();
-        } else await showErrorMessage(res);
-    }
-
     function fetchGame() {
         fetch(base + gameId)
             .then(response => response.json())
@@ -649,11 +593,10 @@ export default function App() {
             });
     }
 
-    async function promote(position, piece) {
-        const res = await fetch(base + gameId + "/promote/" + position + "/" + piece, {method: 'POST'});
-        if (res.ok) fetchGame();
-        else await showErrorMessage(res);
-    }
+    const {movePiece, playCard, endTurn, undo, promote, onPieceDragBegin, onPieceDragEnd} = useGameActions({
+        base, gameId, fetchGame, setSelectedCard, setSelectedParam,
+        setCurrentPlayerColor, currentPlayerColor, selectedCard, setLegalMoves, showErrorMessage,
+    });
 
     function onSquareClick(square) {
         if (pendingPromotions.includes(square)) {
