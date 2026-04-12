@@ -7,7 +7,6 @@ import lombok.Setter;
 import lombok.ToString;
 
 import java.util.List;
-import java.util.Set;
 
 @Getter
 @Setter
@@ -15,8 +14,7 @@ import java.util.Set;
 @ToString
 public class EffectDto {
     private String name;
-    private Set<Position> positions;
-    private List<List<String>> edges;
+    private List<Position> positions;
     private String cardName;
     private String cardEnglishName;
     private String cardDescription;

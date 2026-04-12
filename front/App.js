@@ -817,10 +817,8 @@ export default function App() {
     const selectedEffectPositions = selectedCard && selectedCard.isEffect && selectedCard.effectIndices
         ? selectedCard.effectIndices.flatMap(i => {
             const e = effects[i];
-            if (!e) return [];
-            if (e.positions) return [...e.positions];
-            if (e.edges) return [...new Set(e.edges.flat())];
-            return [];
+            if (!e || !e.positions) return [];
+            return [...e.positions];
         })
         : [];
     const customSquareStyles = {
@@ -1021,14 +1019,14 @@ export default function App() {
                         {isBarricadeCard(selectedCard) && barricadeEdges.length === 2 && (
                             <svg style={{position: 'absolute', top: 0, left: 0, width: boardSize, height: boardSize, pointerEvents: 'none', zIndex: 5}}>
                                 {barricadeEdges.map((edge, i) => {
-                                    const line = barricadeLines({edges: [edge]}, boardSize, currentPlayerColor)[0];
+                                    const line = barricadeLines({positions: edge}, boardSize, currentPlayerColor)[0];
                                     return line && <line key={i} x1={line.x1} y1={line.y1} x2={line.x2} y2={line.y2} stroke="#3fb950" strokeWidth={6} strokeLinecap="round" />;
                                 })}
                             </svg>
                         )}
                         {/* Barricade effect display (existing barricades on the board) */}
                         {effects.map((effect, globalIdx) => {
-                            if (effect.name !== 'BarricadeEffect' || !effect.edges) return null;
+                            if (effect.name !== 'BarricadeEffect' || !effect.positions || effect.positions.length < 3) return null;
                             const clickable = !!effect.cardEnglishName;
                             return (
                                 <svg key={`barricade-${globalIdx}`} style={{position: 'absolute', top: 0, left: 0, width: boardSize, height: boardSize, pointerEvents: 'none', zIndex: 5}}>

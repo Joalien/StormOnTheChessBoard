@@ -4,13 +4,14 @@ import fr.kubys.board.ChessBoard;
 import fr.kubys.core.Position;
 import fr.kubys.piece.Piece;
 
-import java.util.HashSet;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 public abstract class Effect {
 
     private final String name;
-    private final Set<Position> positions = new HashSet<>();
+    private final List<Position> positions = new ArrayList<>();
 
     public Effect(String name) {
         this.name = name;
@@ -41,7 +42,7 @@ public abstract class Effect {
         return this.name;
     }
 
-    public Set<Position> getPositions() {
+    public List<Position> getPositions() {
         return positions;
     }
 }

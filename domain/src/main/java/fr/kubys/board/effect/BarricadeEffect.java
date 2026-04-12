@@ -5,6 +5,7 @@ import fr.kubys.core.Position;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Stream;
 
 public class BarricadeEffect extends Effect {
 
@@ -13,16 +14,17 @@ public class BarricadeEffect extends Effect {
 
     public BarricadeEffect(Position from1, Position to1, Position from2, Position to2) {
         super("Barricade");
-        Set<Position> allPositions = new HashSet<>();
-        allPositions.addAll(Set.of(from1, to1));
-        allPositions.addAll(Set.of(from2, to2));
-        this.getPositions().addAll(allPositions);
         this.edges = List.of(List.of(from1, to1), List.of(from2, to2));
         this.blockedPairs = computeBlockedPairs(from1, to1, from2, to2);
     }
 
     public List<List<Position>> getEdges() {
         return edges;
+    }
+
+    @Override
+    public List<Position> getPositions() {
+        return edges.stream().flatMap(List::stream).toList();
     }
 
     @Override

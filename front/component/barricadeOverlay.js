@@ -96,10 +96,16 @@ function nearestEdge(px, py, orientation, size = DEFAULT_BOARD_SIZE) {
 
 /**
  * Renders barricade wall lines for existing effects on the board.
+ * Positions are ordered as [from1, to1, from2, to2] — taken as consecutive pairs.
  */
 export function barricadeLines(effect, boardWidth, orientation) {
-    if (!effect.edges) return [];
-    return effect.edges.map(([sq1, sq2]) => edgeLine(sq1, sq2, orientation, boardWidth));
+    const positions = effect.positions;
+    if (!positions || positions.length < 2) return [];
+    const lines = [];
+    for (let i = 0; i + 1 < positions.length; i += 2) {
+        lines.push(edgeLine(positions[i], positions[i + 1], orientation, boardWidth));
+    }
+    return lines;
 }
 
 /**
