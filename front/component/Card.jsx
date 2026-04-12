@@ -1,9 +1,11 @@
 import {Image} from "react-native";
 import cardImages from "./cardImages";
 
-export function Card({hidden, name, showCard, isSelected, isPlayable = true}) {
+export function Card({hidden, name, showCard, isSelected, isPlayable = true, large = false}) {
     const hasImage = name in cardImages;
-    const imgStyle = {width: 100, height: 145, borderRadius: 8};
+    const w = large ? 160 : 100;
+    const h = large ? 232 : 145;
+    const imgStyle = {width: w, height: h, borderRadius: 8};
 
     if (hidden) {
         return (
@@ -25,8 +27,8 @@ export function Card({hidden, name, showCard, isSelected, isPlayable = true}) {
 
     return (
         <div className={wrapperClass} onClick={showCard} style={{
-            width: 100,
-            height: 145,
+            width: w,
+            height: h,
             background: 'rgba(255,255,255,0.04)',
             border: '1px solid rgba(255,255,255,0.1)',
             borderRadius: 7,

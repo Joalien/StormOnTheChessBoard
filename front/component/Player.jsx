@@ -1,11 +1,11 @@
 import {Card} from "./Card";
 
-export function Player({player, hiddenCards, showCard, color, selectedCard, playableTypes}) {
+export function Player({player, hiddenCards, showCard, color, selectedCard, playableTypes, large = false}) {
     const isBlack = color === 'black';
     const cards = player.cards || [];
 
     return (
-        <div style={{width: '100%', maxWidth: '560px', display: 'flex', flexDirection: 'column', gap: '8px'}}>
+        <div style={{width: '100%', display: 'flex', flexDirection: 'column', gap: '8px'}}>
             {/* Player label */}
             <div style={{display: 'flex', alignItems: 'center', gap: '7px', paddingLeft: '2px'}}>
                 <div style={{
@@ -40,7 +40,7 @@ export function Player({player, hiddenCards, showCard, color, selectedCard, play
             </div>
 
             {/* Cards row */}
-            <div style={{display: 'flex', gap: '8px', flexWrap: 'wrap', minHeight: '116px', alignItems: 'flex-end'}}>
+            <div style={{display: 'flex', gap: large ? '12px' : '8px', flexWrap: 'wrap', minHeight: large ? '190px' : '116px', alignItems: 'flex-end'}}>
                 {cards.map((card, index) => {
                     const isPlayable = !playableTypes || playableTypes.includes(card.type);
                     return (
@@ -51,6 +51,7 @@ export function Player({player, hiddenCards, showCard, color, selectedCard, play
                             showCard={() => showCard(card)}
                             isSelected={!hiddenCards && selectedCard && selectedCard.englishName === card.englishName}
                             isPlayable={isPlayable}
+                            large={large}
                         />
                     );
                 })}

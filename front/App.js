@@ -155,6 +155,9 @@ const globalCSS = `
     box-shadow: none;
     z-index: auto;
   }
+  .sotc-resize-handle { opacity: 0.35; transition: opacity 0.15s; }
+  .sotc-resize-handle:hover { opacity: 0.8; }
+
   .sotc-card-hidden {
     opacity: 0.7;
     pointer-events: none;
@@ -267,10 +270,9 @@ const globalCSS = `
   @media (max-width: 1200px) {
     .sotc-header-title { display: none; }
     .sotc-main { flex-direction: column !important; align-items: center !important; padding: 12px 8px !important; }
-    .sotc-aside { width: 100% !important; max-width: 560px; position: static !important; }
-    .sotc-aside-left { order: 3; }
+    .sotc-aside { width: 100% !important; max-width: 640px; position: static !important; }
     .sotc-aside-right { order: 2; }
-    .sotc-board-section { order: 1; }
+    .sotc-board-section { order: 1; flex: unset !important; }
   }
 
   @media (max-width: 480px) {
@@ -332,19 +334,54 @@ export default function App() {
     const [expandedGameId, setExpandedGameId] = useState(null);
     const matchmakingPollRef = useRef(null);
     const matchmakingTokenRef = useRef(null);
-
+    const [userBoardSize, setUserBoardSize] = useState(() => {
+        if (typeof localStorage !== 'undefined') {
+            const saved = localStorage.getItem('sotc-board-size');
+            if (saved) return parseInt(saved, 10);
+        }
+        return null;
+    });
     useEffect(() => {
         function onResize() { setWindowWidth(window.innerWidth); }
         window.addEventListener('resize', onResize);
         return () => window.removeEventListener('resize', onResize);
     }, []);
 
-    const boardSize = useMemo(() => {
-        const maxBoard = 560;
+    const defaultBoardSize = useMemo(() => {
+        const maxBoard = 640;
         const padding = 40;
         if (windowWidth <= 900) return Math.min(maxBoard, windowWidth - padding);
-        return Math.min(maxBoard, windowWidth - 340 - padding);
+        return Math.min(maxBoard, windowWidth - 380 - padding);
     }, [windowWidth]);
+
+    const boardSize = userBoardSize ? Math.max(280, Math.min(userBoardSize, windowWidth - 380)) : defaultBoardSize;
+
+    const onResizeStart = useCallback((e) => {
+        e.preventDefault();
+        const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+        const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+        const startSize = boardSize;
+
+        function onMove(ev) {
+            ev.preventDefault();
+            const cx = ev.touches ? ev.touches[0].clientX : ev.clientX;
+            const cy = ev.touches ? ev.touches[0].clientY : ev.clientY;
+            const delta = Math.max(cx - clientX, cy - clientY);
+            const newSize = Math.round(Math.max(280, Math.min(startSize + delta, windowWidth - 380)));
+            setUserBoardSize(newSize);
+            localStorage.setItem('sotc-board-size', String(newSize));
+        }
+        function onEnd() {
+            document.removeEventListener('mousemove', onMove);
+            document.removeEventListener('mouseup', onEnd);
+            document.removeEventListener('touchmove', onMove);
+            document.removeEventListener('touchend', onEnd);
+        }
+        document.addEventListener('mousemove', onMove);
+        document.addEventListener('mouseup', onEnd);
+        document.addEventListener('touchmove', onMove, {passive: false});
+        document.addEventListener('touchend', onEnd);
+    }, [boardSize, windowWidth]);
 
     function loadCustomPieces() {
         const requirePiece = require.context('./component/pieces', false, /\.js$/);
@@ -817,7 +854,6 @@ export default function App() {
                 </div>
                 <div style={{display: 'flex', gap: '8px', alignItems: 'center'}}>
                     <button className="sotc-btn" onClick={() => navigateToGame(null)}>⌂ Accueil</button>
-                    <button className="sotc-btn sotc-btn-danger" onClick={undo} disabled={!isMyTurn}>↩ Annuler</button>
                 </div>
             </header>
 
@@ -830,62 +866,8 @@ export default function App() {
                 padding: '28px 20px',
                 flex: 1,
             }}>
-                {/* Left panel: End Turn + Captured pieces */}
-                <aside className="sotc-aside sotc-aside-left" style={{width: '252px', flexShrink: 0, position: 'sticky', top: '80px', display: 'flex', flexDirection: 'column', gap: '12px'}}>
-                    <button className="sotc-btn sotc-btn-end" style={{width: '100%', padding: '13px'}} onClick={endTurn} disabled={!isMyTurn}>
-                        ✓ Fin du tour
-                    </button>
-
-                    {capturedPieces.length > 0 && (() => {
-                        const pieceSymbols = {P: '♟', N: '♞', B: '♝', R: '♜', Q: '♛', K: '♚', Kangaroo: '🦘', Crab: '🦀'};
-                        const canSelect = selectedCard && selectedParam && !isBarricadeCard(selectedCard);
-                        const renderPiece = (code, globalIndex) => {
-                            const type = code.slice(1);
-                            const color = code[0];
-                            const paramValue = "captured:" + globalIndex;
-                            const isSelected = canSelect && selectedCard.param[selectedParam] === paramValue;
-                            return (
-                                <span
-                                    key={globalIndex}
-                                    onClick={canSelect ? () => onCapturedPieceClick(globalIndex) : undefined}
-                                    style={{
-                                        fontSize: '20px',
-                                        color: color === 'w' ? '#f0d9b5' : '#6a5a4a',
-                                        lineHeight: 1,
-                                        cursor: canSelect ? 'pointer' : 'default',
-                                        background: isSelected ? 'rgba(212,168,67,0.25)' : 'transparent',
-                                        borderRadius: '4px',
-                                        padding: '2px 3px',
-                                        transition: 'background 0.15s',
-                                    }}>
-                                    {pieceSymbols[type] || '?'}
-                                </span>
-                            );
-                        };
-                        const whiteIndices = capturedPieces.map((p, i) => ({code: p, index: i})).filter(e => e.code.startsWith('w'));
-                        const blackIndices = capturedPieces.map((p, i) => ({code: p, index: i})).filter(e => e.code.startsWith('b'));
-                        return (
-                            <div className="sotc-panel" style={{padding: '12px 16px', display: 'flex', flexDirection: 'column', gap: '8px'}}>
-                                <span style={{fontSize: '11px', fontWeight: '700', color: '#484f58', textTransform: 'uppercase', letterSpacing: '0.8px'}}>
-                                    {canSelect ? 'Cliquez sur une pièce capturée' : 'Pièces capturées'}
-                                </span>
-                                {whiteIndices.length > 0 && (
-                                    <div style={{display: 'flex', flexWrap: 'wrap', gap: '2px'}}>
-                                        {whiteIndices.map(e => renderPiece(e.code, e.index))}
-                                    </div>
-                                )}
-                                {blackIndices.length > 0 && (
-                                    <div style={{display: 'flex', flexWrap: 'wrap', gap: '2px'}}>
-                                        {blackIndices.map(e => renderPiece(e.code, e.index))}
-                                    </div>
-                                )}
-                            </div>
-                        );
-                    })()}
-                </aside>
-
                 {/* Center: board column */}
-                <section className="sotc-board-section" style={{display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '14px'}}>
+                <section className="sotc-board-section" style={{display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '14px', flex: 1, minWidth: 0}}>
                     {/* Turn indicator */}
                     <span className={`sotc-turn-indicator sotc-turn-${currentPlayerColor}`}>
                         <span className="dot"/>
@@ -1101,6 +1083,30 @@ export default function App() {
                                 </div>
                             );
                         })()}
+                        {/* Resize handle */}
+                        <div
+                            className="sotc-resize-handle"
+                            onMouseDown={onResizeStart}
+                            onTouchStart={onResizeStart}
+                            style={{
+                                position: 'absolute',
+                                right: -6,
+                                bottom: -6,
+                                width: 22,
+                                height: 22,
+                                cursor: 'nwse-resize',
+                                zIndex: 20,
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                            }}
+                        >
+                            <svg width="12" height="12" viewBox="0 0 12 12">
+                                <line x1="11" y1="1" x2="1" y2="11" stroke="#e6edf3" strokeWidth="1.5" strokeLinecap="round"/>
+                                <line x1="11" y1="5" x2="5" y2="11" stroke="#e6edf3" strokeWidth="1.5" strokeLinecap="round"/>
+                                <line x1="11" y1="9" x2="9" y2="11" stroke="#e6edf3" strokeWidth="1.5" strokeLinecap="round"/>
+                            </svg>
+                        </div>
                     </div>
 
                     {/* Bottom player cards */}
@@ -1111,11 +1117,23 @@ export default function App() {
                         color={bottomColor}
                         selectedCard={selectedCard}
                         playableTypes={playableCardTypes(currentState, false)}
+                        large
                     />
                 </section>
 
-                {/* Right panel: Selected card + Active effects */}
-                <aside className="sotc-aside sotc-aside-right" style={{width: '280px', flexShrink: 0, position: 'sticky', top: '80px', display: 'flex', flexDirection: 'column', gap: '12px'}}>
+                {/* Right panel: Actions + Card details + Effects + Captured */}
+                <aside className="sotc-aside sotc-aside-right" style={{width: '300px', flexShrink: 0, position: 'sticky', top: '80px', display: 'flex', flexDirection: 'column', gap: '12px'}}>
+                    {/* Action buttons */}
+                    <div style={{display: 'flex', gap: '8px'}}>
+                        <button className="sotc-btn sotc-btn-end" style={{flex: 1, padding: '13px'}} onClick={endTurn} disabled={!isMyTurn}>
+                            ✓ Fin du tour
+                        </button>
+                        <button className="sotc-btn sotc-btn-danger" style={{flex: 1, padding: '13px'}} onClick={undo} disabled={!isMyTurn}>
+                            ↩ Annuler
+                        </button>
+                    </div>
+
+                    {/* Card details */}
                     {selectedCard ? (
                         <CardParameters
                             card={selectedCard}
@@ -1135,6 +1153,7 @@ export default function App() {
                         </div>
                     )}
 
+                    {/* Active effects */}
                     {effects.some(e => e.cardEnglishName) && (
                         <div className="sotc-panel" style={{padding: '12px 16px', display: 'flex', flexDirection: 'column', gap: '8px'}}>
                             <span style={{fontSize: '11px', fontWeight: '700', color: '#484f58', textTransform: 'uppercase', letterSpacing: '0.8px'}}>
@@ -1162,6 +1181,54 @@ export default function App() {
                             </div>
                         </div>
                     )}
+
+                    {/* Captured pieces */}
+                    {capturedPieces.length > 0 && (() => {
+                        const pieceSymbols = {P: '♟', N: '♞', B: '♝', R: '♜', Q: '♛', K: '♚', Kangaroo: '🦘', Crab: '🦀'};
+                        const canSelect = selectedCard && selectedParam && !isBarricadeCard(selectedCard);
+                        const renderPiece = (code, globalIndex) => {
+                            const type = code.slice(1);
+                            const color = code[0];
+                            const paramValue = "captured:" + globalIndex;
+                            const isSelected = canSelect && selectedCard.param[selectedParam] === paramValue;
+                            return (
+                                <span
+                                    key={globalIndex}
+                                    onClick={canSelect ? () => onCapturedPieceClick(globalIndex) : undefined}
+                                    style={{
+                                        fontSize: '20px',
+                                        color: color === 'w' ? '#f0d9b5' : '#6a5a4a',
+                                        lineHeight: 1,
+                                        cursor: canSelect ? 'pointer' : 'default',
+                                        background: isSelected ? 'rgba(212,168,67,0.25)' : 'transparent',
+                                        borderRadius: '4px',
+                                        padding: '2px 3px',
+                                        transition: 'background 0.15s',
+                                    }}>
+                                    {pieceSymbols[type] || '?'}
+                                </span>
+                            );
+                        };
+                        const whiteIndices = capturedPieces.map((p, i) => ({code: p, index: i})).filter(e => e.code.startsWith('w'));
+                        const blackIndices = capturedPieces.map((p, i) => ({code: p, index: i})).filter(e => e.code.startsWith('b'));
+                        return (
+                            <div className="sotc-panel" style={{padding: '12px 16px', display: 'flex', flexDirection: 'column', gap: '8px'}}>
+                                <span style={{fontSize: '11px', fontWeight: '700', color: '#484f58', textTransform: 'uppercase', letterSpacing: '0.8px'}}>
+                                    {canSelect ? 'Cliquez sur une pièce capturée' : 'Pièces capturées'}
+                                </span>
+                                {whiteIndices.length > 0 && (
+                                    <div style={{display: 'flex', flexWrap: 'wrap', gap: '2px'}}>
+                                        {whiteIndices.map(e => renderPiece(e.code, e.index))}
+                                    </div>
+                                )}
+                                {blackIndices.length > 0 && (
+                                    <div style={{display: 'flex', flexWrap: 'wrap', gap: '2px'}}>
+                                        {blackIndices.map(e => renderPiece(e.code, e.index))}
+                                    </div>
+                                )}
+                            </div>
+                        );
+                    })()}
                 </aside>
             </main>
         </div>
