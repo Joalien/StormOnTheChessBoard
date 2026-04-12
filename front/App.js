@@ -437,15 +437,13 @@ export default function App() {
             .catch(() => {});
     }, []);
 
-    // Presence WebSocket — real-time connected count
+    // Presence WebSocket — real-time connected count + matchmaking stats
     useEffect(() => {
         const ws = new WebSocket(wsOrigin + '/ws/presence');
         ws.onmessage = (event) => {
             try {
                 const data = JSON.parse(event.data);
-                if (data.connected != null) {
-                    setMatchmakingStats(prev => ({...prev, connectedCount: data.connected}));
-                }
+                setMatchmakingStats(prev => ({...prev, ...data}));
             } catch (e) {}
         };
         return () => ws.close();

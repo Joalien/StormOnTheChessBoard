@@ -18,14 +18,17 @@ public class MatchmakingController {
     private final MatchmakingQueue queue;
     private final RestTemplate restTemplate;
     private final MatchNotifier matchNotifier;
+    private final StatsListener statsListener;
     private final String chessboardBaseUrl;
 
     @Autowired
     public MatchmakingController(MatchmakingQueue queue, RestTemplate restTemplate, MatchNotifier matchNotifier,
+                                 StatsListener statsListener,
                                  @Value("${chessboard.base-url:http://localhost:9000}") String chessboardBaseUrl) {
         this.queue = queue;
         this.restTemplate = restTemplate;
         this.matchNotifier = matchNotifier;
+        this.statsListener = statsListener;
         this.chessboardBaseUrl = chessboardBaseUrl;
     }
 
@@ -36,8 +39,10 @@ public class MatchmakingController {
         if (match.isPresent()) {
             createGameAndNotify(match.get());
             MatchResult result = match.get();
+            notifyStats();
             return new JoinResponse.Matched(token, result.getGameId(), result.getColorForToken(token));
         }
+        notifyStats();
         return new JoinResponse.Waiting(token);
     }
 
@@ -58,6 +63,7 @@ public class MatchmakingController {
     @DeleteMapping("/{token}")
     public void cancel(@PathVariable String token) {
         queue.cancel(token);
+        notifyStats();
     }
 
     @GetMapping("/stats")
@@ -66,6 +72,10 @@ public class MatchmakingController {
     }
 
     public record MatchmakingStats(int waitingCount, int activeMatchCount) {}
+
+    private void notifyStats() {
+        statsListener.onStatsChanged(queue.getWaitingCount(), queue.getActiveMatchCount());
+    }
 
     private void ensureGameCreated(MatchResult result) {
         synchronized (result) {
