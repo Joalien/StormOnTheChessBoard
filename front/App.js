@@ -452,6 +452,9 @@ export default function App() {
                     notifyMatchFound();
                     navigateToGame(data.gameId, data.color);
                 }
+                if (data.connected != null) {
+                    setMatchmakingStats(prev => prev ? {...prev, connectedCount: data.connected} : {connectedCount: data.connected});
+                }
             } catch (e) {}
         };
         return () => { ws.close(); presenceWsRef.current = null; };

@@ -27,11 +27,13 @@ public class PresenceNotifier extends TextWebSocketHandler implements MatchNotif
     @Override
     public void afterConnectionEstablished(WebSocketSession session) {
         sessions.add(session);
+        broadcastConnectedCount();
     }
 
     @Override
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status) {
         sessions.remove(session);
+        broadcastConnectedCount();
         // Cancel any matchmaking token associated with this session
         matchmakingSessions.entrySet().removeIf(entry -> {
             if (entry.getValue().equals(session)) {
@@ -78,5 +80,14 @@ public class PresenceNotifier extends TextWebSocketHandler implements MatchNotif
 
     public int getConnectedCount() {
         return (int) sessions.stream().filter(WebSocketSession::isOpen).count();
+    }
+
+    private void broadcastConnectedCount() {
+        TextMessage msg = new TextMessage("{\"connected\":" + getConnectedCount() + "}");
+        for (WebSocketSession s : sessions) {
+            try {
+                if (s.isOpen()) s.sendMessage(msg);
+            } catch (IOException ignored) {}
+        }
     }
 }
