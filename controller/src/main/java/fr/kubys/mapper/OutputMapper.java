@@ -1,8 +1,7 @@
 package fr.kubys.mapper;
 
 import fr.kubys.api.ChessBoardReadService;
-import fr.kubys.board.effect.BarricadeEffect;
-import fr.kubys.board.effect.Effect;
+import fr.kubys.board.effect.*;
 import fr.kubys.card.Card;
 import fr.kubys.card.CardRegistry;
 import fr.kubys.card.params.CardParam;
@@ -59,6 +58,13 @@ public class OutputMapper {
             builder.edges(barricade.getEdges().stream()
                     .map(edge -> edge.stream().map(Position::name).toList())
                     .toList());
+        }
+        if (e instanceof NeutralityEffect ne && ne.getPiece().getPosition() != null) {
+            builder.positions(java.util.Set.of(ne.getPiece().getPosition()));
+        } else if (e instanceof KangarooEffect ke && ke.getPiece().getPosition() != null) {
+            builder.positions(java.util.Set.of(ke.getPiece().getPosition()));
+        } else if (e instanceof CrabEffect ce && ce.getPiece().getPosition() != null) {
+            builder.positions(java.util.Set.of(ce.getPiece().getPosition()));
         }
         Card<?> card = EFFECT_TO_CARD.get(e.getClass().getSimpleName());
         if (card != null) {

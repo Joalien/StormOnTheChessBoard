@@ -87,14 +87,23 @@ public class GamePresets {
             board.add(new Pawn(Color.BLACK), g6);
             board.add(new Pawn(Color.BLACK), h7);
 
-            // Neutral piece (bishop on e6 made neutral via NeutralityCard effect)
-            board.at(e6).getPiece().orElseThrow().setColor(Color.NONE);
-            board.at(a5).getPiece().orElseThrow().setColor(Color.NONE);
-            board.at(c3).getPiece().orElseThrow().setColor(Color.NONE);
-            board.at(c7).getPiece().orElseThrow().setColor(Color.NONE);
-            board.at(b7).getPiece().orElseThrow().setColor(Color.NONE);
-            board.at(h1).getPiece().orElseThrow().setColor(Color.NONE);
-            board.at(g6).getPiece().orElseThrow().setColor(Color.NONE);
+            // Neutral pieces (via NeutralityCard effect)
+            for (Position pos : List.of(e6, a5, c3, h1, g6)) {
+                Piece piece = board.at(pos).getPiece().orElseThrow();
+                piece.setColor(Color.NONE);
+                board.addEffect(new NeutralityEffect(piece));
+            }
+
+            // Kangaroo and Crab effects
+            Piece kangaroo = board.at(c7).getPiece().orElseThrow();
+            kangaroo.setColor(Color.NONE);
+            board.addEffect(new NeutralityEffect(kangaroo));
+            board.addEffect(new KangarooEffect(kangaroo));
+
+            Piece crab = board.at(b7).getPiece().orElseThrow();
+            crab.setColor(Color.NONE);
+            board.addEffect(new NeutralityEffect(crab));
+            board.addEffect(new CrabEffect(crab));
 
             // === Persistent Effects ===
 

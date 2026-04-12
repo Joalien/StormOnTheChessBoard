@@ -1,12 +1,12 @@
 package fr.kubys.card;
 
 import fr.kubys.board.ChessBoard;
-import fr.kubys.board.effect.PieceTransformationEffect;
+import fr.kubys.board.effect.KangarooEffect;
 import fr.kubys.card.params.KnightCardParam;
 import fr.kubys.core.Position;
 import fr.kubys.piece.extra.Kangaroo;
 
-public class KangarooCard extends Card<KnightCardParam> implements Effectable<PieceTransformationEffect> {
+public class KangarooCard extends Card<KnightCardParam> implements Effectable<KangarooEffect> {
 
     public KangarooCard() {
         super("Kangourou", "Transformez définitivement l'un de vos cavaliers, ou un cavalier adverse en kangourou. Le kangourou se déplace en faisant deux sauts de cavalier consécutifs.", CardType.AFTER_TURN, KnightCardParam.class);
@@ -30,6 +30,6 @@ public class KangarooCard extends Card<KnightCardParam> implements Effectable<Pi
         chessBoard.removePieceFromTheBoard(param.knight());
         Kangaroo kangaroo = new Kangaroo(param.knight().getColor());
         chessBoard.add(kangaroo, knightPosition);
-        chessBoard.addEffect(new PieceTransformationEffect("Kangourou", kangaroo));
+        chessBoard.addEffect(new KangarooEffect(kangaroo));
     }
 }

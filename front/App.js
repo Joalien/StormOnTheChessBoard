@@ -656,27 +656,29 @@ export default function App() {
     function onSquareClick(square) {
         if (pendingPromotions.includes(square)) {
             setPromotionSquare(promotionSquare === square ? null : square);
-            return;
         }
-        // Click on an effect position → select that effect card
-        const matchingEffect = effects.find(e => e.cardEnglishName && (
-            (e.positions && e.positions.includes(square)) ||
-            (e.edges && e.edges.some(edge => edge.includes(square)))
-        ));
-        if (matchingEffect) {
-            const alreadySelected = selectedCard && selectedCard.isEffect && selectedCard.englishName === matchingEffect.cardEnglishName;
-            if (alreadySelected) {
-                setSelectedCard(null);
-                setSelectedParam(null);
-            } else {
-                showCard({
-                    englishName: matchingEffect.cardEnglishName,
-                    name: matchingEffect.cardName,
-                    description: matchingEffect.cardDescription,
-                    param: {},
-                    isEffect: true,
-                });
-            }
+    }
+
+    function selectEffectByIndices(indices) {
+        if (!indices.length) return;
+        const alreadySelected = selectedCard && selectedCard.isEffect &&
+            selectedCard.effectIndices && selectedCard.effectIndices.length === indices.length &&
+            selectedCard.effectIndices.every((v, i) => v === indices[i]);
+        if (alreadySelected) {
+            setSelectedCard(null);
+            setSelectedParam(null);
+        } else {
+            const effect = effects[indices[0]];
+            setSelectedCard({
+                englishName: effect.cardEnglishName,
+                name: effect.cardName,
+                description: effect.cardDescription,
+                param: {},
+                isEffect: true,
+                effectIndices: indices,
+            });
+            setSelectedParam(null);
+            setBarricadeEdges([]);
         }
     }
 
@@ -773,6 +775,15 @@ export default function App() {
             const updated = {...selectedCard, param: newParam};
             setSelectedCard(updated);
             setSelectedParam(firstUnsetParam(updated));
+            return;
+        }
+        // Right-click on an effect position → select all effects on that square
+        const matchingIndices = effects.reduce((acc, e, i) => {
+            if (e.cardEnglishName && e.positions && e.positions.includes(square)) acc.push(i);
+            return acc;
+        }, []);
+        if (matchingIndices.length > 0) {
+            selectEffectByIndices(matchingIndices);
         }
     }
 
@@ -803,14 +814,14 @@ export default function App() {
         background: "radial-gradient(circle, transparent 80%, rgba(0,0,0,0.25) 80%)",
     };
     const effectHighlight = { boxShadow: 'rgba(255,143,0,0.85) 0px 0px 28px 4px inset', background: 'rgba(255,143,0,0.15)' };
-    const selectedEffectPositions = selectedCard && selectedCard.isEffect
-        ? effects
-            .filter(e => e.cardEnglishName === selectedCard.englishName)
-            .flatMap(e => {
-                if (e.positions) return e.positions;
-                if (e.edges) return [...new Set(e.edges.flat())];
-                return [];
-            })
+    const selectedEffectPositions = selectedCard && selectedCard.isEffect && selectedCard.effectIndices
+        ? selectedCard.effectIndices.flatMap(i => {
+            const e = effects[i];
+            if (!e) return [];
+            if (e.positions) return [...e.positions];
+            if (e.edges) return [...new Set(e.edges.flat())];
+            return [];
+        })
         : [];
     const customSquareStyles = {
         ...customSquares(),
@@ -1016,13 +1027,13 @@ export default function App() {
                             </svg>
                         )}
                         {/* Barricade effect display (existing barricades on the board) */}
-                        {effects.filter(e => e.name === 'BarricadeEffect' && e.edges).map((effect, idx) => {
+                        {effects.map((effect, globalIdx) => {
+                            if (effect.name !== 'BarricadeEffect' || !effect.edges) return null;
                             const clickable = !!effect.cardEnglishName;
-                            const firstSquare = effect.edges[0] && effect.edges[0][0];
                             return (
-                                <svg key={`barricade-${idx}`} style={{position: 'absolute', top: 0, left: 0, width: boardSize, height: boardSize, pointerEvents: 'none', zIndex: 5}}>
+                                <svg key={`barricade-${globalIdx}`} style={{position: 'absolute', top: 0, left: 0, width: boardSize, height: boardSize, pointerEvents: 'none', zIndex: 5}}>
                                     {barricadeLines(effect, boardSize, currentPlayerColor).map((line, i) => (
-                                        <g key={i} onClick={clickable && firstSquare ? () => onSquareClick(firstSquare) : undefined} style={{pointerEvents: clickable ? 'auto' : 'none', cursor: clickable ? 'pointer' : 'default'}}>
+                                        <g key={i} onContextMenu={clickable ? (e) => { e.preventDefault(); e.stopPropagation(); selectEffectByIndices([globalIdx]); } : undefined} style={{pointerEvents: clickable ? 'auto' : 'none'}}>
                                             <line x1={line.x1} y1={line.y1} x2={line.x2} y2={line.y2} stroke="transparent" strokeWidth={16} strokeLinecap="round" />
                                             <line x1={line.x1} y1={line.y1} x2={line.x2} y2={line.y2} stroke="#BF360C" strokeWidth={8} strokeLinecap="round" />
                                             <line x1={line.x1} y1={line.y1} x2={line.x2} y2={line.y2} stroke="#FFB300" strokeWidth={4} strokeLinecap="round" />
@@ -1041,14 +1052,12 @@ export default function App() {
                                 const {x: cx, y: cy} = squareToCoords(pos, orientation);
                                 const magSize = sqSize * 0.16;
                                 const magStyle = { position: 'absolute', fontSize: magSize, lineHeight: 1 };
-                                const magClickable = !!effect.cardEnglishName;
                                 elements.push(
-                                    <div key={`mag-center-${idx}-${pi}`} onClick={magClickable ? () => onSquareClick(pos) : undefined} style={{
+                                    <div key={`mag-center-${idx}-${pi}`} style={{
                                         position: 'absolute',
                                         left: cx, top: cy,
                                         width: sqSize, height: sqSize,
-                                        pointerEvents: magClickable ? 'auto' : 'none',
-                                        cursor: magClickable ? 'pointer' : 'default',
+                                        pointerEvents: 'none',
                                         zIndex: 6,
                                         animation: 'magnetPulse 4s ease-in-out infinite',
                                     }}>
@@ -1095,17 +1104,15 @@ export default function App() {
                             if (!loadEffect.keys().includes(effectFileName)) return null;
                             const effectConfig = Object.values(loadEffect(effectFileName))[0];
                             const sqSize = boardSize / 8;
-                            const clickable = !!effect.cardEnglishName;
                             return effect.positions.map((pos, pi) => {
                                 const {x, y} = squareToCoords(pos, currentPlayerColor);
                                 const style = effectConfig.applyStyle(pos);
                                 return (
-                                    <div key={`eff-${idx}-${pi}`} onClick={clickable ? () => onSquareClick(pos) : undefined} style={{
+                                    <div key={`eff-${idx}-${pi}`} style={{
                                         position: 'absolute',
                                         left: x, top: y,
                                         width: sqSize, height: sqSize,
-                                        pointerEvents: clickable ? 'auto' : 'none',
-                                        cursor: clickable ? 'pointer' : 'default',
+                                        pointerEvents: 'none',
                                         zIndex: 5,
                                         ...style,
                                     }}/>
@@ -1262,7 +1269,36 @@ export default function App() {
                     </div>
 
                     {/* Card details */}
-                    {selectedCard ? (
+                    {selectedCard && selectedCard.isEffect && selectedCard.effectIndices && selectedCard.effectIndices.length > 1 ? (
+                        <div className="sotc-panel" style={{padding: '20px', display: 'flex', flexDirection: 'column', gap: '16px'}}>
+                            <div style={{display: 'flex', gap: '10px', justifyContent: 'center'}}>
+                                {selectedCard.effectIndices.map(i => {
+                                    const eff = effects[i];
+                                    if (!eff) return null;
+                                    const hasImage = eff.cardEnglishName in (require('./component/cardImages').default);
+                                    return hasImage ? (
+                                        <div key={i} style={{borderRadius: '10px', overflow: 'hidden', boxShadow: '0 8px 28px rgba(0,0,0,0.55)', lineHeight: 0}}>
+                                            <Image source={require('./component/cardImages').default[eff.cardEnglishName]} style={{width: 135, height: 195}}/>
+                                        </div>
+                                    ) : null;
+                                })}
+                            </div>
+                            {selectedCard.effectIndices.map(i => {
+                                const eff = effects[i];
+                                if (!eff) return null;
+                                return (
+                                    <div key={i} style={{textAlign: 'center', display: 'flex', flexDirection: 'column', gap: '6px', alignItems: 'center'}}>
+                                        <h3 style={{fontSize: '14px', fontWeight: '700', color: '#e6edf3', margin: 0}}>{eff.cardName}</h3>
+                                        {eff.cardDescription && (
+                                            <p style={{fontSize: '11px', color: '#8b949e', lineHeight: '1.6', margin: 0, padding: '8px 10px', background: 'rgba(255,255,255,0.025)', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.05)'}}>
+                                                {eff.cardDescription}
+                                            </p>
+                                        )}
+                                    </div>
+                                );
+                            })}
+                        </div>
+                    ) : selectedCard ? (
                         <CardParameters
                             card={selectedCard}
                             selectedParam={selectedParam}
@@ -1276,7 +1312,7 @@ export default function App() {
                         <div className="sotc-panel" style={{padding: '28px 20px', textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px'}}>
                             <Image source={require('./assets/images/cards/back.png')} style={{width: 80, height: 116, borderRadius: 6, opacity: 0.25}}/>
                             <p style={{color: '#484f58', fontSize: '13px', lineHeight: '1.7', margin: 0}}>
-                                Cliquez sur une de vos cartes pour voir ses détails et la jouer.
+                                Cliquez sur une carte ou faites un clic droit sur une pièce pour voir ses effets.
                             </p>
                         </div>
                     )}
@@ -1288,19 +1324,14 @@ export default function App() {
                                 Effets actifs
                             </span>
                             <div style={{display: 'flex', gap: '8px', flexWrap: 'wrap'}}>
-                                {effects.filter(e => e.cardEnglishName).map((effect, idx) => {
-                                    const isSelected = selectedCard && selectedCard.englishName === effect.cardEnglishName && selectedCard.isEffect;
+                                {effects.map((effect, idx) => {
+                                    if (!effect.cardEnglishName) return null;
+                                    const isSelected = selectedCard && selectedCard.isEffect && selectedCard.effectIndices && selectedCard.effectIndices.includes(idx);
                                     return (
                                         <Card
                                             key={idx}
                                             name={effect.cardEnglishName}
-                                            showCard={() => showCard({
-                                                englishName: effect.cardEnglishName,
-                                                name: effect.cardName,
-                                                description: effect.cardDescription,
-                                                param: {},
-                                                isEffect: true,
-                                            })}
+                                            showCard={() => selectEffectByIndices([idx])}
                                             isSelected={isSelected}
                                             isPlayable={true}
                                         />

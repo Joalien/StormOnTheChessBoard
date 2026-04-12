@@ -1,12 +1,12 @@
 package fr.kubys.card;
 
 import fr.kubys.board.ChessBoard;
-import fr.kubys.board.effect.PieceTransformationEffect;
+import fr.kubys.board.effect.CrabEffect;
 import fr.kubys.card.params.PieceCardParam;
 import fr.kubys.piece.Pawn;
 import fr.kubys.piece.extra.Crab;
 
-public class CrabCard extends Card<PieceCardParam> implements Effectable<PieceTransformationEffect> {
+public class CrabCard extends Card<PieceCardParam> implements Effectable<CrabEffect> {
 
     public CrabCard() {
         super("Crabe",
@@ -38,6 +38,6 @@ public class CrabCard extends Card<PieceCardParam> implements Effectable<PieceTr
         chessBoard.removePieceFromTheBoard(param.piece());
         Crab crab = new Crab(color);
         chessBoard.add(crab, position);
-        chessBoard.addEffect(new PieceTransformationEffect("Crabe", crab));
+        chessBoard.addEffect(new CrabEffect(crab));
     }
 }

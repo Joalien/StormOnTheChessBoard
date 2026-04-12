@@ -2,12 +2,12 @@ package fr.kubys.board.effect;
 
 import fr.kubys.piece.Piece;
 
-public class PieceTransformationEffect extends Effect {
+public class KangarooEffect extends Effect {
 
     private final Piece piece;
 
-    public PieceTransformationEffect(String name, Piece piece) {
-        super(name);
+    public KangarooEffect(Piece piece) {
+        super("Kangourou");
         this.piece = piece;
     }
 

@@ -1,14 +1,14 @@
 package fr.kubys.card;
 
 import fr.kubys.board.ChessBoard;
-import fr.kubys.board.effect.PieceTransformationEffect;
+import fr.kubys.board.effect.NeutralityEffect;
 import fr.kubys.card.params.PieceCardParam;
 import fr.kubys.core.Color;
 import fr.kubys.piece.King;
 import fr.kubys.piece.Piece;
 import fr.kubys.piece.Queen;
 
-public class NeutralityCard extends Card<PieceCardParam> implements Effectable<PieceTransformationEffect> {
+public class NeutralityCard extends Card<PieceCardParam> implements Effectable<NeutralityEffect> {
 
     public NeutralityCard() {
         super("Neutralité",
@@ -49,6 +49,6 @@ public class NeutralityCard extends Card<PieceCardParam> implements Effectable<P
         chessBoard.removePieceFromTheBoard(param.piece());
         param.piece().setColor(Color.NONE);
         chessBoard.add(param.piece(), position);
-        chessBoard.addEffect(new PieceTransformationEffect("Neutralité", param.piece()));
+        chessBoard.addEffect(new NeutralityEffect(param.piece()));
     }
 }
