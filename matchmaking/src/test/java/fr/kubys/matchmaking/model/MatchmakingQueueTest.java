@@ -77,6 +77,41 @@ class MatchmakingQueueTest {
     }
 
     @Test
+    void stats_should_reflect_queue_state() {
+        assertEquals(0, queue.getWaitingCount());
+        assertEquals(0, queue.getActiveMatchCount());
+
+        queue.join();
+        assertEquals(1, queue.getWaitingCount());
+        assertEquals(0, queue.getActiveMatchCount());
+
+        queue.join();
+        assertEquals(0, queue.getWaitingCount());
+        assertEquals(1, queue.getActiveMatchCount());
+
+        String token3 = queue.join();
+        assertEquals(1, queue.getWaitingCount());
+        assertEquals(1, queue.getActiveMatchCount());
+
+        queue.join();
+        assertEquals(0, queue.getWaitingCount());
+        assertEquals(2, queue.getActiveMatchCount());
+
+        // cancel does not affect completed matches
+        queue.cancel(token3);
+        assertEquals(0, queue.getWaitingCount());
+    }
+
+    @Test
+    void stats_waiting_count_should_decrease_on_cancel() {
+        String token = queue.join();
+        assertEquals(1, queue.getWaitingCount());
+
+        queue.cancel(token);
+        assertEquals(0, queue.getWaitingCount());
+    }
+
+    @Test
     void gameId_should_be_null_initially_and_settable() {
         String token1 = queue.join();
         queue.join();

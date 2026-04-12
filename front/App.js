@@ -332,6 +332,7 @@ export default function App() {
     const [windowWidth, setWindowWidth] = useState(typeof window !== 'undefined' ? window.innerWidth : 900);
     const [gameIds, setGameIds] = useState([]);
     const [expandedGameId, setExpandedGameId] = useState(null);
+    const [matchmakingStats, setMatchmakingStats] = useState(null);
     const matchmakingPollRef = useRef(null);
     const matchmakingTokenRef = useRef(null);
     const [userBoardSize, setUserBoardSize] = useState(() => {
@@ -425,6 +426,10 @@ export default function App() {
         fetch(backendOrigin + '/api/chessboard')
             .then(res => res.json())
             .then(ids => setGameIds(ids.sort((a, b) => a - b)))
+            .catch(() => {});
+        fetch(backendOrigin + '/api/matchmaking/stats')
+            .then(res => res.json())
+            .then(setMatchmakingStats)
             .catch(() => {});
     }, []);
 
@@ -821,7 +826,20 @@ export default function App() {
                         Storm on the Chess Board
                     </span>
                 </div>
-                <div style={{display: 'flex', gap: '6px', alignItems: 'center', flexWrap: 'wrap'}}>
+                <div style={{display: 'flex', gap: '8px', alignItems: 'center', flexWrap: 'wrap'}}>
+                    {matchmakingStats && (
+                        <div style={{display: 'flex', gap: '10px', alignItems: 'center', marginRight: '6px', padding: '4px 12px', borderRadius: '8px', background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.07)'}}>
+                            <span style={{fontSize: '11px', color: '#8b949e', display: 'flex', alignItems: 'center', gap: '5px'}}>
+                                <span style={{fontSize: '13px'}}>⚔</span>
+                                <span style={{color: '#e6edf3', fontWeight: 600}}>{matchmakingStats.activeMatchCount}</span> match{matchmakingStats.activeMatchCount !== 1 ? 's' : ''}
+                            </span>
+                            <span style={{width: '1px', height: '14px', background: 'rgba(255,255,255,0.1)'}}/>
+                            <span style={{fontSize: '11px', color: '#8b949e', display: 'flex', alignItems: 'center', gap: '5px'}}>
+                                <span style={{fontSize: '13px'}}>⏳</span>
+                                <span style={{color: '#e6edf3', fontWeight: 600}}>{matchmakingStats.waitingCount}</span> en file
+                            </span>
+                        </div>
+                    )}
                     {gameIds.map(id => (
                         <div key={id} style={{position: 'relative', display: 'inline-flex'}}>
                             <button

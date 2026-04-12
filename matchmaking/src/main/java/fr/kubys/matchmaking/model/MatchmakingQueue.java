@@ -35,4 +35,12 @@ public class MatchmakingQueue {
             waitingToken = null;
         }
     }
+
+    public synchronized int getWaitingCount() {
+        return waitingToken != null ? 1 : 0;
+    }
+
+    public synchronized int getActiveMatchCount() {
+        return (int) matches.values().stream().distinct().count();
+    }
 }

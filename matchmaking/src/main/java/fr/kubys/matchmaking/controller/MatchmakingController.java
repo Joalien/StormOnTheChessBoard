@@ -59,6 +59,13 @@ public class MatchmakingController {
         queue.cancel(token);
     }
 
+    @GetMapping("/stats")
+    public MatchmakingStats stats() {
+        return new MatchmakingStats(queue.getWaitingCount(), queue.getActiveMatchCount());
+    }
+
+    public record MatchmakingStats(int waitingCount, int activeMatchCount) {}
+
     private void ensureGameCreated(MatchResult result) {
         synchronized (result) {
             if (result.getGameId() == null) {
