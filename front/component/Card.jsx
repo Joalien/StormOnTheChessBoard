@@ -19,14 +19,14 @@ export function Card({hidden, name, showCard, isSelected, isPlayable = true, lar
 
     if (hasImage) {
         return (
-            <div className={wrapperClass} onClick={showCard}>
+            <div className={wrapperClass} onClick={(e) => { e.stopPropagation(); showCard(); }}>
                 <Image source={cardImages[name]} style={imgStyle}/>
             </div>
         );
     }
 
     return (
-        <div className={wrapperClass} onClick={showCard} style={{
+        <div className={wrapperClass} onClick={(e) => { e.stopPropagation(); showCard(); }} style={{
             width: w,
             height: h,
             background: 'rgba(255,255,255,0.04)',

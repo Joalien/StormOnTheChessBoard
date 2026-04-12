@@ -40,15 +40,10 @@ export function useCardSelection(effects, currentState, myColor, currentPlayerCo
     }
 
     function showCard(card) {
-        if (card !== selectedCard) {
-            setSelectedCard(card);
-            setSelectedParam(firstUnsetParam(card));
-            setBarricadeEdges([]);
-        } else {
-            setSelectedCard(null);
-            setSelectedParam(null);
-            setBarricadeEdges([]);
-        }
+        if (selectedCard && !selectedCard.isEffect && selectedCard.englishName === card.englishName) return;
+        setSelectedCard(card);
+        setSelectedParam(firstUnsetParam(card));
+        setBarricadeEdges([]);
     }
 
     function clearSelection() {
