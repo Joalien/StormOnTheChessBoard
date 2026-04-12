@@ -25,6 +25,9 @@ const wsOrigin = typeof window !== 'undefined'
 const base = backendOrigin + "/api/chessboard/";
 const highlight = {boxShadow: "rgba(212, 168, 67, 0.85) 0px 0px 24px 0px inset"};
 
+// Open presence WebSocket at module load (before React mounts)
+const presenceWs = typeof window !== 'undefined' ? new WebSocket(wsOrigin + '/ws/presence') : null;
+
 const globalCSS = `
   @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
@@ -440,9 +443,9 @@ export default function App() {
 
     // Presence WebSocket — real-time connected count + matchmaking notifications
     useEffect(() => {
-        const ws = new WebSocket(wsOrigin + '/ws/presence');
-        presenceWsRef.current = ws;
-        ws.onmessage = (event) => {
+        if (!presenceWs) return;
+        presenceWsRef.current = presenceWs;
+        presenceWs.onmessage = (event) => {
             try {
                 const data = JSON.parse(event.data);
                 if (data.connected != null) {
@@ -455,7 +458,7 @@ export default function App() {
                 }
             } catch (e) {}
         };
-        return () => { ws.close(); presenceWsRef.current = null; };
+        return () => { presenceWs.close(); presenceWsRef.current = null; };
     }, []);
 
     useEffect(() => {
