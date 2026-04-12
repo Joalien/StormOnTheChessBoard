@@ -210,6 +210,55 @@ describe('useCardSelection', () => {
         expect(result.current.selectedEffectPositions).toEqual([]);
     });
 
+    // ── Manhole scenario (1 effect on 2 distant squares) ──
+
+    test('manhole: right-click on one hole selects the effect', () => {
+        const effects = [
+            {cardEnglishName: 'ManHoleCard', cardName: 'Bouche d\'égout', cardDescription: 'Téléportation', positions: ['a1', 'h8']},
+        ];
+        const {result} = setup(effects);
+
+        act(() => result.current.onSquareRightClick('a1'));
+
+        expect(result.current.selectedCard.isEffect).toBe(true);
+        expect(result.current.selectedCard.englishName).toBe('ManHoleCard');
+        expect(result.current.selectedCard.effectIndices).toEqual([0]);
+    });
+
+    test('manhole: right-click on the other hole selects the same effect', () => {
+        const effects = [
+            {cardEnglishName: 'ManHoleCard', cardName: 'Bouche d\'égout', cardDescription: 'Téléportation', positions: ['a1', 'h8']},
+        ];
+        const {result} = setup(effects);
+
+        act(() => result.current.onSquareRightClick('h8'));
+
+        expect(result.current.selectedCard.isEffect).toBe(true);
+        expect(result.current.selectedCard.englishName).toBe('ManHoleCard');
+    });
+
+    test('manhole: selectedEffectPositions contains both holes', () => {
+        const effects = [
+            {cardEnglishName: 'ManHoleCard', cardName: 'Bouche d\'égout', cardDescription: 'Téléportation', positions: ['a1', 'h8']},
+        ];
+        const {result} = setup(effects);
+
+        act(() => result.current.onSquareRightClick('a1'));
+
+        expect(result.current.selectedEffectPositions).toEqual(['a1', 'h8']);
+    });
+
+    test('manhole: right-click on unrelated square does not select manhole', () => {
+        const effects = [
+            {cardEnglishName: 'ManHoleCard', cardName: 'Bouche d\'égout', cardDescription: 'Téléportation', positions: ['a1', 'h8']},
+        ];
+        const {result} = setup(effects);
+
+        act(() => result.current.onSquareRightClick('e4'));
+
+        expect(result.current.selectedCard).toBeNull();
+    });
+
     // ── Neutral crab scenario (2 effects on same piece) ──
 
     test('neutral crab: right-click selects both NeutralityCard and CrabCard effects', () => {

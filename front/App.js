@@ -11,6 +11,7 @@ import {NotFoundScreen} from "./component/NotFoundScreen";
 import {toast, ToastContainer} from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 import {useCardSelection} from "./hooks/useCardSelection";
+import {clusterSpotlights} from "./hooks/clusterPositions";
 
 const backendOrigin = typeof window !== 'undefined'
     ? window.location.origin
@@ -998,7 +999,7 @@ export default function App() {
                                         left: x, top: y,
                                         width: sqSize, height: sqSize,
                                         pointerEvents: 'none',
-                                        zIndex: 5,
+                                        zIndex: 1,
                                         ...style,
                                     }}/>
                                 );
@@ -1077,15 +1078,11 @@ export default function App() {
                         {selectedCard && selectedCard.isEffect && selectedEffectPositions.length > 0 && (() => {
                             const sqSize = boardSize / 8;
                             const orientation = myColor || currentPlayerColor;
-                            const centers = selectedEffectPositions.map(sq => {
+                            const points = [...new Set(selectedEffectPositions)].map(sq => {
                                 const {x, y} = squareToCoords(sq, orientation);
                                 return {cx: x + sqSize / 2, cy: y + sqSize / 2};
                             });
-                            // Group all positions into a single spotlight: barycenter + radius covering all
-                            const avgX = centers.reduce((s, c) => s + c.cx, 0) / centers.length;
-                            const avgY = centers.reduce((s, c) => s + c.cy, 0) / centers.length;
-                            const maxDist = Math.max(...centers.map(c => Math.hypot(c.cx - avgX, c.cy - avgY)));
-                            const r = maxDist + sqSize * 1.8;
+                            const spots = clusterSpotlights(points, sqSize * 5, sqSize * 1.8);
                             return (
                                 <svg style={{position: 'absolute', top: 0, left: 0, width: boardSize, height: boardSize, pointerEvents: 'none', zIndex: 8, borderRadius: '10px'}}>
                                     <defs>
@@ -1096,7 +1093,9 @@ export default function App() {
                                         </radialGradient>
                                         <mask id="spotlightMask">
                                             <rect width={boardSize} height={boardSize} fill="white"/>
-                                            <circle cx={avgX} cy={avgY} r={r} fill="url(#spotGrad)"/>
+                                            {spots.map((s, i) => (
+                                                <circle key={i} cx={s.cx} cy={s.cy} r={s.r} fill="url(#spotGrad)"/>
+                                            ))}
                                         </mask>
                                     </defs>
                                     <rect width={boardSize} height={boardSize} fill="black" opacity="0.65" mask="url(#spotlightMask)"/>
