@@ -6,11 +6,15 @@ import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.IOException;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class MatchmakingNotifier extends TextWebSocketHandler {
 
+    private static final Logger log = LoggerFactory.getLogger(MatchmakingNotifier.class);
     private final ConcurrentHashMap<String, WebSocketSession> sessions = new ConcurrentHashMap<>();
     private MatchmakingQueue queue;
 
@@ -23,6 +27,7 @@ public class MatchmakingNotifier extends TextWebSocketHandler {
         String token = extractToken(session);
         if (token != null) {
             sessions.put(token, session);
+            log.info("Matchmaking WS connected: token={}", token);
         }
     }
 
@@ -31,6 +36,7 @@ public class MatchmakingNotifier extends TextWebSocketHandler {
         String token = extractToken(session);
         if (token != null) {
             sessions.remove(token);
+            log.info("Matchmaking WS closed: token={} status={}", token, status);
             if (queue != null) {
                 queue.cancel(token);
             }
@@ -39,11 +45,16 @@ public class MatchmakingNotifier extends TextWebSocketHandler {
 
     public void notifyMatch(String token, String jsonPayload) {
         WebSocketSession session = sessions.get(token);
+        log.info("notifyMatch token={} sessionFound={} sessionOpen={}", token, session != null, session != null && session.isOpen());
         if (session != null && session.isOpen()) {
             try {
                 session.sendMessage(new TextMessage(jsonPayload));
-            } catch (IOException ignored) {
+                log.info("Sent match notification to token={}", token);
+            } catch (IOException e) {
+                log.error("Failed to send match notification to token={}", token, e);
             }
+        } else {
+            log.warn("No open session for token={}, connected tokens: {}", token, sessions.keySet());
         }
     }
 

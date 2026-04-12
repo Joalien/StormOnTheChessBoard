@@ -1005,9 +1005,10 @@ export default function App() {
                             const clickable = !!effect.cardEnglishName;
                             const firstSquare = effect.edges[0] && effect.edges[0][0];
                             return (
-                                <svg key={`barricade-${idx}`} onClick={clickable && firstSquare ? () => onSquareClick(firstSquare) : undefined} style={{position: 'absolute', top: 0, left: 0, width: boardSize, height: boardSize, pointerEvents: clickable ? 'auto' : 'none', cursor: clickable ? 'pointer' : 'default', zIndex: 5}}>
+                                <svg key={`barricade-${idx}`} style={{position: 'absolute', top: 0, left: 0, width: boardSize, height: boardSize, pointerEvents: 'none', zIndex: 5}}>
                                     {barricadeLines(effect, boardSize, currentPlayerColor).map((line, i) => (
-                                        <g key={i}>
+                                        <g key={i} onClick={clickable && firstSquare ? () => onSquareClick(firstSquare) : undefined} style={{pointerEvents: clickable ? 'auto' : 'none', cursor: clickable ? 'pointer' : 'default'}}>
+                                            <line x1={line.x1} y1={line.y1} x2={line.x2} y2={line.y2} stroke="transparent" strokeWidth={16} strokeLinecap="round" />
                                             <line x1={line.x1} y1={line.y1} x2={line.x2} y2={line.y2} stroke="#BF360C" strokeWidth={8} strokeLinecap="round" />
                                             <line x1={line.x1} y1={line.y1} x2={line.x2} y2={line.y2} stroke="#FFB300" strokeWidth={4} strokeLinecap="round" />
                                         </g>
