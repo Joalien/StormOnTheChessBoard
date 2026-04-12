@@ -546,6 +546,21 @@ export default function App() {
                         navigateToGame(status.gameId, status.color);
                     }
                 };
+                // Check status once WS is open in case match happened during connection
+                ws.onopen = () => {
+                    fetch(backendOrigin + '/api/matchmaking/status/' + data.token)
+                        .then(res => res.json())
+                        .then(status => {
+                            if (status.status === 'matched') {
+                                ws.close();
+                                matchmakingPollRef.current = null;
+                                matchmakingTokenRef.current = null;
+                                notifyMatchFound();
+                                navigateToGame(status.gameId, status.color);
+                            }
+                        })
+                        .catch(() => {});
+                };
             })
             .catch(err => {
                 toast.error("Erreur: " + err);
