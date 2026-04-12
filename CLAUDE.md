@@ -152,16 +152,19 @@ Cards that have persistent board effects add an `Effect` subclass to `ChessBoard
 `ChessBoard.doesMovingPieceCheckOurOwnKing()` uses `fakeSquare()`/`unfakeSquare()` to temporarily overlay the board state without physically moving pieces, then checks if the king is under attack. `FakePieceDecorator` wraps pieces in fake squares and is skipped by the check-detection recursion.
 
 ### Matchmaking
-- Domain logic in `domain/src/main/java/fr/kubys/matchmaking/` (pure Java, no Spring)
-- `MatchmakingQueue` pairs players FIFO. `MatchResult` holds token-to-color mapping + lazy game ID.
+- Domain logic in `matchmaking/src/main/java/fr/kubys/matchmaking/` (pure Java, no Spring)
+- `MatchmakingQueue` is a Spring bean, pairs players FIFO. `MatchResult` holds token-to-color mapping + lazy game ID.
 - REST endpoints in `MatchmakingController`: `POST /matchmaking/join`, `GET /matchmaking/status/{token}`, `DELETE /matchmaking/{token}`
-- Frontend: "Attendre un adversaire" → join → WebSocket waits for match → redirect to `/{gameId}?color=white|black`
+- `MatchNotifier` interface (in matchmaking module) implemented by `PresenceNotifier` (in controller module)
+- Frontend: "Jouer !" → join → sends `{"matchmaking":"token"}` on presence WebSocket → match notification arrives on same WS → redirect to `/{gameId}?color=white|black`
 - `myColor` URL param locks board orientation and restricts interactions to your turn only
 
 ### WebSocket (Real-time Updates)
 - Config in `controller/src/main/java/fr/kubys/websocket/`
+- `PresenceNotifier` handles `/ws/presence` — opened on page load by every client. Dual role:
+  1. Tracks connected users count (exposed via `GET /api/chessboard/connected`)
+  2. Handles matchmaking notifications: client sends `{"matchmaking":"token"}`, server sends back `{status, gameId, color}` when match found. On disconnect, cancels any pending matchmaking token.
 - `GameNotifier` handles `/ws/game/{gameId}` — sends `"refresh"` to all connected clients after any game action (move, card, endTurn, undo, promote). Frontend re-fetches game state via HTTP on message.
-- `MatchmakingNotifier` handles `/ws/matchmaking/{token}` — sends match JSON (`{status, gameId, color}`) when opponent found.
 - Nginx routes `/ws/` with `proxy_http_version 1.1` + `Upgrade`/`Connection` headers.
 
 ## REST API
@@ -176,16 +179,18 @@ Base: `http://localhost:9000/chessboard/`
 | POST | `/{gameId}/card/{cardName}` | Play card |
 | POST | `/{gameId}/endTurn` | End turn |
 | POST | `/{gameId}/undo` | Undo last action |
+| GET | `/connected` | Connected players count |
 | POST | `/matchmaking/join` | Join matchmaking queue |
 | GET | `/matchmaking/status/{token}` | Poll match status (fallback) |
 | DELETE | `/matchmaking/{token}` | Cancel matchmaking |
+| GET | `/matchmaking/stats` | Queue size + active match count |
 
 ## WebSocket Endpoints
 
 | Endpoint | Direction | Purpose |
 |----------|-----------|---------|
+| `/ws/presence` | Bidirectional | Presence tracking + matchmaking notifications |
 | `/ws/game/{gameId}` | Server → Client | `"refresh"` after any game state change |
-| `/ws/matchmaking/{token}` | Server → Client | Match found JSON payload |
 
 ## Known Issues
 
