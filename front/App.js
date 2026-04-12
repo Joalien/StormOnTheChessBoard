@@ -12,6 +12,7 @@ import {toast, ToastContainer} from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 import {useCardSelection} from "./hooks/useCardSelection";
 import {clusterSpotlights} from "./hooks/clusterPositions";
+import {getRouteFromUrl, getPlayerColorFromUrl, squareToCoords as squareToCoordsUtil, oppositeColor, parseRoute} from "./utils/boardUtils";
 
 const backendOrigin = typeof window !== 'undefined'
     ? window.location.origin
@@ -298,20 +299,6 @@ async function showErrorMessage(res) {
     toast.error(errorMessage);
 }
 
-function getRouteFromUrl() {
-    if (typeof window === 'undefined') return {page: 'home'};
-    const path = window.location.pathname;
-    if (path === '/') return {page: 'home'};
-    const match = path.match(/^\/chessboard\/(\d+)$/);
-    if (match) return {page: 'game', gameId: parseInt(match[1], 10)};
-    return {page: '404'};
-}
-
-function getPlayerColorFromUrl() {
-    if (typeof window === 'undefined') return null;
-    const params = new URLSearchParams(window.location.search);
-    return params.get('color');
-}
 
 export default function App() {
     const [game, setGame] = useState({});
@@ -675,22 +662,7 @@ export default function App() {
     }
 
     function squareToCoords(square, orientation) {
-        const file = square.charCodeAt(0) - 97; // 'a' = 0
-        const rank = parseInt(square[1]) - 1;   // '1' = 0
-        const size = boardSize / 8;
-        let x, y;
-        if (orientation === 'white') {
-            x = file * size;
-            y = (7 - rank) * size;
-        } else {
-            x = (7 - file) * size;
-            y = rank * size;
-        }
-        return {x, y};
-    }
-
-    function oppositeColor(color) {
-        return color === "white" ? "black" : "white";
+        return squareToCoordsUtil(square, orientation, boardSize);
     }
 
 
