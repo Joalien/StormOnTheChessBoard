@@ -513,12 +513,23 @@ export default function App() {
         return () => window.removeEventListener('beforeunload', onBeforeUnload);
     }, []);
 
+    function notifyMatchFound() {
+        toast.success("Adversaire trouvé !");
+        if (typeof Notification !== 'undefined' && Notification.permission === 'granted') {
+            new Notification("Storm on the Chess Board", {body: "Un adversaire a été trouvé !"});
+        }
+    }
+
     function matchmaking() {
         setRoute({page: 'waiting'});
+        if (typeof Notification !== 'undefined' && Notification.permission === 'default') {
+            Notification.requestPermission();
+        }
         fetch(backendOrigin + '/api/matchmaking/join', {method: 'POST'})
             .then(res => res.json())
             .then(data => {
                 if (data.status === 'matched') {
+                    notifyMatchFound();
                     navigateToGame(data.gameId, data.color);
                     return;
                 }
@@ -531,6 +542,7 @@ export default function App() {
                         ws.close();
                         matchmakingPollRef.current = null;
                         matchmakingTokenRef.current = null;
+                        notifyMatchFound();
                         navigateToGame(status.gameId, status.color);
                     }
                 };
