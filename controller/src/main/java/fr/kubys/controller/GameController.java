@@ -44,6 +44,11 @@ public class GameController {
         return chessBoardRepository.getGameIds();
     }
 
+    @GetMapping("/connected")
+    public int getConnectedCount() {
+        return gameNotifier.getConnectedCount();
+    }
+
     @PostMapping
     public ResponseEntity<Integer> startGame() {
         return new ResponseEntity<>(chessBoardRepository.createNewGame(), HttpStatus.CREATED);

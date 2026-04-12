@@ -1,4 +1,4 @@
-export function HomeScreen({onPlaySolo, onMatchmaking}) {
+export function HomeScreen({onPlaySolo, onMatchmaking, stats}) {
     return (
         <div style={{
             minHeight: '100vh',
@@ -70,6 +70,26 @@ export function HomeScreen({onPlaySolo, onMatchmaking}) {
                     Vous êtes nul aux échecs ?<br/>
                     <strong>Vengez-vous !</strong>
                 </p>
+
+                {/* Stats */}
+                {stats && (
+                    <div style={{display: 'flex', gap: '16px', alignItems: 'center', justifyContent: 'center'}}>
+                        <div style={{display: 'flex', alignItems: 'center', gap: '6px', fontSize: '13px', color: '#8b949e'}}>
+                            <span style={{fontSize: '15px'}}>⚔</span>
+                            <span style={{color: '#e6edf3', fontWeight: 600}}>{stats.activeMatchCount}</span> match{stats.activeMatchCount !== 1 ? 's' : ''}
+                        </div>
+                        <span style={{width: '1px', height: '16px', background: 'rgba(255,255,255,0.15)'}}/>
+                        <div style={{display: 'flex', alignItems: 'center', gap: '6px', fontSize: '13px', color: '#8b949e'}}>
+                            <span style={{fontSize: '15px'}}>⏳</span>
+                            <span style={{color: '#e6edf3', fontWeight: 600}}>{stats.waitingCount}</span> en file
+                        </div>
+                        <span style={{width: '1px', height: '16px', background: 'rgba(255,255,255,0.15)'}}/>
+                        <div style={{display: 'flex', alignItems: 'center', gap: '6px', fontSize: '13px', color: '#8b949e'}}>
+                            <span style={{fontSize: '15px'}}>👥</span>
+                            <span style={{color: '#e6edf3', fontWeight: 600}}>{stats.connectedCount}</span> connect&eacute;{stats.connectedCount !== 1 ? 's' : ''}
+                        </div>
+                    </div>
+                )}
 
                 {/* Buttons */}
                 <div style={{display: 'flex', flexDirection: 'column', gap: '16px', width: '300px'}}>
