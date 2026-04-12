@@ -337,8 +337,8 @@ export default function App() {
     const [gameIds, setGameIds] = useState([]);
     const [expandedGameId, setExpandedGameId] = useState(null);
     const [matchmakingStats, setMatchmakingStats] = useState(null);
-    const matchmakingPollRef = useRef(null);
     const matchmakingTokenRef = useRef(null);
+    const presenceWsRef = useRef(null);
     const [userBoardSize, setUserBoardSize] = useState(() => {
         if (typeof localStorage !== 'undefined') {
             const saved = localStorage.getItem('sotc-board-size');
@@ -437,9 +437,20 @@ export default function App() {
         ])
             .then(([mm, connected]) => setMatchmakingStats({...mm, connectedCount: connected}))
             .catch(() => {});
-        // Presence WebSocket — keeps connection alive so server counts us
+        // Presence WebSocket — keeps connection alive, also used for matchmaking notifications
         const ws = new WebSocket(wsOrigin + '/ws/presence');
-        return () => ws.close();
+        presenceWsRef.current = ws;
+        ws.onmessage = (event) => {
+            try {
+                const data = JSON.parse(event.data);
+                if (data.status === 'matched') {
+                    matchmakingTokenRef.current = null;
+                    notifyMatchFound();
+                    navigateToGame(data.gameId, data.color);
+                }
+            } catch (e) {}
+        };
+        return () => { ws.close(); presenceWsRef.current = null; };
     }, []);
 
     useEffect(() => {
@@ -535,33 +546,21 @@ export default function App() {
                     return;
                 }
                 matchmakingTokenRef.current = data.token;
-                const ws = new WebSocket(wsOrigin + '/ws/matchmaking/' + data.token);
-                matchmakingPollRef.current = ws;
-                ws.onmessage = (event) => {
-                    const status = JSON.parse(event.data);
-                    if (status.status === 'matched') {
-                        ws.close();
-                        matchmakingPollRef.current = null;
-                        matchmakingTokenRef.current = null;
-                        notifyMatchFound();
-                        navigateToGame(status.gameId, status.color);
-                    }
-                };
-                // Check status once WS is open in case match happened during connection
-                ws.onopen = () => {
-                    fetch(backendOrigin + '/api/matchmaking/status/' + data.token)
-                        .then(res => res.json())
-                        .then(status => {
-                            if (status.status === 'matched') {
-                                ws.close();
-                                matchmakingPollRef.current = null;
-                                matchmakingTokenRef.current = null;
-                                notifyMatchFound();
-                                navigateToGame(status.gameId, status.color);
-                            }
-                        })
-                        .catch(() => {});
-                };
+                // Register token on existing presence WebSocket
+                if (presenceWsRef.current && presenceWsRef.current.readyState === WebSocket.OPEN) {
+                    presenceWsRef.current.send(JSON.stringify({matchmaking: data.token}));
+                }
+                // Check status in case match happened before WS registration
+                fetch(backendOrigin + '/api/matchmaking/status/' + data.token)
+                    .then(res => res.json())
+                    .then(status => {
+                        if (status.status === 'matched') {
+                            matchmakingTokenRef.current = null;
+                            notifyMatchFound();
+                            navigateToGame(status.gameId, status.color);
+                        }
+                    })
+                    .catch(() => {});
             })
             .catch(err => {
                 toast.error("Erreur: " + err);
@@ -570,10 +569,6 @@ export default function App() {
     }
 
     function cancelMatchmaking() {
-        if (matchmakingPollRef.current) {
-            matchmakingPollRef.current.close();
-            matchmakingPollRef.current = null;
-        }
         if (matchmakingTokenRef.current) {
             fetch(backendOrigin + '/api/matchmaking/' + matchmakingTokenRef.current, {method: 'DELETE'}).catch(() => {});
             matchmakingTokenRef.current = null;

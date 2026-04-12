@@ -15,17 +15,17 @@ import java.util.Optional;
 @RequestMapping("/api/matchmaking")
 public class MatchmakingController {
 
-    private final MatchmakingQueue queue = new MatchmakingQueue();
+    private final MatchmakingQueue queue;
     private final RestTemplate restTemplate;
-    private final MatchmakingNotifier matchmakingNotifier;
+    private final MatchNotifier matchNotifier;
     private final String chessboardBaseUrl;
 
     @Autowired
-    public MatchmakingController(RestTemplate restTemplate, MatchmakingNotifier matchmakingNotifier,
+    public MatchmakingController(MatchmakingQueue queue, RestTemplate restTemplate, MatchNotifier matchNotifier,
                                  @Value("${chessboard.base-url:http://localhost:9000}") String chessboardBaseUrl) {
+        this.queue = queue;
         this.restTemplate = restTemplate;
-        this.matchmakingNotifier = matchmakingNotifier;
-        this.matchmakingNotifier.setQueue(queue);
+        this.matchNotifier = matchNotifier;
         this.chessboardBaseUrl = chessboardBaseUrl;
     }
 
@@ -78,9 +78,9 @@ public class MatchmakingController {
     private void createGameAndNotify(MatchResult result) {
         ensureGameCreated(result);
         int gameId = result.getGameId();
-        matchmakingNotifier.notifyMatch(result.getWhiteToken(),
+        matchNotifier.notifyMatch(result.getWhiteToken(),
                 "{\"status\":\"matched\",\"gameId\":%d,\"color\":\"white\"}".formatted(gameId));
-        matchmakingNotifier.notifyMatch(result.getBlackToken(),
+        matchNotifier.notifyMatch(result.getBlackToken(),
                 "{\"status\":\"matched\",\"gameId\":%d,\"color\":\"black\"}".formatted(gameId));
     }
 }
