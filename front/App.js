@@ -629,6 +629,27 @@ export default function App() {
     function onSquareClick(square) {
         if (pendingPromotions.includes(square)) {
             setPromotionSquare(promotionSquare === square ? null : square);
+            return;
+        }
+        // Click on an effect position → select that effect card
+        const matchingEffect = effects.find(e => e.cardEnglishName && (
+            (e.positions && e.positions.includes(square)) ||
+            (e.edges && e.edges.some(edge => edge.includes(square)))
+        ));
+        if (matchingEffect) {
+            const alreadySelected = selectedCard && selectedCard.isEffect && selectedCard.englishName === matchingEffect.cardEnglishName;
+            if (alreadySelected) {
+                setSelectedCard(null);
+                setSelectedParam(null);
+            } else {
+                showCard({
+                    englishName: matchingEffect.cardEnglishName,
+                    name: matchingEffect.cardName,
+                    description: matchingEffect.cardDescription,
+                    param: {},
+                    isEffect: true,
+                });
+            }
         }
     }
 
@@ -754,11 +775,15 @@ export default function App() {
     const legalMoveCapture = {
         background: "radial-gradient(circle, transparent 80%, rgba(0,0,0,0.25) 80%)",
     };
-    const effectHighlight = { boxShadow: 'rgba(255,143,0,0.6) 0px 0px 20px 0px inset' };
+    const effectHighlight = { boxShadow: 'rgba(255,143,0,0.85) 0px 0px 28px 4px inset', background: 'rgba(255,143,0,0.15)' };
     const selectedEffectPositions = selectedCard && selectedCard.isEffect
         ? effects
-            .filter(e => e.cardEnglishName === selectedCard.englishName && e.positions)
-            .flatMap(e => e.positions)
+            .filter(e => e.cardEnglishName === selectedCard.englishName)
+            .flatMap(e => {
+                if (e.positions) return e.positions;
+                if (e.edges) return [...new Set(e.edges.flat())];
+                return [];
+            })
         : [];
     const customSquareStyles = {
         ...customSquares(),
@@ -885,6 +910,15 @@ export default function App() {
                 </div>
             </header>
 
+            {/* Dimming overlay when an effect is selected */}
+            {selectedCard && selectedCard.isEffect && (
+                <div onClick={() => { setSelectedCard(null); setSelectedParam(null); setBarricadeEdges([]); }} style={{
+                    position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
+                    background: 'rgba(0,0,0,0.7)',
+                    zIndex: 50,
+                }}/>
+            )}
+
             {/* ── Main ── */}
             <main className="sotc-main" onClick={() => { if (selectedCard) { setSelectedCard(null); setSelectedParam(null); setBarricadeEdges([]); } }} style={{
                 display: 'flex',
@@ -913,7 +947,7 @@ export default function App() {
                     />
 
                     {/* Board */}
-                    <div style={{position: 'relative'}}>
+                    <div style={{position: 'relative', zIndex: selectedCard && selectedCard.isEffect ? 51 : undefined}}>
                         <div style={{
                             borderRadius: '10px',
                             overflow: 'hidden',
@@ -955,16 +989,20 @@ export default function App() {
                             </svg>
                         )}
                         {/* Barricade effect display (existing barricades on the board) */}
-                        {effects.filter(e => e.name === 'BarricadeEffect' && e.edges).map((effect, idx) => (
-                            <svg key={`barricade-${idx}`} style={{position: 'absolute', top: 0, left: 0, width: boardSize, height: boardSize, pointerEvents: 'none', zIndex: 5}}>
-                                {barricadeLines(effect, boardSize, currentPlayerColor).map((line, i) => (
-                                    <g key={i}>
-                                        <line x1={line.x1} y1={line.y1} x2={line.x2} y2={line.y2} stroke="#BF360C" strokeWidth={8} strokeLinecap="round" />
-                                        <line x1={line.x1} y1={line.y1} x2={line.x2} y2={line.y2} stroke="#FFB300" strokeWidth={4} strokeLinecap="round" />
-                                    </g>
-                                ))}
-                            </svg>
-                        ))}
+                        {effects.filter(e => e.name === 'BarricadeEffect' && e.edges).map((effect, idx) => {
+                            const clickable = !!effect.cardEnglishName;
+                            const firstSquare = effect.edges[0] && effect.edges[0][0];
+                            return (
+                                <svg key={`barricade-${idx}`} onClick={clickable && firstSquare ? () => onSquareClick(firstSquare) : undefined} style={{position: 'absolute', top: 0, left: 0, width: boardSize, height: boardSize, pointerEvents: clickable ? 'auto' : 'none', cursor: clickable ? 'pointer' : 'default', zIndex: 5}}>
+                                    {barricadeLines(effect, boardSize, currentPlayerColor).map((line, i) => (
+                                        <g key={i}>
+                                            <line x1={line.x1} y1={line.y1} x2={line.x2} y2={line.y2} stroke="#BF360C" strokeWidth={8} strokeLinecap="round" />
+                                            <line x1={line.x1} y1={line.y1} x2={line.x2} y2={line.y2} stroke="#FFB300" strokeWidth={4} strokeLinecap="round" />
+                                        </g>
+                                    ))}
+                                </svg>
+                            );
+                        })}
                         {/* Magnetism: center magnets + adjacent pulse overlay */}
                         {effects.filter(e => e.name === 'MagnetismEffect' && e.positions && e.positions.length > 0).map((effect, idx) => {
                             const sqSize = boardSize / 8;
@@ -975,12 +1013,14 @@ export default function App() {
                                 const {x: cx, y: cy} = squareToCoords(pos, orientation);
                                 const magSize = sqSize * 0.16;
                                 const magStyle = { position: 'absolute', fontSize: magSize, lineHeight: 1 };
+                                const magClickable = !!effect.cardEnglishName;
                                 elements.push(
-                                    <div key={`mag-center-${idx}-${pi}`} style={{
+                                    <div key={`mag-center-${idx}-${pi}`} onClick={magClickable ? () => onSquareClick(pos) : undefined} style={{
                                         position: 'absolute',
                                         left: cx, top: cy,
                                         width: sqSize, height: sqSize,
-                                        pointerEvents: 'none',
+                                        pointerEvents: magClickable ? 'auto' : 'none',
+                                        cursor: magClickable ? 'pointer' : 'default',
                                         zIndex: 6,
                                         animation: 'magnetPulse 4s ease-in-out infinite',
                                     }}>
@@ -1027,15 +1067,17 @@ export default function App() {
                             if (!loadEffect.keys().includes(effectFileName)) return null;
                             const effectConfig = Object.values(loadEffect(effectFileName))[0];
                             const sqSize = boardSize / 8;
+                            const clickable = !!effect.cardEnglishName;
                             return effect.positions.map((pos, pi) => {
                                 const {x, y} = squareToCoords(pos, currentPlayerColor);
                                 const style = effectConfig.applyStyle(pos);
                                 return (
-                                    <div key={`eff-${idx}-${pi}`} style={{
+                                    <div key={`eff-${idx}-${pi}`} onClick={clickable ? () => onSquareClick(pos) : undefined} style={{
                                         position: 'absolute',
                                         left: x, top: y,
                                         width: sqSize, height: sqSize,
-                                        pointerEvents: 'none',
+                                        pointerEvents: clickable ? 'auto' : 'none',
+                                        cursor: clickable ? 'pointer' : 'default',
                                         zIndex: 5,
                                         ...style,
                                     }}/>
@@ -1111,6 +1153,36 @@ export default function App() {
                                 </div>
                             );
                         })()}
+                        {/* Spotlight overlay on board when effect selected */}
+                        {selectedCard && selectedCard.isEffect && selectedEffectPositions.length > 0 && (() => {
+                            const sqSize = boardSize / 8;
+                            const orientation = myColor || currentPlayerColor;
+                            const centers = selectedEffectPositions.map(sq => {
+                                const {x, y} = squareToCoords(sq, orientation);
+                                return {cx: x + sqSize / 2, cy: y + sqSize / 2};
+                            });
+                            // Group all positions into a single spotlight: barycenter + radius covering all
+                            const avgX = centers.reduce((s, c) => s + c.cx, 0) / centers.length;
+                            const avgY = centers.reduce((s, c) => s + c.cy, 0) / centers.length;
+                            const maxDist = Math.max(...centers.map(c => Math.hypot(c.cx - avgX, c.cy - avgY)));
+                            const r = maxDist + sqSize * 1.8;
+                            return (
+                                <svg style={{position: 'absolute', top: 0, left: 0, width: boardSize, height: boardSize, pointerEvents: 'none', zIndex: 8, borderRadius: '10px'}}>
+                                    <defs>
+                                        <radialGradient id="spotGrad">
+                                            <stop offset="0%" stopColor="black"/>
+                                            <stop offset="40%" stopColor="black" stopOpacity="0.9"/>
+                                            <stop offset="100%" stopColor="white"/>
+                                        </radialGradient>
+                                        <mask id="spotlightMask">
+                                            <rect width={boardSize} height={boardSize} fill="white"/>
+                                            <circle cx={avgX} cy={avgY} r={r} fill="url(#spotGrad)"/>
+                                        </mask>
+                                    </defs>
+                                    <rect width={boardSize} height={boardSize} fill="black" opacity="0.65" mask="url(#spotlightMask)"/>
+                                </svg>
+                            );
+                        })()}
                         {/* Resize handle */}
                         <div
                             className="sotc-resize-handle"
@@ -1150,7 +1222,7 @@ export default function App() {
                 </section>
 
                 {/* Right panel: Actions + Card details + Effects + Captured */}
-                <aside className="sotc-aside sotc-aside-right" onClick={e => e.stopPropagation()} style={{width: '320px', flexShrink: 0, position: 'sticky', top: '80px', display: 'flex', flexDirection: 'column', gap: '12px'}}>
+                <aside className="sotc-aside sotc-aside-right" onClick={e => e.stopPropagation()} style={{width: '320px', flexShrink: 0, position: 'sticky', top: '80px', display: 'flex', flexDirection: 'column', gap: '12px', zIndex: selectedCard && selectedCard.isEffect ? 51 : undefined}}>
                     {/* Action buttons */}
                     <div style={{display: 'flex', gap: '8px'}}>
                         <button className="sotc-btn sotc-btn-end" style={{flex: 1, padding: '13px'}} onClick={endTurn} disabled={!isMyTurn}>
