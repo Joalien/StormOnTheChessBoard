@@ -13,6 +13,7 @@ import fr.kubys.dto.EffectDto;
 import fr.kubys.dto.PlayerDto;
 import fr.kubys.piece.*;
 import fr.kubys.piece.extra.Crab;
+import fr.kubys.piece.extra.FusedPiece;
 import fr.kubys.piece.extra.Kangaroo;
 import fr.kubys.player.Player;
 
@@ -92,7 +93,24 @@ public class OutputMapper {
     }
 
     public static String map(Piece piece) {
-        String pieceType = Map.<Predicate<Piece>, String>of(
+        if (piece instanceof FusedPiece fused) {
+            String firstType = mapPieceType(fused.getFirst());
+            String secondType = mapPieceType(fused.getSecond());
+            return colorPrefix(piece.getColor()) + "Fused_" + firstType + "_" + secondType;
+        }
+        return colorPrefix(piece.getColor()) + mapPieceType(piece);
+    }
+
+    private static String colorPrefix(Color color) {
+        return switch (color) {
+            case WHITE -> "w";
+            case BLACK -> "b";
+            case NONE -> "";
+        };
+    }
+
+    private static String mapPieceType(Piece piece) {
+        return Map.<Predicate<Piece>, String>of(
                         p -> p instanceof Pawn, "P",
                         p -> p instanceof King, "K",
                         p -> p instanceof Queen, "Q",
@@ -102,15 +120,9 @@ public class OutputMapper {
                         p -> p instanceof Kangaroo, "Kangaroo",
                         p -> p instanceof Crab, "Crab"
                 ).entrySet().stream()
-                .filter(objectStringEntry -> objectStringEntry.getKey().test(piece))
+                .filter(entry -> entry.getKey().test(piece))
                 .findAny()
                 .map(Map.Entry::getValue)
                 .orElseThrow();
-        Map<Color, String> colorPrefix = Map.of(
-                Color.WHITE, "w",
-                Color.BLACK, "b",
-                Color.NONE, ""
-        );
-        return colorPrefix.get(piece.getColor()) + pieceType;
     }
 }

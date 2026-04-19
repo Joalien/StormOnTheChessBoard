@@ -12,6 +12,7 @@ import {toast, ToastContainer} from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 import {useCardSelection} from "./hooks/useCardSelection";
 import {clusterSpotlights} from "./hooks/clusterPositions";
+import {createFusedPieceComponent} from "./component/pieces/FusedPiece";
 import {getRouteFromUrl, getPlayerColorFromUrl, squareToCoords as squareToCoordsUtil, oppositeColor} from "./utils/boardUtils";
 import {useGameActions} from "./hooks/useGameActions";
 import {resolveKeyAction} from "./utils/keyboardActions";
@@ -399,7 +400,18 @@ export default function App() {
         });
         return pieces;
     }
-    const customPieces = loadCustomPieces();
+    const staticPieces = loadCustomPieces();
+
+    const customPieces = useMemo(() => {
+        const pieces = { ...staticPieces };
+        Object.values(game).forEach(code => {
+            if (code.includes('Fused') && !pieces[code]) {
+                const component = createFusedPieceComponent(code);
+                if (component) pieces[code] = component;
+            }
+        });
+        return pieces;
+    }, [game]);
 
     function customSquares() {
         const squares = {};
