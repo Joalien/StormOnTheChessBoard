@@ -77,6 +77,8 @@ public class GameStateController implements ChessBoardService {
     @Override
     public <T extends CardParam> void tryToPlayCard(Card<T> card, T params) {
         assertGameHasAlreadyStarted();
+        if (chessBoard.isCardPlayingBlocked())
+            throw new InvalidGameActionException("Un effet empêche de jouer des cartes !");
 
         if (isEnemyCard(card.getType())) {
             Player opponent = getOpponent();

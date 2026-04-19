@@ -371,6 +371,10 @@ public class ChessBoard {
         return Set.copyOf(this.effects);
     }
 
+    public boolean isCardPlayingBlocked() {
+        return effects.stream().anyMatch(Effect::blocksCardPlaying);
+    }
+
     public Color getCurrentTurn() {
         return currentTurn;
     }
