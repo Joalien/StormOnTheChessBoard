@@ -17,9 +17,7 @@ import fr.kubys.piece.extra.Kangaroo;
 import fr.kubys.player.Player;
 
 import java.lang.reflect.Field;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -67,12 +65,21 @@ public class OutputMapper {
         Map<String, Object> cardParamOutputDto = Arrays.stream(c.getClazz().getDeclaredFields())
                 .map(Field::getName)
                 .collect(HashMap::new, (hashMap, name) -> hashMap.put(name, null), HashMap::putAll);
+        Map<String, List<String>> enumOptions = Arrays.stream(c.getClazz().getDeclaredFields())
+                .filter(field -> field.getType().isEnum())
+                .collect(Collectors.toMap(
+                        Field::getName,
+                        field -> Arrays.stream(field.getType().getEnumConstants())
+                                .map(Object::toString)
+                                .toList()
+                ));
         return CardOutputDto.builder()
                 .name(c.getName())
                 .englishName(c.getClass().getSimpleName())
                 .description(c.getDescription())
                 .type(c.getType())
                 .param(cardParamOutputDto)
+                .enumOptions(enumOptions.isEmpty() ? null : enumOptions)
                 .build();
     }
 

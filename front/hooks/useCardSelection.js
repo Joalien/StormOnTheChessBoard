@@ -76,8 +76,17 @@ export function useCardSelection(effects, currentState, myColor, currentPlayerCo
         }
     }
 
+    function onEnumSelect(key, value) {
+        if (!selectedCard) return;
+        const newParam = {...selectedCard.param, [key]: value};
+        const updated = {...selectedCard, param: newParam};
+        setSelectedCard(updated);
+        setSelectedParam(firstUnsetParam(updated));
+    }
+
     function onSquareRightClick(square) {
-        if (selectedCard && selectedParam && isSelectedCardPlayable() && !isBarricadeCard(selectedCard)) {
+        if (selectedCard && selectedParam && isSelectedCardPlayable() && !isBarricadeCard(selectedCard)
+            && !(selectedCard.enumOptions && selectedCard.enumOptions[selectedParam])) {
             const newParam = {...selectedCard.param};
             if (newParam[selectedParam] === square) newParam[selectedParam] = null;
             else newParam[selectedParam] = square;
@@ -143,6 +152,7 @@ export function useCardSelection(effects, currentState, myColor, currentPlayerCo
         onSquareRightClick,
         onBarricadeEdgeClick,
         onCapturedPieceClick,
+        onEnumSelect,
         playableCardTypes,
         isSelectedCardPlayable,
         isBarricadeCard,

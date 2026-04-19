@@ -2,7 +2,6 @@ package fr.kubys.mapper;
 
 import fr.kubys.api.ChessBoardReadService;
 import fr.kubys.card.Card;
-import fr.kubys.card.QuadrilleCard;
 import fr.kubys.card.params.CardParam;
 import fr.kubys.card.params.CardParamException;
 import fr.kubys.core.Position;
@@ -49,8 +48,11 @@ public class CardParametersMapper {
             return ((Collection<String>) param.get(field.getName())).stream()
                     .map(pos -> getPieceFromChessboard(chessBoardService, pos))
                     .collect(Collectors.toSet());
-        if (QuadrilleCard.Direction.class.equals(field.getType()))
-            return QuadrilleCard.Direction.valueOf((String) param.get(field.getName()));
+        if (field.getType().isEnum()) {
+            @SuppressWarnings({"unchecked", "rawtypes"})
+            Enum<?> enumValue = Enum.valueOf((Class<? extends Enum>) field.getType(), (String) param.get(field.getName()));
+            return enumValue;
+        }
         throw new CardParamException("Aucun mapping trouvé pour la classe %s".formatted(field.getType()));
     }
 

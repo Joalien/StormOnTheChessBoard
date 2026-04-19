@@ -81,13 +81,22 @@ const PARAM_LABELS = {
     position1: 'Position 1',
     position2: 'Position 2',
     direction: 'Direction',
+    direction1: 'Direction pion 1',
+    direction2: 'Direction pion 2',
     from1: 'Depuis 1',
     to1: 'Vers 1',
     from2: 'Depuis 2',
     to2: 'Vers 2',
 };
 
-export function CardParameters({card, selectedParam, setSelectedParam, playCardCallback, barricadeEdges, setBarricadeEdges, isPlayable = true}) {
+const ENUM_LABELS = {
+    LEFT: '← Gauche',
+    RIGHT: 'Droite →',
+    CLOCKWISE: '↻ Horaire',
+    COUNTERCLOCKWISE: '↺ Anti-horaire',
+};
+
+export function CardParameters({card, selectedParam, setSelectedParam, playCardCallback, barricadeEdges, setBarricadeEdges, isPlayable = true, onEnumSelect}) {
     const hasImage = card.englishName in cardImages;
     const paramKeys = Object.keys(card.param || {});
     const allParamsSet = !Object.values(card.param || {}).some(x => x === null);
@@ -155,17 +164,18 @@ export function CardParameters({card, selectedParam, setSelectedParam, playCardC
                             const value = card.param[key];
                             const isSet = value !== null;
                             const isActive = selectedParam === key;
+                            const isEnum = card.enumOptions && card.enumOptions[key];
                             return (
                                 <div
                                     key={i}
                                     className={`param-row${isActive ? ' active' : ''}`}
                                     onClick={() => {
-                                        if (isSet) {
+                                        if (isSet && !isEnum) {
                                             card.param[key] = null;
                                             setSelectedParam(key);
                                         }
                                     }}
-                                    style={isSet ? {cursor: 'pointer'} : {cursor: 'default'}}
+                                    style={isSet && !isEnum ? {cursor: 'pointer'} : {cursor: 'default'}}
                                 >
                                     <div style={{
                                         width: '8px', height: '8px', borderRadius: '50%', flexShrink: 0,
@@ -176,14 +186,32 @@ export function CardParameters({card, selectedParam, setSelectedParam, playCardC
                                         <div style={{fontSize: '12px', fontWeight: '600', color: '#c9d1d9', marginBottom: '3px'}}>
                                             {PARAM_LABELS[key] || key}
                                         </div>
-                                        <div style={{
-                                            fontSize: '11px',
-                                            color: isSet ? '#d4a843' : isActive ? '#8b949e' : '#484f58',
-                                            fontFamily: 'monospace',
-                                            letterSpacing: '0.3px',
-                                        }}>
-                                            {isSet ? value : isActive ? 'en attente...' : '—'}
-                                        </div>
+                                        {isEnum ? (
+                                            <div style={{display: 'flex', gap: '6px', marginTop: '4px'}}>
+                                                {card.enumOptions[key].map(option => (
+                                                    <button
+                                                        key={option}
+                                                        className={`sotc-btn ${value === option ? 'sotc-btn-gold' : ''}`}
+                                                        onClick={(e) => {
+                                                            e.stopPropagation();
+                                                            if (onEnumSelect) onEnumSelect(key, value === option ? null : option);
+                                                        }}
+                                                        style={{padding: '4px 12px', fontSize: '11px'}}
+                                                    >
+                                                        {ENUM_LABELS[option] || option}
+                                                    </button>
+                                                ))}
+                                            </div>
+                                        ) : (
+                                            <div style={{
+                                                fontSize: '11px',
+                                                color: isSet ? '#d4a843' : isActive ? '#8b949e' : '#484f58',
+                                                fontFamily: 'monospace',
+                                                letterSpacing: '0.3px',
+                                            }}>
+                                                {isSet ? value : isActive ? 'en attente...' : '—'}
+                                            </div>
+                                        )}
                                     </div>
                                 </div>
                             );

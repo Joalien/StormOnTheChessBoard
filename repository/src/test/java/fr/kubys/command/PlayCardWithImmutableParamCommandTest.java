@@ -132,6 +132,32 @@ class PlayCardWithImmutableParamCommandTest {
     }
 
     @Test
+    void should_play_majorettes_card() {
+        Card<MajorettesCardParam> majorettesCard = new MajorettesCard();
+        currentPlayer.getCards().add(majorettesCard);
+        Pawn p1 = new Pawn(Color.WHITE);
+        p1.setPosition(c4);
+        Pawn p2 = new Pawn(Color.WHITE);
+        p2.setPosition(f4);
+        Mockito.when(chessBoard.getPieces()).thenReturn(Set.of(p1, p2));
+        PlayCardWithImmutableParamCommand<MajorettesCardParam> playCardCommand = PlayCardWithImmutableParamCommand.<MajorettesCardParam>builder()
+                .gameId(GAME_ID)
+                .param(Map.of("piece1", "c4", "direction1", "LEFT", "piece2", "f4", "direction2", "RIGHT"))
+                .cardName(majorettesCard.getName())
+                .build();
+
+        assertDoesNotThrow(() -> playCardCommand.execute(chessBoard));
+
+        ArgumentCaptor<Card<MajorettesCardParam>> cardArgumentCaptor = ArgumentCaptor.forClass(Card.class);
+        ArgumentCaptor<MajorettesCardParam> cardParamArgumentCaptor = ArgumentCaptor.forClass(MajorettesCardParam.class);
+        verify(chessBoard).tryToPlayCard(cardArgumentCaptor.capture(), cardParamArgumentCaptor.capture());
+        MajorettesCardParam captured = cardParamArgumentCaptor.getValue();
+        assertEquals(MajorettesCard.Direction.LEFT, captured.direction1());
+        assertEquals(MajorettesCard.Direction.RIGHT, captured.direction2());
+        assertEquals(majorettesCard, cardArgumentCaptor.getValue());
+    }
+
+    @Test
     void should_return_404_if_card_not_found_in_player_hand() {
         Card<QuadrilleCardParam> quadrilleCard = new QuadrilleCard();
         PlayCardWithImmutableParamCommand<QuadrilleCardParam> playCardCommand = PlayCardWithImmutableParamCommand.<QuadrilleCardParam>builder()

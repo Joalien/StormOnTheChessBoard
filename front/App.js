@@ -330,6 +330,7 @@ export default function App() {
         onSquareRightClick,
         onBarricadeEdgeClick,
         onCapturedPieceClick,
+        onEnumSelect,
         playableCardTypes,
         isSelectedCardPlayable,
         isBarricadeCard,
@@ -1100,6 +1101,7 @@ export default function App() {
                             barricadeEdges={barricadeEdges}
                             setBarricadeEdges={setBarricadeEdges}
                             isPlayable={!selectedCard.isEffect && playableCardTypes(currentState, false).includes(selectedCard.type)}
+                            onEnumSelect={onEnumSelect}
                         />
                     ) : (
                         <div className="sotc-panel" style={{padding: '28px 20px', textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px'}}>
