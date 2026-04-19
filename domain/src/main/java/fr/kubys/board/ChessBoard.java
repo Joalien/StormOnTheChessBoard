@@ -99,6 +99,11 @@ public class ChessBoard {
         return Set.copyOf(outOfTheBoardPieces);
     }
 
+    public boolean lastMoveWasCapture() {
+        return outOfTheBoardPieces.stream()
+                .anyMatch(r -> r.turn() == turnNumber && r.reason() == PieceRemoval.RemovalReason.CAPTURED);
+    }
+
     public Set<Position> getAllAttackablePosition(Piece piece) {
         return generateAllPositions().stream()
                 .filter(pos -> !pos.equals(piece.getPosition()))
