@@ -28,6 +28,7 @@ public class ChessBoard {
     private Color currentTurn = Color.WHITE;
     private int turnNumber = 0;
     private Position lastMoveFrom;
+    private Piece lastMovedPiece;
 
     public static ChessBoard createEmpty() {
 //        log.debug("create empty chessboard");
@@ -206,6 +207,7 @@ public class ChessBoard {
     public void move(Piece piece, Position positionToMoveOn) {
         new ArrayList<>(effects).forEach(effect -> effect.beforeMoveHook(this, piece));
         lastMoveFrom = piece.getPosition();
+        lastMovedPiece = piece;
 
         at(positionToMoveOn).getPiece().ifPresent(captured -> removePieceFromTheBoard(captured, PieceRemoval.RemovalReason.CAPTURED));
 //        log.info("{} moves from {} to {}", piece, piece.getPosition(), positionToMoveOn);
@@ -283,7 +285,7 @@ public class ChessBoard {
         return fakeSquares.size();
     }
 
-    boolean doesMovingPieceCheckOurOwnKing(Piece piece, Position positionToMoveOn) {
+    public boolean doesMovingPieceCheckOurOwnKing(Piece piece, Position positionToMoveOn) {
         if (piece.getPosition().equals(positionToMoveOn)) throw new IllegalArgumentException();
         if (piece instanceof FakePieceDecorator) return false;
 
@@ -366,6 +368,10 @@ public class ChessBoard {
 
     public Position getLastMoveFrom() {
         return lastMoveFrom;
+    }
+
+    public Piece getLastMovedPiece() {
+        return lastMovedPiece;
     }
 
 }
