@@ -11,6 +11,7 @@ public class CardRegistry {
 
     public static List<Card<? extends CardParam>> createAllCards() {
         return List.of(
+                new RingRoadCard(),
                 new PoisonCard(),
                 new ShieldCard(),
                 new BetrayalCard(),
