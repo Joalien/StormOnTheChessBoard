@@ -1,11 +1,10 @@
-package fr.kubys.card.unimplemented.medium;
+package fr.kubys.card;
 
 import fr.kubys.board.ChessBoard;
-import fr.kubys.card.Card;
-import fr.kubys.card.CardType;
+import fr.kubys.board.effect.CeasefireEffect;
 import fr.kubys.card.params.NoCardParam;
 
-public class CeasefireCard extends Card<NoCardParam> {
+public class CeasefireCard extends Card<NoCardParam> implements Effectable<CeasefireEffect> {
 
     public CeasefireCard() {
         super("Cessez le Feu",
@@ -16,16 +15,16 @@ public class CeasefireCard extends Card<NoCardParam> {
 
     @Override
     protected void validInput(ChessBoard chessBoard, NoCardParam param) {
-        throw new UnsupportedOperationException("Cessez le Feu is not yet implemented");
+        // No validation needed
     }
 
     @Override
     protected boolean doesNotCreateCheck(ChessBoard chessBoard, NoCardParam param) {
-        throw new UnsupportedOperationException("Cessez le Feu is not yet implemented");
+        return true;
     }
 
     @Override
     protected void doAction(ChessBoard chessBoard, NoCardParam param) {
-        throw new UnsupportedOperationException("Cessez le Feu is not yet implemented");
+        chessBoard.addEffect(new CeasefireEffect(chessBoard));
     }
 }
