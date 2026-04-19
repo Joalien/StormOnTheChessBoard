@@ -153,6 +153,7 @@ public class ChessBoard {
 
     boolean isEnemyOrEmpty(Piece piece, Position positionToMoveOn, Color effectiveColor) {
         if (doesEffectBlockSquare(positionToMoveOn)) return false;
+        if (doesEffectBlockAttack(piece, positionToMoveOn)) return at(positionToMoveOn).getPiece().isEmpty();
         if (doesEffectBlockCapture(piece, positionToMoveOn))
             return at(positionToMoveOn).getPiece().map(Piece::isKing).orElse(true);
         Optional<Piece> p = at(positionToMoveOn).getPiece();
@@ -165,6 +166,11 @@ public class ChessBoard {
     private boolean doesEffectBlockCapture(Piece attacker, Position target) {
         return effects.stream()
                 .anyMatch(effect -> effect.blocksCapture(attacker, target));
+    }
+
+    private boolean doesEffectBlockAttack(Piece attacker, Position target) {
+        return effects.stream()
+                .anyMatch(effect -> effect.blocksAttack(attacker, target));
     }
 
     public void tryToMove(Position from, Position to) {
