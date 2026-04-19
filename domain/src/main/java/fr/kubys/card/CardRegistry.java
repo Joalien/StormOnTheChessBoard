@@ -18,6 +18,7 @@ public class CardRegistry {
                 new RelayCard(),
                 new SnowplowCard(),
                 new LaserCard(),
+                new ElectroshockCard(),
                 new DoubleStrikeCard(),
                 new CylinderCard(),
                 new AcrobaticCastlingCard(),
