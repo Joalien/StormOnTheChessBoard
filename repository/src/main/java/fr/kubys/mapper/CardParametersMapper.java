@@ -1,6 +1,7 @@
 package fr.kubys.mapper;
 
 import fr.kubys.api.ChessBoardReadService;
+import fr.kubys.board.effect.Effect;
 import fr.kubys.card.Card;
 import fr.kubys.card.params.CardParam;
 import fr.kubys.card.params.CardParamException;
@@ -44,16 +45,29 @@ public class CardParametersMapper {
         if (Position.class.equals(field.getType())) return Position.valueOf((String) param.get(field.getName()));
         if (Piece.class.isAssignableFrom(field.getType()))
             return getPieceFromChessboard(chessBoardService, (String) param.get(field.getName()));
-        if (Collection.class.isAssignableFrom(field.getType()))
-            return ((Collection<String>) param.get(field.getName())).stream()
-                    .map(pos -> getPieceFromChessboard(chessBoardService, pos))
-                    .collect(Collectors.toSet());
+        if (Collection.class.isAssignableFrom(field.getType())) {
+            var pieces = ((Collection<String>) param.get(field.getName())).stream()
+                    .map(pos -> getPieceFromChessboard(chessBoardService, pos));
+            if (List.class.isAssignableFrom(field.getType()))
+                return pieces.collect(Collectors.toList());
+            return pieces.collect(Collectors.toSet());
+        }
+        if (Effect.class.isAssignableFrom(field.getType()))
+            return getEffectFromChessboard(chessBoardService, (String) param.get(field.getName()));
         if (field.getType().isEnum()) {
             @SuppressWarnings({"unchecked", "rawtypes"})
             Enum<?> enumValue = Enum.valueOf((Class<? extends Enum>) field.getType(), (String) param.get(field.getName()));
             return enumValue;
         }
         throw new CardParamException("Aucun mapping trouvé pour la classe %s".formatted(field.getType()));
+    }
+
+    private static Effect getEffectFromChessboard(ChessBoardReadService chessboard, String value) {
+        Position position = Position.valueOf(value);
+        return chessboard.getEffects().stream()
+                .filter(e -> e.getPositions().contains(position))
+                .findFirst()
+                .orElseThrow(() -> new CardParamException("Aucun effet trouvé sur la case %s".formatted(value)));
     }
 
     private static Piece getPieceFromChessboard(ChessBoardReadService chessboard, String value) {
