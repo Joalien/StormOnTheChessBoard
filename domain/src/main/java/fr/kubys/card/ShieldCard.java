@@ -1,11 +1,10 @@
-package fr.kubys.card.unimplemented.medium;
+package fr.kubys.card;
 
 import fr.kubys.board.ChessBoard;
-import fr.kubys.card.Card;
-import fr.kubys.card.CardType;
+import fr.kubys.board.effect.ShieldEffect;
 import fr.kubys.card.params.NoCardParam;
 
-public class ShieldCard extends Card<NoCardParam> {
+public class ShieldCard extends Card<NoCardParam> implements Effectable<ShieldEffect> {
 
     public ShieldCard() {
         super("Bouclier",
@@ -16,16 +15,17 @@ public class ShieldCard extends Card<NoCardParam> {
 
     @Override
     protected void validInput(ChessBoard chessBoard, NoCardParam param) {
-        throw new UnsupportedOperationException("Bouclier is not yet implemented");
+        if (chessBoard.getLastMovedPiece() == null)
+            throw new IllegalStateException("Aucun déplacement n'a été effectué ce tour");
     }
 
     @Override
     protected boolean doesNotCreateCheck(ChessBoard chessBoard, NoCardParam param) {
-        throw new UnsupportedOperationException("Bouclier is not yet implemented");
+        return true;
     }
 
     @Override
     protected void doAction(ChessBoard chessBoard, NoCardParam param) {
-        throw new UnsupportedOperationException("Bouclier is not yet implemented");
+        chessBoard.addEffect(new ShieldEffect(chessBoard.getLastMovedPiece(), chessBoard.getTurnNumber()));
     }
 }
