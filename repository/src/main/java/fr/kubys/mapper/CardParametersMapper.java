@@ -10,6 +10,7 @@ import fr.kubys.piece.Piece;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.ParameterizedType;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -46,7 +47,15 @@ public class CardParametersMapper {
         if (Piece.class.isAssignableFrom(field.getType()))
             return getPieceFromChessboard(chessBoardService, (String) param.get(field.getName()));
         if (Collection.class.isAssignableFrom(field.getType())) {
-            var pieces = ((Collection<String>) param.get(field.getName())).stream()
+            Class<?> elementType = getCollectionElementType(field);
+            Collection<String> rawValues = (Collection<String>) param.get(field.getName());
+            if (Position.class.isAssignableFrom(elementType)) {
+                var positions = rawValues.stream().map(Position::valueOf);
+                if (List.class.isAssignableFrom(field.getType()))
+                    return positions.collect(Collectors.toList());
+                return positions.collect(Collectors.toSet());
+            }
+            var pieces = rawValues.stream()
                     .map(pos -> getPieceFromChessboard(chessBoardService, pos));
             if (List.class.isAssignableFrom(field.getType()))
                 return pieces.collect(Collectors.toList());
@@ -68,6 +77,16 @@ public class CardParametersMapper {
                 .filter(e -> e.getPositions().contains(position))
                 .findFirst()
                 .orElseThrow(() -> new CardParamException("Aucun effet trouvé sur la case %s".formatted(value)));
+    }
+
+    private static Class<?> getCollectionElementType(Field field) {
+        if (field.getGenericType() instanceof ParameterizedType parameterizedType) {
+            var typeArgs = parameterizedType.getActualTypeArguments();
+            if (typeArgs.length == 1 && typeArgs[0] instanceof Class<?> clazz) {
+                return clazz;
+            }
+        }
+        return Object.class;
     }
 
     private static Piece getPieceFromChessboard(ChessBoardReadService chessboard, String value) {
