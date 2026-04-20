@@ -1,11 +1,13 @@
 package fr.kubys.card;
 
 import fr.kubys.board.ChessBoard;
-import fr.kubys.card.params.TwoPieceCardParam;
+import fr.kubys.card.params.InfiltrationCardParam;
 import fr.kubys.core.Color;
 import fr.kubys.piece.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import java.util.Set;
 
 import static fr.kubys.core.Position.*;
 import static org.junit.jupiter.api.Assertions.*;
@@ -25,27 +27,106 @@ class InfiltrationCardTest {
     }
 
     @Test
-    void should_swap_own_and_enemy_pawn() {
+    void should_swap_one_pair_of_pawns() {
         Pawn own = new Pawn(Color.WHITE);
         Pawn enemy = new Pawn(Color.BLACK);
         board.add(own, a4);
         board.add(enemy, a5);
 
-        card.playOn(board, new TwoPieceCardParam(own, enemy));
+        card.playOn(board, new InfiltrationCardParam(Set.of(own, enemy)));
 
         assertEquals(Color.WHITE, board.at(a5).getPiece().get().getColor());
         assertEquals(Color.BLACK, board.at(a4).getPiece().get().getColor());
     }
 
     @Test
+    void should_swap_two_pairs_of_pawns() {
+        Pawn own1 = new Pawn(Color.WHITE);
+        Pawn own2 = new Pawn(Color.WHITE);
+        Pawn enemy1 = new Pawn(Color.BLACK);
+        Pawn enemy2 = new Pawn(Color.BLACK);
+        board.add(own1, a4);
+        board.add(own2, b4);
+        board.add(enemy1, a5);
+        board.add(enemy2, b5);
+
+        card.playOn(board, new InfiltrationCardParam(Set.of(own1, own2, enemy1, enemy2)));
+
+        assertEquals(Color.WHITE, board.at(a5).getPiece().get().getColor());
+        assertEquals(Color.WHITE, board.at(b5).getPiece().get().getColor());
+        assertEquals(Color.BLACK, board.at(a4).getPiece().get().getColor());
+        assertEquals(Color.BLACK, board.at(b4).getPiece().get().getColor());
+    }
+
+    @Test
+    void should_swap_three_pairs_of_pawns() {
+        Pawn own1 = new Pawn(Color.WHITE);
+        Pawn own2 = new Pawn(Color.WHITE);
+        Pawn own3 = new Pawn(Color.WHITE);
+        Pawn enemy1 = new Pawn(Color.BLACK);
+        Pawn enemy2 = new Pawn(Color.BLACK);
+        Pawn enemy3 = new Pawn(Color.BLACK);
+        board.add(own1, a4);
+        board.add(own2, b4);
+        board.add(own3, c4);
+        board.add(enemy1, a5);
+        board.add(enemy2, b5);
+        board.add(enemy3, c5);
+
+        card.playOn(board, new InfiltrationCardParam(Set.of(own1, own2, own3, enemy1, enemy2, enemy3)));
+
+        assertEquals(Color.WHITE, board.at(a5).getPiece().get().getColor());
+        assertEquals(Color.WHITE, board.at(b5).getPiece().get().getColor());
+        assertEquals(Color.WHITE, board.at(c5).getPiece().get().getColor());
+        assertEquals(Color.BLACK, board.at(a4).getPiece().get().getColor());
+        assertEquals(Color.BLACK, board.at(b4).getPiece().get().getColor());
+        assertEquals(Color.BLACK, board.at(c4).getPiece().get().getColor());
+    }
+
+    @Test
+    void should_reject_more_than_three_pairs() {
+        Pawn own1 = new Pawn(Color.WHITE);
+        Pawn own2 = new Pawn(Color.WHITE);
+        Pawn own3 = new Pawn(Color.WHITE);
+        Pawn own4 = new Pawn(Color.WHITE);
+        Pawn enemy1 = new Pawn(Color.BLACK);
+        Pawn enemy2 = new Pawn(Color.BLACK);
+        Pawn enemy3 = new Pawn(Color.BLACK);
+        Pawn enemy4 = new Pawn(Color.BLACK);
+        board.add(own1, a4);
+        board.add(own2, b4);
+        board.add(own3, c4);
+        board.add(own4, d4);
+        board.add(enemy1, a5);
+        board.add(enemy2, b5);
+        board.add(enemy3, c5);
+        board.add(enemy4, d5);
+
+        assertThrows(IllegalArgumentException.class,
+                () -> card.playOn(board, new InfiltrationCardParam(Set.of(own1, own2, own3, own4, enemy1, enemy2, enemy3, enemy4))));
+    }
+
+    @Test
+    void should_reject_mismatched_counts() {
+        Pawn own1 = new Pawn(Color.WHITE);
+        Pawn own2 = new Pawn(Color.WHITE);
+        Pawn enemy = new Pawn(Color.BLACK);
+        board.add(own1, a4);
+        board.add(own2, b4);
+        board.add(enemy, a5);
+
+        assertThrows(IllegalArgumentException.class,
+                () -> card.playOn(board, new InfiltrationCardParam(Set.of(own1, own2, enemy))));
+    }
+
+    @Test
     void should_promote_white_pawn_swapped_to_last_rank() {
-        // White pawn on a7, black pawn on a8 → swap → white pawn lands on a8 → promotion
         Pawn own = new Pawn(Color.WHITE);
         Pawn enemy = new Pawn(Color.BLACK);
         board.add(own, a7);
         board.add(enemy, a8);
 
-        card.playOn(board, new TwoPieceCardParam(own, enemy));
+        card.playOn(board, new InfiltrationCardParam(Set.of(own, enemy)));
 
         assertInstanceOf(Queen.class, board.at(a8).getPiece().get());
         assertEquals(Color.WHITE, board.at(a8).getPiece().get().getColor());
@@ -53,55 +134,26 @@ class InfiltrationCardTest {
 
     @Test
     void should_promote_black_pawn_swapped_to_last_rank() {
-        // White pawn on h1, black pawn on h2 → swap → black pawn lands on h1 → promotion
         Pawn own = new Pawn(Color.WHITE);
         Pawn enemy = new Pawn(Color.BLACK);
         board.add(own, h1);
         board.add(enemy, h2);
 
-        card.playOn(board, new TwoPieceCardParam(own, enemy));
+        card.playOn(board, new InfiltrationCardParam(Set.of(own, enemy)));
 
         assertInstanceOf(Queen.class, board.at(h1).getPiece().get());
         assertEquals(Color.BLACK, board.at(h1).getPiece().get().getColor());
     }
 
     @Test
-    void should_promote_both_pawns_when_both_land_on_last_rank() {
-        // White pawn on a8's row? No, white promotes on row 8, black promotes on row 1
-        // White pawn on h1, black pawn on h8 → swap → white on h8 (promotes), black on h1 (promotes)
-        Pawn own = new Pawn(Color.WHITE);
-        Pawn enemy = new Pawn(Color.BLACK);
-        board.add(own, h1);
-        board.add(enemy, h8);
-
-        card.playOn(board, new TwoPieceCardParam(own, enemy));
-
-        assertInstanceOf(Queen.class, board.at(h8).getPiece().get());
-        assertEquals(Color.WHITE, board.at(h8).getPiece().get().getColor());
-        assertInstanceOf(Queen.class, board.at(h1).getPiece().get());
-        assertEquals(Color.BLACK, board.at(h1).getPiece().get().getColor());
-    }
-
-    @Test
-    void should_reject_two_own_pawns() {
+    void should_reject_all_same_color() {
         Pawn p1 = new Pawn(Color.WHITE);
         Pawn p2 = new Pawn(Color.WHITE);
         board.add(p1, d2);
         board.add(p2, c2);
 
         assertThrows(IllegalArgumentException.class,
-                () -> card.playOn(board, new TwoPieceCardParam(p1, p2)));
-    }
-
-    @Test
-    void should_reject_two_enemy_pawns() {
-        Pawn p1 = new Pawn(Color.BLACK);
-        Pawn p2 = new Pawn(Color.BLACK);
-        board.add(p1, d7);
-        board.add(p2, c7);
-
-        assertThrows(IllegalArgumentException.class,
-                () -> card.playOn(board, new TwoPieceCardParam(p1, p2)));
+                () -> card.playOn(board, new InfiltrationCardParam(Set.of(p1, p2))));
     }
 
     @Test
@@ -112,17 +164,6 @@ class InfiltrationCardTest {
         board.add(pawn, d7);
 
         assertThrows(IllegalArgumentException.class,
-                () -> card.playOn(board, new TwoPieceCardParam(knight, pawn)));
-    }
-
-    @Test
-    void should_reject_non_pawn_enemy_piece() {
-        Pawn pawn = new Pawn(Color.WHITE);
-        Rock rook = new Rock(Color.BLACK);
-        board.add(pawn, d4);
-        board.add(rook, a8);
-
-        assertThrows(IllegalArgumentException.class,
-                () -> card.playOn(board, new TwoPieceCardParam(pawn, rook)));
+                () -> card.playOn(board, new InfiltrationCardParam(Set.of(knight, pawn))));
     }
 }

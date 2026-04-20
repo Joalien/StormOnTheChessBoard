@@ -6,6 +6,7 @@ import fr.kubys.board.effect.*;
 import fr.kubys.card.params.PieceCardParam;
 import fr.kubys.card.params.PieceToPositionCardParam;
 import fr.kubys.card.params.PositionCardParam;
+import fr.kubys.card.params.InfiltrationCardParam;
 import fr.kubys.card.params.TwoPieceCardParam;
 import fr.kubys.core.Color;
 import fr.kubys.piece.*;
@@ -13,6 +14,8 @@ import fr.kubys.piece.extra.Crab;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import java.util.List;
+import java.util.Set;
 
 import static fr.kubys.core.Position.*;
 import static org.junit.jupiter.api.Assertions.*;
@@ -390,7 +393,8 @@ class CombinedEffectsIT {
     class InfiltrationAndMagnetism {
 
         @Test
-        void magnetism_should_prevent_infiltration_when_pawn_is_adjacent() {
+        void infiltration_should_work_even_when_pawn_is_adjacent_to_magnetized() {
+            // Infiltration is a swap, not a move — magnetism does not block it
             Pawn whitePawn = new Pawn(Color.WHITE);
             Pawn blackPawn = new Pawn(Color.BLACK);
             Knight magnetized = new Knight(Color.BLACK);
@@ -400,28 +404,11 @@ class CombinedEffectsIT {
             board.add(magnetized, e4);
             board.addEffect(new MagnetismEffect(magnetized));
 
-            assertThrows(MagnetismException.class,
-                    () -> new InfiltrationCard().playOn(board, new TwoPieceCardParam(whitePawn, blackPawn)));
+            assertDoesNotThrow(
+                    () -> new InfiltrationCard().playOn(board, new InfiltrationCardParam(Set.of(whitePawn, blackPawn))));
 
-            // Pawns should not have moved
-            assertEquals(whitePawn, board.at(d4).getPiece().get());
-            assertEquals(blackPawn, board.at(d5).getPiece().get());
-        }
-
-        @Test
-        void magnetism_should_prevent_infiltration_when_only_enemy_pawn_is_adjacent() {
-            Pawn whitePawn = new Pawn(Color.WHITE);
-            Pawn blackPawn = new Pawn(Color.BLACK);
-            Knight magnetized = new Knight(Color.WHITE);
-
-            board.add(whitePawn, b4);
-            board.add(blackPawn, d5);
-            board.add(magnetized, e5);
-            board.addEffect(new MagnetismEffect(magnetized));
-
-            // blackPawn on d5 is adjacent to magnetized on e5
-            assertThrows(MagnetismException.class,
-                    () -> new InfiltrationCard().playOn(board, new TwoPieceCardParam(whitePawn, blackPawn)));
+            assertEquals(whitePawn, board.at(d5).getPiece().get());
+            assertEquals(blackPawn, board.at(d4).getPiece().get());
         }
 
         @Test
@@ -436,7 +423,7 @@ class CombinedEffectsIT {
             board.addEffect(new MagnetismEffect(magnetized));
 
             assertDoesNotThrow(
-                    () -> new InfiltrationCard().playOn(board, new TwoPieceCardParam(whitePawn, blackPawn)));
+                    () -> new InfiltrationCard().playOn(board, new InfiltrationCardParam(Set.of(whitePawn, blackPawn))));
 
             assertEquals(whitePawn, board.at(f6).getPiece().get());
             assertEquals(blackPawn, board.at(c3).getPiece().get());

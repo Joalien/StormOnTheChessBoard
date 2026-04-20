@@ -1,48 +1,76 @@
 package fr.kubys.card;
 
 import fr.kubys.board.ChessBoard;
-import fr.kubys.card.params.TwoPieceCardParam;
+import fr.kubys.card.params.InfiltrationCardParam;
+import fr.kubys.core.Color;
 import fr.kubys.core.Position;
 import fr.kubys.piece.Pawn;
+import fr.kubys.piece.Piece;
 
-public class InfiltrationCard extends Card<TwoPieceCardParam> {
+import java.util.List;
+import java.util.Set;
+
+public class InfiltrationCard extends Card<InfiltrationCardParam> {
 
     public InfiltrationCard() {
         super("Infiltration",
-                "Sur l'échiquier, permutez un de vos pions avec un pion adverse.",
+                "Sur l'échiquier, permutez 1, 2 ou 3 de vos pions avec des pions adverses.",
                 CardType.REPLACE_TURN,
-                TwoPieceCardParam.class);
+                InfiltrationCardParam.class);
     }
 
     @Override
-    protected void validInput(ChessBoard chessBoard, TwoPieceCardParam param) {
-        if (param.piece1() == null || param.piece2() == null) throw new IllegalStateException("Paramètre de carte manquant");
-        if (!(param.piece1() instanceof Pawn) || !(param.piece2() instanceof Pawn))
-            throw new IllegalArgumentException("Les deux pièces doivent être des Pions");
-        boolean isFirstPawnAlly = !param.piece1().getColor().cannotBeMovedBy(chessBoard.getCurrentTurn());
-        boolean isSecondPawnAlly = !param.piece2().getColor().cannotBeMovedBy(chessBoard.getCurrentTurn());
-        if (isFirstPawnAlly == isSecondPawnAlly)
-            throw new IllegalArgumentException("Vous devez sélectionner un de vos pions et un pion adverse");
-        chessBoard.getEffects().forEach(effect -> effect.beforeMoveHook(chessBoard, param.piece1()));
-        chessBoard.getEffects().forEach(effect -> effect.beforeMoveHook(chessBoard, param.piece2()));
+    protected void validInput(ChessBoard chessBoard, InfiltrationCardParam param) {
+        Set<Piece> pawns = param.pawns();
+        if (pawns == null || pawns.isEmpty())
+            throw new IllegalStateException("Paramètre de carte manquant");
+
+        pawns.forEach(p -> {
+            if (!(p instanceof Pawn))
+                throw new IllegalArgumentException("Les pièces sélectionnées doivent être des Pions");
+        });
+
+        long ownCount = pawns.stream().filter(p -> !p.getColor().cannotBeMovedBy(chessBoard.getCurrentTurn())).count();
+        long enemyCount = pawns.stream().filter(p -> p.getColor().cannotBeMovedBy(chessBoard.getCurrentTurn())).count();
+
+        if (ownCount != enemyCount)
+            throw new IllegalArgumentException("Le nombre de pions alliés et adverses doit être identique");
+        if (ownCount > 3)
+            throw new IllegalArgumentException("Vous pouvez permuter au maximum 3 pions");
+        if (ownCount == 0)
+            throw new IllegalArgumentException("Vous devez sélectionner au moins un pion allié et un pion adverse");
     }
 
     @Override
-    protected boolean doesNotCreateCheck(ChessBoard chessBoard, TwoPieceCardParam param) {
-        chessBoard.fakeSquare(param.piece1(), param.piece2().getPosition());
-        chessBoard.fakeSquare(param.piece2(), param.piece1().getPosition());
-        boolean check = chessBoard.isKingUnderAttack(chessBoard.getCurrentTurn());
+    protected boolean doesNotCreateCheck(ChessBoard chessBoard, InfiltrationCardParam param) {
+        Color currentTurn = chessBoard.getCurrentTurn();
+        List<Piece> own = param.pawns().stream().filter(p -> !p.getColor().cannotBeMovedBy(currentTurn)).toList();
+        List<Piece> enemy = param.pawns().stream().filter(p -> p.getColor().cannotBeMovedBy(currentTurn)).toList();
+
+        for (int i = 0; i < own.size(); i++) {
+            chessBoard.fakeSquare(own.get(i), enemy.get(i).getPosition());
+            chessBoard.fakeSquare(enemy.get(i), own.get(i).getPosition());
+        }
+        boolean check = chessBoard.isKingUnderAttack(currentTurn);
         chessBoard.unfakeAllSquares();
         return !check;
     }
 
     @Override
-    protected void doAction(ChessBoard chessBoard, TwoPieceCardParam param) {
-        Position pos1 = param.piece1().getPosition();
-        Position pos2 = param.piece2().getPosition();
-        chessBoard.removePieceFromTheBoard(param.piece1());
-        chessBoard.removePieceFromTheBoard(param.piece2());
-        chessBoard.add(param.piece1(), pos2);
-        chessBoard.add(param.piece2(), pos1);
+    protected void doAction(ChessBoard chessBoard, InfiltrationCardParam param) {
+        Color currentTurn = chessBoard.getCurrentTurn();
+        List<Piece> own = param.pawns().stream().filter(p -> !p.getColor().cannotBeMovedBy(currentTurn)).toList();
+        List<Piece> enemy = param.pawns().stream().filter(p -> p.getColor().cannotBeMovedBy(currentTurn)).toList();
+
+        Position[] ownPositions = own.stream().map(Piece::getPosition).toArray(Position[]::new);
+        Position[] enemyPositions = enemy.stream().map(Piece::getPosition).toArray(Position[]::new);
+
+        own.forEach(chessBoard::removePieceFromTheBoard);
+        enemy.forEach(chessBoard::removePieceFromTheBoard);
+
+        for (int i = 0; i < own.size(); i++) {
+            chessBoard.add(own.get(i), enemyPositions[i]);
+            chessBoard.add(enemy.get(i), ownPositions[i]);
+        }
     }
 }

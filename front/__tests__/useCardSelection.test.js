@@ -126,7 +126,7 @@ describe('useCardSelection', () => {
 
     test('multi-param card advances to next unset param', () => {
         const {result} = setup();
-        const card = {englishName: 'InfiltrationCard', param: {piece1: null, piece2: null}, type: 'AFTER_TURN'};
+        const card = {englishName: 'AsylumCard', param: {piece1: null, piece2: null}, type: 'AFTER_TURN'};
 
         act(() => result.current.showCard(card));
         act(() => result.current.onSquareRightClick('d4'));
