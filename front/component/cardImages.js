@@ -3,6 +3,7 @@ const cardImages = {
     AmbitionCard: require('../assets/images/cards/implemented/AmbitionCard.png'),
     AmphetaminesCard: require('../assets/images/cards/implemented/AmphetaminesCard.png'),
     ApartheidCard: require('../assets/images/cards/implemented/ApartheidCard.png'),
+    AstralTravelCard: require('../assets/images/cards/implemented/AstralTravelCard.png'),
     AsylumCard: require('../assets/images/cards/implemented/AsylumCard.png'),
     BanzaiCard: require('../assets/images/cards/implemented/BanzaiCard.png'),
     BarricadeCard: require('../assets/images/cards/implemented/BarricadeCard.png'),
