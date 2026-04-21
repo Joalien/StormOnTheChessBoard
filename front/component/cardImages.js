@@ -35,6 +35,7 @@ const cardImages = {
     ExileCard: require('../assets/images/cards/implemented/ExileCard.png'),
     FavoriteCard: require('../assets/images/cards/implemented/FavoriteCard.png'),
     FourCornersCard: require('../assets/images/cards/implemented/FourCornersCard.png'),
+    FrenzyCard: require('../assets/images/cards/implemented/FrenzyCard.png'),
     FrightCard: require('../assets/images/cards/implemented/FrightCard.png'),
     FunnyCard: require('../assets/images/cards/implemented/FunnyCard.png'),
     HomeCard: require('../assets/images/cards/implemented/HomeCard.png'),
