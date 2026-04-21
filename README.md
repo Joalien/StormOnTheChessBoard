@@ -23,18 +23,6 @@ make up          # Lance backend + frontend
 make down        # Arrete tout
 ```
 
-### Avec Docker + mode 2 joueurs (nginx)
-
-```bash
-docker compose -f docker-compose-dev.yml up
-```
-
-Ouvrir `http://localhost` puis, une fois la partie creee :
-- Onglet 1 : `http://localhost/<gameId>?color=white`
-- Onglet 2 : `http://localhost/<gameId>?color=black`
-
-Sans `?color`, le mode local (pass-the-device) est conserve.
-
 ## Deploiement production (kubys.fr)
 
 Toutes les commandes se lancent depuis `deploy/` :
@@ -80,7 +68,7 @@ domain/       # Logique metier (pas de Spring)
 repository/   # CQRS + stockage en memoire
 controller/   # API REST + Spring Boot
 front/        # React / Expo
-deploy/       # Scripts et Makefile de deploiement
+ops/          # Dockerfiles, docker-compose, nginx configs, deploiement
 ```
 
 ### Dependency graph

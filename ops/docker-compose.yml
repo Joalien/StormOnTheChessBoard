@@ -14,27 +14,13 @@ services:
     networks:
       - sotc-net
 
-  sotc-backend:
-    container_name: sotc-backend
-    image: maven:3.9-eclipse-temurin-21
-    working_dir: /app
-    volumes:
-      - ./pom.xml:/app/pom.xml
-      - ./domain:/app/domain
-      - ./repository:/app/repository
-      - ./matchmaking:/app/matchmaking
-      - ./controller:/app/controller
-      - sotc-maven-cache:/root/.m2
-    command: sh -c "mvn -N install && mvn -pl domain,repository,matchmaking install -DskipTests && mvn -pl controller spring-boot:run"
-    networks:
-      - sotc-net
 
   sotc-frontend:
     container_name: sotc-frontend
     image: node:20-slim
     working_dir: /app
     volumes:
-      - ./front:/app
+      - ../front:/app
       - sotc-node-modules:/app/node_modules
     environment:
       - CI=true
@@ -45,12 +31,12 @@ services:
   sotc-claude:
     container_name: sotc-claude
     build:
-      context: .
-      dockerfile: Dockerfile.claude
+      context: ..
+      dockerfile: ops/Dockerfile.claude
     user: "${UID}:${GID}"
     working_dir: /workspace
     volumes:
-      - .:/workspace
+      - ..:/workspace
       - ~/.claude:/home/user/.claude
       - ~/.claude.json:/home/user/.claude.json
       - ~/.gitconfig:/home/user/.gitconfig:ro
@@ -69,5 +55,4 @@ networks:
     driver: bridge
 
 volumes:
-  sotc-maven-cache:
   sotc-node-modules:

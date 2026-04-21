@@ -25,16 +25,16 @@ back:
 	@echo "Backend starting in background (port 9000)"
 
 up: .env back
-	docker compose up -d --force-recreate sotc-frontend sotc-nginx
+	docker compose -f ops/docker-compose.yml up -d --force-recreate sotc-frontend sotc-nginx
 
 claude: up notifier
-	docker compose run --rm sotc-claude
+	docker compose -f ops/docker-compose.yml run --rm sotc-claude
 
 claude-only: .env notifier
-	docker compose run --rm sotc-claude
+	docker compose -f ops/docker-compose.yml run --rm sotc-claude
 
 down:
-	docker compose down
+	docker compose -f ops/docker-compose.yml down
 	@-pkill -f "python3 notifier/server.py" 2>/dev/null && echo "Notifier stopped" || true
 
 .PHONY: test test-back test-front up back claude claude-only down notifier
