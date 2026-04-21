@@ -81,6 +81,7 @@ const cardImages = {
     SchizophreniaCard: require('../assets/images/cards/implemented/SchizophreniaCard.png'),
     SelfDefenseCard: require('../assets/images/cards/implemented/SelfDefenseCard.png'),
     SeniorityPromotionCard: require('../assets/images/cards/implemented/SeniorityPromotionCard.png'),
+    SerialKillerCard: require('../assets/images/cards/implemented/SerialKillerCard.png'),
     ShotCard: require('../assets/images/cards/implemented/ShotCard.png'),
     StableCard: require('../assets/images/cards/implemented/StableCard.png'),
     StateVisitCard: require('../assets/images/cards/implemented/StateVisitCard.png'),
