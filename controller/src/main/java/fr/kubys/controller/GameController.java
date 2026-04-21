@@ -1,7 +1,9 @@
 package fr.kubys.controller;
 
 import fr.kubys.ai.AiGameService;
-import fr.kubys.ai.RandomMoveStrategy;
+import fr.kubys.ai.AiStrategy;
+import fr.kubys.ai.MaterialStrategy;
+import fr.kubys.ai.StockfishStrategy;
 import fr.kubys.card.params.CardParam;
 import fr.kubys.command.*;
 import fr.kubys.core.Color;
@@ -11,7 +13,10 @@ import fr.kubys.piece.PromotionPiece;
 import fr.kubys.repository.ChessBoardRepository;
 import fr.kubys.repository.GamePresets;
 import fr.kubys.websocket.GameNotifier;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -26,16 +31,48 @@ import static fr.kubys.mapper.OutputMapper.mapToDto;
 @RequestMapping("/api/chessboard")
 public class GameController {
 
+    private static final Logger log = LoggerFactory.getLogger(GameController.class);
+
     ChessBoardRepository chessBoardRepository;
     GameNotifier gameNotifier;
     AiGameService aiGameService;
+    AiStrategy aiStrategy;
 
     @Autowired
-    public GameController(ChessBoardRepository chessBoardRepository, GameNotifier gameNotifier, AiGameService aiGameService) {
+    public GameController(ChessBoardRepository chessBoardRepository, GameNotifier gameNotifier, AiGameService aiGameService,
+                          @Value("${stockfish.path:}") String stockfishPath) {
         this.chessBoardRepository = chessBoardRepository;
         this.gameNotifier = gameNotifier;
         this.aiGameService = aiGameService;
+        this.aiStrategy = createAiStrategy(stockfishPath);
         createInitialState(); // FIXME remove me later on
+    }
+
+    private AiStrategy createAiStrategy(String stockfishPath) {
+        String resolvedPath = resolveStockfishPath(stockfishPath);
+        if (resolvedPath != null) {
+            log.info("Using Fairy-Stockfish at {} with MaterialStrategy fallback", resolvedPath);
+            return new StockfishStrategy(resolvedPath, new MaterialStrategy());
+        }
+        log.info("Stockfish not found, using MaterialStrategy");
+        return new MaterialStrategy();
+    }
+
+    private String resolveStockfishPath(String configuredPath) {
+        if (configuredPath != null && !configuredPath.isBlank() && new java.io.File(configuredPath).canExecute()) {
+            return configuredPath;
+        }
+        try {
+            var resource = getClass().getClassLoader().getResource("bin/fairy-stockfish");
+            if (resource != null && "file".equals(resource.getProtocol())) {
+                java.io.File file = new java.io.File(resource.toURI());
+                if (file.canExecute()) return file.getAbsolutePath();
+                if (file.setExecutable(true) && file.canExecute()) return file.getAbsolutePath();
+            }
+        } catch (Exception e) {
+            log.debug("Could not resolve classpath stockfish: {}", e.getMessage());
+        }
+        return null;
     }
 
     private void createInitialState() {
@@ -57,7 +94,7 @@ public class GameController {
     @PostMapping("/ai")
     public ResponseEntity<Map<String, Object>> startAiGame() {
         Integer gameId = chessBoardRepository.createNewGame();
-        aiGameService.registerAiGame(gameId, Color.BLACK, new RandomMoveStrategy());
+        aiGameService.registerAiGame(gameId, Color.BLACK, aiStrategy);
         return new ResponseEntity<>(Map.of("gameId", gameId, "color", "white"), HttpStatus.CREATED);
     }
 

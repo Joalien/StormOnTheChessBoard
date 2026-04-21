@@ -11,5 +11,8 @@ RUN mvn -N install && mvn -pl domain,repository,matchmaking,ai install -DskipTes
 FROM eclipse-temurin:21-jre
 WORKDIR /app
 COPY --from=build /app/controller/target/*.jar app.jar
+COPY --from=build /app/ai/src/main/resources/bin/fairy-stockfish /app/fairy-stockfish
+RUN chmod +x /app/fairy-stockfish
+ENV STOCKFISH_PATH=/app/fairy-stockfish
 EXPOSE 9000
 ENTRYPOINT ["java", "-jar", "app.jar"]
