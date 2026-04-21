@@ -95,6 +95,7 @@ const cardImages = {
     UrbanPlanningCard: require('../assets/images/cards/implemented/UrbanPlanningCard.png'),
     VampirismCard: require('../assets/images/cards/implemented/VampirismCard.png'),
     YouOnlyLiveTwiceCard: require('../assets/images/cards/implemented/YouOnlyLiveTwiceCard.png'),
+    YouTooBrutusCard: require('../assets/images/cards/implemented/YouTooBrutusCard.png'),
 };
 
 export default cardImages;
