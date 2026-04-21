@@ -1,4 +1,13 @@
+import {useState} from 'react';
+
+const AI_STRATEGIES = [
+    {value: 'stockfish', label: 'Stockfish — Difficile', symbol: '♛'},
+    {value: 'material', label: 'Heuristique matérielle — Moyen', symbol: '♜'},
+    {value: 'random', label: 'Aléatoire — Facile', symbol: '♙'},
+];
+
 export function HomeScreen({onPlaySolo, onMatchmaking, onPlayAi, stats}) {
+    const [aiMenuOpen, setAiMenuOpen] = useState(false);
     return (
         <div style={{
             minHeight: '100vh',
@@ -100,20 +109,66 @@ export function HomeScreen({onPlaySolo, onMatchmaking, onPlayAi, stats}) {
                     >
                         Jouer !
                     </button>
-                    <button
-                        className="sotc-btn"
-                        style={{
-                            width: '100%',
-                            padding: '18px',
-                            fontSize: '17px',
-                            letterSpacing: '0.5px',
-                            borderColor: 'rgba(167,139,250,0.3)',
-                            color: '#a78bfa',
-                        }}
-                        onClick={onPlayAi}
-                    >
-                        Jouer contre une IA
-                    </button>
+                    <div style={{position: 'relative'}}>
+                        <button
+                            className="sotc-btn"
+                            style={{
+                                width: '100%',
+                                padding: '18px',
+                                fontSize: '17px',
+                                letterSpacing: '0.5px',
+                                borderColor: 'rgba(167,139,250,0.3)',
+                                color: '#a78bfa',
+                            }}
+                            onClick={() => setAiMenuOpen(v => !v)}
+                        >
+                            Jouer contre une IA
+                        </button>
+                        {aiMenuOpen && (
+                            <div style={{
+                                position: 'absolute',
+                                bottom: 'calc(100% + 8px)',
+                                left: '50%',
+                                transform: 'translateX(-50%)',
+                                zIndex: 1000,
+                                display: 'flex',
+                                gap: '6px',
+                                background: '#1c2128',
+                                border: '1px solid rgba(255,255,255,0.15)',
+                                borderRadius: '10px',
+                                padding: '8px',
+                                boxShadow: '0 8px 32px rgba(0,0,0,0.7)',
+                            }}>
+                                {AI_STRATEGIES.map(({value, label, symbol}) => (
+                                    <button
+                                        key={value}
+                                        title={label}
+                                        aria-label={label}
+                                        onClick={() => onPlayAi(value)}
+                                        style={{
+                                            background: 'rgba(255,255,255,0.04)',
+                                            border: '1px solid rgba(255,255,255,0.1)',
+                                            borderRadius: '7px',
+                                            color: '#a78bfa',
+                                            fontSize: '30px',
+                                            cursor: 'pointer',
+                                            width: '44px',
+                                            height: '44px',
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                            lineHeight: 1,
+                                            transition: 'background 0.15s, transform 0.1s',
+                                        }}
+                                        onMouseEnter={e => { e.currentTarget.style.background = 'rgba(167,139,250,0.18)'; e.currentTarget.style.transform = 'scale(1.12)'; }}
+                                        onMouseLeave={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.04)'; e.currentTarget.style.transform = 'scale(1)'; }}
+                                    >
+                                        {symbol}
+                                    </button>
+                                ))}
+                            </div>
+                        )}
+                    </div>
                     <button
                         className="sotc-btn"
                         style={{

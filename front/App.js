@@ -516,13 +516,17 @@ export default function App() {
         return fetch(base + gameId + "/players/" + color).then(res => res.json());
     }
 
-    function navigateToGame(id, color = null) {
+    function navigateToGame(id, color = null, strategy = null) {
         if (id === null) {
             window.history.pushState({}, '', '/');
             setRoute({page: 'home'});
             setMyColor(null);
         } else {
-            const url = color ? `/chessboard/${id}?color=${color}` : `/chessboard/${id}`;
+            const params = new URLSearchParams();
+            if (color) params.set('color', color);
+            if (strategy) params.set('strategy', strategy);
+            const qs = params.toString();
+            const url = qs ? `/chessboard/${id}?${qs}` : `/chessboard/${id}`;
             window.history.pushState({}, '', url);
             setRoute({page: 'game', gameId: id});
             setMyColor(color);
@@ -559,10 +563,11 @@ export default function App() {
             .catch(err => alert(err));
     }
 
-    function playAgainstAi() {
-        fetch(backendOrigin + '/api/chessboard/ai', {method: 'POST'})
+    function playAgainstAi(strategy) {
+        const query = strategy ? '?strategy=' + encodeURIComponent(strategy) : '';
+        fetch(backendOrigin + '/api/chessboard/ai' + query, {method: 'POST'})
             .then(res => res.json())
-            .then(data => navigateToGame(data.gameId, data.color))
+            .then(data => navigateToGame(data.gameId, data.color, strategy))
             .catch(err => alert(err));
     }
 
