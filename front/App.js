@@ -663,7 +663,7 @@ export default function App() {
     }
 
     function fetchGame() {
-        fetch(base + gameId)
+        return fetch(base + gameId)
             .then(response => {
                 if (!response.ok) {
                     setRoute({page: '404'});
@@ -673,7 +673,7 @@ export default function App() {
                 return response.json();
             })
             .then(data => {
-                if (!data) return;
+                if (!data) return null;
                 setGame(data.pieces);
                 setCurrentPlayerColor(data.currentTurn);
                 setEffects(data.effects || []);
@@ -686,12 +686,14 @@ export default function App() {
                 setIsInCheck(data.isInCheck || false);
                 setGameResult(data.gameResult || 'ONGOING');
                 setPromotionSquare(null);
+                return data;
             });
     }
 
     const {movePiece, playCard, endTurn, undo, promote, shuffle, onPieceDragBegin, onPieceDragEnd} = useGameActions({
         base, gameId, fetchGame, setSelectedCard, setSelectedParam,
         setCurrentPlayerColor, currentPlayerColor, selectedCard, setLegalMoves, showErrorMessage,
+        myColor,
     });
 
     function onSquareClick(square) {
