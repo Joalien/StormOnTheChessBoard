@@ -5,8 +5,6 @@ import fr.kubys.core.File;
 import fr.kubys.core.Position;
 import fr.kubys.core.Row;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Predicate;
@@ -82,25 +80,28 @@ public abstract class Piece {
         this.position = position;
     }
 
+    /**
+     * Default clone for pieces with a public (Color) constructor — the standard case.
+     * Subclasses with a different constructor signature (e.g. {@link fr.kubys.piece.extra.FusedPiece})
+     * must override this method; {@link #copyMetadataTo(Piece)} is provided for reuse.
+     */
     public Piece clone() {
         try {
-            Piece p;
-            Constructor<? extends Piece> firstConstructor = (Constructor<? extends Piece>) this.getClass().getConstructors()[0];
-            if (firstConstructor.getParameterTypes().length == 0) {
-                p = firstConstructor.newInstance();
-            } else if (firstConstructor.getParameterTypes()[0] == Color.class) {
-                p = this.getClass().getConstructor(Color.class).newInstance(color);
-            } else {
-                throw new InstantiationException("Constructor not found");
-            }
-            p.setPosition(position);
-            p.setCheckMateTarget(checkMateTarget);
-            if (!canCastle) p.cannotCastleAnymore();
-            return p;
-        } catch (InstantiationException | IllegalAccessException | NoSuchMethodException |
-                 InvocationTargetException e) {
+            Piece copy = this.getClass().getConstructor(Color.class).newInstance(color);
+            copyMetadataTo(copy);
+            return copy;
+        } catch (NoSuchMethodException e) {
+            throw new IllegalStateException(
+                    "%s must override clone(): no public (Color) constructor found".formatted(this.getClass().getSimpleName()), e);
+        } catch (ReflectiveOperationException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    protected void copyMetadataTo(Piece copy) {
+        copy.setPosition(position);
+        copy.setCheckMateTarget(checkMateTarget);
+        if (!canCastle) copy.cannotCastleAnymore();
     }
 
     @Override

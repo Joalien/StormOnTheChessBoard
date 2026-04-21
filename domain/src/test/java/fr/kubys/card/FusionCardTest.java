@@ -126,6 +126,44 @@ class FusionCardTest {
     }
 
     @Test
+    void clone_should_deep_copy_both_parts_and_preserve_position() {
+        Knight knight = new Knight(Color.WHITE);
+        board.add(knight, c3);
+        Bishop bishop = new Bishop(Color.WHITE);
+        board.add(bishop, d4);
+        card.playOn(board, new PieceToPositionCardParam(knight, d4));
+
+        FusedPiece fused = (FusedPiece) board.at(d4).getPiece().orElseThrow();
+
+        Piece copy = fused.clone();
+
+        assertInstanceOf(FusedPiece.class, copy);
+        assertNotSame(fused, copy);
+        assertEquals(d4, copy.getPosition());
+        FusedPiece fusedCopy = (FusedPiece) copy;
+        assertNotSame(fused.getFirst(), fusedCopy.getFirst());
+        assertNotSame(fused.getSecond(), fusedCopy.getSecond());
+        assertEquals(fused.getFirst().getClass(), fusedCopy.getFirst().getClass());
+        assertEquals(fused.getSecond().getClass(), fusedCopy.getSecond().getClass());
+    }
+
+    @Test
+    void getLegalMoves_should_not_throw_for_fused_piece() {
+        // Regression: Piece#clone reflectively picks a (Color) constructor and used to
+        // blow up on FusedPiece, crashing getLegalMoves as soon as the self-check
+        // detection kicked in.
+        Knight knight = new Knight(Color.WHITE);
+        board.add(knight, c3);
+        Bishop bishop = new Bishop(Color.WHITE);
+        board.add(bishop, d4);
+        card.playOn(board, new PieceToPositionCardParam(knight, d4));
+
+        FusedPiece fused = (FusedPiece) board.at(d4).getPiece().orElseThrow();
+
+        assertDoesNotThrow(() -> board.getLegalMoves(fused));
+    }
+
+    @Test
     void should_reject_fusing_onto_empty_square() {
         Knight knight = new Knight(Color.WHITE);
         board.add(knight, c3);

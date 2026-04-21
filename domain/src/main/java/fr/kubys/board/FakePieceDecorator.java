@@ -74,4 +74,12 @@ public class FakePieceDecorator extends Piece {
     public boolean isKing() {
         return fakePiece.isKing();
     }
+
+    @Override
+    public Piece clone() {
+        // Internal decorator used only during check-detection recursion.
+        // It is guarded by `instanceof FakePieceDecorator` wherever it matters;
+        // cloning it would indicate a bug elsewhere.
+        throw new UnsupportedOperationException("FakePieceDecorator must not be cloned");
+    }
 }

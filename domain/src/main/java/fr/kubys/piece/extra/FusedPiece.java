@@ -71,4 +71,11 @@ public class FusedPiece extends Piece implements Promotable {
         String secondName = second.getClass().getSimpleName();
         return "%s Fused(%s+%s)".formatted(colorStr, firstName, secondName);
     }
+
+    @Override
+    public Piece clone() {
+        FusedPiece copy = new FusedPiece(first.clone(), second.clone());
+        copyMetadataTo(copy);
+        return copy;
+    }
 }
