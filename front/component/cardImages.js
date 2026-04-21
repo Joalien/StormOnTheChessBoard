@@ -89,6 +89,7 @@ const cardImages = {
     StateVisitCard: require('../assets/images/cards/implemented/StateVisitCard.png'),
     SuicideKnightCard: require('../assets/images/cards/implemented/SuicideKnightCard.png'),
     SwapYourKnightsCard: require('../assets/images/cards/implemented/SwapYourKnightsCard.png'),
+    TrailerCard: require('../assets/images/cards/implemented/TrailerCard.png'),
     UrbanPlanningCard: require('../assets/images/cards/implemented/UrbanPlanningCard.png'),
     VampirismCard: require('../assets/images/cards/implemented/VampirismCard.png'),
     YouOnlyLiveTwiceCard: require('../assets/images/cards/implemented/YouOnlyLiveTwiceCard.png'),
