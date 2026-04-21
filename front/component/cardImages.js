@@ -46,6 +46,7 @@ const cardImages = {
     InfiltrationCard: require('../assets/images/cards/implemented/InfiltrationCard.png'),
     KangarooCard: require('../assets/images/cards/implemented/KangarooCard.png'),
     LaserCard: require('../assets/images/cards/implemented/LaserCard.png'),
+    LeapfrogCard: require('../assets/images/cards/implemented/LeapfrogCard.png'),
     LightweightSquadCard: require('../assets/images/cards/implemented/LightweightSquadCard.png'),
     MadHorseDiseaseCard: require('../assets/images/cards/implemented/MadHorseDiseaseCard.png'),
     MadHouseCard: require('../assets/images/cards/implemented/MadHouseCard.png'),
