@@ -48,6 +48,15 @@ export function useGameActions({base, gameId, fetchGame, setSelectedCard, setSel
         else await showErrorMessage(res);
     }
 
+    async function shuffle() {
+        const res = await fetch(base + gameId + "/shuffle", {method: 'POST'});
+        if (res.ok) {
+            setSelectedCard(null);
+            setSelectedParam(null);
+            fetchGame();
+        } else await showErrorMessage(res);
+    }
+
     function onPieceDragBegin(piece, sourceSquare) {
         fetch(base + gameId + "/legalMoves/" + sourceSquare)
             .then(res => res.json())
@@ -59,5 +68,5 @@ export function useGameActions({base, gameId, fetchGame, setSelectedCard, setSel
         setLegalMoves([]);
     }
 
-    return {movePiece, playCard, endTurn, undo, promote, onPieceDragBegin, onPieceDragEnd};
+    return {movePiece, playCard, endTurn, undo, promote, shuffle, onPieceDragBegin, onPieceDragEnd};
 }

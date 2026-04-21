@@ -216,6 +216,12 @@ public class GameStateController implements ChessBoardService {
     }
 
     @Override
+    public void shuffleHand() {
+        assertGameHasAlreadyStarted();
+        deck.shuffleAndRedeal(getCurrentPlayer(), NUMBER_OF_CARDS_IN_HAND);
+    }
+
+    @Override
     public Set<Position> getLegalMoves(Position position) {
         Piece piece = chessBoard.at(position).getPiece()
                 .orElseThrow(() -> new IllegalArgumentException("No piece on %s".formatted(position)));

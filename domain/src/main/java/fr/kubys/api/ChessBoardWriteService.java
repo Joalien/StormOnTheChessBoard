@@ -15,4 +15,6 @@ public interface ChessBoardWriteService {
     void tryToPass();
 
     void promote(Position position, PromotionPiece piece);
+
+    void shuffleHand();
 }

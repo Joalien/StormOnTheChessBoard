@@ -103,6 +103,14 @@ public class GameController {
                 .collect(Collectors.toSet());
     }
 
+    @PostMapping("/{gameId}/shuffle")
+    public ResponseEntity<Void> shuffle(@PathVariable Integer gameId) {
+        ShuffleCommand shuffleCommand = ShuffleCommand.builder().gameId(gameId).build();
+        chessBoardRepository.saveCommand(shuffleCommand);
+        gameNotifier.notifyGame(gameId);
+        return ResponseEntity.ok().build();
+    }
+
     @PostMapping("/{gameId}/move/{from}/to/{to}")
     public ResponseEntity<Void> move(@PathVariable Integer gameId, @PathVariable String from, @PathVariable String to) {
         Command command = PlayMoveCommand.builder()

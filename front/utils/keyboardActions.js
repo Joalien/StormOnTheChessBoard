@@ -19,5 +19,9 @@ export function resolveKeyAction(e, {gameId, myColor, currentPlayerColor, select
         return 'undo';
     }
 
+    if (e.key === 'S' && e.shiftKey) {
+        return 'shuffle';
+    }
+
     return null;
 }

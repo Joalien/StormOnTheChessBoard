@@ -127,6 +127,16 @@ const globalCSS = `
     box-shadow: 0 4px 12px rgba(248,81,73,0.15);
   }
 
+  .sotc-btn-shuffle {
+    border-color: rgba(56,189,248,0.3);
+    color: #38bdf8;
+  }
+  .sotc-btn-shuffle:hover {
+    background: rgba(56,189,248,0.1);
+    border-color: rgba(56,189,248,0.5);
+    box-shadow: 0 4px 12px rgba(56,189,248,0.2);
+  }
+
   .sotc-panel {
     background: rgba(22,27,34,0.85);
     border: 1px solid rgba(255,255,255,0.07);
@@ -512,6 +522,7 @@ export default function App() {
             if (action === 'playCard') playCard();
             else if (action === 'endTurn') endTurn();
             else if (action === 'undo') undo();
+            else if (action === 'shuffle') shuffle();
         }
         window.addEventListener('keydown', onKeyDown, true);
         return () => window.removeEventListener('keydown', onKeyDown, true);
@@ -611,7 +622,7 @@ export default function App() {
             });
     }
 
-    const {movePiece, playCard, endTurn, undo, promote, onPieceDragBegin, onPieceDragEnd} = useGameActions({
+    const {movePiece, playCard, endTurn, undo, promote, shuffle, onPieceDragBegin, onPieceDragEnd} = useGameActions({
         base, gameId, fetchGame, setSelectedCard, setSelectedParam,
         setCurrentPlayerColor, currentPlayerColor, selectedCard, setLegalMoves, showErrorMessage,
     });
@@ -1071,6 +1082,10 @@ export default function App() {
                         <button className="sotc-btn sotc-btn-danger" style={{flex: 1, padding: '10px 13px 8px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '2px'}} onClick={undo} disabled={!isMyTurn}>
                             <span>↩ Annuler</span>
                             <span style={{fontSize: '9px', opacity: 0.5, fontWeight: 400}}>Ctrl+Z</span>
+                        </button>
+                        <button className="sotc-btn sotc-btn-shuffle" style={{flex: 1, padding: '10px 13px 8px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '2px'}} onClick={shuffle} disabled={!isMyTurn}>
+                            <span>⟳ Mélanger</span>
+                            <span style={{fontSize: '9px', opacity: 0.5, fontWeight: 400}}>Shift+S</span>
                         </button>
                     </div>
 

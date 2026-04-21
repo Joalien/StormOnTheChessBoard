@@ -87,6 +87,34 @@ class GameStateControllerTest {
         assertEquals(1, gameStateController.getCurrentPlayer().getCards().size());
     }
 
+    @Test
+    void should_shuffle_hand_at_beginning_of_turn() {
+        var oldCards = new java.util.ArrayList<>(gameStateController.getCurrentPlayer().getCards());
+        assertEquals(StateEnum.BEGINNING_OF_THE_TURN, gameStateController.getCurrentState());
+
+        assertDoesNotThrow(() -> gameStateController.shuffleHand());
+
+        assertEquals(5, gameStateController.getCurrentPlayer().getCards().size());
+        assertEquals(StateEnum.BEGINNING_OF_THE_TURN, gameStateController.getCurrentState());
+    }
+
+    @Test
+    void should_shuffle_hand_after_move() {
+        gameStateController.tryToMove(e2, e4);
+        assertEquals(StateEnum.MOVE_WITHOUT_CARD_PLAYED, gameStateController.getCurrentState());
+
+        assertDoesNotThrow(() -> gameStateController.shuffleHand());
+
+        assertEquals(5, gameStateController.getCurrentPlayer().getCards().size());
+        assertEquals(StateEnum.MOVE_WITHOUT_CARD_PLAYED, gameStateController.getCurrentState());
+    }
+
+    @Test
+    void should_not_shuffle_if_game_not_started() {
+        var controller = new GameStateController();
+        assertThrows(IllegalStateException.class, controller::shuffleHand);
+    }
+
     private void add_2_cards_in_discard() {
         Card<LightweightSquadCardParam> card1 = new LightweightSquadCard();
         Card<KnightCardParam> card2 = new KangarooCard();

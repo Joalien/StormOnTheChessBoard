@@ -8,6 +8,7 @@ import fr.kubys.player.Player;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.IntStream;
 
 public class CardDeck {
 
@@ -32,6 +33,15 @@ public class CardDeck {
     void discardAndDraw(Card<? extends CardParam> card, Player player) {
         discard.add(card);
         dealCard(player);
+    }
+
+    void shuffleAndRedeal(Player player, int numberOfCards) {
+        discard.addAll(player.getCards());
+        player.getCards().clear();
+        stack.addAll(discard);
+        discard.clear();
+        Collections.shuffle(stack);
+        IntStream.range(0, numberOfCards).forEach(i -> dealCard(player));
     }
 
     List<Card<? extends CardParam>> getStack() {
