@@ -180,6 +180,30 @@ class LegalMovesTest {
             assertFalse(moves.contains(a3));
             assertFalse(moves.contains(c3));
         }
+
+        @Test
+        void tryToMove_still_allows_self_check_moves_for_card_scenarios() {
+            // White rook on e2 is pinned by black rook on e7
+            // getLegalMoves filters it, but tryToMove must still allow it
+            // (player may play an AFTER_TURN card to resolve the check)
+            Rock whiteRook = new Rock(Color.WHITE);
+            board.add(whiteRook, e2);
+            board.add(new Rock(Color.BLACK), e7);
+
+            assertFalse(board.getLegalMoves(whiteRook).contains(d2)); // filtered
+
+            assertDoesNotThrow(() -> board.tryToMove(whiteRook, d2)); // but still executable
+        }
+
+        @Test
+        void tryToMove_allows_king_to_move_into_attacked_square() {
+            board.add(new Rock(Color.BLACK), f8);
+            King whiteKing = (King) board.at(e1).getPiece().get();
+
+            assertFalse(board.getLegalMoves(whiteKing).contains(f1)); // filtered
+
+            assertDoesNotThrow(() -> board.tryToMove(whiteKing, f1)); // but still executable
+        }
     }
 
     @Nested

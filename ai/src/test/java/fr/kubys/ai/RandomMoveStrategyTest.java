@@ -9,6 +9,7 @@ import fr.kubys.core.Position;
 import fr.kubys.game.ChessBoardServiceFactory;
 import fr.kubys.game.GameStateController;
 import fr.kubys.piece.King;
+import fr.kubys.piece.Rock;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -85,5 +86,35 @@ class RandomMoveStrategyTest {
                 !move1.getFrom().equals(move2.getFrom()) || !move1.getTo().equals(move2.getTo()),
                 "Different seeds should produce different moves"
         );
+    }
+
+    @Test
+    void should_never_pick_a_move_that_leaves_king_in_check() {
+        // White king on e1, black rook on e7 gives check on e-file
+        // White rook on d1 is the only piece that can block (d1->e2 is not blocking, but moving elsewhere is illegal)
+        // Run many seeds to ensure no illegal move is ever picked
+        for (int seed = 0; seed < 100; seed++) {
+            ChessBoard board = ChessBoard.createEmpty();
+            board.add(new King(Color.WHITE), e1);
+            board.add(new King(Color.BLACK), h8);
+            board.add(new Rock(Color.BLACK), e7);
+            // White rook can block on e-file or move off it (exposing king)
+            board.add(new Rock(Color.WHITE), d2);
+            board.setTurn(Color.WHITE);
+
+            var gsc = (GameStateController) ChessBoardServiceFactory.newChessBoardService(() -> board);
+            gsc.startGame(1L);
+
+            RandomMoveStrategy strategy = new RandomMoveStrategy(new Random(seed));
+            List<Command> commands = strategy.decideMove(1, gsc);
+
+            if (commands.size() == 2) {
+                PlayMoveCommand move = (PlayMoveCommand) commands.get(0);
+                // Verify move doesn't leave king in check
+                Set<Position> legal = gsc.getLegalMoves(move.getFrom());
+                assertTrue(legal.contains(move.getTo()),
+                        "Seed %d: move %s->%s should be legal".formatted(seed, move.getFrom(), move.getTo()));
+            }
+        }
     }
 }
