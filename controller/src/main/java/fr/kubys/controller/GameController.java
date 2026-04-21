@@ -126,11 +126,7 @@ public class GameController {
         EndTurnCommand endTurnCommand = EndTurnCommand.builder().gameId(gameId).build();
         chessBoardRepository.saveCommand(endTurnCommand);
         gameNotifier.notifyGame(gameId);
-
-        if (aiGameService.playIfAiTurn(gameId)) {
-            gameNotifier.notifyGame(gameId);
-        }
-
+        aiGameService.schedulePlayIfAiTurn(gameId, () -> gameNotifier.notifyGame(gameId));
         return ResponseEntity.ok().build();
     }
 

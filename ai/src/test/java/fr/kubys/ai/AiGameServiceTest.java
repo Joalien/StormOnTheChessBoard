@@ -32,7 +32,8 @@ class AiGameServiceTest {
 
     @BeforeEach
     void setUp() {
-        aiGameService = new AiGameService(chessBoardRepository);
+        // Synchronous executor: schedulePlayIfAiTurn runs in-caller thread, deterministic.
+        aiGameService = new AiGameService(chessBoardRepository, Runnable::run);
     }
 
     @Test
@@ -70,6 +71,65 @@ class AiGameServiceTest {
         assertTrue(aiGameService.playIfAiTurn(1));
         verify(chessBoardRepository).saveCommand(expectedCommands.get(0));
         verify(chessBoardRepository).saveCommand(expectedCommands.get(1));
+    }
+
+    @Test
+    void schedule_runs_after_commit_callback_when_ai_plays() {
+        List<Command> aiCommands = List.of(
+                PlayMoveCommand.builder().gameId(1).from(Position.e7).to(Position.e5).build(),
+                EndTurnCommand.builder().gameId(1).build()
+        );
+        AiStrategy strategy = (gameId, state) -> aiCommands;
+        aiGameService.registerAiGame(1, Color.BLACK, strategy);
+
+        Player blackAi = new Player("AI", Color.BLACK);
+        when(chessBoardRepository.getChessBoardService(1)).thenReturn(boardState);
+        when(boardState.getCurrentPlayer()).thenReturn(blackAi);
+
+        Runnable afterCommit = mock(Runnable.class);
+        aiGameService.schedulePlayIfAiTurn(1, afterCommit);
+
+        verify(chessBoardRepository).saveCommand(aiCommands.get(0));
+        verify(chessBoardRepository).saveCommand(aiCommands.get(1));
+        verify(afterCommit).run();
+    }
+
+    @Test
+    void schedule_does_not_run_after_commit_when_not_ai_game() {
+        Runnable afterCommit = mock(Runnable.class);
+        aiGameService.schedulePlayIfAiTurn(1, afterCommit);
+
+        verify(afterCommit, never()).run();
+        verifyNoInteractions(chessBoardRepository);
+    }
+
+    @Test
+    void schedule_does_not_run_after_commit_when_not_ai_turn() {
+        aiGameService.registerAiGame(1, Color.BLACK, (id, state) -> List.of());
+        Player whiteHuman = new Player("Human", Color.WHITE);
+        when(chessBoardRepository.getChessBoardService(1)).thenReturn(boardState);
+        when(boardState.getCurrentPlayer()).thenReturn(whiteHuman);
+
+        Runnable afterCommit = mock(Runnable.class);
+        aiGameService.schedulePlayIfAiTurn(1, afterCommit);
+
+        verify(afterCommit, never()).run();
+        verify(chessBoardRepository, never()).saveCommand(any());
+    }
+
+    @Test
+    void schedule_swallows_strategy_exception() {
+        AiStrategy failing = (gameId, state) -> { throw new RuntimeException("boom"); };
+        aiGameService.registerAiGame(1, Color.BLACK, failing);
+        Player blackAi = new Player("AI", Color.BLACK);
+        when(chessBoardRepository.getChessBoardService(1)).thenReturn(boardState);
+        when(boardState.getCurrentPlayer()).thenReturn(blackAi);
+
+        Runnable afterCommit = mock(Runnable.class);
+        // Should not throw to the caller even if the strategy blows up.
+        aiGameService.schedulePlayIfAiTurn(1, afterCommit);
+
+        verify(afterCommit, never()).run();
     }
 
     @Test
