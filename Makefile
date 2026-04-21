@@ -21,7 +21,7 @@ notifier:
 
 back:
 	@-pkill -f "spring-boot:run" 2>/dev/null
-	@mvn -N install -q && mvn -pl domain,repository,matchmaking install -DskipTests -q && mvn -pl controller spring-boot:run &
+	@mvn -N install -q && mvn -pl domain,repository,matchmaking,ai install -DskipTests -q && mvn -pl controller spring-boot:run &
 	@echo "Backend starting in background (port 9000)"
 
 up: .env back

@@ -1,4 +1,4 @@
-export function HomeScreen({onPlaySolo, onMatchmaking, stats}) {
+export function HomeScreen({onPlaySolo, onMatchmaking, onPlayAi, stats}) {
     return (
         <div style={{
             minHeight: '100vh',
@@ -99,6 +99,20 @@ export function HomeScreen({onPlaySolo, onMatchmaking, stats}) {
                         onClick={onMatchmaking}
                     >
                         Jouer !
+                    </button>
+                    <button
+                        className="sotc-btn"
+                        style={{
+                            width: '100%',
+                            padding: '18px',
+                            fontSize: '17px',
+                            letterSpacing: '0.5px',
+                            borderColor: 'rgba(167,139,250,0.3)',
+                            color: '#a78bfa',
+                        }}
+                        onClick={onPlayAi}
+                    >
+                        Jouer contre une IA
                     </button>
                     <button
                         className="sotc-btn"

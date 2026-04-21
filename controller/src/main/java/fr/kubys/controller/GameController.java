@@ -1,7 +1,10 @@
 package fr.kubys.controller;
 
+import fr.kubys.ai.AiGameService;
+import fr.kubys.ai.RandomMoveStrategy;
 import fr.kubys.card.params.CardParam;
 import fr.kubys.command.*;
+import fr.kubys.core.Color;
 import fr.kubys.core.Position;
 import fr.kubys.dto.ChessBoardDto;
 import fr.kubys.piece.PromotionPiece;
@@ -25,11 +28,13 @@ public class GameController {
 
     ChessBoardRepository chessBoardRepository;
     GameNotifier gameNotifier;
+    AiGameService aiGameService;
 
     @Autowired
-    public GameController(ChessBoardRepository chessBoardRepository, GameNotifier gameNotifier) {
+    public GameController(ChessBoardRepository chessBoardRepository, GameNotifier gameNotifier, AiGameService aiGameService) {
         this.chessBoardRepository = chessBoardRepository;
         this.gameNotifier = gameNotifier;
+        this.aiGameService = aiGameService;
         createInitialState(); // FIXME remove me later on
     }
 
@@ -49,11 +54,23 @@ public class GameController {
         return new ResponseEntity<>(chessBoardRepository.createNewGame(), HttpStatus.CREATED);
     }
 
+    @PostMapping("/ai")
+    public ResponseEntity<Map<String, Object>> startAiGame() {
+        Integer gameId = chessBoardRepository.createNewGame();
+        aiGameService.registerAiGame(gameId, Color.BLACK, new RandomMoveStrategy());
+        return new ResponseEntity<>(Map.of("gameId", gameId, "color", "white"), HttpStatus.CREATED);
+    }
+
     @PostMapping("/{gameId}/endTurn")
     public ResponseEntity<Integer> endTurn(@PathVariable Integer gameId) {
         EndTurnCommand endTurnCommand = EndTurnCommand.builder().gameId(gameId).build();
         chessBoardRepository.saveCommand(endTurnCommand);
         gameNotifier.notifyGame(gameId);
+
+        if (aiGameService.playIfAiTurn(gameId)) {
+            gameNotifier.notifyGame(gameId);
+        }
+
         return ResponseEntity.ok().build();
     }
 

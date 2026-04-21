@@ -559,6 +559,13 @@ export default function App() {
             .catch(err => alert(err));
     }
 
+    function playAgainstAi() {
+        fetch(backendOrigin + '/api/chessboard/ai', {method: 'POST'})
+            .then(res => res.json())
+            .then(data => navigateToGame(data.gameId, data.color))
+            .catch(err => alert(err));
+    }
+
     useEffect(() => {
         function onBeforeUnload() {
             if (matchmakingTokenRef.current) {
@@ -704,7 +711,7 @@ export default function App() {
         return (
             <>
                 <ToastContainer position="top-right" closeOnClick pauseOnFocusLoss draggable pauseOnHover autoClose={3500} />
-                <HomeScreen onPlaySolo={startNewGame} onMatchmaking={matchmaking} stats={matchmakingStats} />
+                <HomeScreen onPlaySolo={startNewGame} onMatchmaking={matchmaking} onPlayAi={playAgainstAi} stats={matchmakingStats} />
             </>
         );
     }
