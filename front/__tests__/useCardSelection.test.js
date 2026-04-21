@@ -388,6 +388,53 @@ describe('useCardSelection', () => {
         expect(result.current.barricadeEdges).toHaveLength(2);
     });
 
+    // ── List params (Leapfrog / SerialKiller) ──
+
+    test('list param: right-clicks accumulate positions in array', () => {
+        const {result} = setup([], {state: 'BEGINNING_OF_THE_TURN'});
+        const card = {englishName: 'LeapfrogCard', param: {pawn: null, positions: []}, type: 'REPLACE_TURN', listParams: ['positions']};
+
+        act(() => result.current.showCard(card));
+        expect(result.current.selectedParam).toBe('pawn');
+
+        act(() => result.current.onSquareRightClick('d2'));
+        expect(result.current.selectedCard.param.pawn).toBe('d2');
+        expect(result.current.selectedParam).toBe('positions');
+
+        act(() => result.current.onSquareRightClick('f4'));
+        expect(result.current.selectedCard.param.positions).toEqual(['f4']);
+        expect(result.current.selectedParam).toBe('positions');
+
+        act(() => result.current.onSquareRightClick('h6'));
+        expect(result.current.selectedCard.param.positions).toEqual(['f4', 'h6']);
+    });
+
+    test('list param: right-clicking same square removes it', () => {
+        const {result} = setup([], {state: 'BEGINNING_OF_THE_TURN'});
+        const card = {englishName: 'LeapfrogCard', param: {pawn: null, positions: []}, type: 'REPLACE_TURN', listParams: ['positions']};
+
+        act(() => result.current.showCard(card));
+        act(() => result.current.onSquareRightClick('d2'));
+        act(() => result.current.onSquareRightClick('f4'));
+        act(() => result.current.onSquareRightClick('h6'));
+        act(() => result.current.onSquareRightClick('f4'));
+
+        expect(result.current.selectedCard.param.positions).toEqual(['h6']);
+    });
+
+    test('list param: selectedParam stays on list after scalar params filled', () => {
+        const {result} = setup([], {state: 'BEGINNING_OF_THE_TURN'});
+        const card = {englishName: 'LeapfrogCard', param: {pawn: null, positions: []}, type: 'REPLACE_TURN', listParams: ['positions']};
+
+        act(() => result.current.showCard(card));
+        act(() => result.current.onSquareRightClick('d2'));
+
+        expect(result.current.selectedParam).toBe('positions');
+
+        act(() => result.current.onSquareRightClick('f4'));
+        expect(result.current.selectedParam).toBe('positions');
+    });
+
     // ── Playable card types ──
 
     test('BEGINNING_OF_THE_TURN allows BEFORE_TURN and REPLACE_TURN', () => {

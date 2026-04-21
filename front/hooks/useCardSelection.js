@@ -4,6 +4,10 @@ function isBarricadeCard(card) {
     return card && card.englishName === 'BarricadeCard';
 }
 
+function isListParam(card, key) {
+    return card && card.listParams && card.listParams.includes(key);
+}
+
 function firstUnsetParam(card) {
     if (!card || !card.param) return null;
     if (isBarricadeCard(card)) {
@@ -13,7 +17,11 @@ function firstUnsetParam(card) {
         if (card.param.to2 === null) return 'to2';
         return null;
     }
-    return Object.keys(card.param).find(k => card.param[k] === null) || null;
+    // Scalar params that are still null
+    const unsetScalar = Object.keys(card.param).find(k => !isListParam(card, k) && card.param[k] === null);
+    if (unsetScalar) return unsetScalar;
+    // If all scalars are set, select the first list param (always accepts more clicks)
+    return Object.keys(card.param).find(k => isListParam(card, k)) || null;
 }
 
 export function useCardSelection(effects, currentState, myColor, currentPlayerColor) {
@@ -88,8 +96,16 @@ export function useCardSelection(effects, currentState, myColor, currentPlayerCo
         if (selectedCard && selectedParam && isSelectedCardPlayable() && !isBarricadeCard(selectedCard)
             && !(selectedCard.enumOptions && selectedCard.enumOptions[selectedParam])) {
             const newParam = {...selectedCard.param};
-            if (newParam[selectedParam] === square) newParam[selectedParam] = null;
-            else newParam[selectedParam] = square;
+            if (isListParam(selectedCard, selectedParam)) {
+                const list = [...(newParam[selectedParam] || [])];
+                const idx = list.indexOf(square);
+                if (idx >= 0) list.splice(idx, 1);
+                else list.push(square);
+                newParam[selectedParam] = list;
+            } else {
+                if (newParam[selectedParam] === square) newParam[selectedParam] = null;
+                else newParam[selectedParam] = square;
+            }
             const updated = {...selectedCard, param: newParam};
             setSelectedCard(updated);
             setSelectedParam(firstUnsetParam(updated));

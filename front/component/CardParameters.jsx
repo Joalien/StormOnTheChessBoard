@@ -78,6 +78,7 @@ const PARAM_LABELS = {
     pawn1: 'Pion 1',
     pawn2: 'Pion 2',
     pawns: 'Pions',
+    positions: 'Cases de saut',
     position1: 'Position 1',
     position2: 'Position 2',
     direction: 'Direction',
@@ -99,7 +100,10 @@ const ENUM_LABELS = {
 export function CardParameters({card, selectedParam, setSelectedParam, playCardCallback, barricadeEdges, setBarricadeEdges, isPlayable = true, onEnumSelect}) {
     const hasImage = card.englishName in cardImages;
     const paramKeys = Object.keys(card.param || {});
-    const allParamsSet = !Object.values(card.param || {}).some(x => x === null);
+    const listParams = card.listParams || [];
+    const allParamsSet = paramKeys.every(k =>
+        listParams.includes(k) ? Array.isArray(card.param[k]) && card.param[k].length > 0 : card.param[k] !== null
+    );
     const typeLabel = TYPE_LABELS[card.type] || card.type;
     const barricade = isBarricadeCard(card);
 
@@ -162,7 +166,8 @@ export function CardParameters({card, selectedParam, setSelectedParam, playCardC
                     ) : (
                         paramKeys.map((key, i) => {
                             const value = card.param[key];
-                            const isSet = value !== null;
+                            const isList = listParams.includes(key);
+                            const isSet = isList ? Array.isArray(value) && value.length > 0 : value !== null;
                             const isActive = selectedParam === key;
                             const isEnum = card.enumOptions && card.enumOptions[key];
                             return (
@@ -170,12 +175,12 @@ export function CardParameters({card, selectedParam, setSelectedParam, playCardC
                                     key={i}
                                     className={`param-row${isActive ? ' active' : ''}`}
                                     onClick={() => {
-                                        if (isSet && !isEnum) {
+                                        if (!isList && isSet && !isEnum) {
                                             card.param[key] = null;
                                             setSelectedParam(key);
                                         }
                                     }}
-                                    style={isSet && !isEnum ? {cursor: 'pointer'} : {cursor: 'default'}}
+                                    style={!isList && isSet && !isEnum ? {cursor: 'pointer'} : {cursor: 'default'}}
                                 >
                                     <div style={{
                                         width: '8px', height: '8px', borderRadius: '50%', flexShrink: 0,
@@ -201,6 +206,28 @@ export function CardParameters({card, selectedParam, setSelectedParam, playCardC
                                                         {ENUM_LABELS[option] || option}
                                                     </button>
                                                 ))}
+                                            </div>
+                                        ) : isList ? (
+                                            <div style={{fontSize: '11px', fontFamily: 'monospace', letterSpacing: '0.3px'}}>
+                                                {isSet ? (
+                                                    <div style={{display: 'flex', flexWrap: 'wrap', gap: '4px', marginTop: '4px'}}>
+                                                        {value.map((pos, j) => (
+                                                            <span key={j} style={{
+                                                                color: '#d4a843',
+                                                                background: 'rgba(212,168,67,0.1)',
+                                                                padding: '2px 6px',
+                                                                borderRadius: '4px',
+                                                                border: '1px solid rgba(212,168,67,0.3)',
+                                                            }}>
+                                                                {pos}
+                                                            </span>
+                                                        ))}
+                                                    </div>
+                                                ) : (
+                                                    <span style={{color: isActive ? '#8b949e' : '#484f58'}}>
+                                                        {isActive ? 'clic droit pour ajouter...' : '—'}
+                                                    </span>
+                                                )}
                                             </div>
                                         ) : (
                                             <div style={{
