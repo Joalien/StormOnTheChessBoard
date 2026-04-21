@@ -13,6 +13,7 @@ public class CrossContextArchitectureIT {
             "..board..", "..piece..", "..card..", "..game..", "..player..", "..repository.."
     };
     private static final String MATCHMAKING = "..matchmaking..";
+    private static final String AI = "..ai..";
 
     private static final JavaClasses classes = new ClassFileImporter().importPackages("fr.kubys");
     ArchRule rule;
@@ -29,6 +30,20 @@ public class CrossContextArchitectureIT {
         rule = ArchRuleDefinition.noClasses()
                 .that().resideInAPackage(MATCHMAKING)
                 .should().dependOnClassesThat().resideInAnyPackage(CHESS_PACKAGES);
+    }
+
+    @Test
+    void ai_should_not_depend_on_matchmaking() {
+        rule = ArchRuleDefinition.noClasses()
+                .that().resideInAPackage(AI)
+                .should().dependOnClassesThat().resideInAPackage(MATCHMAKING);
+    }
+
+    @Test
+    void matchmaking_should_not_depend_on_ai() {
+        rule = ArchRuleDefinition.noClasses()
+                .that().resideInAPackage(MATCHMAKING)
+                .should().dependOnClassesThat().resideInAPackage(AI);
     }
 
     @AfterEach

@@ -140,7 +140,7 @@ class LegalMovesTest {
     @Nested
     class CheckFiltering {
         @Test
-        void piece_can_move_even_if_it_exposes_king_to_check() {
+        void pinned_piece_cannot_move_off_pin_line() {
             // White rook on e2 is pinned by black rook on e7
             Rock whiteRook = new Rock(Color.WHITE);
             board.add(whiteRook, e2);
@@ -148,21 +148,61 @@ class LegalMovesTest {
 
             Set<Position> moves = board.getLegalMoves(whiteRook);
 
-            // Rook can move anywhere it can attack, including off the pin line
-            assertTrue(moves.contains(e3));
+            assertTrue(moves.contains(e3)); // stays on pin line
             assertTrue(moves.contains(e7)); // can capture the attacker
-            assertTrue(moves.contains(d2)); // allowed even if it exposes king
+            assertFalse(moves.contains(d2)); // would expose king to check
         }
 
         @Test
-        void king_can_move_into_check() {
+        void king_cannot_move_into_check() {
             board.add(new Rock(Color.BLACK), f8);
             King whiteKing = (King) board.at(e1).getPiece().get();
 
             Set<Position> moves = board.getLegalMoves(whiteKing);
 
-            assertTrue(moves.contains(f1)); // attacked by rook on f8, but allowed
-            assertTrue(moves.contains(f2)); // attacked by rook on f8, but allowed
+            assertFalse(moves.contains(f1)); // attacked by rook on f8
+            assertFalse(moves.contains(f2)); // attacked by rook on f8
+            assertTrue(moves.contains(d1)); // safe square
+            assertTrue(moves.contains(d2)); // safe square
+        }
+
+        @Test
+        void when_in_check_only_moves_that_escape_check_are_legal() {
+            // Black rook gives check on e-file
+            board.add(new Rock(Color.BLACK), e7);
+            Knight knight = new Knight(Color.WHITE);
+            board.add(knight, b1);
+
+            Set<Position> moves = board.getLegalMoves(knight);
+
+            // Knight cannot block the check on e-file, and cannot capture e7
+            // Only moves that resolve the check are legal — none for this knight
+            assertFalse(moves.contains(a3));
+            assertFalse(moves.contains(c3));
+        }
+
+        @Test
+        void tryToMove_still_allows_self_check_moves_for_card_scenarios() {
+            // White rook on e2 is pinned by black rook on e7
+            // getLegalMoves filters it, but tryToMove must still allow it
+            // (player may play an AFTER_TURN card to resolve the check)
+            Rock whiteRook = new Rock(Color.WHITE);
+            board.add(whiteRook, e2);
+            board.add(new Rock(Color.BLACK), e7);
+
+            assertFalse(board.getLegalMoves(whiteRook).contains(d2)); // filtered
+
+            assertDoesNotThrow(() -> board.tryToMove(whiteRook, d2)); // but still executable
+        }
+
+        @Test
+        void tryToMove_allows_king_to_move_into_attacked_square() {
+            board.add(new Rock(Color.BLACK), f8);
+            King whiteKing = (King) board.at(e1).getPiece().get();
+
+            assertFalse(board.getLegalMoves(whiteKing).contains(f1)); // filtered
+
+            assertDoesNotThrow(() -> board.tryToMove(whiteKing, f1)); // but still executable
         }
     }
 

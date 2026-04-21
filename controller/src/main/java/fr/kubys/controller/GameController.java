@@ -1,14 +1,19 @@
 package fr.kubys.controller;
 
+import fr.kubys.ai.*;
 import fr.kubys.card.params.CardParam;
 import fr.kubys.command.*;
+import fr.kubys.core.Color;
 import fr.kubys.core.Position;
 import fr.kubys.dto.ChessBoardDto;
 import fr.kubys.piece.PromotionPiece;
 import fr.kubys.repository.ChessBoardRepository;
 import fr.kubys.repository.GamePresets;
 import fr.kubys.websocket.GameNotifier;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -23,14 +28,72 @@ import static fr.kubys.mapper.OutputMapper.mapToDto;
 @RequestMapping("/api/chessboard")
 public class GameController {
 
+    private static final Logger log = LoggerFactory.getLogger(GameController.class);
+
     ChessBoardRepository chessBoardRepository;
     GameNotifier gameNotifier;
+    AiGameService aiGameService;
+    AiStrategy defaultStrategy;
 
     @Autowired
-    public GameController(ChessBoardRepository chessBoardRepository, GameNotifier gameNotifier) {
+    public GameController(ChessBoardRepository chessBoardRepository, GameNotifier gameNotifier, AiGameService aiGameService,
+                          @Value("${stockfish.path:}") String stockfishPath) {
         this.chessBoardRepository = chessBoardRepository;
         this.gameNotifier = gameNotifier;
+        this.aiGameService = aiGameService;
+        this.defaultStrategy = createDefaultStrategy(stockfishPath);
         createInitialState(); // FIXME remove me later on
+    }
+
+    private AiStrategy createDefaultStrategy(String stockfishPath) {
+        String resolvedPath = resolveStockfishPath(stockfishPath);
+        if (resolvedPath != null) {
+            log.info("Using Fairy-Stockfish at {} with MaterialStrategy fallback", resolvedPath);
+            return new StockfishStrategy(resolvedPath, new MaterialStrategy());
+        }
+        log.info("Stockfish not found, using MaterialStrategy");
+        return new MaterialStrategy();
+    }
+
+    private AiStrategy resolveStrategy(String name) {
+        if (name == null) return defaultStrategy;
+        return switch (name.toLowerCase()) {
+            case "random" -> new RandomMoveStrategy();
+            case "material" -> new MaterialStrategy();
+            default -> defaultStrategy;
+        };
+    }
+
+    private String resolveStockfishPath(String configuredPath) {
+        if (configuredPath != null && !configuredPath.isBlank() && new java.io.File(configuredPath).canExecute()) {
+            return configuredPath;
+        }
+        try {
+            var resource = getClass().getClassLoader().getResource("bin/fairy-stockfish");
+            if (resource == null) return null;
+
+            if ("file".equals(resource.getProtocol())) {
+                java.io.File file = new java.io.File(resource.toURI());
+                if (file.canExecute()) return file.getAbsolutePath();
+                if (file.setExecutable(true) && file.canExecute()) return file.getAbsolutePath();
+                return null;
+            }
+
+            // Resource is inside a jar (typical for spring-boot:run / packaged jar).
+            // Extract it to a temp file so it can be executed.
+            java.io.File tmp = java.io.File.createTempFile("fairy-stockfish-", "");
+            tmp.deleteOnExit();
+            try (var in = resource.openStream()) {
+                java.nio.file.Files.copy(in, tmp.toPath(), java.nio.file.StandardCopyOption.REPLACE_EXISTING);
+            }
+            if (tmp.setExecutable(true) && tmp.canExecute()) {
+                log.info("Extracted Fairy-Stockfish from classpath to {}", tmp.getAbsolutePath());
+                return tmp.getAbsolutePath();
+            }
+        } catch (Exception e) {
+            log.warn("Could not resolve classpath stockfish: {}", e.getMessage());
+        }
+        return null;
     }
 
     private void createInitialState() {
@@ -49,11 +112,25 @@ public class GameController {
         return new ResponseEntity<>(chessBoardRepository.createNewGame(), HttpStatus.CREATED);
     }
 
+    @PostMapping("/ai")
+    public ResponseEntity<Map<String, Object>> startAiGame(@RequestParam(required = false) String strategy) {
+        Integer gameId = chessBoardRepository.createNewGame();
+        AiStrategy resolved = resolveStrategy(strategy);
+        log.info("[AI Game {}] Starting with requested strategy={} → {}", gameId, strategy, resolved.getClass().getSimpleName());
+        aiGameService.registerAiGame(gameId, Color.BLACK, resolved);
+        return new ResponseEntity<>(Map.of("gameId", gameId, "color", "white"), HttpStatus.CREATED);
+    }
+
     @PostMapping("/{gameId}/endTurn")
     public ResponseEntity<Integer> endTurn(@PathVariable Integer gameId) {
         EndTurnCommand endTurnCommand = EndTurnCommand.builder().gameId(gameId).build();
         chessBoardRepository.saveCommand(endTurnCommand);
         gameNotifier.notifyGame(gameId);
+
+        if (aiGameService.playIfAiTurn(gameId)) {
+            gameNotifier.notifyGame(gameId);
+        }
+
         return ResponseEntity.ok().build();
     }
 

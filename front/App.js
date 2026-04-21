@@ -516,13 +516,17 @@ export default function App() {
         return fetch(base + gameId + "/players/" + color).then(res => res.json());
     }
 
-    function navigateToGame(id, color = null) {
+    function navigateToGame(id, color = null, strategy = null) {
         if (id === null) {
             window.history.pushState({}, '', '/');
             setRoute({page: 'home'});
             setMyColor(null);
         } else {
-            const url = color ? `/chessboard/${id}?color=${color}` : `/chessboard/${id}`;
+            const params = new URLSearchParams();
+            if (color) params.set('color', color);
+            if (strategy) params.set('strategy', strategy);
+            const qs = params.toString();
+            const url = qs ? `/chessboard/${id}?${qs}` : `/chessboard/${id}`;
             window.history.pushState({}, '', url);
             setRoute({page: 'game', gameId: id});
             setMyColor(color);
@@ -556,6 +560,14 @@ export default function App() {
         fetch(backendOrigin + '/api/chessboard', {method: 'POST'})
             .then(res => res.text())
             .then(text => navigateToGame(parseInt(text, 10)))
+            .catch(err => alert(err));
+    }
+
+    function playAgainstAi(strategy) {
+        const query = strategy ? '?strategy=' + encodeURIComponent(strategy) : '';
+        fetch(backendOrigin + '/api/chessboard/ai' + query, {method: 'POST'})
+            .then(res => res.json())
+            .then(data => navigateToGame(data.gameId, data.color, strategy))
             .catch(err => alert(err));
     }
 
@@ -631,8 +643,16 @@ export default function App() {
 
     function fetchGame() {
         fetch(base + gameId)
-            .then(response => response.json())
+            .then(response => {
+                if (!response.ok) {
+                    setRoute({page: '404'});
+                    window.history.replaceState({}, '', window.location.pathname);
+                    return null;
+                }
+                return response.json();
+            })
             .then(data => {
+                if (!data) return;
                 setGame(data.pieces);
                 setCurrentPlayerColor(data.currentTurn);
                 setEffects(data.effects || []);
@@ -696,7 +716,7 @@ export default function App() {
         return (
             <>
                 <ToastContainer position="top-right" closeOnClick pauseOnFocusLoss draggable pauseOnHover autoClose={3500} />
-                <HomeScreen onPlaySolo={startNewGame} onMatchmaking={matchmaking} stats={matchmakingStats} />
+                <HomeScreen onPlaySolo={startNewGame} onMatchmaking={matchmaking} onPlayAi={playAgainstAi} stats={matchmakingStats} />
             </>
         );
     }
