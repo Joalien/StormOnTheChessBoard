@@ -30,6 +30,7 @@ const cardImages = {
     DisintegrationCard: require('../assets/images/cards/implemented/DisintegrationCard.png'),
     DoubleStrikeCard: require('../assets/images/cards/implemented/DoubleStrikeCard.png'),
     DoubleTurnCard: require('../assets/images/cards/implemented/DoubleTurnCard.png'),
+    DunceCapCard: require('../assets/images/cards/implemented/DunceCapCard.png'),
     ExileCard: require('../assets/images/cards/implemented/ExileCard.png'),
     FourCornersCard: require('../assets/images/cards/implemented/FourCornersCard.png'),
     FrightCard: require('../assets/images/cards/implemented/FrightCard.png'),
