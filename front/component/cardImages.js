@@ -28,6 +28,7 @@ const cardImages = {
     CylinderCard: require('../assets/images/cards/implemented/CylinderCard.png'),
     DerbyCard: require('../assets/images/cards/implemented/DerbyCard.png'),
     DisintegrationCard: require('../assets/images/cards/implemented/DisintegrationCard.png'),
+    DoubleStrikeCard: require('../assets/images/cards/implemented/DoubleStrikeCard.png'),
     ExileCard: require('../assets/images/cards/implemented/ExileCard.png'),
     FourCornersCard: require('../assets/images/cards/implemented/FourCornersCard.png'),
     FrightCard: require('../assets/images/cards/implemented/FrightCard.png'),
