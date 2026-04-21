@@ -84,6 +84,20 @@ class AstralTravelCardTest {
     }
 
     @Test
+    void should_allow_piece_to_pass_through_removed_piece_square_with_tryToMove() {
+        Knight knight = new Knight(Color.WHITE);
+        board.add(knight, d4);
+        Rock rock = new Rock(Color.WHITE);
+        board.add(rock, d1);
+
+        card.playOn(board, new PieceCardParam(knight));
+
+        board.tryToMove(rock, d7);
+        assertEquals(rock, board.at(d7).getPiece().get());
+        assertEquals(knight, board.at(d4).getPiece().get());
+    }
+
+    @Test
     void should_remove_own_piece() {
         Knight knight = new Knight(Color.WHITE);
         board.add(knight, d4);
@@ -165,6 +179,20 @@ class AstralTravelCardTest {
         card.playOn(board, new PieceCardParam(enemyBishop));
 
         board.move(rock, d7);
+        assertEquals(rock, board.at(d7).getPiece().get());
+        assertEquals(enemyBishop, board.at(d4).getPiece().get());
+    }
+
+    @Test
+    void should_allow_rook_to_pass_through_removed_enemy_piece_square_with_tryToMove() {
+        Bishop enemyBishop = new Bishop(Color.BLACK);
+        board.add(enemyBishop, d4);
+        Rock rock = new Rock(Color.WHITE);
+        board.add(rock, d1);
+
+        card.playOn(board, new PieceCardParam(enemyBishop));
+
+        board.tryToMove(rock, d7);
         assertEquals(rock, board.at(d7).getPiece().get());
         assertEquals(enemyBishop, board.at(d4).getPiece().get());
     }
