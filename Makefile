@@ -1,3 +1,5 @@
+COMPOSE := docker compose --env-file .env -f ops/docker-compose.yml
+
 test:
 	mvn test
 	cd front && npx jest
@@ -25,16 +27,16 @@ back:
 	@echo "Backend starting in background (port 9000)"
 
 up: .env back
-	docker compose -f ops/docker-compose.yml up -d --force-recreate sotc-frontend sotc-nginx
+	$(COMPOSE) up -d --force-recreate sotc-frontend sotc-nginx
 
 claude: up notifier
-	docker compose -f ops/docker-compose.yml run --rm sotc-claude
+	$(COMPOSE) run --rm sotc-claude
 
 claude-only: .env notifier
-	docker compose -f ops/docker-compose.yml run --rm sotc-claude
+	$(COMPOSE) run --rm sotc-claude
 
 down:
-	docker compose -f ops/docker-compose.yml down
+	$(COMPOSE) down
 	@-pkill -f "python3 notifier/server.py" 2>/dev/null && echo "Notifier stopped" || true
 
 .PHONY: test test-back test-front up back claude claude-only down notifier
