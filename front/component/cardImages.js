@@ -18,6 +18,7 @@ const cardImages = {
     CannibalCard: require('../assets/images/cards/implemented/CannibalCard.png'),
     CastleAndRollCard: require('../assets/images/cards/implemented/CastleAndRollCard.png'),
     CavalcadeCard: require('../assets/images/cards/implemented/CavalcadeCard.png'),
+    CeasefireCard: require('../assets/images/cards/implemented/CeasefireCard.png'),
     ChargeCard: require('../assets/images/cards/implemented/ChargeCard.png'),
     CourtlyLoveCard: require('../assets/images/cards/implemented/CourtlyLoveCard.png'),
     CrabCard: require('../assets/images/cards/implemented/CrabCard.png'),
