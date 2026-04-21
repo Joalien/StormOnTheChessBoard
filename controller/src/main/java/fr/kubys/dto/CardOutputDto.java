@@ -20,4 +20,5 @@ public class CardOutputDto { // FIXME use id?
     private CardType type;
     private Map<String, Object> param;
     private Map<String, List<String>> enumOptions;
+    private List<String> listParams;
 }
