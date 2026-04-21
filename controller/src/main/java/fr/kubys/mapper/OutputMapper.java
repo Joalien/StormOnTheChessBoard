@@ -70,7 +70,7 @@ public class OutputMapper {
                 .toList();
         Map<String, Object> cardParamOutputDto = Arrays.stream(c.getClazz().getDeclaredFields())
                 .map(Field::getName)
-                .collect(HashMap::new, (hashMap, name) -> hashMap.put(name, listParams.contains(name) ? new ArrayList<>() : null), HashMap::putAll);
+                .collect(LinkedHashMap::new, (map, name) -> map.put(name, listParams.contains(name) ? new ArrayList<>() : null), LinkedHashMap::putAll);
         Map<String, List<String>> enumOptions = Arrays.stream(c.getClazz().getDeclaredFields())
                 .filter(field -> field.getType().isEnum() && field.getType() != Position.class)
                 .collect(Collectors.toMap(
