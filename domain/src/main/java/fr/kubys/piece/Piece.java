@@ -74,6 +74,10 @@ public abstract class Piece {
         return this.position;
     }
 
+    public Optional<Position> findPosition() {
+        return Optional.ofNullable(this.position);
+    }
+
     public void setPosition(Position position) {
         this.position = position;
     }

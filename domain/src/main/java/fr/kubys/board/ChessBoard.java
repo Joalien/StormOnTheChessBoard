@@ -28,6 +28,7 @@ public class ChessBoard {
     private Color currentTurn = Color.WHITE;
     private int turnNumber = 0;
     private Position lastMoveFrom;
+    private Piece lastMovedPiece;
 
     public static ChessBoard createEmpty() {
 //        log.debug("create empty chessboard");
@@ -98,6 +99,11 @@ public class ChessBoard {
         return Set.copyOf(outOfTheBoardPieces);
     }
 
+    public boolean lastMoveWasCapture() {
+        return outOfTheBoardPieces.stream()
+                .anyMatch(r -> r.turn() == turnNumber && r.reason() == PieceRemoval.RemovalReason.CAPTURED);
+    }
+
     public Set<Position> getAllAttackablePosition(Piece piece) {
         return generateAllPositions().stream()
                 .filter(pos -> !pos.equals(piece.getPosition()))
@@ -147,11 +153,24 @@ public class ChessBoard {
 
     boolean isEnemyOrEmpty(Piece piece, Position positionToMoveOn, Color effectiveColor) {
         if (doesEffectBlockSquare(positionToMoveOn)) return false;
+        if (doesEffectBlockAttack(piece, positionToMoveOn)) return at(positionToMoveOn).getPiece().isEmpty();
+        if (doesEffectBlockCapture(piece, positionToMoveOn))
+            return at(positionToMoveOn).getPiece().map(Piece::isKing).orElse(true);
         Optional<Piece> p = at(positionToMoveOn).getPiece();
         return p.isEmpty() || p
                 .map(Piece::getColor)
                 .map(color -> color != effectiveColor)
                 .orElse(false); // color is null
+    }
+
+    private boolean doesEffectBlockCapture(Piece attacker, Position target) {
+        return effects.stream()
+                .anyMatch(effect -> effect.blocksCapture(attacker, target));
+    }
+
+    private boolean doesEffectBlockAttack(Piece attacker, Position target) {
+        return effects.stream()
+                .anyMatch(effect -> effect.blocksAttack(attacker, target));
     }
 
     public void tryToMove(Position from, Position to) {
@@ -206,6 +225,7 @@ public class ChessBoard {
     public void move(Piece piece, Position positionToMoveOn) {
         new ArrayList<>(effects).forEach(effect -> effect.beforeMoveHook(this, piece));
         lastMoveFrom = piece.getPosition();
+        lastMovedPiece = piece;
 
         at(positionToMoveOn).getPiece().ifPresent(captured -> removePieceFromTheBoard(captured, PieceRemoval.RemovalReason.CAPTURED));
 //        log.info("{} moves from {} to {}", piece, piece.getPosition(), positionToMoveOn);
@@ -283,7 +303,7 @@ public class ChessBoard {
         return fakeSquares.size();
     }
 
-    boolean doesMovingPieceCheckOurOwnKing(Piece piece, Position positionToMoveOn) {
+    public boolean doesMovingPieceCheckOurOwnKing(Piece piece, Position positionToMoveOn) {
         if (piece.getPosition().equals(positionToMoveOn)) throw new IllegalArgumentException();
         if (piece instanceof FakePieceDecorator) return false;
 
@@ -351,6 +371,10 @@ public class ChessBoard {
         return Set.copyOf(this.effects);
     }
 
+    public boolean isCardPlayingBlocked() {
+        return effects.stream().anyMatch(Effect::blocksCardPlaying);
+    }
+
     public Color getCurrentTurn() {
         return currentTurn;
     }
@@ -366,6 +390,10 @@ public class ChessBoard {
 
     public Position getLastMoveFrom() {
         return lastMoveFrom;
+    }
+
+    public Piece getLastMovedPiece() {
+        return lastMovedPiece;
     }
 
 }

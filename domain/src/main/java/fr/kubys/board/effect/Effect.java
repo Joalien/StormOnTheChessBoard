@@ -34,6 +34,18 @@ public abstract class Effect {
         return false;
     }
 
+    public boolean blocksCapture(Piece attacker, Position target) {
+        return false;
+    }
+
+    public boolean blocksAttack(Piece attacker, Position target) {
+        return false;
+    }
+
+    public boolean blocksCardPlaying() {
+        return false;
+    }
+
     public boolean blocksPath(Position from, Position to, Set<Position> intermediates) {
         return intermediates.stream().anyMatch(this::blocksPosition);
     }
