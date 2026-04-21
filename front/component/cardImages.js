@@ -62,6 +62,7 @@ const cardImages = {
     NuclearBombCard: require('../assets/images/cards/implemented/NuclearBombCard.png'),
     OhDarlingCard: require('../assets/images/cards/implemented/OhDarlingCard.png'),
     OriginsCard: require('../assets/images/cards/implemented/OriginsCard.png'),
+    ParanoiaCard: require('../assets/images/cards/implemented/ParanoiaCard.png'),
     ParatrooperCard: require('../assets/images/cards/implemented/ParatrooperCard.png'),
     PegasusCard: require('../assets/images/cards/implemented/PegasusCard.png'),
     PrivateJetCard: require('../assets/images/cards/implemented/PrivateJetCard.png'),
