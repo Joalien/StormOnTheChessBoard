@@ -56,6 +56,7 @@ const cardImages = {
     ManHoleCard: require('../assets/images/cards/implemented/ManHoleCard.png'),
     MercyCard: require('../assets/images/cards/implemented/MercyCard.png'),
     MeritPromotionCard: require('../assets/images/cards/implemented/MeritPromotionCard.png'),
+    ModestyCard: require('../assets/images/cards/implemented/ModestyCard.png'),
     NeutralityCard: require('../assets/images/cards/implemented/NeutralityCard.png'),
     NuclearBombCard: require('../assets/images/cards/implemented/NuclearBombCard.png'),
     OhDarlingCard: require('../assets/images/cards/implemented/OhDarlingCard.png'),
