@@ -3,7 +3,7 @@ import {useState} from 'react';
 const AI_STRATEGIES = [
     {value: 'stockfish', label: 'Stockfish — Difficile', symbol: '♛'},
     {value: 'material', label: 'Heuristique matérielle — Moyen', symbol: '♜'},
-    {value: 'random', label: 'Aléatoire — Facile', symbol: '♙'},
+    {value: 'random', label: 'Aléatoire — Facile', symbol: '♟'},
 ];
 
 export function HomeScreen({onPlaySolo, onMatchmaking, onPlayAi, stats}) {
@@ -132,13 +132,24 @@ export function HomeScreen({onPlaySolo, onMatchmaking, onPlayAi, stats}) {
                                 transform: 'translateX(-50%)',
                                 zIndex: 1000,
                                 display: 'flex',
+                                flexDirection: 'column',
+                                alignItems: 'center',
                                 gap: '6px',
                                 background: '#1c2128',
                                 border: '1px solid rgba(255,255,255,0.15)',
                                 borderRadius: '10px',
-                                padding: '8px',
+                                padding: '8px 10px 10px',
                                 boxShadow: '0 8px 32px rgba(0,0,0,0.7)',
                             }}>
+                                <div style={{
+                                    fontSize: '12px',
+                                    color: '#8b949e',
+                                    letterSpacing: '0.3px',
+                                    whiteSpace: 'nowrap',
+                                }}>
+                                    Difficulté
+                                </div>
+                                <div style={{display: 'flex', gap: '6px'}}>
                                 {AI_STRATEGIES.map(({value, label, symbol}) => (
                                     <button
                                         key={value}
@@ -166,6 +177,7 @@ export function HomeScreen({onPlaySolo, onMatchmaking, onPlayAi, stats}) {
                                         {symbol}
                                     </button>
                                 ))}
+                                </div>
                             </div>
                         )}
                     </div>
