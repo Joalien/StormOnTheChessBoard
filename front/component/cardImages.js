@@ -38,6 +38,7 @@ const cardImages = {
     FrenzyCard: require('../assets/images/cards/implemented/FrenzyCard.png'),
     FrightCard: require('../assets/images/cards/implemented/FrightCard.png'),
     FunnyCard: require('../assets/images/cards/implemented/FunnyCard.png'),
+    FusionCard: require('../assets/images/cards/implemented/FusionCard.png'),
     HomeCard: require('../assets/images/cards/implemented/HomeCard.png'),
     InfiltrationCard: require('../assets/images/cards/implemented/InfiltrationCard.png'),
     KangarooCard: require('../assets/images/cards/implemented/KangarooCard.png'),
