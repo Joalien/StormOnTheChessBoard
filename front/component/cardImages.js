@@ -40,6 +40,7 @@ const cardImages = {
     FunnyCard: require('../assets/images/cards/implemented/FunnyCard.png'),
     FusionCard: require('../assets/images/cards/implemented/FusionCard.png'),
     GuardianAngelCard: require('../assets/images/cards/implemented/GuardianAngelCard.png'),
+    HideoutCard: require('../assets/images/cards/implemented/HideoutCard.png'),
     HomeCard: require('../assets/images/cards/implemented/HomeCard.png'),
     InfiltrationCard: require('../assets/images/cards/implemented/InfiltrationCard.png'),
     KangarooCard: require('../assets/images/cards/implemented/KangarooCard.png'),
