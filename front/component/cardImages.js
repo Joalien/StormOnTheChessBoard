@@ -75,6 +75,7 @@ const cardImages = {
     QuadrilleCard: require('../assets/images/cards/implemented/QuadrilleCard.png'),
     RaccoonCard: require('../assets/images/cards/implemented/RaccoonCard.png'),
     ReflectedBishopCard: require('../assets/images/cards/implemented/ReflectedBishopCard.png'),
+    RelayCard: require('../assets/images/cards/implemented/RelayCard.png'),
     RetaliationCard: require('../assets/images/cards/implemented/RetaliationCard.png'),
     SchizophreniaCard: require('../assets/images/cards/implemented/SchizophreniaCard.png'),
     SelfDefenseCard: require('../assets/images/cards/implemented/SelfDefenseCard.png'),
