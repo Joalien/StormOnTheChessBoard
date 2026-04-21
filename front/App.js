@@ -631,8 +631,16 @@ export default function App() {
 
     function fetchGame() {
         fetch(base + gameId)
-            .then(response => response.json())
+            .then(response => {
+                if (!response.ok) {
+                    setRoute({page: '404'});
+                    window.history.replaceState({}, '', window.location.pathname);
+                    return null;
+                }
+                return response.json();
+            })
             .then(data => {
+                if (!data) return;
                 setGame(data.pieces);
                 setCurrentPlayerColor(data.currentTurn);
                 setEffects(data.effects || []);
