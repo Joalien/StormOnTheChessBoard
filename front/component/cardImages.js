@@ -42,6 +42,7 @@ const cardImages = {
     GuardianAngelCard: require('../assets/images/cards/implemented/GuardianAngelCard.png'),
     HideoutCard: require('../assets/images/cards/implemented/HideoutCard.png'),
     HomeCard: require('../assets/images/cards/implemented/HomeCard.png'),
+    ImitatorCard: require('../assets/images/cards/implemented/ImitatorCard.png'),
     InfiltrationCard: require('../assets/images/cards/implemented/InfiltrationCard.png'),
     KangarooCard: require('../assets/images/cards/implemented/KangarooCard.png'),
     LightweightSquadCard: require('../assets/images/cards/implemented/LightweightSquadCard.png'),
