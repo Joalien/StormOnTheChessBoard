@@ -1,6 +1,5 @@
 package fr.kubys.board.effect;
 
-import fr.kubys.board.CheckException;
 import fr.kubys.board.ChessBoard;
 import fr.kubys.core.Color;
 import fr.kubys.piece.Pawn;
@@ -71,8 +70,8 @@ class ManHoleEffectTest {
 
         chessBoard.addEffect(manHoleEffect);
 
-        assertThrows(CheckException.class, () -> chessBoard.canMove(blackKing, e6));
-        assertThrows(CheckException.class, () -> chessBoard.tryToMove(blackKing, e6));
+        assertDoesNotThrow( () -> chessBoard.canMove(blackKing, e6));
+        assertDoesNotThrow( () -> chessBoard.tryToMove(blackKing, e6));
     }
 
     @Test

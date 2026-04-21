@@ -19,11 +19,6 @@ public class MagnetismCard extends Card<PieceCardParam> implements Effectable<Ma
     }
 
     @Override
-    protected boolean doesNotCreateCheck(ChessBoard chessBoard, PieceCardParam param) {
-        return true;
-    }
-
-    @Override
     protected void doAction(ChessBoard chessBoard, PieceCardParam param) {
         chessBoard.addEffect(new MagnetismEffect(param.piece()));
     }

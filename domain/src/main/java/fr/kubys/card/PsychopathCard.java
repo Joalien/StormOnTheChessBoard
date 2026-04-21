@@ -32,11 +32,6 @@ public class PsychopathCard extends Card<PieceCardParam> {
     }
 
     @Override
-    protected boolean doesNotCreateCheck(ChessBoard chessBoard, PieceCardParam param) {
-        return ExplosionHelper.explosionDoesNotCreateCheck(chessBoard, param.piece());
-    }
-
-    @Override
     protected void doAction(ChessBoard chessBoard, PieceCardParam param) {
         List<Piece> capturable = ExplosionHelper.getCapturableEnemyPieces(chessBoard, param.piece());
         capturable.forEach(chessBoard::removePieceFromTheBoard);

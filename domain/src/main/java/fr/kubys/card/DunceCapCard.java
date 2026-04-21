@@ -34,15 +34,6 @@ public class DunceCapCard extends Card<PieceToPositionCardParam> implements Effe
     }
 
     @Override
-    protected boolean doesNotCreateCheck(ChessBoard chessBoard, PieceToPositionCardParam param) {
-        chessBoard.fakeSquare(null, param.piece().getPosition());
-        chessBoard.fakeSquare(param.piece(), param.positionToMoveOn());
-        boolean check = chessBoard.isKingUnderAttack(chessBoard.getCurrentTurn());
-        chessBoard.unfakeAllSquares();
-        return !check;
-    }
-
-    @Override
     protected void doAction(ChessBoard chessBoard, PieceToPositionCardParam param) {
         chessBoard.at(param.piece().getPosition()).removePiece();
         chessBoard.add(param.piece(), param.positionToMoveOn());

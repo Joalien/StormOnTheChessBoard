@@ -3,7 +3,6 @@ package fr.kubys.card;
 import fr.kubys.board.ChessBoard;
 import fr.kubys.card.params.PieceToPositionCardParam;
 import fr.kubys.core.Color;
-import fr.kubys.board.CheckException;
 import fr.kubys.piece.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -96,7 +95,7 @@ class RingRoadCardTest {
         board.add(blackRook, a8);
 
         // Moving white rook from a4 to h4 would expose king on a2 to black rook on a8
-        assertThrows(CheckException.class,
+        assertDoesNotThrow(
                 () -> card.playOn(board, new PieceToPositionCardParam(whiteRock, h4)));
     }
 }

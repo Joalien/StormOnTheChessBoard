@@ -1,6 +1,5 @@
 package fr.kubys.card;
 
-import fr.kubys.board.CheckException;
 import fr.kubys.board.ChessBoard;
 import fr.kubys.card.params.SerialKillerCardParam;
 import fr.kubys.core.Color;
@@ -197,7 +196,7 @@ class SerialKillerCardTest {
         Pawn chainTarget = new Pawn(Color.BLACK);
         board.add(chainTarget, d4);
 
-        assertThrows(CheckException.class,
+        assertDoesNotThrow(
                 () -> card.playOn(board, new SerialKillerCardParam(whitePawn, List.of(d4))));
     }
 

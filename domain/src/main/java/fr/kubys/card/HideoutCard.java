@@ -26,11 +26,6 @@ public class HideoutCard extends Card<PieceCardParam> implements Effectable<Hide
     }
 
     @Override
-    protected boolean doesNotCreateCheck(ChessBoard chessBoard, PieceCardParam param) {
-        return true;
-    }
-
-    @Override
     protected void doAction(ChessBoard chessBoard, PieceCardParam param) {
         chessBoard.addEffect(new HideoutEffect(param.piece()));
     }

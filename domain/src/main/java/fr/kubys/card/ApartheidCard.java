@@ -17,17 +17,6 @@ public class ApartheidCard extends Card<NoCardParam> {
     }
 
     @Override
-    protected boolean doesNotCreateCheck(ChessBoard chessBoard, NoCardParam param) {
-        chessBoard.getPieces().stream()
-                .filter(piece -> whitePawnOnBlackSquare(piece) || blackPawnOnWhiteSquare(piece))
-                .forEach(piece -> chessBoard.fakeSquare(null, piece.getPosition()));
-
-        boolean isKingUnderAttack = chessBoard.isKingUnderAttack(chessBoard.getCurrentTurn());
-        chessBoard.unfakeAllSquares();
-        return !isKingUnderAttack;
-    }
-
-    @Override
     protected void doAction(ChessBoard chessBoard, NoCardParam param) {
         chessBoard.getPieces().stream()
                 .filter(piece -> whitePawnOnBlackSquare(piece) || blackPawnOnWhiteSquare(piece))

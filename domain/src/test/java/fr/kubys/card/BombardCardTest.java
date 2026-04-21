@@ -155,9 +155,8 @@ class BombardCardTest {
             board.add(new Knight(Color.BLACK), a6);
             board.setTurn(Color.WHITE);
 
-            // Rook leaves row 1 → king exposed to black queen
-            assertThrows(Exception.class,
-                    () -> card.playOn(board, new PieceToPositionCardParam(rock, a6)));
+            // Rook leaves row 1 → king exposed to black queen (temporary check allowed)
+            assertDoesNotThrow(() -> card.playOn(board, new PieceToPositionCardParam(rock, a6)));
         }
     }
 }

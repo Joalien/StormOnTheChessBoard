@@ -20,11 +20,6 @@ public class VultureCard extends Card<NoCardParam> {
     }
 
     @Override
-    protected boolean doesNotCreateCheck(ChessBoard chessBoard, NoCardParam param) {
-        throw new UnsupportedOperationException("Vautour is not yet implemented");
-    }
-
-    @Override
     protected void doAction(ChessBoard chessBoard, NoCardParam param) {
         throw new UnsupportedOperationException("Vautour is not yet implemented");
     }

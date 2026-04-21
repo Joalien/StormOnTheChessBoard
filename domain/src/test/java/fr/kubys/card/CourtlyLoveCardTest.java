@@ -1,6 +1,5 @@
 package fr.kubys.card;
 
-import fr.kubys.board.CheckException;
 import fr.kubys.board.ChessBoard;
 import fr.kubys.card.params.CourtlyLoveCardParam;
 import fr.kubys.core.Color;
@@ -84,13 +83,14 @@ chessBoard.setTurn(Color.WHITE);
         }
 
         @Test
-        void should_not_tp_if_it_create_check() {
+        void should_tp_even_if_it_creates_check() {
             chessBoard.add(new Bishop(Color.BLACK), a5);
 
-            assertThrows(CheckException.class, () -> createCourtlyLoveCard().playOn(chessBoard, new CourtlyLoveCardParam(knight, c1)));
+            assertDoesNotThrow(() -> createCourtlyLoveCard().playOn(chessBoard, new CourtlyLoveCardParam(knight, c1)));
 
-            assertEquals(knight, chessBoard.at(b4).getPiece().get());
-            assertTrue(chessBoard.at(c1).getPiece().isEmpty());
+            // Card executes even if it creates check (temporary check allowed)
+            assertEquals(knight, chessBoard.at(c1).getPiece().get());
+            assertTrue(chessBoard.at(b4).getPiece().isEmpty());
         }
 
         @Test

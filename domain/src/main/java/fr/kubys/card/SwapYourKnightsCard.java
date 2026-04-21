@@ -31,15 +31,6 @@ public class SwapYourKnightsCard extends Card<TwoPieceCardParam> {
     }
 
     @Override
-    protected boolean doesNotCreateCheck(ChessBoard chessBoard, TwoPieceCardParam param) {
-        chessBoard.fakeSquare(param.piece1(), param.piece2().getPosition());
-        chessBoard.fakeSquare(param.piece2(), param.piece1().getPosition());
-        boolean check = chessBoard.isKingUnderAttack(chessBoard.getCurrentTurn());
-        chessBoard.unfakeAllSquares();
-        return !check;
-    }
-
-    @Override
     protected void doAction(ChessBoard chessBoard, TwoPieceCardParam param) {
         Position pos1 = param.piece1().getPosition();
         Position pos2 = param.piece2().getPosition();

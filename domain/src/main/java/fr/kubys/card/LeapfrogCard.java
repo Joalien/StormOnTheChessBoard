@@ -58,18 +58,6 @@ public class LeapfrogCard extends Card<LeapfrogCardParam> {
     }
 
     @Override
-    protected boolean doesNotCreateCheck(ChessBoard chessBoard, LeapfrogCardParam param) {
-        List<Position> positions = param.positions();
-        Position finalPos = positions.get(positions.size() - 1);
-
-        chessBoard.fakeSquare(null, param.pawn().getPosition());
-        chessBoard.fakeSquare(param.pawn(), finalPos);
-        boolean check = chessBoard.isKingUnderAttack(chessBoard.getCurrentTurn());
-        chessBoard.unfakeAllSquares();
-        return !check;
-    }
-
-    @Override
     protected void doAction(ChessBoard chessBoard, LeapfrogCardParam param) {
         List<Position> positions = param.positions();
         Position finalPos = positions.get(positions.size() - 1);

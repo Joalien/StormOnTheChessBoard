@@ -38,19 +38,6 @@ public class ChargeCard extends Card<ChargeCardParam> {
     }
 
     @Override
-    protected boolean doesNotCreateCheck(ChessBoard chessBoard, ChargeCardParam param) {
-        param.pawns().forEach(p -> chessBoard.fakeSquare(null, p.getPosition()));
-        param.pawns().stream()
-                .filter(p -> p.oneSquareForward().isPresent())
-                .forEach(p -> chessBoard.fakeSquare(p, p.oneSquareForward().get()));
-
-        boolean kingIsNotUnderAttack = !chessBoard.isKingUnderAttack(chessBoard.getCurrentTurn());
-
-        chessBoard.unfakeAllSquares();
-        return kingIsNotUnderAttack;
-    }
-
-    @Override
     protected void doAction(ChessBoard chessBoard, ChargeCardParam param) {
         Comparator<Pawn> startWithMoreAdvancedPawn = Map.of(
                 Color.BLACK, Comparator.<Pawn>comparingInt(pawn -> pawn.getRow().getRowNumber()),

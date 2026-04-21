@@ -48,23 +48,6 @@ public class SerialKillerCard extends Card<SerialKillerCardParam> {
     }
 
     @Override
-    protected boolean doesNotCreateCheck(ChessBoard chessBoard, SerialKillerCardParam param) {
-        Position pawnOrigin = param.pawn().getPosition();
-        List<Position> positions = param.positions();
-
-        chessBoard.fakeSquare(null, pawnOrigin);
-        for (Position pos : positions) {
-            chessBoard.fakeSquare(null, pos);
-        }
-        Position finalPos = positions.get(positions.size() - 1);
-        chessBoard.fakeSquare(param.pawn(), finalPos);
-
-        boolean check = chessBoard.isKingUnderAttack(chessBoard.getCurrentTurn());
-        chessBoard.unfakeAllSquares();
-        return !check;
-    }
-
-    @Override
     protected void doAction(ChessBoard chessBoard, SerialKillerCardParam param) {
         Piece pawn = param.pawn();
         for (Position pos : param.positions()) {

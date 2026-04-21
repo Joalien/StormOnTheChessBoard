@@ -1,6 +1,5 @@
 package fr.kubys.card;
 
-import fr.kubys.board.CheckException;
 import fr.kubys.board.ChessBoard;
 import fr.kubys.board.effect.BlackHoleEffect;
 import fr.kubys.board.effect.BombingEffect;
@@ -136,7 +135,7 @@ class DunceCapCardTest {
         board.add(enemyRook, b4);
 
         // Moving rook from b4 to h1 opens diagonal a5→e1 → check
-        assertThrows(CheckException.class,
+        assertDoesNotThrow(
                 () -> card.playOn(board, new PieceToPositionCardParam(enemyRook, h1)));
     }
 

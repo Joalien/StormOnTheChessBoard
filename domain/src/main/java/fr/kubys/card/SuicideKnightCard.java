@@ -29,11 +29,6 @@ public class SuicideKnightCard extends Card<KnightCardParam> {
     }
 
     @Override
-    protected boolean doesNotCreateCheck(ChessBoard chessBoard, KnightCardParam param) {
-        return ExplosionHelper.explosionDoesNotCreateCheck(chessBoard, param.knight());
-    }
-
-    @Override
     protected void doAction(ChessBoard chessBoard, KnightCardParam param) {
         List<Piece> capturable = ExplosionHelper.getCapturableEnemyPieces(chessBoard, param.knight());
         capturable.forEach(chessBoard::removePieceFromTheBoard);

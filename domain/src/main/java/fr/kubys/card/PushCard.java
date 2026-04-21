@@ -41,22 +41,6 @@ public class PushCard extends Card<PieceCardParam> {
     }
 
     @Override
-    protected boolean doesNotCreateCheck(ChessBoard chessBoard, PieceCardParam param) {
-        Pawn pawn = (Pawn) param.piece();
-        Position forward = pawn.oneSquareForward().orElseThrow();
-        Piece occupant = chessBoard.at(forward).getPiece().orElseThrow();
-
-        chessBoard.fakeSquare(null, pawn.getPosition());
-        chessBoard.fakeSquare(pawn, forward);
-        pawn.twoSquaresForward().ifPresent(pushDest -> chessBoard.fakeSquare(occupant, pushDest));
-
-        boolean kingIsNotUnderAttack = !chessBoard.isKingUnderAttack(chessBoard.getCurrentTurn());
-
-        chessBoard.unfakeAllSquares();
-        return kingIsNotUnderAttack;
-    }
-
-    @Override
     protected void doAction(ChessBoard chessBoard, PieceCardParam param) {
         Pawn pawn = (Pawn) param.piece();
         Position forward = pawn.oneSquareForward().orElseThrow();

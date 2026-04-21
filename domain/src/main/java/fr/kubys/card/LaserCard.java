@@ -37,17 +37,6 @@ public class LaserCard extends Card<PieceToPositionCardParam> {
     }
 
     @Override
-    protected boolean doesNotCreateCheck(ChessBoard chessBoard, PieceToPositionCardParam param) {
-        List<Piece> targets = getTargetsAlongRay(chessBoard, param.piece(), param.positionToMoveOn());
-        for (Piece target : targets) {
-            chessBoard.fakeSquare(null, target.getPosition());
-        }
-        boolean check = chessBoard.isKingUnderAttack(chessBoard.getCurrentTurn());
-        chessBoard.unfakeAllSquares();
-        return !check;
-    }
-
-    @Override
     protected void doAction(ChessBoard chessBoard, PieceToPositionCardParam param) {
         List<Piece> targets = getTargetsAlongRay(chessBoard, param.piece(), param.positionToMoveOn());
         for (Piece target : targets) {

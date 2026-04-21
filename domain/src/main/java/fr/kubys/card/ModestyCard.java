@@ -27,11 +27,6 @@ public class ModestyCard extends Card<PieceToPositionCardParam> {
     }
 
     @Override
-    protected boolean doesNotCreateCheck(ChessBoard chessBoard, PieceToPositionCardParam param) {
-        return !chessBoard.doesMovingPieceCheckOurOwnKing(param.piece(), param.positionToMoveOn());
-    }
-
-    @Override
     protected void doAction(ChessBoard chessBoard, PieceToPositionCardParam param) {
         chessBoard.move(param.piece(), param.positionToMoveOn());
         // Non-Promotable pieces reaching last rank get replaced by a Pawn to trigger promotion

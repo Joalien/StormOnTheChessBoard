@@ -20,11 +20,6 @@ public class StableCard extends Card<StableCardParam> {
     }
 
     @Override
-    protected boolean doesNotCreateCheck(ChessBoard chessBoard, StableCardParam param) {
-        return true;
-    }
-
-    @Override
     protected void doAction(ChessBoard chessBoard, StableCardParam param) {
         Position rockPosition = param.rock().getPosition();
         Position knightPosition = param.knight().getPosition();

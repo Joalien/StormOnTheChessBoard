@@ -1,7 +1,6 @@
 package fr.kubys.card;
 
 import fr.kubys.board.ChessBoard;
-import fr.kubys.board.CheckException;
 import fr.kubys.card.params.PieceCardParam;
 import fr.kubys.core.Color;
 import fr.kubys.piece.*;
@@ -186,7 +185,7 @@ class PushCardTest {
         board.add(enemyBishop, a5);
 
         // Pawn d2 -> d3, knight d3 -> d4. Now diagonal a5-e1 is open: a5,b4,c3,d2,e1
-        assertThrows(CheckException.class,
+        assertDoesNotThrow(
                 () -> card.playOn(board, new PieceCardParam(pawn2)));
     }
 

@@ -20,11 +20,6 @@ public class RebeloteCard extends Card<NoCardParam> {
     }
 
     @Override
-    protected boolean doesNotCreateCheck(ChessBoard chessBoard, NoCardParam param) {
-        throw new UnsupportedOperationException("Rebelote et dix de der is not yet implemented");
-    }
-
-    @Override
     protected void doAction(ChessBoard chessBoard, NoCardParam param) {
         throw new UnsupportedOperationException("Rebelote et dix de der is not yet implemented");
     }

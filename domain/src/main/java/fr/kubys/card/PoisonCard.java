@@ -23,11 +23,6 @@ public class PoisonCard extends Card<PieceCardParam> implements Effectable<Poiso
     }
 
     @Override
-    protected boolean doesNotCreateCheck(ChessBoard chessBoard, PieceCardParam param) {
-        return true;
-    }
-
-    @Override
     protected void doAction(ChessBoard chessBoard, PieceCardParam param) {
         chessBoard.addEffect(new PoisonEffect(param.piece()));
     }

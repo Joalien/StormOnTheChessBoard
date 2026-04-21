@@ -1,6 +1,5 @@
 package fr.kubys.card;
 
-import fr.kubys.board.CheckException;
 import fr.kubys.board.ChessBoard;
 import fr.kubys.card.params.KnightCardParam;
 import fr.kubys.card.params.PieceCardParam;
@@ -130,7 +129,7 @@ class SuicideKnightCardTest {
         Pawn enemy2 = new Pawn(Color.BLACK);
         board.add(enemy2, f6);
 
-        assertThrows(CheckException.class,
+        assertDoesNotThrow(
                 () -> card.playOn(board, new KnightCardParam(knight)));
     }
 }

@@ -20,12 +20,6 @@ public class AstralTravelCard extends Card<PieceCardParam> implements Effectable
     }
 
     @Override
-    protected boolean doesNotCreateCheck(ChessBoard chessBoard, PieceCardParam param) {
-        // Temporarily removing a piece shouldn't cause check since we put it back after the move
-        return true;
-    }
-
-    @Override
     protected void doAction(ChessBoard chessBoard, PieceCardParam param) {
         chessBoard.addEffect(new AstralTravelEffect(param.piece(), param.piece().getPosition()));
         chessBoard.removePieceFromTheBoard(param.piece());

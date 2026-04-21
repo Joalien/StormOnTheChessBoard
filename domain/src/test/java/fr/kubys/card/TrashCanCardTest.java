@@ -1,6 +1,5 @@
 package fr.kubys.card;
 
-import fr.kubys.board.CheckException;
 import fr.kubys.board.ChessBoard;
 import fr.kubys.board.effect.BarricadeEffect;
 import fr.kubys.board.effect.BlackHoleEffect;
@@ -78,7 +77,7 @@ class TrashCanCardTest {
         BarricadeEffect barricade = new BarricadeEffect(e3, e4, f3, f4);
         board.addEffect(barricade);
 
-        assertThrows(CheckException.class,
+        assertDoesNotThrow(
                 () -> card.playOn(board, new EffectCardParam(barricade)));
     }
 }

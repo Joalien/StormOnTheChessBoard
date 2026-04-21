@@ -31,11 +31,6 @@ public class YouTooBrutusCard extends Card<PieceCardParam> {
     }
 
     @Override
-    protected boolean doesNotCreateCheck(ChessBoard chessBoard, PieceCardParam param) {
-        return true;
-    }
-
-    @Override
     protected void doAction(ChessBoard chessBoard, PieceCardParam param) {
         Color cardPlayerColor = chessBoard.getCurrentTurn().opposite();
         param.piece().setColor(cardPlayerColor);

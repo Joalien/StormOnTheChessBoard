@@ -20,11 +20,6 @@ public class DalaiLamaCard extends Card<NoCardParam> {
     }
 
     @Override
-    protected boolean doesNotCreateCheck(ChessBoard chessBoard, NoCardParam param) {
-        throw new UnsupportedOperationException("Dalaï Lama is not yet implemented");
-    }
-
-    @Override
     protected void doAction(ChessBoard chessBoard, NoCardParam param) {
         throw new UnsupportedOperationException("Dalaï Lama is not yet implemented");
     }

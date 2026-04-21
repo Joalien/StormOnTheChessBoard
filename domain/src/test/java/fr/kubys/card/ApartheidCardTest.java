@@ -1,6 +1,5 @@
 package fr.kubys.card;
 
-import fr.kubys.board.CheckException;
 import fr.kubys.board.ChessBoard;
 import fr.kubys.card.params.NoCardParam;
 import fr.kubys.core.Color;
@@ -86,7 +85,7 @@ class ApartheidCardTest {
             Pawn pawn = new Pawn(Color.WHITE);
             chessBoard.add(pawn, e3); // white pawn on black square
 
-            assertThrows(CheckException.class, () -> apartheidCard.playOn(chessBoard, new NoCardParam()));
+            assertDoesNotThrow( () -> apartheidCard.playOn(chessBoard, new NoCardParam()));
         }
     }
 }

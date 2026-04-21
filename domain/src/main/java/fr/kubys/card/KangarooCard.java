@@ -20,11 +20,6 @@ public class KangarooCard extends Card<KnightCardParam> implements Effectable<Ka
     }
 
     @Override
-    protected boolean doesNotCreateCheck(ChessBoard chessBoard, KnightCardParam param) {
-        return true; // FIXME
-    }
-
-    @Override
     protected void doAction(ChessBoard chessBoard, KnightCardParam param) {
         Position knightPosition = param.knight().getPosition();
         chessBoard.removePieceFromTheBoard(param.knight());

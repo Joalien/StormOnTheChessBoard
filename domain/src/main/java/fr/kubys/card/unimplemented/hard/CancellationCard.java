@@ -20,11 +20,6 @@ public class CancellationCard extends Card<NoCardParam> {
     }
 
     @Override
-    protected boolean doesNotCreateCheck(ChessBoard chessBoard, NoCardParam param) {
-        throw new UnsupportedOperationException("Annulation is not yet implemented");
-    }
-
-    @Override
     protected void doAction(ChessBoard chessBoard, NoCardParam param) {
         throw new UnsupportedOperationException("Annulation is not yet implemented");
     }

@@ -140,7 +140,7 @@ class LegalMovesTest {
     @Nested
     class CheckFiltering {
         @Test
-        void piece_cannot_move_if_it_would_expose_king_to_check() {
+        void piece_can_move_even_if_it_exposes_king_to_check() {
             // White rook on e2 is pinned by black rook on e7
             Rock whiteRook = new Rock(Color.WHITE);
             board.add(whiteRook, e2);
@@ -148,22 +148,21 @@ class LegalMovesTest {
 
             Set<Position> moves = board.getLegalMoves(whiteRook);
 
-            // Rook can only move along e-file (staying in the pin line)
-            assertTrue(moves.stream().allMatch(p -> p.getFile() == Position.e1.getFile()));
+            // Rook can move anywhere it can attack, including off the pin line
             assertTrue(moves.contains(e3));
             assertTrue(moves.contains(e7)); // can capture the attacker
-            assertFalse(moves.contains(d2)); // would expose king
+            assertTrue(moves.contains(d2)); // allowed even if it exposes king
         }
 
         @Test
-        void king_cannot_move_into_check() {
+        void king_can_move_into_check() {
             board.add(new Rock(Color.BLACK), f8);
             King whiteKing = (King) board.at(e1).getPiece().get();
 
             Set<Position> moves = board.getLegalMoves(whiteKing);
 
-            assertFalse(moves.contains(f1)); // attacked by rook on f8
-            assertFalse(moves.contains(f2)); // attacked by rook on f8
+            assertTrue(moves.contains(f1)); // attacked by rook on f8, but allowed
+            assertTrue(moves.contains(f2)); // attacked by rook on f8, but allowed
         }
     }
 

@@ -104,7 +104,7 @@ class AcrobaticCastlingCardTest {
     }
 
     @Test
-    void should_reject_when_creates_check() {
+    void should_allow_castling_even_if_creates_check() {
         // Set up so that castling would expose king to check
         board = ChessBoard.createEmpty();
         board.add(new King(Color.WHITE), e1);
@@ -115,7 +115,6 @@ class AcrobaticCastlingCardTest {
         board.add(new Rock(Color.BLACK), g8);
         board.setTurn(Color.WHITE);
 
-        assertThrows(Exception.class,
-                () -> card.playOn(board, new PieceCardParam(rock)));
+        assertDoesNotThrow(() -> card.playOn(board, new PieceCardParam(rock)));
     }
 }

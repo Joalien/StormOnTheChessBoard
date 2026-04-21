@@ -33,15 +33,6 @@ public class NeutralityCard extends Card<PieceCardParam> implements Effectable<N
     }
 
     @Override
-    protected boolean doesNotCreateCheck(ChessBoard chessBoard, PieceCardParam param) {
-        Color originalColor = param.piece().getColor();
-        param.piece().setColor(Color.NONE);
-        boolean check = chessBoard.isKingUnderAttack(chessBoard.getCurrentTurn());
-        param.piece().setColor(originalColor);
-        return !check;
-    }
-
-    @Override
     protected void doAction(ChessBoard chessBoard, PieceCardParam param) {
         var position = param.piece().getPosition();
         // Remove and re-add the piece so that ChessBoard.add() triggers promotion check

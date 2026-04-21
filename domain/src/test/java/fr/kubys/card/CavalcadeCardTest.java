@@ -1,6 +1,5 @@
 package fr.kubys.card;
 
-import fr.kubys.board.CheckException;
 import fr.kubys.board.ChessBoard;
 import fr.kubys.card.params.PieceToPositionCardParam;
 import fr.kubys.core.Color;
@@ -141,17 +140,17 @@ class CavalcadeCardTest {
         }
 
         @Test
-        void should_not_create_check() {
+        void should_allow_move_even_if_creates_check() {
             Rock rook = new Rock(Color.WHITE);
             chessBoard.add(rook, e4); // rook protects king on e1 from e8 black queen
             Queen blackQueen = new Queen(Color.BLACK);
             chessBoard.add(blackQueen, e8);
 
-            // Moving rook away from e-file would expose king to the queen
-            assertThrows(CheckException.class,
+            // Moving rook away from e-file exposes king to the queen (temporary check allowed)
+            assertDoesNotThrow(
                     () -> cavalcadeCard.playOn(chessBoard, new PieceToPositionCardParam(rook, f6)));
 
-            assertEquals(rook, chessBoard.at(e4).getPiece().get());
+            assertTrue(chessBoard.at(e4).getPiece().isEmpty());
         }
     }
 }

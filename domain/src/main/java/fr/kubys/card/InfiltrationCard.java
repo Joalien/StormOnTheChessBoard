@@ -42,21 +42,6 @@ public class InfiltrationCard extends Card<InfiltrationCardParam> {
     }
 
     @Override
-    protected boolean doesNotCreateCheck(ChessBoard chessBoard, InfiltrationCardParam param) {
-        Color currentTurn = chessBoard.getCurrentTurn();
-        List<Piece> own = param.pawns().stream().filter(p -> !p.getColor().cannotBeMovedBy(currentTurn)).toList();
-        List<Piece> enemy = param.pawns().stream().filter(p -> p.getColor().cannotBeMovedBy(currentTurn)).toList();
-
-        for (int i = 0; i < own.size(); i++) {
-            chessBoard.fakeSquare(own.get(i), enemy.get(i).getPosition());
-            chessBoard.fakeSquare(enemy.get(i), own.get(i).getPosition());
-        }
-        boolean check = chessBoard.isKingUnderAttack(currentTurn);
-        chessBoard.unfakeAllSquares();
-        return !check;
-    }
-
-    @Override
     protected void doAction(ChessBoard chessBoard, InfiltrationCardParam param) {
         Color currentTurn = chessBoard.getCurrentTurn();
         List<Piece> own = param.pawns().stream().filter(p -> !p.getColor().cannotBeMovedBy(currentTurn)).toList();

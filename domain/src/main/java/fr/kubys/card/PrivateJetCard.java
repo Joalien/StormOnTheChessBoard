@@ -23,16 +23,6 @@ public class PrivateJetCard extends Card<PositionCardParam> {
     }
 
     @Override
-    protected boolean doesNotCreateCheck(ChessBoard chessBoard, PositionCardParam param) {
-        Piece king = findKing(chessBoard);
-        chessBoard.fakeSquare(king, param.position());
-        chessBoard.fakeSquare(null, king.getPosition());
-        boolean check = chessBoard.isKingUnderAttack(chessBoard.getCurrentTurn());
-        chessBoard.unfakeAllSquares();
-        return !check;
-    }
-
-    @Override
     protected void doAction(ChessBoard chessBoard, PositionCardParam param) {
         Piece king = findKing(chessBoard);
         chessBoard.at(king.getPosition()).removePiece();

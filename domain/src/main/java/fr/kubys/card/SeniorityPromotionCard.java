@@ -31,11 +31,6 @@ public class SeniorityPromotionCard extends Card<NoCardParam> {
     }
 
     @Override
-    protected boolean doesNotCreateCheck(ChessBoard chessBoard, NoCardParam param) {
-        return true;
-    }
-
-    @Override
     protected void doAction(ChessBoard chessBoard, NoCardParam param) {
         Color color = chessBoard.getCurrentTurn();
         List<Piece> pawns = chessBoard.allyPieces(color).stream()

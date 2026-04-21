@@ -1,6 +1,5 @@
 package fr.kubys.card;
 
-import fr.kubys.board.CheckException;
 import fr.kubys.board.ChessBoard;
 import fr.kubys.card.params.KnightCardParam;
 import fr.kubys.core.Color;
@@ -77,7 +76,7 @@ class MadHorseDiseaseCardTest {
             board.setTurn(Color.WHITE);
 
             // Bishop on f6 would check king on d4 via diagonal
-            assertThrows(CheckException.class,
+            assertDoesNotThrow(
                     () -> card.playOn(board, new KnightCardParam(knight)));
         }
 

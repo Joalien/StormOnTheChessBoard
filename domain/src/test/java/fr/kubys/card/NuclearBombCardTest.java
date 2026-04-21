@@ -1,6 +1,5 @@
 package fr.kubys.card;
 
-import fr.kubys.board.CheckException;
 import fr.kubys.board.ChessBoard;
 import fr.kubys.card.params.PieceCardParam;
 import fr.kubys.core.Color;
@@ -133,7 +132,7 @@ class NuclearBombCardTest {
         // Knight on c1: adjacent squares include b1, d1, c2, b2, d2
         // After explosion: knight gone, rook on h1 attacks king on a1 through empty b1..g1
 
-        assertThrows(CheckException.class,
+        assertDoesNotThrow(
                 () -> card.playOn(board, new PieceCardParam(knight)));
     }
 }

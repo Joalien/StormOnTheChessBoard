@@ -24,17 +24,6 @@ public class BestFriendsCard extends Card<NoCardParam> {
     }
 
     @Override
-    protected boolean doesNotCreateCheck(ChessBoard chessBoard, NoCardParam param) {
-        Piece ownQueen = findQueen(chessBoard, chessBoard.getCurrentTurn());
-        Piece enemyQueen = findQueen(chessBoard, chessBoard.getCurrentTurn().opposite());
-        chessBoard.fakeSquare(ownQueen, enemyQueen.getPosition());
-        chessBoard.fakeSquare(enemyQueen, ownQueen.getPosition());
-        boolean check = chessBoard.isKingUnderAttack(chessBoard.getCurrentTurn());
-        chessBoard.unfakeAllSquares();
-        return !check;
-    }
-
-    @Override
     protected void doAction(ChessBoard chessBoard, NoCardParam param) {
         Piece ownQueen = findQueen(chessBoard, chessBoard.getCurrentTurn());
         Piece enemyQueen = findQueen(chessBoard, chessBoard.getCurrentTurn().opposite());

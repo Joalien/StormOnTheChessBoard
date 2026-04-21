@@ -49,17 +49,6 @@ public class DoubleStrikeCard extends Card<DoubleStrikeCardParam> {
     }
 
     @Override
-    protected boolean doesNotCreateCheck(ChessBoard chessBoard, DoubleStrikeCardParam param) {
-        chessBoard.fakeSquare(null, param.piece1().getPosition());
-        chessBoard.fakeSquare(null, param.piece2().getPosition());
-        chessBoard.fakeSquare(param.piece1(), param.position1());
-        chessBoard.fakeSquare(param.piece2(), param.position2());
-        boolean check = chessBoard.isKingUnderAttack(chessBoard.getCurrentTurn());
-        chessBoard.unfakeAllSquares();
-        return !check;
-    }
-
-    @Override
     protected void doAction(ChessBoard chessBoard, DoubleStrikeCardParam param) {
         chessBoard.move(param.piece1(), param.position1());
         chessBoard.move(param.piece2(), param.position2());

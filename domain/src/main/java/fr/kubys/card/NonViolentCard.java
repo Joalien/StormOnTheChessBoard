@@ -26,11 +26,6 @@ public class NonViolentCard extends Card<PieceCardParam> implements Effectable<N
     }
 
     @Override
-    protected boolean doesNotCreateCheck(ChessBoard chessBoard, PieceCardParam param) {
-        return true;
-    }
-
-    @Override
     protected void doAction(ChessBoard chessBoard, PieceCardParam param) {
         chessBoard.addEffect(new NonViolentEffect(param.piece()));
     }

@@ -39,22 +39,6 @@ public class AcrobaticCastlingCard extends Card<PieceCardParam> {
     }
 
     @Override
-    protected boolean doesNotCreateCheck(ChessBoard chessBoard, PieceCardParam param) {
-        Piece king = findKing(chessBoard);
-        Rock rock = (Rock) param.piece();
-        Position rockDest = computeRockDestination(king, rock);
-        Position kingDest = computeKingDestination(king, rockDest);
-
-        chessBoard.fakeSquare(null, king.getPosition());
-        chessBoard.fakeSquare(null, rock.getPosition());
-        chessBoard.fakeSquare(rock, rockDest);
-        chessBoard.fakeSquare(king, kingDest);
-        boolean check = chessBoard.isKingUnderAttack(chessBoard.getCurrentTurn());
-        chessBoard.unfakeAllSquares();
-        return !check;
-    }
-
-    @Override
     protected void doAction(ChessBoard chessBoard, PieceCardParam param) {
         Piece king = findKing(chessBoard);
         Rock rock = (Rock) param.piece();

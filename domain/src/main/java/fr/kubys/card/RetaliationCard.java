@@ -33,14 +33,6 @@ public class RetaliationCard extends Card<PieceCardParam> {
     }
 
     @Override
-    protected boolean doesNotCreateCheck(ChessBoard chessBoard, PieceCardParam param) {
-        chessBoard.fakeSquare(null, param.piece().getPosition());
-        boolean check = chessBoard.isKingUnderAttack(chessBoard.getCurrentTurn().opposite());
-        chessBoard.unfakeSquare(param.piece().getPosition());
-        return !check;
-    }
-
-    @Override
     protected void doAction(ChessBoard chessBoard, PieceCardParam param) {
         chessBoard.removePieceFromTheBoard(param.piece());
     }

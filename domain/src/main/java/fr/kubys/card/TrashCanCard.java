@@ -20,15 +20,6 @@ public class TrashCanCard extends Card<EffectCardParam> {
     }
 
     @Override
-    protected boolean doesNotCreateCheck(ChessBoard chessBoard, EffectCardParam param) {
-        // Temporarily remove the effect and check if our king is under attack
-        chessBoard.removeEffect(param.effect());
-        boolean check = chessBoard.isKingUnderAttack(chessBoard.getCurrentTurn());
-        chessBoard.addEffect(param.effect());
-        return !check;
-    }
-
-    @Override
     protected void doAction(ChessBoard chessBoard, EffectCardParam param) {
         chessBoard.removeEffect(param.effect());
     }

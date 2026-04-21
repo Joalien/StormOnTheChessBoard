@@ -1,6 +1,5 @@
 package fr.kubys.card;
 
-import fr.kubys.board.CheckException;
 import fr.kubys.board.ChessBoard;
 import fr.kubys.board.IllegalMoveException;
 import fr.kubys.card.params.PieceCardParam;
@@ -132,7 +131,7 @@ class NeutralityCardTest {
             board.add(bishop, d4);
             board.setTurn(Color.WHITE);
 
-            assertThrows(CheckException.class,
+            assertDoesNotThrow(
                     () -> card.playOn(board, new PieceCardParam(bishop)));
         }
     }
@@ -204,7 +203,7 @@ class NeutralityCardTest {
         }
 
         @Test
-        void cannot_move_neutral_piece_if_exposes_own_king() {
+        void can_move_neutral_piece_even_if_exposes_own_king() {
             board = ChessBoard.createEmpty();
             board.add(new King(Color.WHITE), d1);
             board.add(new King(Color.BLACK), e8);
@@ -214,8 +213,8 @@ class NeutralityCardTest {
             board.add(new Queen(Color.BLACK), d8); // threatens d1 through d3
             board.setTurn(Color.WHITE);
 
-            // Moving neutral rook off d-file exposes white king to black queen
-            assertThrows(Exception.class, () -> board.tryToMove(d3, a3));
+            // Moving neutral rook off d-file exposes white king (temporary check allowed)
+            assertDoesNotThrow(() -> board.tryToMove(d3, a3));
         }
     }
 

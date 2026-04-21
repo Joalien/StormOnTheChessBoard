@@ -21,11 +21,6 @@ public class MadHouseCard extends Card<MadHouseCardParam> {
     }
 
     @Override
-    protected boolean doesNotCreateCheck(ChessBoard chessBoard, MadHouseCardParam param) {
-        return true;
-    }
-
-    @Override
     protected void doAction(ChessBoard chessBoard, MadHouseCardParam param) {
         Position rockPosition = param.rock().getPosition();
         Position bishopPosition = param.bishop().getPosition();

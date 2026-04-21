@@ -34,23 +34,6 @@ public class MercyCard extends Card<NoCardParam> {
     }
 
     @Override
-    protected boolean doesNotCreateCheck(ChessBoard chessBoard, NoCardParam param) {
-        PieceRemoval removal = findCapturedPawnRemoval(chessBoard);
-        Piece capturedPawn = removal.piece();
-        Position capturedPosition = removal.position();
-        Position mercySquare = computeMercySquare(capturedPosition, chessBoard.getLastMoveFrom());
-        Piece attacker = chessBoard.at(capturedPosition).getPiece().orElseThrow();
-
-        chessBoard.fakeSquare(capturedPawn, capturedPosition);
-        if (!mercySquare.equals(capturedPosition)) {
-            chessBoard.fakeSquare(attacker, mercySquare);
-        }
-        boolean isKingUnderAttack = chessBoard.isKingUnderAttack(capturedPawn.getColor());
-        chessBoard.unfakeAllSquares();
-        return !isKingUnderAttack;
-    }
-
-    @Override
     protected void doAction(ChessBoard chessBoard, NoCardParam param) {
         PieceRemoval removal = findCapturedPawnRemoval(chessBoard);
         Piece capturedPawn = removal.piece();

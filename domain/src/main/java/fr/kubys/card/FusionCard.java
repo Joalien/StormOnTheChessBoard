@@ -31,14 +31,6 @@ public class FusionCard extends Card<PieceToPositionCardParam> {
     }
 
     @Override
-    protected boolean doesNotCreateCheck(ChessBoard chessBoard, PieceToPositionCardParam param) {
-        chessBoard.fakeSquare(null, param.piece().getPosition());
-        boolean safe = !chessBoard.isKingUnderAttack(chessBoard.getCurrentTurn());
-        chessBoard.unfakeSquare(param.piece().getPosition());
-        return safe;
-    }
-
-    @Override
     protected void doAction(ChessBoard chessBoard, PieceToPositionCardParam param) {
         Piece movingPiece = param.piece();
         Piece targetPiece = chessBoard.at(param.positionToMoveOn()).getPiece().orElseThrow();

@@ -21,11 +21,6 @@ public class MaddeningSquareCard extends Card<PositionCardParam> implements Effe
     }
 
     @Override
-    protected boolean doesNotCreateCheck(ChessBoard chessBoard, PositionCardParam param) {
-        return true;
-    }
-
-    @Override
     protected void doAction(ChessBoard chessBoard, PositionCardParam param) {
         chessBoard.addEffect(new MaddeningSquareEffect(chessBoard, param.position()));
     }

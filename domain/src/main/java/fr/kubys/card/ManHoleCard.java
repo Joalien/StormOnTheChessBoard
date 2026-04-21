@@ -22,15 +22,6 @@ public class ManHoleCard extends Card<ManHoleCardParam> implements Effectable<Ma
     }
 
     @Override
-    protected boolean doesNotCreateCheck(ChessBoard chessBoard, ManHoleCardParam param) {
-        Optional<Piece> piece1 = chessBoard.at(param.position1()).getPiece();
-        Optional<Piece> piece2 = chessBoard.at(param.position2()).getPiece();
-        return piece1.isEmpty() || piece2.isEmpty() ||
-                piece1.get().getColor() == piece2.get().getColor() ||
-                !piece1.get().isKing() || !piece2.get().isKing();
-    }
-
-    @Override
     protected void doAction(ChessBoard chessBoard, ManHoleCardParam param) {
         chessBoard.addEffect(new ManHoleEffect(param.position1(), param.position2()));
     }

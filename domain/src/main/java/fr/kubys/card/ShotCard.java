@@ -30,14 +30,6 @@ public class ShotCard extends Card<PieceToPositionCardParam> {
     }
 
     @Override
-    protected boolean doesNotCreateCheck(ChessBoard chessBoard, PieceToPositionCardParam param) {
-        chessBoard.fakeSquare(null, param.positionToMoveOn());
-        boolean check = chessBoard.isKingUnderAttack(chessBoard.getCurrentTurn());
-        chessBoard.unfakeSquare(param.positionToMoveOn());
-        return !check;
-    }
-
-    @Override
     protected void doAction(ChessBoard chessBoard, PieceToPositionCardParam param) {
         Piece target = chessBoard.at(param.positionToMoveOn()).getPiece().orElseThrow();
         chessBoard.removePieceFromTheBoard(target);

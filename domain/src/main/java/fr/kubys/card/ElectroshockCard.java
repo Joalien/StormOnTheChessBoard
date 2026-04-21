@@ -32,12 +32,6 @@ public class ElectroshockCard extends Card<NoCardParam> {
     }
 
     @Override
-    protected boolean doesNotCreateCheck(ChessBoard chessBoard, NoCardParam param) {
-        // Auto-move card; check is verified implicitly
-        return true;
-    }
-
-    @Override
     protected void doAction(ChessBoard chessBoard, NoCardParam param) {
         Color currentTurn = chessBoard.getCurrentTurn();
         Color enemy = currentTurn.opposite();

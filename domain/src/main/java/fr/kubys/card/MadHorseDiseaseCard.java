@@ -22,16 +22,6 @@ public class MadHorseDiseaseCard extends Card<KnightCardParam> {
     }
 
     @Override
-    protected boolean doesNotCreateCheck(ChessBoard chessBoard, KnightCardParam param) {
-        Position knightPosition = param.knight().getPosition();
-        Bishop fakeBishop = new Bishop(param.knight().getColor());
-        chessBoard.fakeSquare(fakeBishop, knightPosition);
-        boolean check = chessBoard.isKingUnderAttack(chessBoard.getCurrentTurn());
-        chessBoard.unfakeAllSquares();
-        return !check;
-    }
-
-    @Override
     protected void doAction(ChessBoard chessBoard, KnightCardParam param) {
         Position knightPosition = param.knight().getPosition();
         chessBoard.removePieceFromTheBoard(param.knight());

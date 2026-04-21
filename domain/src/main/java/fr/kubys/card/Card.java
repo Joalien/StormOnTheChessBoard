@@ -1,6 +1,5 @@
 package fr.kubys.card;
 
-import fr.kubys.board.CheckException;
 import fr.kubys.board.ChessBoard;
 import fr.kubys.card.params.CardParam;
 
@@ -23,15 +22,10 @@ public abstract class Card<T extends CardParam> {
 
     public final void playOn(ChessBoard chessBoard, T param) {
         validInput(chessBoard, param);
-
-        if (!doesNotCreateCheck(chessBoard, param)) throw new CheckException();
-//        log.info("{} card is played!", this.name);
         doAction(chessBoard, param);
     }
 
     protected abstract void validInput(ChessBoard chessBoard, T param);
-
-    protected abstract boolean doesNotCreateCheck(ChessBoard chessBoard, T param);
 
     protected abstract void doAction(ChessBoard chessBoard, T param);
 

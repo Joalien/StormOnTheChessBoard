@@ -1,6 +1,5 @@
 package fr.kubys.card;
 
-import fr.kubys.board.CheckException;
 import fr.kubys.board.ChessBoard;
 import fr.kubys.card.params.PieceCardParam;
 import fr.kubys.core.Color;
@@ -141,7 +140,7 @@ class PsychopathCardTest {
         Pawn enemy2 = new Pawn(Color.BLACK);
         board.add(enemy2, g4);
 
-        assertThrows(CheckException.class,
+        assertDoesNotThrow(
                 () -> card.playOn(board, new PieceCardParam(bishop)));
     }
 }

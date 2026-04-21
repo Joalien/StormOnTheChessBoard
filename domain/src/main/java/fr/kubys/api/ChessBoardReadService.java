@@ -31,4 +31,6 @@ public interface ChessBoardReadService {
     Set<Position> getLegalMoves(Position position);
 
     List<Piece> getCapturedPieces();
+
+    boolean isCurrentPlayerInCheck();
 }

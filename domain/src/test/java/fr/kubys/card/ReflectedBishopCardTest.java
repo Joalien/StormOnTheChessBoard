@@ -1,7 +1,6 @@
 package fr.kubys.card;
 
 import fr.kubys.board.CannotTakeKingException;
-import fr.kubys.board.CheckException;
 import fr.kubys.board.ChessBoard;
 import fr.kubys.card.params.ReflectedBishopCardParam;
 import fr.kubys.core.Color;
@@ -89,13 +88,14 @@ class ReflectedBishopCardTest {
         }
 
         @Test
-        void should_not_move_if_it_check_itself() {
+        void should_move_even_if_it_creates_check() {
             chessBoard.add(new King(Color.WHITE), h2);
             chessBoard.add(new Rock(Color.BLACK), a2);
 
-            assertThrows(CheckException.class, () -> reflectedBishop.playOn(chessBoard, new ReflectedBishopCardParam(bishop, f7)));
+            assertDoesNotThrow(() -> reflectedBishop.playOn(chessBoard, new ReflectedBishopCardParam(bishop, f7)));
 
-            assertEquals(bishop, chessBoard.at(e2).getPiece().get());
+            // Card executes even if it creates check (temporary check allowed)
+            assertTrue(chessBoard.at(e2).getPiece().isEmpty());
         }
 
         @Test

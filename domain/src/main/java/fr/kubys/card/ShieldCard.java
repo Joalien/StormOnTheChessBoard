@@ -20,11 +20,6 @@ public class ShieldCard extends Card<NoCardParam> implements Effectable<ShieldEf
     }
 
     @Override
-    protected boolean doesNotCreateCheck(ChessBoard chessBoard, NoCardParam param) {
-        return true;
-    }
-
-    @Override
     protected void doAction(ChessBoard chessBoard, NoCardParam param) {
         chessBoard.addEffect(new ShieldEffect(chessBoard.getLastMovedPiece(), chessBoard.getTurnNumber()));
     }

@@ -33,18 +33,6 @@ public class FourCornersCard extends Card<PieceCardParam> {
     }
 
     @Override
-    protected boolean doesNotCreateCheck(ChessBoard chessBoard, PieceCardParam param) {
-        Position freeCorner = CORNERS.stream()
-                .filter(pos -> chessBoard.at(pos).getPiece().isEmpty())
-                .findFirst().orElseThrow();
-        chessBoard.fakeSquare(param.piece(), freeCorner);
-        chessBoard.fakeSquare(null, param.piece().getPosition());
-        boolean check = chessBoard.isKingUnderAttack(chessBoard.getCurrentTurn());
-        chessBoard.unfakeAllSquares();
-        return !check;
-    }
-
-    @Override
     protected void doAction(ChessBoard chessBoard, PieceCardParam param) {
         Position freeCorner = CORNERS.stream()
                 .filter(pos -> chessBoard.at(pos).getPiece().isEmpty())

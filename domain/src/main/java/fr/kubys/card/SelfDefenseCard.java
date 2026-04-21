@@ -26,19 +26,6 @@ public class SelfDefenseCard extends Card<NoCardParam> {
     }
 
     @Override
-    protected boolean doesNotCreateCheck(ChessBoard chessBoard, NoCardParam param) {
-        PieceRemoval removal = findCapturedPieceRemoval(chessBoard);
-        Piece capturedPiece = removal.piece();
-        Position capturedPosition = removal.position();
-
-        // The attacking piece is on capturedPosition — fake it as the restored captured piece
-        chessBoard.fakeSquare(capturedPiece, capturedPosition);
-        boolean isKingUnderAttack = chessBoard.isKingUnderAttack(capturedPiece.getColor());
-        chessBoard.unfakeAllSquares();
-        return !isKingUnderAttack;
-    }
-
-    @Override
     protected void doAction(ChessBoard chessBoard, NoCardParam param) {
         PieceRemoval removal = findCapturedPieceRemoval(chessBoard);
         Piece capturedPiece = removal.piece();

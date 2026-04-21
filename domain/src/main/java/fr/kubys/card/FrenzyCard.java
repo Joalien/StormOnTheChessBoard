@@ -19,11 +19,6 @@ public class FrenzyCard extends Card<NoCardParam> implements Effectable<FrenzyEf
     }
 
     @Override
-    protected boolean doesNotCreateCheck(ChessBoard chessBoard, NoCardParam param) {
-        return true;
-    }
-
-    @Override
     protected void doAction(ChessBoard chessBoard, NoCardParam param) {
         chessBoard.addEffect(new FrenzyEffect(chessBoard));
     }

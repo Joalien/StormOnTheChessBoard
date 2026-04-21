@@ -52,23 +52,6 @@ public class TrailerCard extends Card<PieceToPositionCardParam> {
     }
 
     @Override
-    protected boolean doesNotCreateCheck(ChessBoard chessBoard, PieceToPositionCardParam param) {
-        Pawn pawn = (Pawn) param.piece();
-        Position pawnPos = pawn.getPosition();
-        Position behindPos = getBehindPosition(pawn).orElseThrow();
-        Piece behindPiece = chessBoard.at(behindPos).getPiece().orElseThrow();
-        // Behind piece follows to stay immediately behind the pawn
-        Position behindNewPos = computeBehindNewPosition(pawn, param.positionToMoveOn());
-
-        chessBoard.fakeSquare(null, behindPos);
-        chessBoard.fakeSquare(behindPiece, behindNewPos);
-        chessBoard.fakeSquare(pawn, param.positionToMoveOn());
-        boolean check = chessBoard.isKingUnderAttack(chessBoard.getCurrentTurn());
-        chessBoard.unfakeAllSquares();
-        return !check;
-    }
-
-    @Override
     protected void doAction(ChessBoard chessBoard, PieceToPositionCardParam param) {
         Pawn pawn = (Pawn) param.piece();
         Position behindPos = getBehindPosition(pawn).orElseThrow();

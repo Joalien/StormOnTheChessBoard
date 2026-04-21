@@ -21,18 +21,6 @@ public class StateVisitCard extends Card<NoCardParam> {
     }
 
     @Override
-    protected boolean doesNotCreateCheck(ChessBoard chessBoard, NoCardParam param) {
-        Piece ownKing = findKing(chessBoard, chessBoard.getCurrentTurn());
-        Piece enemyKing = findKing(chessBoard, chessBoard.getCurrentTurn().opposite());
-        chessBoard.fakeSquare(ownKing, enemyKing.getPosition());
-        chessBoard.fakeSquare(enemyKing, ownKing.getPosition());
-        boolean ownCheck = chessBoard.isKingUnderAttack(chessBoard.getCurrentTurn());
-        boolean enemyCheck = chessBoard.isKingUnderAttack(chessBoard.getCurrentTurn().opposite());
-        chessBoard.unfakeAllSquares();
-        return !ownCheck && !enemyCheck;
-    }
-
-    @Override
     protected void doAction(ChessBoard chessBoard, NoCardParam param) {
         Piece ownKing = findKing(chessBoard, chessBoard.getCurrentTurn());
         Piece enemyKing = findKing(chessBoard, chessBoard.getCurrentTurn().opposite());

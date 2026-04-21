@@ -50,19 +50,6 @@ public class SnowplowCard extends Card<PieceToPositionCardParam> {
     }
 
     @Override
-    protected boolean doesNotCreateCheck(ChessBoard chessBoard, PieceToPositionCardParam param) {
-        List<Piece> enemies = getEnemiesOnPath(chessBoard, param.piece(), param.positionToMoveOn());
-        chessBoard.fakeSquare(null, param.piece().getPosition());
-        chessBoard.fakeSquare(param.piece(), param.positionToMoveOn());
-        for (Piece enemy : enemies) {
-            chessBoard.fakeSquare(null, enemy.getPosition());
-        }
-        boolean check = chessBoard.isKingUnderAttack(chessBoard.getCurrentTurn());
-        chessBoard.unfakeAllSquares();
-        return !check;
-    }
-
-    @Override
     protected void doAction(ChessBoard chessBoard, PieceToPositionCardParam param) {
         List<Piece> enemies = getEnemiesOnPath(chessBoard, param.piece(), param.positionToMoveOn());
         // Remove enemy pieces first

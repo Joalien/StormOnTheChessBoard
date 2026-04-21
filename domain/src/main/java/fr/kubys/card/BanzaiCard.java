@@ -39,16 +39,6 @@ public class BanzaiCard extends Card<PieceCardParam> {
     }
 
     @Override
-    protected boolean doesNotCreateCheck(ChessBoard chessBoard, PieceCardParam param) {
-        Position target = threeSquaresForward(param.piece());
-        chessBoard.fakeSquare(param.piece(), target);
-        chessBoard.fakeSquare(null, param.piece().getPosition());
-        boolean check = chessBoard.isKingUnderAttack(chessBoard.getCurrentTurn());
-        chessBoard.unfakeAllSquares();
-        return !check;
-    }
-
-    @Override
     protected void doAction(ChessBoard chessBoard, PieceCardParam param) {
         Position target = threeSquaresForward(param.piece());
         chessBoard.at(param.piece().getPosition()).removePiece();

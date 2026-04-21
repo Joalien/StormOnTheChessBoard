@@ -30,21 +30,6 @@ public class NuclearBombCard extends Card<PieceCardParam> {
     }
 
     @Override
-    protected boolean doesNotCreateCheck(ChessBoard chessBoard, PieceCardParam param) {
-        Set<Position> affectedPositions = getAffectedPositions(param.piece().getPosition());
-        // Fake-remove the exploding piece and all non-king adjacent pieces
-        chessBoard.fakeSquare(null, param.piece().getPosition());
-        for (Position pos : affectedPositions) {
-            chessBoard.at(pos).getPiece()
-                    .filter(p -> !p.isKing())
-                    .ifPresent(p -> chessBoard.fakeSquare(null, pos));
-        }
-        boolean isKingUnderAttack = chessBoard.isKingUnderAttack(chessBoard.getCurrentTurn());
-        chessBoard.unfakeAllSquares();
-        return !isKingUnderAttack;
-    }
-
-    @Override
     protected void doAction(ChessBoard chessBoard, PieceCardParam param) {
         Position center = param.piece().getPosition();
         Set<Position> affectedPositions = getAffectedPositions(center);

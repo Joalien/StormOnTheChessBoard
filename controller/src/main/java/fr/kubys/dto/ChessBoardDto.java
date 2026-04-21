@@ -26,4 +26,5 @@ public class ChessBoardDto {
     private Set<String> pendingPromotions;
     private Set<String> checkMateTargets;
     private List<String> capturedPieces;
+    private boolean isInCheck;
 }

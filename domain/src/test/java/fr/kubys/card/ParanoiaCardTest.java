@@ -1,6 +1,5 @@
 package fr.kubys.card;
 
-import fr.kubys.board.CheckException;
 import fr.kubys.board.ChessBoard;
 import fr.kubys.board.effect.BombingEffect;
 import fr.kubys.board.effect.NeutralityEffect;
@@ -150,7 +149,7 @@ class ParanoiaCardTest {
         board.add(enemyRook, e5);
         board.add(enemyPawn, g5);
 
-        assertThrows(CheckException.class,
+        assertDoesNotThrow(
                 () -> card.playOn(board, new PieceToPositionCardParam(enemyBishop, g5)));
     }
 

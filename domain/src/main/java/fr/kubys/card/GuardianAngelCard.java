@@ -42,14 +42,6 @@ public class GuardianAngelCard extends Card<PieceToPositionCardParam> {
     }
 
     @Override
-    protected boolean doesNotCreateCheck(ChessBoard chessBoard, PieceToPositionCardParam param) {
-        chessBoard.fakeSquare(param.piece(), param.positionToMoveOn());
-        boolean safe = !chessBoard.isKingUnderAttack(chessBoard.getCurrentTurn());
-        chessBoard.unfakeSquare(param.positionToMoveOn());
-        return safe;
-    }
-
-    @Override
     protected void doAction(ChessBoard chessBoard, PieceToPositionCardParam param) {
         chessBoard.add(param.piece(), param.positionToMoveOn());
     }

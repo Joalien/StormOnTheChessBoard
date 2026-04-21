@@ -35,11 +35,6 @@ public class MajorettesCard extends Card<MajorettesCardParam> {
     }
 
     @Override
-    protected boolean doesNotCreateCheck(ChessBoard chessBoard, MajorettesCardParam param) {
-        return true;
-    }
-
-    @Override
     protected void doAction(ChessBoard chessBoard, MajorettesCardParam param) {
         Position target1 = lateralTarget(chessBoard, param.piece1(), param.direction1());
         Position target2 = lateralTarget(chessBoard, param.piece2(), param.direction2());

@@ -40,11 +40,6 @@ public class HomeCard extends Card<PieceToPositionCardParam> {
     }
 
     @Override
-    protected boolean doesNotCreateCheck(ChessBoard chessBoard, PieceToPositionCardParam param) {
-        return true; // FIXME
-    }
-
-    @Override
     protected void doAction(ChessBoard chessBoard, PieceToPositionCardParam param) {
         chessBoard.at(param.positionToMoveOn()).getPiece().ifPresent(chessBoard::removePieceFromTheBoard);
         chessBoard.move(param.piece(), param.positionToMoveOn());

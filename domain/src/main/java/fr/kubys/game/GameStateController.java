@@ -1,6 +1,7 @@
 package fr.kubys.game;
 
 import fr.kubys.api.ChessBoardService;
+import fr.kubys.board.CheckException;
 import fr.kubys.board.ChessBoard;
 import fr.kubys.board.effect.Effect;
 import fr.kubys.card.Card;
@@ -106,6 +107,8 @@ public class GameStateController implements ChessBoardService {
     @Override
     public void tryToPass() {
         assertGameHasAlreadyStarted();
+        if (chessBoard.isKingUnderAttack(getCurrentPlayer().getColor()))
+            throw new CheckException();
         currentState.getState().tryToPass(this);
         setCurrentState(StateEnum.BEGINNING_OF_THE_TURN);
         swapCurrentPlayer();
@@ -213,6 +216,12 @@ public class GameStateController implements ChessBoardService {
     @Override
     public Set<Position> getPendingPromotions() {
         return Set.copyOf(pendingPromotions);
+    }
+
+    @Override
+    public boolean isCurrentPlayerInCheck() {
+        assertGameHasAlreadyStarted();
+        return chessBoard.isKingUnderAttack(getCurrentPlayer().getColor());
     }
 
     @Override

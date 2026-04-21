@@ -112,9 +112,7 @@ public class ChessBoard {
     }
 
     public Set<Position> getLegalMoves(Piece piece) {
-        return getAllAttackablePosition(piece).stream()
-                .filter(pos -> !doesMovingPieceCheckOurOwnKing(piece, pos))
-                .collect(Collectors.toSet());
+        return getAllAttackablePosition(piece);
     }
 
     public boolean canAttack(Piece piece, Position positionToMoveOn) {
@@ -274,8 +272,6 @@ public class ChessBoard {
         boolean isCastleMove = getCastleRookPassSquare(piece, positionToMoveOn).isPresent();
         if (!isCastleMove && !canAttack(piece, positionToMoveOn, piece.getEffectiveColor(currentTurn)))
             throw new IllegalMoveException("Impossible de déplacer %s vers %s".formatted(piece, positionToMoveOn));
-        if (doesMovingPieceCheckOurOwnKing(piece, positionToMoveOn))
-            throw new CheckException();
         return true;
     }
 

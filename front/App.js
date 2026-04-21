@@ -127,6 +127,29 @@ const globalCSS = `
     box-shadow: 0 4px 12px rgba(248,81,73,0.15);
   }
 
+  @keyframes sotc-check-blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+  }
+
+  .sotc-check-warning {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 14px;
+    border-radius: 8px;
+    background: rgba(248,81,73,0.12);
+    border: 1px solid rgba(248,81,73,0.4);
+    color: #f85149;
+    font-size: 13px;
+    font-weight: 600;
+    animation: sotc-check-blink 1.2s ease-in-out infinite;
+  }
+
+  .sotc-check-warning span.sotc-check-icon {
+    font-size: 18px;
+  }
+
   .sotc-btn-shuffle {
     border-color: rgba(56,189,248,0.3);
     color: #38bdf8;
@@ -328,6 +351,7 @@ export default function App() {
     const [checkMateTargets, setCheckMateTargets] = useState([]);
     const [currentState, setCurrentState] = useState(null);
     const [capturedPieces, setCapturedPieces] = useState([]);
+    const [isInCheck, setIsInCheck] = useState(false);
     const [myColor, setMyColor] = useState(getPlayerColorFromUrl);
     const [legalMoves, setLegalMoves] = useState([]);
 
@@ -618,6 +642,7 @@ export default function App() {
                 setCheckMateTargets(data.checkMateTargets || []);
                 setCurrentState(data.currentState);
                 setCapturedPieces(data.capturedPieces || []);
+                setIsInCheck(data.isInCheck || false);
                 setPromotionSquare(null);
             });
     }
@@ -1073,6 +1098,13 @@ export default function App() {
 
                 {/* Right panel: Actions + Card details + Effects + Captured */}
                 <aside className="sotc-aside sotc-aside-right" onClick={e => e.stopPropagation()} style={{width: '320px', flexShrink: 0, position: 'sticky', top: '80px', display: 'flex', flexDirection: 'column', gap: '12px', zIndex: selectedCard && selectedCard.isEffect ? 51 : undefined}}>
+                    {/* Check warning */}
+                    {isInCheck && isMyTurn && (
+                        <div className="sotc-check-warning" title="Votre roi est en échec ! Jouez une carte pour parer l'échec ou annulez votre coup.">
+                            <span className="sotc-check-icon">/!\</span>
+                            <span>Votre roi est en échec !</span>
+                        </div>
+                    )}
                     {/* Action buttons */}
                     <div style={{display: 'flex', gap: '8px'}}>
                         <button className="sotc-btn sotc-btn-end" style={{flex: 1, padding: '10px 13px 8px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '2px'}} onClick={endTurn} disabled={!isMyTurn}>

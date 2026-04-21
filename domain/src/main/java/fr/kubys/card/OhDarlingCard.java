@@ -36,15 +36,6 @@ public class OhDarlingCard extends Card<PieceToPositionCardParam> {
     }
 
     @Override
-    protected boolean doesNotCreateCheck(ChessBoard chessBoard, PieceToPositionCardParam param) {
-        chessBoard.fakeSquare(param.piece(), param.positionToMoveOn());
-        chessBoard.fakeSquare(null, param.piece().getPosition());
-        boolean check = chessBoard.isKingUnderAttack(chessBoard.getCurrentTurn());
-        chessBoard.unfakeAllSquares();
-        return !check;
-    }
-
-    @Override
     protected void doAction(ChessBoard chessBoard, PieceToPositionCardParam param) {
         chessBoard.at(param.piece().getPosition()).removePiece();
         chessBoard.add(param.piece(), param.positionToMoveOn());

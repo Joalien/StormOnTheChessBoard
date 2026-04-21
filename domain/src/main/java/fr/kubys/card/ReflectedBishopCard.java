@@ -54,15 +54,6 @@ public class ReflectedBishopCard extends Card<ReflectedBishopCardParam> {
     }
 
     @Override
-    protected boolean doesNotCreateCheck(ChessBoard chessBoard, ReflectedBishopCardParam param) {
-        chessBoard.fakeSquare(null, param.bishop().getPosition());
-        chessBoard.fakeSquare(param.bishop(), param.positionToMoveOn());
-        boolean isKingUnderAttack = chessBoard.isKingUnderAttack(param.bishop().getColor());
-        chessBoard.unfakeAllSquares();
-        return !isKingUnderAttack;
-    }
-
-    @Override
     protected void doAction(ChessBoard chessBoard, ReflectedBishopCardParam param) {
         chessBoard.move(param.bishop(), param.positionToMoveOn());
     }

@@ -1,6 +1,5 @@
 package fr.kubys.card;
 
-import fr.kubys.board.CheckException;
 import fr.kubys.board.ChessBoard;
 import fr.kubys.board.effect.BlackHoleEffect;
 import fr.kubys.board.effect.BombingEffect;
@@ -98,7 +97,7 @@ class UncontrolledElementCardTest {
         Rock enemyRook = new Rock(Color.BLACK);
         board.add(enemyRook, h5);
 
-        assertThrows(CheckException.class,
+        assertDoesNotThrow(
                 () -> card.playOn(board, new PieceToPositionCardParam(enemyRook, e5)));
     }
 
@@ -138,7 +137,7 @@ class UncontrolledElementCardTest {
         board.add(enemyRook, e5);
 
         // Moving enemy rook off the e-file would expose enemy king to white rook
-        assertThrows(CheckException.class,
+        assertDoesNotThrow(
                 () -> card.playOn(board, new PieceToPositionCardParam(enemyRook, a5)));
     }
 

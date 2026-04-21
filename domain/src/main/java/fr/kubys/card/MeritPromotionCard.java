@@ -29,11 +29,6 @@ public class MeritPromotionCard extends Card<PieceCardParam> {
     }
 
     @Override
-    protected boolean doesNotCreateCheck(ChessBoard chessBoard, PieceCardParam param) {
-        return true;
-    }
-
-    @Override
     protected void doAction(ChessBoard chessBoard, PieceCardParam param) {
         var position = param.piece().getPosition();
         var color = param.piece().getColor();

@@ -19,11 +19,6 @@ public class OriginsCard extends Card<NoCardParam> implements Effectable<Origins
     }
 
     @Override
-    protected boolean doesNotCreateCheck(ChessBoard chessBoard, NoCardParam param) {
-        return true;
-    }
-
-    @Override
     protected void doAction(ChessBoard chessBoard, NoCardParam param) {
         chessBoard.addEffect(new OriginsEffect());
     }

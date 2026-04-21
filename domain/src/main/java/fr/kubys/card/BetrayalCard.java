@@ -26,11 +26,6 @@ public class BetrayalCard extends Card<PieceCardParam> {
     }
 
     @Override
-    protected boolean doesNotCreateCheck(ChessBoard chessBoard, PieceCardParam param) {
-        return true;
-    }
-
-    @Override
     protected void doAction(ChessBoard chessBoard, PieceCardParam param) {
         param.piece().setColor(chessBoard.getCurrentTurn());
     }

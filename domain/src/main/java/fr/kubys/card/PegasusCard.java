@@ -29,15 +29,6 @@ public class PegasusCard extends Card<PieceToPositionCardParam> {
     }
 
     @Override
-    protected boolean doesNotCreateCheck(ChessBoard chessBoard, PieceToPositionCardParam param) {
-        chessBoard.fakeSquare(null, param.piece().getPosition());
-        chessBoard.fakeSquare(param.piece(), param.positionToMoveOn());
-        boolean isKingUnderAttack = chessBoard.isKingUnderAttack(param.piece().getColor());
-        chessBoard.unfakeAllSquares();
-        return !isKingUnderAttack;
-    }
-
-    @Override
     protected void doAction(ChessBoard chessBoard, PieceToPositionCardParam param) {
         chessBoard.move(param.piece(), param.positionToMoveOn());
     }

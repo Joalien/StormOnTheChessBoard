@@ -25,11 +25,6 @@ public class BarricadeCard extends Card<BarricadeCardParam> implements Effectabl
     }
 
     @Override
-    protected boolean doesNotCreateCheck(ChessBoard chessBoard, BarricadeCardParam param) {
-        return true;
-    }
-
-    @Override
     protected void doAction(ChessBoard chessBoard, BarricadeCardParam param) {
         chessBoard.addEffect(new BarricadeEffect(param.from1(), param.to1(), param.from2(), param.to2()));
     }

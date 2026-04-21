@@ -118,9 +118,8 @@ class PasDeDeuxCardTest {
         board.add(pawn, e2);
         board.move(pawn, e4);
 
-        // Rook c1 -> c3 (delta 0, +2) would expose king to queen
-        assertThrows(Exception.class,
-                () -> card.playOn(board, new PieceCardParam(rook)));
+        // Rook c1 -> c3 (delta 0, +2) would expose king to queen (temporary check allowed)
+        assertDoesNotThrow(() -> card.playOn(board, new PieceCardParam(rook)));
     }
 
     @Test

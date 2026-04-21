@@ -33,16 +33,6 @@ public class VampirismCard extends Card<PieceCardParam> {
     }
 
     @Override
-    protected boolean doesNotCreateCheck(ChessBoard chessBoard, PieceCardParam param) {
-        Piece capturedPiece = findCapturedPieceThisTurn(chessBoard);
-        Piece newPiece = createPieceOfSameType(capturedPiece, param.piece().getColor());
-        chessBoard.fakeSquare(newPiece, param.piece().getPosition());
-        boolean isKingUnderAttack = chessBoard.isKingUnderAttack(param.piece().getColor());
-        chessBoard.unfakeAllSquares();
-        return !isKingUnderAttack;
-    }
-
-    @Override
     protected void doAction(ChessBoard chessBoard, PieceCardParam param) {
         Piece capturedPiece = findCapturedPieceThisTurn(chessBoard);
         Piece newPiece = createPieceOfSameType(capturedPiece, param.piece().getColor());

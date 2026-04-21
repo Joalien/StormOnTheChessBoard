@@ -26,15 +26,6 @@ public class QuadrilleCard extends Card<QuadrilleCardParam> {
     }
 
     @Override
-    protected boolean doesNotCreateCheck(ChessBoard chessBoard, QuadrilleCardParam param) {
-        Map<Position, Optional<Piece>> pieces = saveWhichPieceShouldGoInWhichCorner(chessBoard, param.direction());
-        pieces.forEach((key, value) -> chessBoard.fakeSquare(value.orElse(null), key));
-        boolean isKingUnderAttack = chessBoard.isKingUnderAttack(chessBoard.getCurrentTurn());
-        chessBoard.unfakeAllSquares();
-        return !isKingUnderAttack;
-    }
-
-    @Override
     protected void doAction(ChessBoard chessBoard, QuadrilleCardParam param) {
         Map<Position, Optional<Piece>> pieces = saveWhichPieceShouldGoInWhichCorner(chessBoard, param.direction());
         removeCornersFromTheBoard(chessBoard);

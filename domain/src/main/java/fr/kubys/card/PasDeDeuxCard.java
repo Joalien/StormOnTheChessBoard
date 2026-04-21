@@ -37,16 +37,6 @@ public class PasDeDeuxCard extends Card<PieceCardParam> {
     }
 
     @Override
-    protected boolean doesNotCreateCheck(ChessBoard chessBoard, PieceCardParam param) {
-        Position destination = computeDestination(chessBoard, param.piece());
-        chessBoard.fakeSquare(null, param.piece().getPosition());
-        chessBoard.fakeSquare(param.piece(), destination);
-        boolean check = chessBoard.isKingUnderAttack(chessBoard.getCurrentTurn());
-        chessBoard.unfakeAllSquares();
-        return !check;
-    }
-
-    @Override
     protected void doAction(ChessBoard chessBoard, PieceCardParam param) {
         Position destination = computeDestination(chessBoard, param.piece());
         chessBoard.move(param.piece(), destination);

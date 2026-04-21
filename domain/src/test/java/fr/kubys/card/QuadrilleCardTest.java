@@ -1,6 +1,5 @@
 package fr.kubys.card;
 
-import fr.kubys.board.CheckException;
 import fr.kubys.board.ChessBoard;
 import fr.kubys.card.params.QuadrilleCardParam;
 import fr.kubys.core.Color;
@@ -168,7 +167,7 @@ class QuadrilleCardTest {
             chessBoard.add(new King(Color.WHITE), e1);
             chessBoard.add(a8Rock, h8);
 
-            Assertions.assertThrows(CheckException.class, () -> clockwiseQuadrille.playOn(chessBoard, new QuadrilleCardParam(QuadrilleCard.Direction.CLOCKWISE)));
+            Assertions.assertDoesNotThrow( () -> clockwiseQuadrille.playOn(chessBoard, new QuadrilleCardParam(QuadrilleCard.Direction.CLOCKWISE)));
             assertDoesNotThrow(() -> counterclockwiseQuadrille.playOn(chessBoard, new QuadrilleCardParam(QuadrilleCard.Direction.COUNTERCLOCKWISE)));
         }
 
@@ -178,7 +177,7 @@ class QuadrilleCardTest {
             chessBoard.add(new King(Color.WHITE), e1);
             chessBoard.add(a8Rock, a8);
 
-            Assertions.assertThrows(CheckException.class, () -> counterclockwiseQuadrille.playOn(chessBoard, new QuadrilleCardParam(QuadrilleCard.Direction.COUNTERCLOCKWISE)));
+            Assertions.assertDoesNotThrow( () -> counterclockwiseQuadrille.playOn(chessBoard, new QuadrilleCardParam(QuadrilleCard.Direction.COUNTERCLOCKWISE)));
             assertDoesNotThrow(() -> clockwiseQuadrille.playOn(chessBoard, new QuadrilleCardParam(QuadrilleCard.Direction.CLOCKWISE)));
         }
     }

@@ -1,5 +1,6 @@
 package fr.kubys.game;
 
+import fr.kubys.board.CheckException;
 import fr.kubys.card.Card;
 import fr.kubys.card.KangarooCard;
 import fr.kubys.card.LightweightSquadCard;
@@ -107,6 +108,35 @@ class GameStateControllerTest {
 
         assertEquals(5, gameStateController.getCurrentPlayer().getCards().size());
         assertEquals(StateEnum.MOVE_WITHOUT_CARD_PLAYED, gameStateController.getCurrentState());
+    }
+
+    @Test
+    void should_allow_move_into_check() {
+        // Move king's pawn to expose king — this was forbidden before, now allowed
+        assertDoesNotThrow(() -> gameStateController.tryToMove(f2, f3));
+    }
+
+    @Test
+    void should_not_pass_turn_while_in_check() {
+        // Move pawn to allow diagonal attack on king
+        gameStateController.tryToMove(f2, f3);
+        gameStateController.tryToPass(); // end white turn
+        gameStateController.tryToMove(e7, e5); // black moves
+        gameStateController.tryToPass(); // end black turn
+        gameStateController.tryToMove(g2, g4); // white plays fool's mate setup
+        gameStateController.tryToPass(); // end white turn
+        // Black queen delivers check
+        gameStateController.tryToMove(d8, h4);
+        // Black cannot pass while white is... wait, it's black's turn and black just checked white
+        // Actually after black moves, black tries to pass — but white's king is checked, not black's
+        // Let me reconsider: tryToPass checks getCurrentPlayer's king
+        // After black moves Qh4, it's still black's turn. Black's king is not in check.
+        // So black can pass. Then it's white's turn, white is in check.
+        // White should not be able to pass.
+        gameStateController.tryToPass(); // end black turn — OK, black is not in check
+        // Now it's white's turn, white king is in check from Qh4
+        assertTrue(gameStateController.isCurrentPlayerInCheck());
+        assertThrows(CheckException.class, () -> gameStateController.tryToPass());
     }
 
     @Test

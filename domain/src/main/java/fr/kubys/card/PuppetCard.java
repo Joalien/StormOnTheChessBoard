@@ -29,22 +29,6 @@ public class PuppetCard extends Card<PieceCardParam> {
     }
 
     @Override
-    protected boolean doesNotCreateCheck(ChessBoard chessBoard, PieceCardParam param) {
-        Piece king = chessBoard.allyPieces(chessBoard.getCurrentTurn()).stream()
-                .filter(Piece::isKing)
-                .findFirst()
-                .orElseThrow();
-        Position kingPos = king.getPosition();
-        Position pawnPos = param.piece().getPosition();
-
-        chessBoard.fakeSquare(king, pawnPos);
-        chessBoard.fakeSquare(param.piece(), kingPos);
-        boolean check = chessBoard.isKingUnderAttack(chessBoard.getCurrentTurn());
-        chessBoard.unfakeAllSquares();
-        return !check;
-    }
-
-    @Override
     protected void doAction(ChessBoard chessBoard, PieceCardParam param) {
         Piece king = chessBoard.allyPieces(chessBoard.getCurrentTurn()).stream()
                 .filter(Piece::isKing)

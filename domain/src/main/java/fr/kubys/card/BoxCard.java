@@ -31,17 +31,6 @@ public class BoxCard extends Card<TwoPieceCardParam> {
     }
 
     @Override
-    protected boolean doesNotCreateCheck(ChessBoard chessBoard, TwoPieceCardParam param) {
-        Position pos1 = param.piece1().getPosition();
-        Position pos2 = param.piece2().getPosition();
-        chessBoard.fakeSquare(param.piece2(), pos1);
-        chessBoard.fakeSquare(param.piece1(), pos2);
-        boolean isKingUnderAttack = chessBoard.isKingUnderAttack(chessBoard.getCurrentTurn());
-        chessBoard.unfakeAllSquares();
-        return !isKingUnderAttack;
-    }
-
-    @Override
     protected void doAction(ChessBoard chessBoard, TwoPieceCardParam param) {
         Position pos1 = param.piece1().getPosition();
         Position pos2 = param.piece2().getPosition();

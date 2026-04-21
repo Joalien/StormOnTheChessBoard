@@ -20,11 +20,6 @@ public class BlackHoleCard extends Card<PositionCardParam> implements Effectable
     }
 
     @Override
-    protected boolean doesNotCreateCheck(ChessBoard chessBoard, PositionCardParam param) {
-        return true;
-    }
-
-    @Override
     protected void doAction(ChessBoard chessBoard, PositionCardParam param) {
         chessBoard.addEffect(new BlackHoleEffect(param.position()));
     }

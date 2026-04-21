@@ -28,15 +28,6 @@ public class CourtlyLoveCard extends Card<CourtlyLoveCardParam> {
     }
 
     @Override
-    protected boolean doesNotCreateCheck(ChessBoard chessBoard, CourtlyLoveCardParam param) {
-        chessBoard.fakeSquare(null, param.knight().getPosition());
-        chessBoard.fakeSquare(param.knight(), param.positionToMoveOn());
-        boolean isKingUnderAttack = chessBoard.isKingUnderAttack(param.knight().getColor());
-        chessBoard.unfakeAllSquares();
-        return !isKingUnderAttack;
-    }
-
-    @Override
     protected void doAction(ChessBoard chessBoard, CourtlyLoveCardParam param) {
         chessBoard.move(param.knight(), param.positionToMoveOn());
     }

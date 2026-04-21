@@ -36,16 +36,6 @@ public class BreakthroughCard extends Card<PieceCardParam> {
     }
 
     @Override
-    protected boolean doesNotCreateCheck(ChessBoard chessBoard, PieceCardParam param) {
-        Position target = oneForward(param.piece());
-        chessBoard.fakeSquare(param.piece(), target);
-        chessBoard.fakeSquare(null, param.piece().getPosition());
-        boolean check = chessBoard.isKingUnderAttack(chessBoard.getCurrentTurn());
-        chessBoard.unfakeAllSquares();
-        return !check;
-    }
-
-    @Override
     protected void doAction(ChessBoard chessBoard, PieceCardParam param) {
         Position target = oneForward(param.piece());
         chessBoard.at(target).getPiece().ifPresent(p -> chessBoard.removePieceFromTheBoard(p));

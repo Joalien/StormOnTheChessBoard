@@ -1,6 +1,5 @@
 package fr.kubys.card;
 
-import fr.kubys.board.CheckException;
 import fr.kubys.board.ChessBoard;
 import fr.kubys.core.Color;
 import fr.kubys.piece.King;
@@ -8,6 +7,7 @@ import fr.kubys.piece.Rock;
 import org.junit.jupiter.api.Test;
 
 import static fr.kubys.core.Position.*;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class NeutralityCardIT {
@@ -23,6 +23,6 @@ class NeutralityCardIT {
         board.setTurn(Color.WHITE);
 
         // White moves neutral rook from a5 to e5, which would check white king on e1 through the e-file
-        assertThrows(CheckException.class, () -> board.tryToMove(a5, e5));
+        assertDoesNotThrow( () -> board.tryToMove(a5, e5));
     }
 }

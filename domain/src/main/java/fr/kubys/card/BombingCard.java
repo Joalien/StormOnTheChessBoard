@@ -27,11 +27,6 @@ public class BombingCard extends Card<PositionCardParam> implements Effectable<B
     }
 
     @Override
-    protected boolean doesNotCreateCheck(ChessBoard chessBoard, PositionCardParam param) {
-        return true;
-    }
-
-    @Override
     protected void doAction(ChessBoard chessBoard, PositionCardParam param) {
         chessBoard.addEffect(new BombingEffect(param.position(), chessBoard.getCurrentTurn()));
     }

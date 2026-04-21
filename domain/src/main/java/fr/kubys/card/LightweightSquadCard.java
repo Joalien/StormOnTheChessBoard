@@ -39,11 +39,6 @@ public class LightweightSquadCard extends Card<LightweightSquadCardParam> {
     }
 
     @Override
-    protected boolean doesNotCreateCheck(ChessBoard chessBoard, LightweightSquadCardParam param) {
-        return true; // FIXME
-    }
-
-    @Override
     protected void doAction(ChessBoard chessBoard, LightweightSquadCardParam param) {
         chessBoard.move(param.pawn1(), param.pawn1().twoSquaresForward().get());
         chessBoard.move(param.pawn2(), param.pawn2().twoSquaresForward().get());
