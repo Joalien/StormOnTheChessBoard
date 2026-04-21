@@ -79,4 +79,21 @@ class CardDeckTest {
         assertTrue(deck.getDiscard().isEmpty());
         assertEquals(5, player.getCards().size());
     }
+
+    @Test
+    void should_redeal_deterministically_for_a_given_seed() {
+        long seed = 42L;
+        CardDeck deck1 = new CardDeck(seed);
+        CardDeck deck2 = new CardDeck(seed);
+        Player player1 = new Player("P1", Color.WHITE);
+        Player player2 = new Player("P2", Color.WHITE);
+        for (int i = 0; i < 5; i++) deck1.dealCard(player1);
+        for (int i = 0; i < 5; i++) deck2.dealCard(player2);
+
+        deck1.shuffleAndRedeal(player1, 5);
+        deck2.shuffleAndRedeal(player2, 5);
+
+        assertEquals(player1.getCards(), player2.getCards(),
+                "Two decks with the same seed must redeal the same hand — required so that command replays are deterministic");
+    }
 }

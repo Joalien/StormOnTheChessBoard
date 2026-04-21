@@ -8,24 +8,27 @@ import fr.kubys.player.Player;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Random;
 import java.util.stream.IntStream;
 
 public class CardDeck {
 
     private final List<Card<? extends CardParam>> stack;
     private final List<Card<? extends CardParam>> discard;
+    private final Random random;
 
     CardDeck(long seed) {
         this.stack = new LinkedList<>(CardRegistry.createAllCards());
         this.discard = new LinkedList<>();
-//        Collections.shuffle(stack, new Random(seed));
+        this.random = new Random(seed);
+//        Collections.shuffle(stack, random);
     }
 
     void dealCard(Player player) {
         if (stack.isEmpty()) {
             stack.addAll(discard);
             discard.clear();
-            Collections.shuffle(stack);
+            Collections.shuffle(stack, random);
         }
         player.getCards().add(stack.remove(0));
     }
@@ -40,7 +43,7 @@ public class CardDeck {
         player.getCards().clear();
         stack.addAll(discard);
         discard.clear();
-        Collections.shuffle(stack);
+        Collections.shuffle(stack, random);
         IntStream.range(0, numberOfCards).forEach(i -> dealCard(player));
     }
 

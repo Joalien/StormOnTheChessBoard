@@ -1,11 +1,15 @@
 package fr.kubys.repository;
 
+import fr.kubys.card.Card;
 import fr.kubys.command.Command;
 import fr.kubys.command.EndTurnCommand;
 import fr.kubys.command.PlayMoveCommand;
+import fr.kubys.command.ShuffleCommand;
 import fr.kubys.command.StartGameCommand;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import java.util.List;
 
 import static fr.kubys.core.Position.*;
 import static org.junit.jupiter.api.Assertions.*;
@@ -78,5 +82,17 @@ class ChessBoardRepositoryImplTest {
     @Test
     void should_not_create_game_if_invalid_command() {
         assertThrows(GameNotFoundException.class, () -> chessBoardRepository.saveCommand(MOVE_GAME_COMMAND));
+    }
+
+    @Test
+    void hand_after_shuffle_must_be_the_same_across_replays() {
+        chessBoardRepository.createNewGame();
+        chessBoardRepository.saveCommand(ShuffleCommand.builder().gameId(GAME_ID).build());
+
+        List<Card<?>> firstRead = List.copyOf(chessBoardRepository.getChessBoardService(GAME_ID).getCurrentPlayer().getCards());
+        List<Card<?>> secondRead = List.copyOf(chessBoardRepository.getChessBoardService(GAME_ID).getCurrentPlayer().getCards());
+
+        assertEquals(firstRead, secondRead,
+                "Replaying the command log must yield the same hand — otherwise the hand the UI shows won't match what the backend sees on the next command");
     }
 }
