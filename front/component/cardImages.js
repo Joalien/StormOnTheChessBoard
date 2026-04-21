@@ -8,6 +8,7 @@ const cardImages = {
     BanzaiCard: require('../assets/images/cards/implemented/BanzaiCard.png'),
     BarricadeCard: require('../assets/images/cards/implemented/BarricadeCard.png'),
     BestFriendsCard: require('../assets/images/cards/implemented/BestFriendsCard.png'),
+    BetrayalCard: require('../assets/images/cards/implemented/BetrayalCard.png'),
     BigBluesCard: require('../assets/images/cards/implemented/BigBluesCard.png'),
     BlackHoleCard: require('../assets/images/cards/implemented/BlackHoleCard.png'),
     BombardCard: require('../assets/images/cards/implemented/BombardCard.png'),
