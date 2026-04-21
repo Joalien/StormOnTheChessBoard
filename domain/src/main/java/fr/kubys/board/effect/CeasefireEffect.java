@@ -34,7 +34,15 @@ public class CeasefireEffect extends Effect {
 
     @Override
     public void afterMoveHook(ChessBoard chessBoard, Piece piece) {
-        // After a move, check if either king is in check. If so, remove the effect.
+        endIfAKingIsInCheck(chessBoard);
+    }
+
+    @Override
+    public void afterRemovingPieceHook(ChessBoard chessBoard, Piece piece) {
+        endIfAKingIsInCheck(chessBoard);
+    }
+
+    private void endIfAKingIsInCheck(ChessBoard chessBoard) {
         if (chessBoard.isKingUnderAttack(Color.WHITE) || chessBoard.isKingUnderAttack(Color.BLACK)) {
             chessBoard.removeEffect(this);
         }
