@@ -8,6 +8,7 @@ import {barricadeLines, BarricadeSelectionOverlay} from "./component/barricadeOv
 import {HomeScreen} from "./component/HomeScreen";
 import {WaitingScreen} from "./component/WaitingScreen";
 import {NotFoundScreen} from "./component/NotFoundScreen";
+import {VictoryPopup} from "./component/VictoryPopup";
 import {toast, ToastContainer} from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 import {useCardSelection} from "./hooks/useCardSelection";
@@ -368,6 +369,8 @@ export default function App() {
     const [currentState, setCurrentState] = useState(null);
     const [capturedPieces, setCapturedPieces] = useState([]);
     const [isInCheck, setIsInCheck] = useState(false);
+    const [gameResult, setGameResult] = useState('ONGOING');
+    const [victoryDismissed, setVictoryDismissed] = useState(false);
     const [myColor, setMyColor] = useState(getPlayerColorFromUrl);
     const [legalMoves, setLegalMoves] = useState([]);
 
@@ -533,6 +536,8 @@ export default function App() {
     }
 
     function navigateToGame(id, color = null, strategy = null) {
+        setGameResult('ONGOING');
+        setVictoryDismissed(false);
         if (id === null) {
             window.history.pushState({}, '', '/');
             setRoute({page: 'home'});
@@ -679,6 +684,7 @@ export default function App() {
                 setCurrentState(data.currentState);
                 setCapturedPieces(data.capturedPieces || []);
                 setIsInCheck(data.isInCheck || false);
+                setGameResult(data.gameResult || 'ONGOING');
                 setPromotionSquare(null);
             });
     }
@@ -701,6 +707,14 @@ export default function App() {
 
     const isWhiteTurn = currentPlayerColor === "white";
     const isMyTurn = !myColor || myColor === currentPlayerColor;
+
+    const victoryOutcome = (() => {
+        if (gameResult === 'ONGOING' || victoryDismissed) return null;
+        if (gameResult === 'DRAW') return 'draw';
+        const winner = gameResult === 'WHITE_WINS' ? 'white' : 'black';
+        if (!myColor) return 'win';
+        return myColor === winner ? 'win' : 'lose';
+    })();
 
     // In matchmaking: layout is fixed (my cards at bottom). In solo: follows current turn.
     const bottomColor = myColor || currentPlayerColor;
@@ -760,6 +774,14 @@ export default function App() {
                 pauseOnHover
                 autoClose={3500}
             />
+
+            {victoryOutcome && (
+                <VictoryPopup
+                    outcome={victoryOutcome}
+                    onClose={() => setVictoryDismissed(true)}
+                    onGoHome={() => navigateToGame(null)}
+                />
+            )}
 
             {/* ── Header ── */}
             <header className="sotc-header" style={{
