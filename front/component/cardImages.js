@@ -84,6 +84,7 @@ const cardImages = {
     SerialKillerCard: require('../assets/images/cards/implemented/SerialKillerCard.png'),
     ShieldCard: require('../assets/images/cards/implemented/ShieldCard.png'),
     ShotCard: require('../assets/images/cards/implemented/ShotCard.png'),
+    SnowplowCard: require('../assets/images/cards/implemented/SnowplowCard.png'),
     StableCard: require('../assets/images/cards/implemented/StableCard.png'),
     StateVisitCard: require('../assets/images/cards/implemented/StateVisitCard.png'),
     SwapYourKnightsCard: require('../assets/images/cards/implemented/SwapYourKnightsCard.png'),
