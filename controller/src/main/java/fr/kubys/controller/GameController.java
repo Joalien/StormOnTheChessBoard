@@ -64,13 +64,28 @@ public class GameController {
         }
         try {
             var resource = getClass().getClassLoader().getResource("bin/fairy-stockfish");
-            if (resource != null && "file".equals(resource.getProtocol())) {
+            if (resource == null) return null;
+
+            if ("file".equals(resource.getProtocol())) {
                 java.io.File file = new java.io.File(resource.toURI());
                 if (file.canExecute()) return file.getAbsolutePath();
                 if (file.setExecutable(true) && file.canExecute()) return file.getAbsolutePath();
+                return null;
+            }
+
+            // Resource is inside a jar (typical for spring-boot:run / packaged jar).
+            // Extract it to a temp file so it can be executed.
+            java.io.File tmp = java.io.File.createTempFile("fairy-stockfish-", "");
+            tmp.deleteOnExit();
+            try (var in = resource.openStream()) {
+                java.nio.file.Files.copy(in, tmp.toPath(), java.nio.file.StandardCopyOption.REPLACE_EXISTING);
+            }
+            if (tmp.setExecutable(true) && tmp.canExecute()) {
+                log.info("Extracted Fairy-Stockfish from classpath to {}", tmp.getAbsolutePath());
+                return tmp.getAbsolutePath();
             }
         } catch (Exception e) {
-            log.debug("Could not resolve classpath stockfish: {}", e.getMessage());
+            log.warn("Could not resolve classpath stockfish: {}", e.getMessage());
         }
         return null;
     }
