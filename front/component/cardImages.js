@@ -39,6 +39,7 @@ const cardImages = {
     FrightCard: require('../assets/images/cards/implemented/FrightCard.png'),
     FunnyCard: require('../assets/images/cards/implemented/FunnyCard.png'),
     FusionCard: require('../assets/images/cards/implemented/FusionCard.png'),
+    GuardianAngelCard: require('../assets/images/cards/implemented/GuardianAngelCard.png'),
     HomeCard: require('../assets/images/cards/implemented/HomeCard.png'),
     InfiltrationCard: require('../assets/images/cards/implemented/InfiltrationCard.png'),
     KangarooCard: require('../assets/images/cards/implemented/KangarooCard.png'),
