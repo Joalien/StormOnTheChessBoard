@@ -1,6 +1,7 @@
 package fr.kubys.ai;
 
 import fr.kubys.api.ChessBoardReadService;
+import fr.kubys.api.GameResult;
 import fr.kubys.command.Command;
 import fr.kubys.core.Color;
 import fr.kubys.repository.ChessBoardRepository;
@@ -66,6 +67,10 @@ public class AiGameService {
 
         ChessBoardReadService boardState = chessBoardRepository.getChessBoardService(gameId);
         if (boardState.getCurrentPlayer().getColor() != config.aiColor()) return false;
+        if (boardState.getGameResult() != GameResult.ONGOING) {
+            log.info("[AI Game {}] Game is over ({}), AI will not play", gameId, boardState.getGameResult());
+            return false;
+        }
 
         log.info("[AI Game {}] AI ({}) is thinking...", gameId, config.aiColor());
         List<Command> commands = config.strategy().decideMove(gameId, boardState);

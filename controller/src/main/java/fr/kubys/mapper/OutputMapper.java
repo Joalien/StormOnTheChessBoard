@@ -43,6 +43,7 @@ public class OutputMapper {
                 .pendingPromotions(chessBoard.getPendingPromotions().stream().map(p -> p.name()).collect(Collectors.toSet()))
                 .capturedPieces(chessBoard.getCapturedPieces().stream().map(OutputMapper::map).toList())
                 .isInCheck(chessBoard.isCurrentPlayerInCheck())
+                .gameResult(chessBoard.getGameResult().name())
                 .checkMateTargets(chessBoard.getPieces().stream()
                         .filter(p -> p.isKing() && !(p instanceof King))
                         .map(p -> p.getPosition().name())

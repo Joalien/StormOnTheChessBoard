@@ -1,6 +1,7 @@
 package fr.kubys.game;
 
 import fr.kubys.api.ChessBoardService;
+import fr.kubys.api.GameResult;
 import fr.kubys.board.CheckException;
 import fr.kubys.board.ChessBoard;
 import fr.kubys.board.effect.Effect;
@@ -222,6 +223,20 @@ public class GameStateController implements ChessBoardService {
     public boolean isCurrentPlayerInCheck() {
         assertGameHasAlreadyStarted();
         return chessBoard.isKingUnderAttack(getCurrentPlayer().getColor());
+    }
+
+    @Override
+    public GameResult getGameResult() {
+        if (chessBoard == null) return GameResult.ONGOING;
+        Color currentColor = getCurrentPlayer().getColor();
+        boolean hasLegalMove = chessBoard.getPieces().stream()
+                .filter(p -> p.getColor() == currentColor)
+                .anyMatch(p -> !chessBoard.getLegalMoves(p).isEmpty());
+        if (hasLegalMove) return GameResult.ONGOING;
+        if (chessBoard.isKingUnderAttack(currentColor)) {
+            return currentColor == Color.WHITE ? GameResult.BLACK_WINS : GameResult.WHITE_WINS;
+        }
+        return GameResult.DRAW;
     }
 
     @Override

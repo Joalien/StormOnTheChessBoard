@@ -1,6 +1,7 @@
 package fr.kubys.ai;
 
 import fr.kubys.api.ChessBoardReadService;
+import fr.kubys.api.GameResult;
 import fr.kubys.command.Command;
 import fr.kubys.command.EndTurnCommand;
 import fr.kubys.command.PlayMoveCommand;
@@ -67,6 +68,7 @@ class AiGameServiceTest {
         Player blackPlayer = new Player("AI", Color.BLACK);
         when(chessBoardRepository.getChessBoardService(1)).thenReturn(boardState);
         when(boardState.getCurrentPlayer()).thenReturn(blackPlayer);
+        when(boardState.getGameResult()).thenReturn(GameResult.ONGOING);
 
         assertTrue(aiGameService.playIfAiTurn(1));
         verify(chessBoardRepository).saveCommand(expectedCommands.get(0));
@@ -89,6 +91,7 @@ class AiGameServiceTest {
         // first read: AI turn; second (post-compute) read: back to human (undo happened)
         when(chessBoardRepository.getChessBoardService(1)).thenReturn(boardState);
         when(boardState.getCurrentPlayer()).thenReturn(blackAi, whiteHuman);
+        when(boardState.getGameResult()).thenReturn(GameResult.ONGOING);
 
         assertFalse(aiGameService.playIfAiTurn(1));
         verify(chessBoardRepository, never()).saveCommand(any());
@@ -106,6 +109,7 @@ class AiGameServiceTest {
         Player blackAi = new Player("AI", Color.BLACK);
         when(chessBoardRepository.getChessBoardService(1)).thenReturn(boardState);
         when(boardState.getCurrentPlayer()).thenReturn(blackAi);
+        when(boardState.getGameResult()).thenReturn(GameResult.ONGOING);
 
         Runnable afterCommit = mock(Runnable.class);
         aiGameService.schedulePlayIfAiTurn(1, afterCommit);
@@ -139,12 +143,28 @@ class AiGameServiceTest {
     }
 
     @Test
+    void should_not_play_when_game_is_already_over() {
+        // Regression: the AI used to call EndTurnCommand when it had no legal moves,
+        // which threw CheckException from tryToPass and hid the fact that the game was won.
+        aiGameService.registerAiGame(1, Color.BLACK, (gameId, state) -> { throw new AssertionError("strategy must not be asked to play when game is over"); });
+
+        Player blackAi = new Player("AI", Color.BLACK);
+        when(chessBoardRepository.getChessBoardService(1)).thenReturn(boardState);
+        when(boardState.getCurrentPlayer()).thenReturn(blackAi);
+        when(boardState.getGameResult()).thenReturn(GameResult.WHITE_WINS);
+
+        assertFalse(aiGameService.playIfAiTurn(1));
+        verify(chessBoardRepository, never()).saveCommand(any());
+    }
+
+    @Test
     void schedule_swallows_strategy_exception() {
         AiStrategy failing = (gameId, state) -> { throw new RuntimeException("boom"); };
         aiGameService.registerAiGame(1, Color.BLACK, failing);
         Player blackAi = new Player("AI", Color.BLACK);
         when(chessBoardRepository.getChessBoardService(1)).thenReturn(boardState);
         when(boardState.getCurrentPlayer()).thenReturn(blackAi);
+        when(boardState.getGameResult()).thenReturn(GameResult.ONGOING);
 
         Runnable afterCommit = mock(Runnable.class);
         // Should not throw to the caller even if the strategy blows up.

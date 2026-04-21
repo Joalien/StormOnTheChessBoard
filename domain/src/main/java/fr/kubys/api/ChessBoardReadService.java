@@ -33,4 +33,6 @@ public interface ChessBoardReadService {
     List<Piece> getCapturedPieces();
 
     boolean isCurrentPlayerInCheck();
+
+    GameResult getGameResult();
 }
