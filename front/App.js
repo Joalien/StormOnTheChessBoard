@@ -17,6 +17,7 @@ import {getRouteFromUrl, getPlayerColorFromUrl, squareToCoords as squareToCoords
 import {useGameActions} from "./hooks/useGameActions";
 import {resolveKeyAction} from "./utils/keyboardActions";
 import {parsePresenceMessage, parseMatchmakingMessage} from "./utils/wsHandlers";
+import {endTurnButtonClassName} from "./utils/endTurnButton";
 
 const backendOrigin = typeof window !== 'undefined'
     ? window.location.origin
@@ -115,6 +116,21 @@ const globalCSS = `
     background: rgba(63,185,80,0.1);
     border-color: rgba(63,185,80,0.5);
     box-shadow: 0 4px 12px rgba(63,185,80,0.2);
+  }
+
+  @keyframes sotc-end-turn-pulse {
+    0%, 100% {
+      box-shadow: 0 0 0 0 rgba(63,185,80,0);
+      background: rgba(63,185,80,0.05);
+    }
+    50% {
+      box-shadow: 0 0 16px 2px rgba(63,185,80,0.55);
+      background: rgba(63,185,80,0.18);
+    }
+  }
+  .sotc-btn-end.sotc-btn-end--ready {
+    animation: sotc-end-turn-pulse 1.4s ease-in-out infinite;
+    border-color: rgba(63,185,80,0.55);
   }
 
   .sotc-btn-danger {
@@ -1127,7 +1143,7 @@ export default function App() {
                     )}
                     {/* Action buttons */}
                     <div style={{display: 'flex', gap: '8px'}}>
-                        <button className="sotc-btn sotc-btn-end" style={{flex: 1, padding: '10px 13px 8px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '2px'}} onClick={endTurn} disabled={!isMyTurn}>
+                        <button className={endTurnButtonClassName(currentState, isMyTurn)} style={{flex: 1, padding: '10px 13px 8px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '2px'}} onClick={endTurn} disabled={!isMyTurn}>
                             <span>✓ Fin du tour</span>
                             <span style={{fontSize: '9px', opacity: 0.5, fontWeight: 400}}>Espace</span>
                         </button>
