@@ -69,6 +69,7 @@ const cardImages = {
     PegasusCard: require('../assets/images/cards/implemented/PegasusCard.png'),
     PoisonCard: require('../assets/images/cards/implemented/PoisonCard.png'),
     PrivateJetCard: require('../assets/images/cards/implemented/PrivateJetCard.png'),
+    PsychopathCard: require('../assets/images/cards/implemented/PsychopathCard.png'),
     QuadrilleCard: require('../assets/images/cards/implemented/QuadrilleCard.png'),
     RaccoonCard: require('../assets/images/cards/implemented/RaccoonCard.png'),
     ReflectedBishopCard: require('../assets/images/cards/implemented/ReflectedBishopCard.png'),
