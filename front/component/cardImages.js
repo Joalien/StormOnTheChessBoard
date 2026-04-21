@@ -1,4 +1,5 @@
 const cardImages = {
+    AcrobaticCastlingCard: require('../assets/images/cards/implemented/AcrobaticCastlingCard.png'),
     AmbitionCard: require('../assets/images/cards/implemented/AmbitionCard.png'),
     ApartheidCard: require('../assets/images/cards/implemented/ApartheidCard.png'),
     AsylumCard: require('../assets/images/cards/implemented/AsylumCard.png'),
