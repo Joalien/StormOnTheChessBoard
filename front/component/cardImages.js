@@ -50,6 +50,7 @@ const cardImages = {
     LightweightSquadCard: require('../assets/images/cards/implemented/LightweightSquadCard.png'),
     MadHorseDiseaseCard: require('../assets/images/cards/implemented/MadHorseDiseaseCard.png'),
     MadHouseCard: require('../assets/images/cards/implemented/MadHouseCard.png'),
+    MaddeningSquareCard: require('../assets/images/cards/implemented/MaddeningSquareCard.png'),
     MagnetismCard: require('../assets/images/cards/implemented/MagnetismCard.png'),
     MajorettesCard: require('../assets/images/cards/implemented/MajorettesCard.png'),
     ManHoleCard: require('../assets/images/cards/implemented/ManHoleCard.png'),
