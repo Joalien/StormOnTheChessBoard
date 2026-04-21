@@ -1,9 +1,6 @@
 package fr.kubys.controller;
 
-import fr.kubys.ai.AiGameService;
-import fr.kubys.ai.AiStrategy;
-import fr.kubys.ai.MaterialStrategy;
-import fr.kubys.ai.StockfishStrategy;
+import fr.kubys.ai.*;
 import fr.kubys.card.params.CardParam;
 import fr.kubys.command.*;
 import fr.kubys.core.Color;
@@ -36,7 +33,7 @@ public class GameController {
     ChessBoardRepository chessBoardRepository;
     GameNotifier gameNotifier;
     AiGameService aiGameService;
-    AiStrategy aiStrategy;
+    AiStrategy defaultStrategy;
 
     @Autowired
     public GameController(ChessBoardRepository chessBoardRepository, GameNotifier gameNotifier, AiGameService aiGameService,
@@ -44,11 +41,11 @@ public class GameController {
         this.chessBoardRepository = chessBoardRepository;
         this.gameNotifier = gameNotifier;
         this.aiGameService = aiGameService;
-        this.aiStrategy = createAiStrategy(stockfishPath);
+        this.defaultStrategy = createDefaultStrategy(stockfishPath);
         createInitialState(); // FIXME remove me later on
     }
 
-    private AiStrategy createAiStrategy(String stockfishPath) {
+    private AiStrategy createDefaultStrategy(String stockfishPath) {
         String resolvedPath = resolveStockfishPath(stockfishPath);
         if (resolvedPath != null) {
             log.info("Using Fairy-Stockfish at {} with MaterialStrategy fallback", resolvedPath);
@@ -56,6 +53,15 @@ public class GameController {
         }
         log.info("Stockfish not found, using MaterialStrategy");
         return new MaterialStrategy();
+    }
+
+    private AiStrategy resolveStrategy(String name) {
+        if (name == null) return defaultStrategy;
+        return switch (name.toLowerCase()) {
+            case "random" -> new RandomMoveStrategy();
+            case "material" -> new MaterialStrategy();
+            default -> defaultStrategy;
+        };
     }
 
     private String resolveStockfishPath(String configuredPath) {
@@ -107,9 +113,11 @@ public class GameController {
     }
 
     @PostMapping("/ai")
-    public ResponseEntity<Map<String, Object>> startAiGame() {
+    public ResponseEntity<Map<String, Object>> startAiGame(@RequestParam(required = false) String strategy) {
         Integer gameId = chessBoardRepository.createNewGame();
-        aiGameService.registerAiGame(gameId, Color.BLACK, aiStrategy);
+        AiStrategy resolved = resolveStrategy(strategy);
+        log.info("[AI Game {}] Starting with requested strategy={} → {}", gameId, strategy, resolved.getClass().getSimpleName());
+        aiGameService.registerAiGame(gameId, Color.BLACK, resolved);
         return new ResponseEntity<>(Map.of("gameId", gameId, "color", "white"), HttpStatus.CREATED);
     }
 
