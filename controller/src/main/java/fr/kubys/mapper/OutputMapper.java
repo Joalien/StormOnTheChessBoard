@@ -68,7 +68,7 @@ public class OutputMapper {
                 .map(Field::getName)
                 .collect(HashMap::new, (hashMap, name) -> hashMap.put(name, null), HashMap::putAll);
         Map<String, List<String>> enumOptions = Arrays.stream(c.getClazz().getDeclaredFields())
-                .filter(field -> field.getType().isEnum())
+                .filter(field -> field.getType().isEnum() && field.getType() != Position.class)
                 .collect(Collectors.toMap(
                         Field::getName,
                         field -> Arrays.stream(field.getType().getEnumConstants())
