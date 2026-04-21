@@ -74,6 +74,27 @@ class AiGameServiceTest {
     }
 
     @Test
+    void should_discard_move_if_turn_changed_during_computation() {
+        // Strategy reads state then returns a move. By the time playIfAiTurn checks
+        // post-state, the current player is no longer the AI (user undid end-turn).
+        List<Command> aiCommands = List.of(
+                PlayMoveCommand.builder().gameId(1).from(Position.e7).to(Position.e5).build(),
+                EndTurnCommand.builder().gameId(1).build()
+        );
+        AiStrategy strategy = (gameId, state) -> aiCommands;
+        aiGameService.registerAiGame(1, Color.BLACK, strategy);
+
+        Player blackAi = new Player("AI", Color.BLACK);
+        Player whiteHuman = new Player("Human", Color.WHITE);
+        // first read: AI turn; second (post-compute) read: back to human (undo happened)
+        when(chessBoardRepository.getChessBoardService(1)).thenReturn(boardState);
+        when(boardState.getCurrentPlayer()).thenReturn(blackAi, whiteHuman);
+
+        assertFalse(aiGameService.playIfAiTurn(1));
+        verify(chessBoardRepository, never()).saveCommand(any());
+    }
+
+    @Test
     void schedule_runs_after_commit_callback_when_ai_plays() {
         List<Command> aiCommands = List.of(
                 PlayMoveCommand.builder().gameId(1).from(Position.e7).to(Position.e5).build(),

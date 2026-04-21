@@ -70,6 +70,14 @@ public class AiGameService {
         log.info("[AI Game {}] AI ({}) is thinking...", gameId, config.aiColor());
         List<Command> commands = config.strategy().decideMove(gameId, boardState);
 
+        // Re-check after the (potentially long) think: if the user undid the end-turn
+        // in the meantime, the state is no longer AI's and we must discard the move.
+        ChessBoardReadService postState = chessBoardRepository.getChessBoardService(gameId);
+        if (postState.getCurrentPlayer().getColor() != config.aiColor()) {
+            log.info("[AI Game {}] Turn changed during computation, discarding {} command(s)", gameId, commands.size());
+            return false;
+        }
+
         for (Command command : commands) {
             chessBoardRepository.saveCommand(command);
         }
