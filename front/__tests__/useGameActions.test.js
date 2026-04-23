@@ -174,6 +174,30 @@ describe('useGameActions', () => {
         expect(deps.fetchGame).toHaveBeenCalled();
     });
 
+    test('undo in AI game calls undo multiple times until currentTurn matches myColor', async () => {
+        mockFetch.mockResolvedValue({ok: true});
+        const fetchGame = jest.fn()
+            .mockResolvedValueOnce({currentTurn: 'black'})
+            .mockResolvedValueOnce({currentTurn: 'black'})
+            .mockResolvedValueOnce({currentTurn: 'white'});
+        const {result} = setup({fetchGame, myColor: 'white'});
+
+        await act(() => result.current.undo());
+
+        expect(mockFetch).toHaveBeenCalledTimes(3);
+        expect(mockFetch).toHaveBeenCalledWith('http://localhost:9000/api/chessboard/1/undo', {method: 'POST'});
+    });
+
+    test('undo in AI game stops after one call when already on own turn mid-turn', async () => {
+        mockFetch.mockResolvedValue({ok: true});
+        const fetchGame = jest.fn().mockResolvedValue({currentTurn: 'white'});
+        const {result} = setup({fetchGame, myColor: 'white'});
+
+        await act(() => result.current.undo());
+
+        expect(mockFetch).toHaveBeenCalledTimes(1);
+    });
+
     // ── promote ──
 
     test('promote sends POST with position and piece', async () => {
