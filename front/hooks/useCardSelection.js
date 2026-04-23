@@ -31,7 +31,11 @@ export function useCardSelection(effects, currentState, myColor, currentPlayerCo
 
     function playableCardTypes(state, isOpponent) {
         if (isOpponent) return ['ENEMY_TURN_AFTER_MOVE', 'ENEMY_TURN_AFTER_CARD'];
-        if (myColor && myColor !== currentPlayerColor) return [];
+        if (myColor && myColor !== currentPlayerColor) {
+            if (state === 'MOVE_WITHOUT_CARD_PLAYED') return ['ENEMY_TURN_AFTER_MOVE'];
+            if (state === 'END_OF_THE_TURN') return ['ENEMY_TURN_AFTER_MOVE', 'ENEMY_TURN_AFTER_CARD'];
+            return [];
+        }
         const map = {
             'BEGINNING_OF_THE_TURN': ['BEFORE_TURN', 'REPLACE_TURN'],
             'BEFORE_MOVE': [],

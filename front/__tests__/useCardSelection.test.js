@@ -461,4 +461,19 @@ describe('useCardSelection', () => {
         const {result} = setup();
         expect(result.current.playableCardTypes('BEGINNING_OF_THE_TURN', true)).toEqual(['ENEMY_TURN_AFTER_MOVE', 'ENEMY_TURN_AFTER_CARD']);
     });
+
+    test('en mode multijoueur, ENEMY_TURN_AFTER_MOVE jouable quand l\'adversaire a bougé', () => {
+        const {result} = setup([], {myColor: 'white', currentPlayerColor: 'black', state: 'MOVE_WITHOUT_CARD_PLAYED'});
+        expect(result.current.playableCardTypes('MOVE_WITHOUT_CARD_PLAYED', false)).toEqual(['ENEMY_TURN_AFTER_MOVE']);
+    });
+
+    test('en mode multijoueur, ENEMY_TURN_AFTER_CARD jouable en fin de tour adverse', () => {
+        const {result} = setup([], {myColor: 'white', currentPlayerColor: 'black', state: 'END_OF_THE_TURN'});
+        expect(result.current.playableCardTypes('END_OF_THE_TURN', false)).toEqual(['ENEMY_TURN_AFTER_MOVE', 'ENEMY_TURN_AFTER_CARD']);
+    });
+
+    test('en mode multijoueur, rien de jouable au début du tour adverse', () => {
+        const {result} = setup([], {myColor: 'white', currentPlayerColor: 'black', state: 'BEGINNING_OF_THE_TURN'});
+        expect(result.current.playableCardTypes('BEGINNING_OF_THE_TURN', false)).toEqual([]);
+    });
 });
