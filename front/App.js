@@ -19,6 +19,8 @@ import {useGameActions} from "./hooks/useGameActions";
 import {resolveKeyAction} from "./utils/keyboardActions";
 import {parsePresenceMessage, parseMatchmakingMessage} from "./utils/wsHandlers";
 import {endTurnButtonClassName} from "./utils/endTurnButton";
+import {DEV_TOOLS_ENABLED} from "./config/devConfig";
+import {DevCardSearch} from "./component/dev/DevCardSearch";
 
 const backendOrigin = typeof window !== 'undefined'
     ? window.location.origin
@@ -1364,6 +1366,9 @@ export default function App() {
                             </div>
                         );
                     })()}
+                    {DEV_TOOLS_ENABLED && gameId && (
+                        <DevCardSearch gameId={gameId} onReplaced={fetchGame}/>
+                    )}
                 </aside>
             </main>
         </div>

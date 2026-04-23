@@ -9,7 +9,7 @@ import java.time.Instant;
 
 @Getter
 @SuperBuilder
-public abstract sealed class Command permits EndTurnCommand, PlayMoveCommand, StartGameCommand, PlayCardWithImmutableParamCommand, PromoteCommand, ShuffleCommand {
+public abstract sealed class Command permits EndTurnCommand, PlayMoveCommand, StartGameCommand, PlayCardWithImmutableParamCommand, PromoteCommand, ShuffleCommand, ReplaceLastCardCommand {
     protected Integer gameId;
     @Builder.Default
     protected Instant instant = Instant.now();

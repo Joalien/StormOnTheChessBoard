@@ -17,4 +17,6 @@ public interface ChessBoardWriteService {
     void promote(Position position, PromotionPiece piece);
 
     void shuffleHand();
+
+    void replaceLastCard(String cardClassName);
 }

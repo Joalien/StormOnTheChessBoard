@@ -16,6 +16,8 @@ import fr.kubys.piece.Piece;
 import fr.kubys.piece.PromotionPiece;
 import fr.kubys.player.Player;
 
+import fr.kubys.card.CardRegistry;
+
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -243,6 +245,19 @@ public class GameStateController implements ChessBoardService {
     public void shuffleHand() {
         assertGameHasAlreadyStarted();
         deck.shuffleAndRedeal(getCurrentPlayer(), NUMBER_OF_CARDS_IN_HAND);
+    }
+
+    @Override
+    public void replaceLastCard(String cardClassName) {
+        assertGameHasAlreadyStarted();
+        List<Card<? extends CardParam>> hand = getCurrentPlayer().getCards();
+        if (hand.isEmpty()) throw new IllegalStateException("La main est vide");
+        Card<? extends CardParam> replacement = CardRegistry.createAllCards().stream()
+                .filter(c -> c.getClass().getSimpleName().equals(cardClassName))
+                .findFirst()
+                .orElseThrow(() -> new CardNotFoundException("Carte introuvable : " + cardClassName));
+        hand.remove(hand.size() - 1);
+        hand.add(replacement);
     }
 
     @Override
