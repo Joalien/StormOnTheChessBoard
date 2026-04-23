@@ -29,7 +29,7 @@ class FusionCardTest {
     @Test
     void should_fuse_pieces_into_fused_piece() {
         Knight knight = new Knight(Color.WHITE);
-        board.add(knight, c3);
+        board.add(knight, c2);
         Bishop bishop = new Bishop(Color.WHITE);
         board.add(bishop, d4);
 
@@ -44,7 +44,7 @@ class FusionCardTest {
     @Test
     void fused_piece_should_move_like_either_original_piece() {
         Knight knight = new Knight(Color.WHITE);
-        board.add(knight, c3);
+        board.add(knight, c2);
         Bishop bishop = new Bishop(Color.WHITE);
         board.add(bishop, d4);
 
@@ -84,7 +84,7 @@ class FusionCardTest {
     @Test
     void fused_piece_without_pawn_should_not_be_promotable() {
         Knight knight = new Knight(Color.WHITE);
-        board.add(knight, c3);
+        board.add(knight, c2);
         Bishop bishop = new Bishop(Color.WHITE);
         board.add(bishop, d4);
 
@@ -97,7 +97,7 @@ class FusionCardTest {
     @Test
     void fused_piece_toString_should_show_both_pieces() {
         Knight knight = new Knight(Color.WHITE);
-        board.add(knight, c3);
+        board.add(knight, c2);
         Bishop bishop = new Bishop(Color.WHITE);
         board.add(bishop, d4);
 
@@ -128,7 +128,7 @@ class FusionCardTest {
     @Test
     void clone_should_deep_copy_both_parts_and_preserve_position() {
         Knight knight = new Knight(Color.WHITE);
-        board.add(knight, c3);
+        board.add(knight, c2);
         Bishop bishop = new Bishop(Color.WHITE);
         board.add(bishop, d4);
         card.playOn(board, new PieceToPositionCardParam(knight, d4));
@@ -153,7 +153,7 @@ class FusionCardTest {
         // blow up on FusedPiece, crashing getLegalMoves as soon as the self-check
         // detection kicked in.
         Knight knight = new Knight(Color.WHITE);
-        board.add(knight, c3);
+        board.add(knight, c2);
         Bishop bishop = new Bishop(Color.WHITE);
         board.add(bishop, d4);
         card.playOn(board, new PieceToPositionCardParam(knight, d4));
@@ -161,6 +161,32 @@ class FusionCardTest {
         FusedPiece fused = (FusedPiece) board.at(d4).getPiece().orElseThrow();
 
         assertDoesNotThrow(() -> board.getLegalMoves(fused));
+    }
+
+    @Test
+    void should_reject_fusion_when_piece_cannot_reach_destination() {
+        Knight knight = new Knight(Color.WHITE);
+        board.add(knight, c3);
+        Bishop bishop = new Bishop(Color.WHITE);
+        board.add(bishop, d4);
+
+        // c3 → d4 is a diagonal move, not a valid knight move
+        assertThrows(IllegalArgumentException.class,
+                () -> card.playOn(board, new PieceToPositionCardParam(knight, d4)));
+    }
+
+    @Test
+    void should_reject_fusion_when_path_is_blocked() {
+        Rock rook = new Rock(Color.WHITE);
+        board.add(rook, a1);
+        Bishop ally = new Bishop(Color.WHITE);
+        board.add(ally, a8);
+        Rock blocker = new Rock(Color.BLACK);
+        board.add(blocker, a4);
+
+        // a1 → a8 is a valid rook direction but the path is blocked by a4
+        assertThrows(IllegalArgumentException.class,
+                () -> card.playOn(board, new PieceToPositionCardParam(rook, a8)));
     }
 
     @Test

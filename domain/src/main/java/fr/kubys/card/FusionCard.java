@@ -28,6 +28,10 @@ public class FusionCard extends Card<PieceToPositionCardParam> {
             throw new IllegalArgumentException("La case de destination doit être occupée par une de vos pièces");
         if (target.isKing())
             throw new IllegalArgumentException("Le Roi ne peut pas fusionner");
+        if (!param.piece().isPositionTheoreticallyReachable(param.positionToMoveOn()))
+            throw new IllegalArgumentException("La pièce ne peut pas atteindre la case de destination");
+        if (!chessBoard.emptyPath(param.piece(), param.positionToMoveOn()))
+            throw new IllegalArgumentException("Le chemin est bloqué");
     }
 
     @Override
