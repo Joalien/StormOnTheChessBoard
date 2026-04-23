@@ -1235,7 +1235,7 @@ export default function App() {
                             <span>✓ Fin du tour</span>
                             <span style={{fontSize: '9px', opacity: 0.5, fontWeight: 400}}>Espace</span>
                         </button>
-                        <button className="sotc-btn sotc-btn-danger" style={{flex: 1, padding: '10px 13px 8px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '2px'}} onClick={undo} disabled={!isMyTurn}>
+                        <button className="sotc-btn sotc-btn-danger" style={{flex: 1, padding: '10px 13px 8px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '2px'}} onClick={undo}>
                             <span>↩ Annuler</span>
                             <span style={{fontSize: '9px', opacity: 0.5, fontWeight: 400}}>Ctrl+Z</span>
                         </button>

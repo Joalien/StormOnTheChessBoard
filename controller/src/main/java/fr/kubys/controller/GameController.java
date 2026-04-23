@@ -151,6 +151,7 @@ public class GameController {
                 .build();
         chessBoardRepository.saveCommand(command);
         gameNotifier.notifyGame(gameId);
+        aiGameService.schedulePlayIfAiTurn(gameId, () -> gameNotifier.notifyGame(gameId));
         return ResponseEntity.ok().build();
     }
 

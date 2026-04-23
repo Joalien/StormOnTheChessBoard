@@ -43,23 +43,12 @@ export function useGameActions({base, gameId, fetchGame, setSelectedCard, setSel
     }
 
     async function undo() {
-        if (myColor) {
-            let data;
-            do {
-                const res = await fetch(base + gameId + "/undo", {method: 'POST'});
-                if (!res.ok) { await showErrorMessage(res); return; }
-                data = await fetchGame();
-            } while (data && data.currentTurn !== myColor);
+        const res = await fetch(base + gameId + "/undo", {method: 'POST'});
+        if (res.ok) {
             setSelectedCard(null);
             setSelectedParam(null);
-        } else {
-            const res = await fetch(base + gameId + "/undo", {method: 'POST'});
-            if (res.ok) {
-                setSelectedCard(null);
-                setSelectedParam(null);
-                fetchGame();
-            } else await showErrorMessage(res);
-        }
+            await fetchGame();
+        } else await showErrorMessage(res);
     }
 
     async function promote(position, piece) {

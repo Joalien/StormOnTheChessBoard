@@ -6,6 +6,11 @@ export function resolveKeyAction(e, {gameId, myColor, currentPlayerColor, select
     if (gameId === null) return null;
 
     const isMyTurn = !myColor || myColor === currentPlayerColor;
+
+    if (e.key === 'z' && (e.ctrlKey || e.metaKey)) {
+        return 'undo';
+    }
+
     if (!isMyTurn) return null;
 
     if (e.code === 'Space') {
@@ -13,10 +18,6 @@ export function resolveKeyAction(e, {gameId, myColor, currentPlayerColor, select
             return 'playCard';
         }
         return 'endTurn';
-    }
-
-    if (e.key === 'z' && (e.ctrlKey || e.metaKey)) {
-        return 'undo';
     }
 
     if (e.key === 'S' && e.shiftKey) {
