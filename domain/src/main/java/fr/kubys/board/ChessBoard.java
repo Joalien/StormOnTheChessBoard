@@ -182,7 +182,7 @@ public class ChessBoard {
     }
 
     public void tryToMove(Piece piece, Position positionToMoveOn) {
-        if (piece.getPosition().equals(positionToMoveOn)) throw new IllegalArgumentException();
+        if (piece.getPosition().equals(positionToMoveOn)) throw new IllegalArgumentException("Impossible de se déplacer sur la même case");
         if (canMove(piece, positionToMoveOn)) {
             // FIXME if rock cannot castle, it will still castle
             tryToCastle(piece, positionToMoveOn);
@@ -302,7 +302,7 @@ public class ChessBoard {
     }
 
     public boolean doesMovingPieceCheckOurOwnKing(Piece piece, Position positionToMoveOn) {
-        if (piece.getPosition().equals(positionToMoveOn)) throw new IllegalArgumentException();
+        if (piece.getPosition().equals(positionToMoveOn)) throw new IllegalArgumentException("Impossible de se déplacer sur la même case");
         if (piece instanceof FakePieceDecorator) return false;
 
         fakeSquare(null, piece.getPosition());

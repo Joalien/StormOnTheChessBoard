@@ -20,7 +20,7 @@ public class CardParametersMapper {
         try {
             return (Card<T>) cardMatchingName;
         } catch (ClassCastException e) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("Paramètres incompatibles avec cette carte");
         }
     }
 

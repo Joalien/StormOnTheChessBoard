@@ -79,7 +79,8 @@ class ReflectedBishopCardTest {
             King king = new King(Color.BLACK);
             chessBoard.add(king, f7);
 
-            assertThrows(CannotTakeKingException.class, () -> reflectedBishop.playOn(chessBoard, new ReflectedBishopCardParam(bishop, f7)));
+            CannotTakeKingException ex = assertThrows(CannotTakeKingException.class, () -> reflectedBishop.playOn(chessBoard, new ReflectedBishopCardParam(bishop, f7)));
+            assertEquals("Vous ne pouvez pas capturer le roi adverse !", ex.getMessage());
 
             assertEquals(bishop, chessBoard.at(e2).getPiece().get());
             assertEquals(king, chessBoard.at(f7).getPiece().get());

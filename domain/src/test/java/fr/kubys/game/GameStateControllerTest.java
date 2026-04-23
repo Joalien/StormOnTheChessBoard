@@ -136,7 +136,8 @@ class GameStateControllerTest {
         gameStateController.tryToPass(); // end black turn — OK, black is not in check
         // Now it's white's turn, white king is in check from Qh4
         assertTrue(gameStateController.isCurrentPlayerInCheck());
-        assertThrows(CheckException.class, () -> gameStateController.tryToPass());
+        CheckException ex = assertThrows(CheckException.class, () -> gameStateController.tryToPass());
+        assertEquals("Impossible de passer le tour : votre roi est en échec !", ex.getMessage());
     }
 
     @Test

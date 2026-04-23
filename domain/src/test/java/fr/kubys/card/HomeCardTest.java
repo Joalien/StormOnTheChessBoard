@@ -131,7 +131,8 @@ class HomeCardTest {
             HomeCard homeCard = new HomeCard();
             chessBoard.setTurn(Color.WHITE);
 
-            assertThrows(CannotTakeKingException.class, () -> homeCard.playOn(chessBoard, new PieceToPositionCardParam(knight, g1)));
+            CannotTakeKingException ex = assertThrows(CannotTakeKingException.class, () -> homeCard.playOn(chessBoard, new PieceToPositionCardParam(knight, g1)));
+            assertEquals("Vous ne pouvez pas capturer le roi adverse !", ex.getMessage());
 
             assertEquals(knight, chessBoard.at(e4).getPiece().get());
             assertEquals(king, chessBoard.at(g1).getPiece().get());

@@ -29,7 +29,7 @@ public class Rock extends Piece {
             return squaresOnTheFile(getPosition(), squareToMoveOn);
         } else if (getRow() == squareToMoveOn.getRow()) {
             return squaresOnTheRow(getPosition(), squareToMoveOn);
-        } else throw new IllegalStateException();
+        } else throw new IllegalStateException("La Tour ne peut pas se déplacer en diagonale");
     }
 
     static Set<Position> squaresOnTheFile(Position currentPosition, Position squareToMoveOn) {

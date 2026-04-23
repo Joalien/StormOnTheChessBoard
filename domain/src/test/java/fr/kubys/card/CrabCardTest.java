@@ -54,8 +54,9 @@ class CrabCardTest {
             Pawn pawn = new Pawn(Color.BLACK);
             board.add(pawn, d5);
 
-            assertThrows(CannotMoveThisColorException.class,
+            CannotMoveThisColorException ex = assertThrows(CannotMoveThisColorException.class,
                     () -> card.playOn(board, new PieceCardParam(pawn)));
+            assertEquals("Vous ne pouvez pas déplacer une pièce noire", ex.getMessage());
         }
 
         @Test

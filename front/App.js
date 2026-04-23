@@ -350,8 +350,9 @@ if (typeof document !== 'undefined') {
 }
 
 async function showErrorMessage(res) {
-    const errorMessage = await res.text();
-    toast.error(errorMessage);
+    const text = await res.text();
+    const isPlainText = text && !text.trimStart().startsWith('{') && !text.trimStart().startsWith('[');
+    toast.error(isPlainText ? text : "Une erreur est survenue.");
 }
 
 
@@ -595,7 +596,7 @@ export default function App() {
         fetch(backendOrigin + '/api/chessboard', {method: 'POST'})
             .then(res => res.text())
             .then(text => navigateToGame(parseInt(text, 10)))
-            .catch(err => alert(err));
+            .catch(err => toast.error("Impossible de créer la partie : " + (err?.message ?? String(err))));
     }
 
     function playAgainstAi(strategy) {
@@ -603,7 +604,7 @@ export default function App() {
         fetch(backendOrigin + '/api/chessboard/ai' + query, {method: 'POST'})
             .then(res => res.json())
             .then(data => navigateToGame(data.gameId, data.color, strategy))
-            .catch(err => alert(err));
+            .catch(err => toast.error("Impossible de démarrer la partie contre l'IA : " + (err?.message ?? String(err))));
     }
 
     useEffect(() => {
