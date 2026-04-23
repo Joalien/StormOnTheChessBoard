@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <!-- Fond violet -->
+  <rect x="5" y="5" width="90" height="90" rx="8" fill="#4a1942" opacity="0.6" stroke="#ff69b4" stroke-width="2" stroke-dasharray="8 4"/>
+
+  <!-- Murs -->
+  <rect x="20" y="57" width="60" height="33" fill="#8020a0" stroke="#ff69b4" stroke-width="1.5"/>
+
+  <!-- Toit de chaume (bosselé) -->
+  <path d="M8 59 Q18 32 33 46 Q50 18 67 46 Q82 32 92 59 Z" fill="#601890" stroke="#ff69b4" stroke-width="1.5"/>
+
+  <!-- Porte arrondie -->
+  <path d="M43 90 L43 74 Q50 68 57 74 L57 90 Z" fill="#2a0a50" stroke="#ff69b4" stroke-width="1"/>
+
+  <!-- Fenêtre gauche : yeux fous (X) -->
+  <circle cx="31" cy="70" r="6" fill="#2a0a50" stroke="#ff69b4" stroke-width="1"/>
+  <line x1="27" y1="66" x2="35" y2="74" stroke="#ff88ee" stroke-width="1.5"/>
+  <line x1="35" y1="66" x2="27" y2="74" stroke="#ff88ee" stroke-width="1.5"/>
+
+  <!-- Fenêtre droite : yeux fous (X) -->
+  <circle cx="69" cy="70" r="6" fill="#2a0a50" stroke="#ff69b4" stroke-width="1"/>
+  <line x1="65" y1="66" x2="73" y2="74" stroke="#ff88ee" stroke-width="1.5"/>
+  <line x1="73" y1="66" x2="65" y2="74" stroke="#ff88ee" stroke-width="1.5"/>
+
+  <!-- Étoile de folie sur le faîte du toit -->
+  <path d="M50 28 L52 34 L58 36 L52 38 L50 44 L48 38 L42 36 L48 34 Z" fill="#ff88ee" opacity="0.9"/>
+</svg>

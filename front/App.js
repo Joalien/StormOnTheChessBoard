@@ -1070,7 +1070,7 @@ export default function App() {
                             const sqSize = boardSize / 8;
                             return effect.positions.map((pos, pi) => {
                                 const {x, y} = squareToCoords(pos, currentPlayerColor);
-                                const style = effectConfig.applyStyle(pos);
+                                const style = effectConfig.applyStyle(pos, !!game[pos]);
                                 return (
                                     <div key={`eff-${idx}-${pi}`} style={{
                                         position: 'absolute',

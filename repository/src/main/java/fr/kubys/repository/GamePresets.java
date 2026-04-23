@@ -123,6 +123,13 @@ public class GamePresets {
             Piece blackKnight = board.at(f6).getPiece().orElseThrow();
             board.addEffect(new MagnetismEffect(blackKnight));
 
+            // Case qui rend fou on d4 (empty central square)
+            board.addEffect(new MaddeningSquareEffect(board, d4));
+
+            // Pièce non violente : le cavalier blanc en c3
+            Piece whiteKnight = board.at(c3).getPiece().orElseThrow();
+            board.addEffect(new NonViolentEffect(whiteKnight));
+
             return board;
         });
 

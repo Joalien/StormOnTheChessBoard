@@ -6,20 +6,27 @@ function injectStyles() {
 
     const style = document.createElement('style');
     style.textContent = `
-        @keyframes madSpin {
-            0%{transform:rotate(0deg) scale(1)}50%{transform:rotate(3deg) scale(1.04)}100%{transform:rotate(0deg) scale(1)}
+        @keyframes funnelWobble {
+            0%,100%{transform:rotate(-4deg)}50%{transform:rotate(4deg)}
         }
     `;
     document.head.appendChild(style);
 }
 
 export const MaddeningSquareEffect = {
-    applyStyle: () => {
+    applyStyle: (pos, hasPiece) => {
         injectStyles();
+        if (hasPiece) {
+            return {
+                backgroundImage: `url(${require('../../assets/images/effects/MaddeningSquareEffect.svg')})`,
+                backgroundSize: 'cover',
+                animation: 'funnelWobble 1.8s ease-in-out infinite',
+                zIndex: 3,
+            };
+        }
         return {
-            backgroundImage: `url(${require('../../assets/images/effects/MaddeningSquareEffect.svg')})`,
+            backgroundImage: `url(${require('../../assets/images/effects/MaddeningSquareHut.svg')})`,
             backgroundSize: 'cover',
-            animation: 'madSpin 2s ease-in-out infinite'
         };
     }
 };

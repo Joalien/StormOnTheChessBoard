@@ -1,1 +1,9 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="45" fill="#3d2c5e" opacity="0.5"/><text x="50" y="62" text-anchor="middle" font-size="40" fill="#d4a0ff">☮</text></svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <!-- Auréole positionnée au-dessus de la tête de la pièce -->
+  <!-- Ombre légère (dépth) -->
+  <ellipse cx="50" cy="20" rx="23" ry="8" fill="none" stroke="#b8860b" stroke-width="5" opacity="0.3"/>
+  <!-- Auréole dorée -->
+  <ellipse cx="50" cy="18" rx="23" ry="8" fill="none" stroke="#ffd700" stroke-width="3.5" opacity="0.95"/>
+  <!-- Reflet intérieur (lueur blanche) -->
+  <ellipse cx="50" cy="18" rx="23" ry="8" fill="none" stroke="#fffacd" stroke-width="1" opacity="0.6"/>
+</svg>

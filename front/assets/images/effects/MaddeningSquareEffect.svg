@@ -1,1 +1,12 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect x="5" y="5" width="90" height="90" rx="8" fill="#4a1942" opacity="0.6" stroke="#ff69b4" stroke-width="2" stroke-dasharray="8 4"/><text x="50" y="62" text-anchor="middle" font-size="40" fill="#ff69b4">🌀</text></svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <!-- Fond très léger -->
+  <rect x="2" y="2" width="96" height="96" fill="#4a1942" opacity="0.2"/>
+
+  <!-- Entonnoir à l'envers : tube étroit en haut, ouverture évasée en bas (sur la tête) -->
+  <!-- Tube étroit (pointe vers le haut) -->
+  <rect x="43" y="5" width="14" height="16" rx="2" fill="#c030b0" stroke="#ff69b4" stroke-width="1.5"/>
+  <!-- Cône évasé vers le bas -->
+  <path d="M43 21 L57 21 L82 48 L18 48 Z" fill="#c030b0" stroke="#ff69b4" stroke-width="1.5"/>
+  <!-- Rebord de l'ouverture (en bas, pose sur la tête) -->
+  <rect x="15" y="46" width="70" height="5" rx="2.5" fill="#ff88ee"/>
+</svg>
