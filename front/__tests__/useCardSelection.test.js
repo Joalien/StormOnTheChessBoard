@@ -57,7 +57,7 @@ describe('useCardSelection', () => {
         const {result} = setup(effects);
 
         // Select an effect first
-        act(() => result.current.onSquareRightClick('f6'));
+        act(() => result.current.selectEffectByIndices([0]));
         expect(result.current.selectedCard.isEffect).toBe(true);
 
         // Click on a hand card
@@ -96,31 +96,50 @@ describe('useCardSelection', () => {
         expect(result.current.selectedCard).toBeNull();
     });
 
-    // ── Card param assignment via right-click ──
+    // ── Card param assignment via left-click (onBoardSquareClick) ──
 
-    test('right-click on square assigns param to selected card', () => {
+    test('left-click on square assigns param to selected card', () => {
         const {result} = setup();
         const card = {englishName: 'BombingCard', param: {position: null}, type: 'AFTER_TURN'};
 
         act(() => result.current.showCard(card));
-        act(() => result.current.onSquareRightClick('e4'));
+        act(() => result.current.onBoardSquareClick('e4'));
 
         expect(result.current.selectedCard.param.position).toBe('e4');
         expect(result.current.selectedParam).toBeNull(); // all params set
     });
 
-    test('right-click different square replaces the param', () => {
+    test('left-click returns true when param was assigned', () => {
+        const {result} = setup();
+        const card = {englishName: 'BombingCard', param: {position: null}, type: 'AFTER_TURN'};
+        act(() => result.current.showCard(card));
+
+        let consumed;
+        act(() => { consumed = result.current.onBoardSquareClick('e4'); });
+
+        expect(consumed).toBe(true);
+    });
+
+    test('left-click returns false when no card is selected', () => {
+        const {result} = setup();
+
+        let consumed;
+        act(() => { consumed = result.current.onBoardSquareClick('e4'); });
+
+        expect(consumed).toBe(false);
+    });
+
+    test('left-click different square replaces the param', () => {
         const {result} = setup();
         const card = {englishName: 'BombingCard', param: {position: null, extra: null}, type: 'AFTER_TURN'};
 
         act(() => result.current.showCard(card));
-        act(() => result.current.onSquareRightClick('e4'));
+        act(() => result.current.onBoardSquareClick('e4'));
 
         expect(result.current.selectedCard.param.position).toBe('e4');
         expect(result.current.selectedParam).toBe('extra');
 
-        // Right-click on same square while param is 'extra' assigns extra
-        act(() => result.current.onSquareRightClick('d5'));
+        act(() => result.current.onBoardSquareClick('d5'));
         expect(result.current.selectedCard.param.extra).toBe('d5');
     });
 
@@ -129,25 +148,25 @@ describe('useCardSelection', () => {
         const card = {englishName: 'AsylumCard', param: {piece1: null, piece2: null}, type: 'AFTER_TURN'};
 
         act(() => result.current.showCard(card));
-        act(() => result.current.onSquareRightClick('d4'));
+        act(() => result.current.onBoardSquareClick('d4'));
 
         expect(result.current.selectedCard.param.piece1).toBe('d4');
         expect(result.current.selectedParam).toBe('piece2');
 
-        act(() => result.current.onSquareRightClick('d5'));
+        act(() => result.current.onBoardSquareClick('d5'));
         expect(result.current.selectedCard.param.piece2).toBe('d5');
         expect(result.current.selectedParam).toBeNull();
     });
 
-    // ── Effect selection ──
+    // ── Effect selection (via selectEffectByIndices, appelé depuis App.js au clic gauche) ──
 
-    test('right-click on effect position selects the effect', () => {
+    test('selectEffectByIndices selects the effect at given index', () => {
         const effects = [
             {cardEnglishName: 'MagnetismCard', cardName: 'Magnétisme', cardDescription: 'desc', positions: ['f6']},
         ];
         const {result} = setup(effects);
 
-        act(() => result.current.onSquareRightClick('f6'));
+        act(() => result.current.selectEffectByIndices([0]));
 
         expect(result.current.selectedCard).not.toBeNull();
         expect(result.current.selectedCard.isEffect).toBe(true);
@@ -155,27 +174,45 @@ describe('useCardSelection', () => {
         expect(result.current.selectedCard.effectIndices).toEqual([0]);
     });
 
-    test('right-click on square with multiple effects selects all', () => {
+    test('selectEffectByIndices with multiple indices selects all', () => {
         const effects = [
             {cardEnglishName: 'NeutralityCard', cardName: 'Neutralité', cardDescription: 'n', positions: ['b7']},
             {cardEnglishName: 'CrabCard', cardName: 'Crabe', cardDescription: 'c', positions: ['b7']},
         ];
         const {result} = setup(effects);
 
-        act(() => result.current.onSquareRightClick('b7'));
+        act(() => result.current.selectEffectByIndices([0, 1]));
 
         expect(result.current.selectedCard.effectIndices).toEqual([0, 1]);
     });
 
-    test('right-clicking selected effect again deselects it', () => {
+    test('selectEffectByIndices same effect twice deselects it', () => {
         const effects = [
             {cardEnglishName: 'MagnetismCard', cardName: 'Magnétisme', cardDescription: 'd', positions: ['f6']},
         ];
         const {result} = setup(effects);
 
-        act(() => result.current.onSquareRightClick('f6'));
-        act(() => result.current.onSquareRightClick('f6'));
+        act(() => result.current.selectEffectByIndices([0]));
+        act(() => result.current.selectEffectByIndices([0]));
 
+        expect(result.current.selectedCard).toBeNull();
+    });
+
+    // ── Right-click: annulation universelle ──
+
+    test('right-click cancels card selection', () => {
+        const {result} = setup();
+        act(() => result.current.showCard({englishName: 'BombingCard', param: {position: null}, type: 'AFTER_TURN'}));
+
+        act(() => result.current.onSquareRightClick('e4'));
+
+        expect(result.current.selectedCard).toBeNull();
+        expect(result.current.selectedParam).toBeNull();
+    });
+
+    test('right-click does nothing when nothing is selected', () => {
+        const {result} = setup();
+        act(() => result.current.onSquareRightClick('e4'));
         expect(result.current.selectedCard).toBeNull();
     });
 
@@ -210,31 +247,19 @@ describe('useCardSelection', () => {
         expect(result.current.selectedEffectPositions).toEqual([]);
     });
 
-    // ── Manhole scenario (1 effect on 2 distant squares) ──
+    // ── Manhole scenario (1 effet sur 2 cases distantes) ──
 
-    test('manhole: right-click on one hole selects the effect', () => {
+    test('manhole: selectEffectByIndices sélectionne l\'effet depuis n\'importe quelle case', () => {
         const effects = [
             {cardEnglishName: 'ManHoleCard', cardName: 'Bouche d\'égout', cardDescription: 'Téléportation', positions: ['a1', 'h8']},
         ];
         const {result} = setup(effects);
 
-        act(() => result.current.onSquareRightClick('a1'));
+        act(() => result.current.selectEffectByIndices([0]));
 
         expect(result.current.selectedCard.isEffect).toBe(true);
         expect(result.current.selectedCard.englishName).toBe('ManHoleCard');
         expect(result.current.selectedCard.effectIndices).toEqual([0]);
-    });
-
-    test('manhole: right-click on the other hole selects the same effect', () => {
-        const effects = [
-            {cardEnglishName: 'ManHoleCard', cardName: 'Bouche d\'égout', cardDescription: 'Téléportation', positions: ['a1', 'h8']},
-        ];
-        const {result} = setup(effects);
-
-        act(() => result.current.onSquareRightClick('h8'));
-
-        expect(result.current.selectedCard.isEffect).toBe(true);
-        expect(result.current.selectedCard.englishName).toBe('ManHoleCard');
     });
 
     test('manhole: selectedEffectPositions contains both holes', () => {
@@ -243,47 +268,35 @@ describe('useCardSelection', () => {
         ];
         const {result} = setup(effects);
 
-        act(() => result.current.onSquareRightClick('a1'));
+        act(() => result.current.selectEffectByIndices([0]));
 
         expect(result.current.selectedEffectPositions).toEqual(['a1', 'h8']);
     });
 
-    test('manhole: right-click on unrelated square does not select manhole', () => {
-        const effects = [
-            {cardEnglishName: 'ManHoleCard', cardName: 'Bouche d\'égout', cardDescription: 'Téléportation', positions: ['a1', 'h8']},
-        ];
-        const {result} = setup(effects);
+    // ── Neutral crab scenario (2 effets sur la même pièce) ──
 
-        act(() => result.current.onSquareRightClick('e4'));
-
-        expect(result.current.selectedCard).toBeNull();
-    });
-
-    // ── Neutral crab scenario (2 effects on same piece) ──
-
-    test('neutral crab: right-click selects both NeutralityCard and CrabCard effects', () => {
+    test('neutral crab: selectEffectByIndices [0,1] sélectionne les deux effets', () => {
         const effects = [
             {cardEnglishName: 'NeutralityCard', cardName: 'Neutralité', cardDescription: 'Pièce neutre', positions: ['b7']},
             {cardEnglishName: 'CrabCard', cardName: 'Crabe', cardDescription: 'Se déplace en diagonale', positions: ['b7']},
         ];
         const {result} = setup(effects);
 
-        act(() => result.current.onSquareRightClick('b7'));
+        act(() => result.current.selectEffectByIndices([0, 1]));
 
         expect(result.current.selectedCard.isEffect).toBe(true);
         expect(result.current.selectedCard.effectIndices).toEqual([0, 1]);
-        // First effect's card info is used as primary
         expect(result.current.selectedCard.englishName).toBe('NeutralityCard');
     });
 
-    test('neutral crab: selectedEffectPositions contains the shared position once', () => {
+    test('neutral crab: selectedEffectPositions contains the shared position once per effect', () => {
         const effects = [
             {cardEnglishName: 'NeutralityCard', cardName: 'Neutralité', cardDescription: 'n', positions: ['b7']},
             {cardEnglishName: 'CrabCard', cardName: 'Crabe', cardDescription: 'c', positions: ['b7']},
         ];
         const {result} = setup(effects);
 
-        act(() => result.current.onSquareRightClick('b7'));
+        act(() => result.current.selectEffectByIndices([0, 1]));
 
         // b7 appears twice (once per effect), both are valid for spotlight
         expect(result.current.selectedEffectPositions).toEqual(['b7', 'b7']);
@@ -309,11 +322,9 @@ describe('useCardSelection', () => {
         ];
         const {result} = setup(effects);
 
-        // Select both effects via right-click
-        act(() => result.current.onSquareRightClick('b7'));
+        act(() => result.current.selectEffectByIndices([0, 1]));
         expect(result.current.selectedCard.effectIndices).toEqual([0, 1]);
 
-        // Click a hand card
         const card = {englishName: 'BombingCard', param: {position: null}, type: 'AFTER_TURN'};
         act(() => result.current.showCard(card));
 
@@ -321,9 +332,9 @@ describe('useCardSelection', () => {
         expect(result.current.selectedCard.isEffect).toBeUndefined();
     });
 
-    // ── Right-click priority: card param > effect ──
+    // ── Priorité clic gauche : paramètre carte > effet ──
 
-    test('right-click assigns param when card is selected, even if effect is on that square', () => {
+    test('left-click assigns param when card is selected, even if effect is on that square', () => {
         const effects = [
             {cardEnglishName: 'MagnetismCard', cardName: 'M', cardDescription: '', positions: ['e4']},
         ];
@@ -331,9 +342,8 @@ describe('useCardSelection', () => {
         const card = {englishName: 'BombingCard', param: {position: null}, type: 'AFTER_TURN'};
 
         act(() => result.current.showCard(card));
-        act(() => result.current.onSquareRightClick('e4'));
+        act(() => result.current.onBoardSquareClick('e4'));
 
-        // Should assign param, not select the effect
         expect(result.current.selectedCard.param.position).toBe('e4');
         expect(result.current.selectedCard.isEffect).toBeUndefined();
     });
@@ -390,34 +400,34 @@ describe('useCardSelection', () => {
 
     // ── List params (Leapfrog / SerialKiller) ──
 
-    test('list param: right-clicks accumulate positions in array', () => {
+    test('list param: left-clicks accumulate positions in array', () => {
         const {result} = setup([], {state: 'BEGINNING_OF_THE_TURN'});
         const card = {englishName: 'LeapfrogCard', param: {pawn: null, positions: []}, type: 'REPLACE_TURN', listParams: ['positions']};
 
         act(() => result.current.showCard(card));
         expect(result.current.selectedParam).toBe('pawn');
 
-        act(() => result.current.onSquareRightClick('d2'));
+        act(() => result.current.onBoardSquareClick('d2'));
         expect(result.current.selectedCard.param.pawn).toBe('d2');
         expect(result.current.selectedParam).toBe('positions');
 
-        act(() => result.current.onSquareRightClick('f4'));
+        act(() => result.current.onBoardSquareClick('f4'));
         expect(result.current.selectedCard.param.positions).toEqual(['f4']);
         expect(result.current.selectedParam).toBe('positions');
 
-        act(() => result.current.onSquareRightClick('h6'));
+        act(() => result.current.onBoardSquareClick('h6'));
         expect(result.current.selectedCard.param.positions).toEqual(['f4', 'h6']);
     });
 
-    test('list param: right-clicking same square removes it', () => {
+    test('list param: left-clicking same square removes it', () => {
         const {result} = setup([], {state: 'BEGINNING_OF_THE_TURN'});
         const card = {englishName: 'LeapfrogCard', param: {pawn: null, positions: []}, type: 'REPLACE_TURN', listParams: ['positions']};
 
         act(() => result.current.showCard(card));
-        act(() => result.current.onSquareRightClick('d2'));
-        act(() => result.current.onSquareRightClick('f4'));
-        act(() => result.current.onSquareRightClick('h6'));
-        act(() => result.current.onSquareRightClick('f4'));
+        act(() => result.current.onBoardSquareClick('d2'));
+        act(() => result.current.onBoardSquareClick('f4'));
+        act(() => result.current.onBoardSquareClick('h6'));
+        act(() => result.current.onBoardSquareClick('f4'));
 
         expect(result.current.selectedCard.param.positions).toEqual(['h6']);
     });
@@ -427,11 +437,11 @@ describe('useCardSelection', () => {
         const card = {englishName: 'LeapfrogCard', param: {pawn: null, positions: []}, type: 'REPLACE_TURN', listParams: ['positions']};
 
         act(() => result.current.showCard(card));
-        act(() => result.current.onSquareRightClick('d2'));
+        act(() => result.current.onBoardSquareClick('d2'));
 
         expect(result.current.selectedParam).toBe('positions');
 
-        act(() => result.current.onSquareRightClick('f4'));
+        act(() => result.current.onBoardSquareClick('f4'));
         expect(result.current.selectedParam).toBe('positions');
     });
 

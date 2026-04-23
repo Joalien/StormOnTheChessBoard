@@ -77,16 +77,20 @@ export function useGameActions({base, gameId, fetchGame, setSelectedCard, setSel
         } else await showErrorMessage(res);
     }
 
-    function onPieceDragBegin(piece, sourceSquare) {
-        fetch(base + gameId + "/legalMoves/" + sourceSquare)
+    function selectPiece(square) {
+        fetch(base + gameId + "/legalMoves/" + square)
             .then(res => res.json())
             .then(moves => setLegalMoves(moves))
             .catch(() => setLegalMoves([]));
+    }
+
+    function onPieceDragBegin(piece, sourceSquare) {
+        selectPiece(sourceSquare);
     }
 
     function onPieceDragEnd() {
         setLegalMoves([]);
     }
 
-    return {movePiece, playCard, endTurn, undo, promote, shuffle, onPieceDragBegin, onPieceDragEnd};
+    return {movePiece, playCard, endTurn, undo, promote, shuffle, selectPiece, onPieceDragBegin, onPieceDragEnd};
 }

@@ -379,8 +379,9 @@ export default function App() {
         selectedParam, setSelectedParam,
         barricadeEdges, setBarricadeEdges,
         selectedEffectPositions,
-        showCard, clearSelection,
+        showCard: showCardInner, clearSelection: clearCardSelection,
         selectEffectByIndices,
+        onBoardSquareClick,
         onSquareRightClick,
         onBarricadeEdgeClick,
         onCapturedPieceClick,
@@ -390,6 +391,19 @@ export default function App() {
         isBarricadeCard,
         firstUnsetParam,
     } = useCardSelection(effects, currentState, myColor, currentPlayerColor);
+    const [selectedPiece, setSelectedPiece] = useState(null);
+
+    function clearSelection() {
+        clearCardSelection();
+        setSelectedPiece(null);
+        setLegalMoves([]);
+    }
+
+    function showCard(card) {
+        showCardInner(card);
+        setSelectedPiece(null);
+        setLegalMoves([]);
+    }
     const [windowWidth, setWindowWidth] = useState(typeof window !== 'undefined' ? window.innerWidth : 900);
     const [gameIds, setGameIds] = useState([]);
     const [expandedGameId, setExpandedGameId] = useState(null);
@@ -690,16 +704,61 @@ export default function App() {
             });
     }
 
-    const {movePiece, playCard, endTurn, undo, promote, shuffle, onPieceDragBegin, onPieceDragEnd} = useGameActions({
+    const {movePiece, playCard, endTurn, undo, promote, shuffle, selectPiece, onPieceDragBegin, onPieceDragEnd} = useGameActions({
         base, gameId, fetchGame, setSelectedCard, setSelectedParam,
         setCurrentPlayerColor, currentPlayerColor, selectedCard, setLegalMoves, showErrorMessage,
         myColor,
     });
 
+    function isOwnPiece(square) {
+        return isMyTurn && !!game[square] && game[square][0] === currentPlayerColor[0];
+    }
+
     function onSquareClick(square) {
+        // 1. Promotion
         if (pendingPromotions.includes(square)) {
             setPromotionSquare(promotionSquare === square ? null : square);
+            return;
         }
+
+        // 2. Card param assignment (clic gauche remplace l'ancien clic droit)
+        if (onBoardSquareClick(square)) return;
+
+        // 3. Déplacement par clic (pièce déjà sélectionnée)
+        if (selectedPiece) {
+            if (legalMoves.includes(square)) {
+                movePiece(selectedPiece, square);
+                setSelectedPiece(null);
+                setLegalMoves([]);
+            } else if (isOwnPiece(square)) {
+                setSelectedPiece(square);
+                selectPiece(square);
+            } else {
+                setSelectedPiece(null);
+                setLegalMoves([]);
+            }
+            return;
+        }
+
+        // 4. Sélection de pièce
+        if (isOwnPiece(square)) {
+            setSelectedPiece(square);
+            selectPiece(square);
+            return;
+        }
+
+        // 5. Affichage d'un effet actif
+        const matchingIndices = effects.reduce((acc, e, i) => {
+            if (e.cardEnglishName && e.positions && e.positions.includes(square)) acc.push(i);
+            return acc;
+        }, []);
+        if (matchingIndices.length > 0) {
+            selectEffectByIndices(matchingIndices);
+            return;
+        }
+
+        // 6. Désélection
+        clearSelection();
     }
 
     function squareToCoords(square, orientation) {
@@ -730,8 +789,10 @@ export default function App() {
         background: "radial-gradient(circle, transparent 80%, rgba(0,0,0,0.25) 80%)",
     };
     const effectHighlight = { boxShadow: 'rgba(255,143,0,0.85) 0px 0px 28px 4px inset', background: 'rgba(255,143,0,0.15)' };
+    const selectedPieceHighlight = {boxShadow: "rgba(212, 168, 67, 0.95) 0px 0px 24px 4px inset"};
     const customSquareStyles = {
         ...customSquares(),
+        ...(selectedPiece ? {[selectedPiece]: selectedPieceHighlight} : {}),
         ...(selectedCard && !selectedCard.isEffect
             ? Object.values(selectedCard.param || {}).reduce((obj, square) => {
                 if (square) obj[square] = highlight;
@@ -887,7 +948,7 @@ export default function App() {
                     />
 
                     {/* Board */}
-                    <div style={{position: 'relative', zIndex: selectedCard && selectedCard.isEffect ? 51 : undefined}}>
+                    <div style={{position: 'relative', zIndex: selectedCard && selectedCard.isEffect ? 51 : undefined}} onClick={e => e.stopPropagation()}>
                         <div style={{
                             borderRadius: '10px',
                             overflow: 'hidden',

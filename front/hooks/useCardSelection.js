@@ -92,32 +92,30 @@ export function useCardSelection(effects, currentState, myColor, currentPlayerCo
         setSelectedParam(firstUnsetParam(updated));
     }
 
-    function onSquareRightClick(square) {
-        if (selectedCard && selectedParam && isSelectedCardPlayable() && !isBarricadeCard(selectedCard)
-            && !(selectedCard.enumOptions && selectedCard.enumOptions[selectedParam])) {
-            const newParam = {...selectedCard.param};
-            if (isListParam(selectedCard, selectedParam)) {
-                const list = [...(newParam[selectedParam] || [])];
-                const idx = list.indexOf(square);
-                if (idx >= 0) list.splice(idx, 1);
-                else list.push(square);
-                newParam[selectedParam] = list;
-            } else {
-                if (newParam[selectedParam] === square) newParam[selectedParam] = null;
-                else newParam[selectedParam] = square;
-            }
-            const updated = {...selectedCard, param: newParam};
-            setSelectedCard(updated);
-            setSelectedParam(firstUnsetParam(updated));
-            return;
+    // Assigns the clicked square to the current card parameter.
+    // Returns true if a param was consumed (caller should not process the click further).
+    function onBoardSquareClick(square) {
+        if (!selectedCard || selectedCard.isEffect || !selectedParam || !isSelectedCardPlayable() || isBarricadeCard(selectedCard)) return false;
+        if (selectedCard.enumOptions && selectedCard.enumOptions[selectedParam]) return false;
+        const newParam = {...selectedCard.param};
+        if (isListParam(selectedCard, selectedParam)) {
+            const list = [...(newParam[selectedParam] || [])];
+            const idx = list.indexOf(square);
+            if (idx >= 0) list.splice(idx, 1);
+            else list.push(square);
+            newParam[selectedParam] = list;
+        } else {
+            if (newParam[selectedParam] === square) newParam[selectedParam] = null;
+            else newParam[selectedParam] = square;
         }
-        const matchingIndices = effects.reduce((acc, e, i) => {
-            if (e.cardEnglishName && e.positions && e.positions.includes(square)) acc.push(i);
-            return acc;
-        }, []);
-        if (matchingIndices.length > 0) {
-            selectEffectByIndices(matchingIndices);
-        }
+        const updated = {...selectedCard, param: newParam};
+        setSelectedCard(updated);
+        setSelectedParam(firstUnsetParam(updated));
+        return true;
+    }
+
+    function onSquareRightClick() {
+        clearSelection();
     }
 
     function onBarricadeEdgeClick(edge) {
@@ -165,6 +163,7 @@ export function useCardSelection(effects, currentState, myColor, currentPlayerCo
         showCard,
         clearSelection,
         selectEffectByIndices,
+        onBoardSquareClick,
         onSquareRightClick,
         onBarricadeEdgeClick,
         onCapturedPieceClick,
