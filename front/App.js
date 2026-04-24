@@ -373,6 +373,8 @@ export default function App() {
     const [capturedPieces, setCapturedPieces] = useState([]);
     const [isInCheck, setIsInCheck] = useState(false);
     const [gameResult, setGameResult] = useState('ONGOING');
+    const [whiteTime, setWhiteTime] = useState(0);
+    const [blackTime, setBlackTime] = useState(0);
     const [victoryDismissed, setVictoryDismissed] = useState(false);
     const [myColor, setMyColor] = useState(getPlayerColorFromUrl);
     const [legalMoves, setLegalMoves] = useState([]);
@@ -618,6 +620,15 @@ export default function App() {
         window.addEventListener('beforeunload', onBeforeUnload);
         return () => window.removeEventListener('beforeunload', onBeforeUnload);
     }, []);
+
+    useEffect(() => {
+        if (!gameId || gameResult !== 'ONGOING') return;
+        const id = setInterval(() => {
+            if (currentPlayerColor === 'white') setWhiteTime(t => t + 1);
+            else setBlackTime(t => t + 1);
+        }, 1000);
+        return () => clearInterval(id);
+    }, [gameId, currentPlayerColor, gameResult]);
 
     function notifyMatchFound() {
         toast.success("Adversaire trouvé !");
@@ -948,6 +959,8 @@ export default function App() {
                         color={topColor}
                         selectedCard={selectedCard}
                         playableTypes={playableCardTypes(currentState, true)}
+                        time={topColor === 'white' ? whiteTime : blackTime}
+                        isActivePlayer={currentPlayerColor === topColor}
                     />
 
                     {/* Board */}
@@ -1216,6 +1229,8 @@ export default function App() {
                         color={bottomColor}
                         selectedCard={selectedCard}
                         playableTypes={playableCardTypes(currentState, false)}
+                        time={bottomColor === 'white' ? whiteTime : blackTime}
+                        isActivePlayer={currentPlayerColor === bottomColor}
                         large
                     />
                 </section>

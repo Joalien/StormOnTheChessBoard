@@ -1,6 +1,12 @@
 import {Card} from "./Card";
 
-export function Player({player, hiddenCards, showCard, color, selectedCard, playableTypes, large = false}) {
+function formatTime(seconds) {
+    const m = Math.floor(seconds / 60);
+    const s = seconds % 60;
+    return `${m}:${String(s).padStart(2, '0')}`;
+}
+
+export function Player({player, hiddenCards, showCard, color, selectedCard, playableTypes, time, isActivePlayer, large = false}) {
     const isBlack = color === 'black';
     const cards = player.cards || [];
 
@@ -35,6 +41,21 @@ export function Player({player, hiddenCards, showCard, color, selectedCard, play
                         border: '1px solid rgba(255,255,255,0.06)',
                     }}>
                         {cards.length} carte{cards.length !== 1 ? 's' : ''}
+                    </span>
+                )}
+                {time !== undefined && (
+                    <span style={{
+                        fontSize: '11px',
+                        fontVariantNumeric: 'tabular-nums',
+                        color: isActivePlayer ? '#e6edf3' : '#484f58',
+                        background: isActivePlayer ? 'rgba(255,255,255,0.07)' : 'rgba(255,255,255,0.02)',
+                        padding: '2px 8px',
+                        borderRadius: '8px',
+                        border: `1px solid ${isActivePlayer ? 'rgba(255,255,255,0.15)' : 'rgba(255,255,255,0.05)'}`,
+                        fontFamily: 'monospace',
+                        marginLeft: 'auto',
+                    }}>
+                        {formatTime(time)}
                     </span>
                 )}
             </div>
