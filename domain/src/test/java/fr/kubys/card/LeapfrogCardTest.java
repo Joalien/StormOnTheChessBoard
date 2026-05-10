@@ -27,41 +27,51 @@ class LeapfrogCardTest {
     }
 
     @Test
-    void should_jump_over_one_piece_diagonally() {
+    void should_jump_over_one_piece_and_capture_it() {
         Pawn pawn = new Pawn(Color.WHITE);
+        Knight jumped = new Knight(Color.WHITE);
         board.add(pawn, d2);
-        board.add(new Knight(Color.WHITE), e3);
+        board.add(jumped, e3);
 
         card.playOn(board, new LeapfrogCardParam(pawn, List.of(f4)));
 
         assertEquals(pawn, board.at(f4).getPiece().get());
         assertTrue(board.at(d2).getPiece().isEmpty());
-        assertTrue(board.at(e3).getPiece().isPresent());
+        assertTrue(board.at(e3).getPiece().isEmpty(), "Jumped piece should be removed from the board");
+        assertTrue(board.getOutOfTheBoardPieces().contains(jumped), "Jumped piece should be among captured pieces");
     }
 
     @Test
-    void should_jump_over_enemy_piece() {
+    void should_capture_jumped_enemy_piece() {
         Pawn pawn = new Pawn(Color.WHITE);
+        Knight enemy = new Knight(Color.BLACK);
         board.add(pawn, d2);
-        board.add(new Knight(Color.BLACK), e3);
+        board.add(enemy, e3);
 
         card.playOn(board, new LeapfrogCardParam(pawn, List.of(f4)));
 
         assertEquals(pawn, board.at(f4).getPiece().get());
-        assertTrue(board.at(e3).getPiece().isPresent());
+        assertTrue(board.at(e3).getPiece().isEmpty());
+        assertTrue(board.getOutOfTheBoardPieces().contains(enemy));
     }
 
     @Test
-    void should_make_multiple_jumps() {
+    void should_capture_every_piece_along_a_multi_jump() {
         Pawn pawn = new Pawn(Color.WHITE);
+        Knight first = new Knight(Color.WHITE);
+        Knight second = new Knight(Color.BLACK);
         board.add(pawn, d2);
-        board.add(new Knight(Color.WHITE), e3);
-        board.add(new Knight(Color.BLACK), g5);
+        board.add(first, e3);
+        board.add(second, g5);
 
         card.playOn(board, new LeapfrogCardParam(pawn, List.of(f4, h6)));
 
         assertEquals(pawn, board.at(h6).getPiece().get());
         assertTrue(board.at(d2).getPiece().isEmpty());
+        assertTrue(board.at(e3).getPiece().isEmpty());
+        assertTrue(board.at(g5).getPiece().isEmpty());
+        assertTrue(board.getOutOfTheBoardPieces().contains(first));
+        assertTrue(board.getOutOfTheBoardPieces().contains(second));
     }
 
     @Test
@@ -107,13 +117,19 @@ class LeapfrogCardTest {
     @Test
     void should_allow_change_direction_during_multi_jump() {
         Pawn pawn = new Pawn(Color.WHITE);
+        Knight ally = new Knight(Color.WHITE);
+        Knight enemy = new Knight(Color.BLACK);
         board.add(pawn, d2);
-        board.add(new Knight(Color.WHITE), e3);
-        board.add(new Knight(Color.BLACK), e5);
+        board.add(ally, e3);
+        board.add(enemy, e5);
 
         card.playOn(board, new LeapfrogCardParam(pawn, List.of(f4, d6)));
 
         assertEquals(pawn, board.at(d6).getPiece().get());
+        assertTrue(board.at(e3).getPiece().isEmpty());
+        assertTrue(board.at(e5).getPiece().isEmpty());
+        assertTrue(board.getOutOfTheBoardPieces().contains(ally));
+        assertTrue(board.getOutOfTheBoardPieces().contains(enemy));
     }
 
     @Test
