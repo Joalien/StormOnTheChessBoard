@@ -9,6 +9,7 @@ import {HomeScreen} from "./component/HomeScreen";
 import {WaitingScreen} from "./component/WaitingScreen";
 import {NotFoundScreen} from "./component/NotFoundScreen";
 import {VictoryPopup} from "./component/VictoryPopup";
+import {HistoryPanel} from "./component/HistoryPanel";
 import {toast, ToastContainer} from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 import {useCardSelection} from "./hooks/useCardSelection";
@@ -378,6 +379,7 @@ export default function App() {
     const [victoryDismissed, setVictoryDismissed] = useState(false);
     const [myColor, setMyColor] = useState(getPlayerColorFromUrl);
     const [legalMoves, setLegalMoves] = useState([]);
+    const [history, setHistory] = useState([]);
 
     const {
         selectedCard, setSelectedCard,
@@ -713,6 +715,7 @@ export default function App() {
                 setCapturedPieces(data.capturedPieces || []);
                 setIsInCheck(data.isInCheck || false);
                 setGameResult(data.gameResult || 'ONGOING');
+                setHistory(data.history || []);
                 setPromotionSquare(null);
                 return data;
             });
@@ -1379,6 +1382,7 @@ export default function App() {
                             </div>
                         );
                     })()}
+                    <HistoryPanel history={history}/>
                     {DEV_TOOLS_ENABLED && gameId && (
                         <DevCardSearch gameId={gameId} onReplaced={fetchGame}/>
                     )}
