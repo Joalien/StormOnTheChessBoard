@@ -68,13 +68,20 @@ public class AiGameService {
         if (config == null) return false;
 
         ChessBoardReadService boardState = chessBoardRepository.getChessBoardService(gameId);
-        int turn = boardState.getTurnNumber();
-        if (boardState.getCurrentPlayer().getColor() != config.aiColor()) return false;
         if (boardState.getGameResult() != GameResult.ONGOING) {
-            log.info("[AI Game {} turn {}] Game is over ({}), AI will not play", gameId, turn, boardState.getGameResult());
+            log.info("[AI Game {} turn {}] Game is over ({}), AI will not play",
+                    gameId, boardState.getTurnNumber(), boardState.getGameResult());
             return false;
         }
 
+        if (boardState.getCurrentPlayer().getColor() == config.aiColor()) {
+            return playOwnTurn(gameId, config, boardState);
+        }
+        return playEnemyReaction(gameId, config, boardState);
+    }
+
+    private boolean playOwnTurn(Integer gameId, AiGameConfig config, ChessBoardReadService boardState) {
+        int turn = boardState.getTurnNumber();
         log.info("[AI Game {} turn {}] AI ({}) is thinking...", gameId, turn, config.aiColor());
         List<Command> commands = config.strategy().decideMove(gameId, boardState);
 
@@ -82,7 +89,8 @@ public class AiGameService {
         // in the meantime, the state is no longer AI's and we must discard the move.
         ChessBoardReadService postState = chessBoardRepository.getChessBoardService(gameId);
         if (postState.getCurrentPlayer().getColor() != config.aiColor()) {
-            log.info("[AI Game {} turn {}] Turn changed during computation, discarding {} command(s)", gameId, turn, commands.size());
+            log.info("[AI Game {} turn {}] Turn changed during computation, discarding {} command(s)",
+                    gameId, turn, commands.size());
             return false;
         }
 
@@ -90,6 +98,37 @@ public class AiGameService {
             commandExecutor.execute(command);
         }
         log.info("[AI Game {} turn {}] AI played {} command(s)", gameId, turn, commands.size());
+        return true;
+    }
+
+    /**
+     * Asks the strategy whether any ENEMY_TURN card in the AI's hand should be played in
+     * reaction to the human's last move/card. Re-checks the state after the (potentially
+     * long) thinking phase to avoid committing into a stale window — if the human ended
+     * their turn meanwhile, the AI's regular {@link #playOwnTurn} path will run on the
+     * next scheduled tick.
+     */
+    private boolean playEnemyReaction(Integer gameId, AiGameConfig config, ChessBoardReadService boardState) {
+        int turn = boardState.getTurnNumber();
+        List<Command> commands = config.strategy().decideEnemyReaction(gameId, boardState, config.aiColor());
+        if (commands.isEmpty()) return false;
+
+        ChessBoardReadService postState = chessBoardRepository.getChessBoardService(gameId);
+        if (postState.getCurrentPlayer().getColor() == config.aiColor()) {
+            log.info("[AI Game {} turn {}] Turn switched to AI before enemy reaction could commit, discarding {} command(s)",
+                    gameId, turn, commands.size());
+            return false;
+        }
+        if (!postState.getCurrentStateName().equals(boardState.getCurrentStateName())) {
+            log.info("[AI Game {} turn {}] State changed ({} → {}) before enemy reaction could commit, discarding",
+                    gameId, turn, boardState.getCurrentStateName(), postState.getCurrentStateName());
+            return false;
+        }
+
+        for (Command command : commands) {
+            commandExecutor.execute(command);
+        }
+        log.info("[AI Game {} turn {}] AI played {} enemy-reaction command(s)", gameId, turn, commands.size());
         return true;
     }
 

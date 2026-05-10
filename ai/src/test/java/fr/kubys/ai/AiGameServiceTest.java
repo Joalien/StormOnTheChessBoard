@@ -51,6 +51,7 @@ class AiGameServiceTest {
         Player whitePlayer = new Player("Human", Color.WHITE);
         when(chessBoardRepository.getChessBoardService(1)).thenReturn(boardState);
         when(boardState.getCurrentPlayer()).thenReturn(whitePlayer);
+        when(boardState.getGameResult()).thenReturn(GameResult.ONGOING);
 
         assertFalse(aiGameService.playIfAiTurn(1));
         verify(chessBoardRepository, never()).saveCommand(any());
@@ -135,6 +136,7 @@ class AiGameServiceTest {
         Player whiteHuman = new Player("Human", Color.WHITE);
         when(chessBoardRepository.getChessBoardService(1)).thenReturn(boardState);
         when(boardState.getCurrentPlayer()).thenReturn(whiteHuman);
+        when(boardState.getGameResult()).thenReturn(GameResult.ONGOING);
 
         Runnable afterCommit = mock(Runnable.class);
         aiGameService.schedulePlayIfAiTurn(1, afterCommit);
@@ -149,9 +151,7 @@ class AiGameServiceTest {
         // which threw CheckException from tryToPass and hid the fact that the game was won.
         aiGameService.registerAiGame(1, Color.BLACK, (gameId, state) -> { throw new AssertionError("strategy must not be asked to play when game is over"); });
 
-        Player blackAi = new Player("AI", Color.BLACK);
         when(chessBoardRepository.getChessBoardService(1)).thenReturn(boardState);
-        when(boardState.getCurrentPlayer()).thenReturn(blackAi);
         when(boardState.getGameResult()).thenReturn(GameResult.WHITE_WINS);
 
         assertFalse(aiGameService.playIfAiTurn(1));
@@ -172,6 +172,71 @@ class AiGameServiceTest {
         aiGameService.schedulePlayIfAiTurn(1, afterCommit);
 
         verify(afterCommit, never()).run();
+    }
+
+    @Test
+    void should_play_enemy_reaction_when_state_allows() {
+        Command reaction = PlayMoveCommand.builder().gameId(1).from(Position.e2).to(Position.e4).build(); // any non-null command
+        AiStrategy strategy = new AiStrategy() {
+            @Override
+            public List<Command> decideMove(Integer id, ChessBoardReadService state) { return List.of(); }
+            @Override
+            public List<Command> decideEnemyReaction(Integer id, ChessBoardReadService state, Color aiColor) {
+                return List.of(reaction);
+            }
+        };
+        aiGameService.registerAiGame(1, Color.BLACK, strategy);
+
+        Player whiteHuman = new Player("Human", Color.WHITE);
+        when(chessBoardRepository.getChessBoardService(1)).thenReturn(boardState);
+        when(boardState.getCurrentPlayer()).thenReturn(whiteHuman);
+        when(boardState.getGameResult()).thenReturn(GameResult.ONGOING);
+        when(boardState.getCurrentStateName()).thenReturn("MOVE_WITHOUT_CARD_PLAYED");
+
+        assertTrue(aiGameService.playIfAiTurn(1));
+        verify(chessBoardRepository).saveCommand(reaction);
+    }
+
+    @Test
+    void should_not_invoke_strategy_for_reaction_when_strategy_returns_empty() {
+        AiStrategy strategy = new AiStrategy() {
+            @Override
+            public List<Command> decideMove(Integer id, ChessBoardReadService state) { return List.of(); }
+            // default decideEnemyReaction returns empty list
+        };
+        aiGameService.registerAiGame(1, Color.BLACK, strategy);
+
+        Player whiteHuman = new Player("Human", Color.WHITE);
+        when(chessBoardRepository.getChessBoardService(1)).thenReturn(boardState);
+        when(boardState.getCurrentPlayer()).thenReturn(whiteHuman);
+        when(boardState.getGameResult()).thenReturn(GameResult.ONGOING);
+
+        assertFalse(aiGameService.playIfAiTurn(1));
+        verify(chessBoardRepository, never()).saveCommand(any());
+    }
+
+    @Test
+    void should_discard_enemy_reaction_if_turn_switched_during_computation() {
+        Command reaction = PlayMoveCommand.builder().gameId(1).from(Position.e2).to(Position.e4).build();
+        AiStrategy strategy = new AiStrategy() {
+            @Override
+            public List<Command> decideMove(Integer id, ChessBoardReadService state) { return List.of(); }
+            @Override
+            public List<Command> decideEnemyReaction(Integer id, ChessBoardReadService state, Color aiColor) {
+                return List.of(reaction);
+            }
+        };
+        aiGameService.registerAiGame(1, Color.BLACK, strategy);
+
+        // First read: human's turn (reaction window). Second read (post-compute): turn switched to AI.
+        Player whiteHuman = new Player("Human", Color.WHITE);
+        Player blackAi = new Player("AI", Color.BLACK);
+        when(chessBoardRepository.getChessBoardService(1)).thenReturn(boardState);
+        when(boardState.getCurrentPlayer()).thenReturn(whiteHuman, blackAi);
+        when(boardState.getGameResult()).thenReturn(GameResult.ONGOING);
+
+        assertFalse(aiGameService.playIfAiTurn(1));
+        verify(chessBoardRepository, never()).saveCommand(any());
     }
 
     @Test
