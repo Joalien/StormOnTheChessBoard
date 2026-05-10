@@ -34,7 +34,8 @@ class AiGameServiceTest {
     @BeforeEach
     void setUp() {
         // Synchronous executor: schedulePlayIfAiTurn runs in-caller thread, deterministic.
-        aiGameService = new AiGameService(chessBoardRepository, Runnable::run);
+        // Command executor delegates to the mocked repo so existing saveCommand() verifies still apply.
+        aiGameService = new AiGameService(chessBoardRepository, chessBoardRepository::saveCommand, Runnable::run);
     }
 
     @Test

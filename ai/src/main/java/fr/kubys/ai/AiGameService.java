@@ -23,15 +23,17 @@ public class AiGameService {
     private static final Logger log = LoggerFactory.getLogger(AiGameService.class);
     private final Map<Integer, AiGameConfig> aiGames = new ConcurrentHashMap<>();
     private final ChessBoardRepository chessBoardRepository;
+    private final GameCommandExecutor commandExecutor;
     private final Executor aiExecutor;
 
     @Autowired
     public AiGameService(ChessBoardRepository chessBoardRepository) {
-        this(chessBoardRepository, defaultExecutor());
+        this(chessBoardRepository, chessBoardRepository::saveCommand, defaultExecutor());
     }
 
-    AiGameService(ChessBoardRepository chessBoardRepository, Executor aiExecutor) {
+    AiGameService(ChessBoardRepository chessBoardRepository, GameCommandExecutor commandExecutor, Executor aiExecutor) {
         this.chessBoardRepository = chessBoardRepository;
+        this.commandExecutor = commandExecutor;
         this.aiExecutor = aiExecutor;
     }
 
@@ -84,7 +86,7 @@ public class AiGameService {
         }
 
         for (Command command : commands) {
-            chessBoardRepository.saveCommand(command);
+            commandExecutor.execute(command);
         }
         log.info("[AI Game {}] AI played {} command(s)", gameId, commands.size());
         return true;
