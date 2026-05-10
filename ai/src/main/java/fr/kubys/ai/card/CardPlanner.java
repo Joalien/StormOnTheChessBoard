@@ -7,6 +7,7 @@ import fr.kubys.card.params.CardParam;
 import fr.kubys.command.Command;
 import fr.kubys.command.PlayCardWithImmutableParamCommand;
 import fr.kubys.core.Color;
+import fr.kubys.player.Player;
 import fr.kubys.repository.ChessBoardRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,14 +42,32 @@ public final class CardPlanner {
             CardType type,
             Supplier<List<Command>> committedCommandsBeforeHypothetical
     ) {
-        Color aiColor = currentBoard.getCurrentPlayer().getColor();
-        int baseline = BoardEvaluator.evaluate(currentBoard, aiColor);
+        return bestPlayFor(gameId, currentBoard, currentBoard.getCurrentPlayer(), type, committedCommandsBeforeHypothetical);
+    }
+
+    /**
+     * Same as the simpler overload but lets the caller specify which player's hand to draw
+     * candidates from. Used by enemy-reaction planning, where the AI is not the current
+     * player on the board but still needs to score cards from its own hand.
+     * <p>
+     * The perspective for {@link BoardEvaluator} remains the supplied {@code player}'s
+     * colour: we score positions from the AI's point of view regardless of whose turn it is.
+     */
+    public Optional<ScoredCardPlay> bestPlayFor(
+            Integer gameId,
+            ChessBoardReadService currentBoard,
+            Player player,
+            CardType type,
+            Supplier<List<Command>> committedCommandsBeforeHypothetical
+    ) {
+        Color perspective = player.getColor();
+        int baseline = BoardEvaluator.evaluate(currentBoard, perspective);
         int turn = currentBoard.getTurnNumber();
 
-        Optional<ScoredCardPlay> best = currentBoard.getCurrentPlayer().getCards().stream()
+        Optional<ScoredCardPlay> best = player.getCards().stream()
                 .filter(card -> card.getType() == type)
                 .flatMap(card -> generators.candidatesFor(card, currentBoard).stream()
-                        .map(param -> attemptScore(gameId, turn, card, param, baseline, aiColor, committedCommandsBeforeHypothetical)))
+                        .map(param -> attemptScore(gameId, turn, card, param, baseline, perspective, committedCommandsBeforeHypothetical)))
                 .flatMap(Optional::stream)
                 .max(Comparator.comparingInt(ScoredCardPlay::score));
 

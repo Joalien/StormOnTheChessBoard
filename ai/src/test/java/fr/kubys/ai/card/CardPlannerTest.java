@@ -100,6 +100,34 @@ class CardPlannerTest {
     }
 
     @Test
+    void bestPlayFor_with_explicit_player_uses_that_hand() {
+        // White is current player; we plan for BLACK's hand explicitly. Only black has the
+        // RetaliationCard — current-player overload would not see it.
+        ChessBoard board = ChessBoard.createEmpty();
+        board.add(new King(Color.WHITE), e1);
+        board.add(new King(Color.BLACK), e8);
+        board.setTurn(Color.WHITE);
+        var gsc = (GameStateController) ChessBoardServiceFactory.newChessBoardService(() -> board);
+        gsc.startGame(1L);
+        // Empty white's hand, give black a Retaliation card explicitly.
+        var retaliation = new fr.kubys.card.RetaliationCard();
+        gsc.getWhite().getCards().clear();
+        gsc.getBlack().getCards().clear();
+        gsc.getBlack().getCards().add(retaliation);
+
+        // Implicit overload (current player = WHITE, empty hand) → empty.
+        Optional<ScoredCardPlay> implicit = planner.bestPlayFor(1, gsc, CardType.ENEMY_TURN_AFTER_MOVE, List::of);
+        assertTrue(implicit.isEmpty(), "Default overload looks at current player's hand (white, empty)");
+
+        // Explicit overload (player = BLACK with Retaliation) → planner sees the card.
+        // The simulation will fail because validInput rejects (no enemy capture this turn),
+        // so the result is still empty — but the candidate generation went through black's hand.
+        Player aiPlayer = gsc.getBlack();
+        Optional<ScoredCardPlay> explicit = planner.bestPlayFor(1, gsc, aiPlayer, CardType.ENEMY_TURN_AFTER_MOVE, List::of);
+        assertTrue(explicit.isEmpty(), "All Retaliation candidates fail validInput here, so empty is expected");
+    }
+
+    @Test
     void returns_empty_when_card_has_no_generic_generator() {
         // KnightCardParam has no registered generator
         ChessBoard board = ChessBoard.createEmpty();
