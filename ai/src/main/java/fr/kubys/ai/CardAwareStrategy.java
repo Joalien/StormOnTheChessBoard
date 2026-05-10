@@ -35,6 +35,17 @@ public class CardAwareStrategy implements AiStrategy {
 
     private static final Logger log = LoggerFactory.getLogger(CardAwareStrategy.class);
 
+    /**
+     * Bonus added to a plan score per card actually played, in the same units as the
+     * material score (a pawn is worth 10). Worth half a pawn: enough to break ties in
+     * favor of card play (so the AI exercises its hand instead of standing pat) but
+     * small enough that any card costing real material — even a single pawn — still
+     * loses to the do-nothing baseline. Captures the latent value of effects the
+     * material-only evaluator can't see (Bombing's pending square, Origines' reset,
+     * future-turn benefits, etc.).
+     */
+    private static final int CARD_PLAY_BONUS = 5;
+
     private final ChessBoardRepository repository;
     private final AiStrategy moveStrategy;
     private final CardPlanner planner;
@@ -141,7 +152,9 @@ public class CardAwareStrategy implements AiStrategy {
     private Optional<TurnPlan> scorePlan(Integer gameId, List<Command> commands, Color perspective, int baseline, String label) {
         try {
             ChessBoardReadService simulated = repository.simulate(gameId, commands);
-            int score = BoardEvaluator.evaluate(simulated, perspective) - baseline;
+            int materialDelta = BoardEvaluator.evaluate(simulated, perspective) - baseline;
+            long cardsPlayed = commands.stream().filter(PlayCardWithImmutableParamCommand.class::isInstance).count();
+            int score = materialDelta + (int) cardsPlayed * CARD_PLAY_BONUS;
             return Optional.of(new TurnPlan(commands, score, label));
         } catch (RuntimeException e) {
             return Optional.empty();
