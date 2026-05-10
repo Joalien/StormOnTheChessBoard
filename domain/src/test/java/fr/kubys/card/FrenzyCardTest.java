@@ -94,5 +94,54 @@ class FrenzyCardTest {
             // Black rook tries non-capture move when capture is available
             assertThrows(IllegalMoveException.class, () -> board.tryToMove(a8, a5));
         }
+
+        @Test
+        void afterCardPlayHook_rejects_REPLACE_TURN_that_does_not_capture() {
+            // Capture is available (rook on a1 vs pawn on a5).
+            Rock whiteRook = new Rock(Color.WHITE);
+            board.add(whiteRook, a1);
+            Pawn blackPawn = new Pawn(Color.BLACK);
+            board.add(blackPawn, a5);
+            FrenzyEffect frenzy = (FrenzyEffect) board.getEffects().stream()
+                    .filter(e -> e instanceof FrenzyEffect).findFirst().orElseThrow();
+
+            IllegalStateException ex = assertThrows(IllegalStateException.class,
+                    () -> frenzy.afterCardPlayHook(board, fr.kubys.card.CardType.REPLACE_TURN));
+            assertTrue(ex.getMessage().contains("Fringale"), "Message should name Fringale: " + ex.getMessage());
+            assertTrue(ex.getMessage().contains("pièce"), "Message should mention the missed capture: " + ex.getMessage());
+        }
+
+        @Test
+        void afterCardPlayHook_accepts_REPLACE_TURN_that_captures() {
+            // Trigger a capture this turn first so lastMoveWasCapture() == true.
+            Rock whiteRook = new Rock(Color.WHITE);
+            board.add(whiteRook, a1);
+            Pawn blackPawn = new Pawn(Color.BLACK);
+            board.add(blackPawn, a5);
+            board.tryToMove(a1, a5); // capture
+            FrenzyEffect frenzy = (FrenzyEffect) board.getEffects().stream()
+                    .filter(e -> e instanceof FrenzyEffect).findFirst().orElse(null);
+            // Frenzy may auto-remove via beforeMoveHook if no further capture is reachable.
+            // We invoke afterCardPlayHook on a still-attached instance to validate the
+            // capture-aware branch.
+            FrenzyEffect probe = frenzy != null ? frenzy : new FrenzyEffect(board);
+            assertDoesNotThrow(() -> probe.afterCardPlayHook(board, fr.kubys.card.CardType.REPLACE_TURN));
+        }
+
+        @Test
+        void afterCardPlayHook_ignores_BEFORE_TURN_and_AFTER_TURN() {
+            FrenzyEffect frenzy = (FrenzyEffect) board.getEffects().stream()
+                    .filter(e -> e instanceof FrenzyEffect).findFirst().orElseThrow();
+
+            // No capture this turn, capture available, but BEFORE_TURN/AFTER_TURN aren't
+            // policed by Frenzy (they go through other code paths that already enforce it).
+            Rock whiteRook = new Rock(Color.WHITE);
+            board.add(whiteRook, a1);
+            Pawn blackPawn = new Pawn(Color.BLACK);
+            board.add(blackPawn, a5);
+
+            assertDoesNotThrow(() -> frenzy.afterCardPlayHook(board, fr.kubys.card.CardType.BEFORE_TURN));
+            assertDoesNotThrow(() -> frenzy.afterCardPlayHook(board, fr.kubys.card.CardType.AFTER_TURN));
+        }
     }
 }

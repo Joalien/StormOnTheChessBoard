@@ -1,6 +1,7 @@
 package fr.kubys.board.effect;
 
 import fr.kubys.board.ChessBoard;
+import fr.kubys.card.CardType;
 import fr.kubys.core.Color;
 import fr.kubys.core.Position;
 import fr.kubys.piece.Piece;
@@ -63,6 +64,25 @@ public class FrenzyEffect extends Effect {
     @Override
     public void afterMoveHook(ChessBoard chessBoard, Piece piece) {
         duringMove = false;
+    }
+
+    /**
+     * REPLACE_TURN cards bypass the standard move pipeline (they call {@code board.move}
+     * directly inside {@code Card.doAction}), so {@link #blocksPosition} never gets a
+     * chance to reject a non-capture move embedded in a card. We catch that here, after
+     * the card has been applied: if Frenzy is still active (i.e. a capture was actually
+     * available) and no capture occurred during the card's execution, reject the play.
+     * <p>
+     * BEFORE_TURN and AFTER_TURN paths are unaffected: BEFORE_TURN is followed by a
+     * normal move that goes through {@code blocksPosition}; AFTER_TURN is played after
+     * the move that already had to capture (or Frenzy was already inactive).
+     */
+    @Override
+    public void afterCardPlayHook(ChessBoard chessBoard, CardType cardType) {
+        if (cardType != CardType.REPLACE_TURN) return;
+        if (chessBoard.lastMoveWasCapture()) return;
+        throw new IllegalStateException(
+                "Fringale exige que vous preniez une pièce ce tour-ci. Cette carte n'en capture aucune.");
     }
 
     /**
