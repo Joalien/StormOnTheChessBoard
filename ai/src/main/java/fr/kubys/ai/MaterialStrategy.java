@@ -28,35 +28,40 @@ public class MaterialStrategy implements AiStrategy {
 
     @Override
     public List<Command> decideMove(Integer gameId, ChessBoardReadService boardState) {
+        return bestMove(boardState, random)
+                .<List<Command>>map(move -> List.of(
+                        PlayMoveCommand.builder().gameId(gameId).from(move.from()).to(move.to()).build(),
+                        EndTurnCommand.builder().gameId(gameId).build()))
+                .orElseGet(() -> List.of(EndTurnCommand.builder().gameId(gameId).build()));
+    }
+
+    /**
+     * Selects the highest-scoring legal move for the player whose turn it currently is on the
+     * supplied board. Ties are broken randomly via the supplied source of randomness. Returns
+     * empty when the player has no legal moves.
+     */
+    public static Optional<ScoredMove> bestMove(ChessBoardReadService boardState, Random random) {
+        List<ScoredMove> scored = scoreAllMoves(boardState);
+        if (scored.isEmpty()) return Optional.empty();
+        int bestScore = scored.stream().mapToInt(ScoredMove::score).max().orElseThrow();
+        List<ScoredMove> bests = scored.stream().filter(m -> m.score() == bestScore).toList();
+        return Optional.of(bests.get(random.nextInt(bests.size())));
+    }
+
+    public static List<ScoredMove> scoreAllMoves(ChessBoardReadService boardState) {
         Color aiColor = boardState.getCurrentPlayer().getColor();
         Map<Position, Piece> piecesByPosition = boardState.getPieces().stream()
                 .collect(Collectors.toMap(Piece::getPosition, p -> p));
-
         Set<Position> enemyAttackedSquares = computeAttackedSquares(boardState, aiColor.opposite());
 
-        List<ScoredMove> scoredMoves = boardState.getPieces().stream()
+        return boardState.getPieces().stream()
                 .filter(piece -> piece.getColor() == aiColor)
                 .flatMap(piece -> boardState.getLegalMoves(piece.getPosition()).stream()
                         .map(target -> scoreMove(piece, target, piecesByPosition, enemyAttackedSquares)))
                 .toList();
-
-        if (scoredMoves.isEmpty()) {
-            return List.of(EndTurnCommand.builder().gameId(gameId).build());
-        }
-
-        int bestScore = scoredMoves.stream().mapToInt(ScoredMove::score).max().orElseThrow();
-        List<ScoredMove> bestMoves = scoredMoves.stream()
-                .filter(m -> m.score() == bestScore)
-                .toList();
-
-        ScoredMove chosen = bestMoves.get(random.nextInt(bestMoves.size()));
-        return List.of(
-                PlayMoveCommand.builder().gameId(gameId).from(chosen.from()).to(chosen.to()).build(),
-                EndTurnCommand.builder().gameId(gameId).build()
-        );
     }
 
-    private ScoredMove scoreMove(Piece piece, Position target, Map<Position, Piece> piecesByPosition, Set<Position> enemyAttackedSquares) {
+    private static ScoredMove scoreMove(Piece piece, Position target, Map<Position, Piece> piecesByPosition, Set<Position> enemyAttackedSquares) {
         int score = 0;
 
         // Bonus for capturing an enemy piece
@@ -82,14 +87,14 @@ public class MaterialStrategy implements AiStrategy {
         return new ScoredMove(piece.getPosition(), target, score);
     }
 
-    private Set<Position> computeAttackedSquares(ChessBoardReadService boardState, Color color) {
+    private static Set<Position> computeAttackedSquares(ChessBoardReadService boardState, Color color) {
         return boardState.getPieces().stream()
                 .filter(piece -> piece.getColor() == color)
                 .flatMap(piece -> boardState.getLegalMoves(piece.getPosition()).stream())
                 .collect(Collectors.toSet());
     }
 
-    static int pieceValue(Piece piece) {
+    public static int pieceValue(Piece piece) {
         if (piece instanceof FusedPiece) return 7;
         if (piece instanceof Queen) return 9;
         if (piece instanceof Rock) return 5;
@@ -113,6 +118,6 @@ public class MaterialStrategy implements AiStrategy {
         return 0;
     }
 
-    private record ScoredMove(Position from, Position to, int score) {
+    public record ScoredMove(Position from, Position to, int score) {
     }
 }
