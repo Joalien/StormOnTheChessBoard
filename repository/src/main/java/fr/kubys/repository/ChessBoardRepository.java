@@ -4,6 +4,7 @@ import fr.kubys.api.ChessBoardReadService;
 import fr.kubys.board.ChessBoard;
 import fr.kubys.command.Command;
 
+import java.util.List;
 import java.util.Set;
 import java.util.function.Supplier;
 
@@ -18,6 +19,13 @@ public interface ChessBoardRepository {
     ChessBoardReadService getChessBoardService(Integer gameId);
 
     void undoLastCommand(Integer gameId);
+
+    /**
+     * Replays all committed commands plus the supplied hypothetical commands on a fresh
+     * service, without mutating the persisted store. Used by the AI to explore the value
+     * of candidate moves and card plays.
+     */
+    ChessBoardReadService simulate(Integer gameId, List<Command> hypothetical);
 
     boolean gameExists(Integer gameId);
 

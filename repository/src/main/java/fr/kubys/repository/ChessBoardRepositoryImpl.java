@@ -56,6 +56,16 @@ public class ChessBoardRepositoryImpl implements ChessBoardRepository {
     }
 
     @Override
+    public ChessBoardReadService simulate(Integer gameId, List<Command> hypothetical) {
+        if (!store.containsKey(gameId)) throw new GameNotFoundException(gameId);
+        Supplier<ChessBoard> factory = boardFactories.getOrDefault(gameId, GamePresets.INITIAL_STATE);
+        ChessBoardService gameStateController = ChessBoardServiceFactory.newChessBoardService(factory);
+        List.copyOf(store.get(gameId)).forEach(command -> command.execute(gameStateController));
+        hypothetical.forEach(command -> command.execute(gameStateController));
+        return gameStateController;
+    }
+
+    @Override
     public boolean gameExists(Integer gameId) {
         return store.containsKey(gameId);
     }

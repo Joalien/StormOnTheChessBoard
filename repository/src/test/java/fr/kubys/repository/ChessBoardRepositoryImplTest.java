@@ -95,4 +95,32 @@ class ChessBoardRepositoryImplTest {
         assertEquals(firstRead, secondRead,
                 "Replaying the command log must yield the same hand — otherwise the hand the UI shows won't match what the backend sees on the next command");
     }
+
+    @Test
+    void simulate_should_apply_hypothetical_commands_without_mutating_store() {
+        chessBoardRepository.createNewGame();
+
+        var simulated = chessBoardRepository.simulate(GAME_ID, List.of(MOVE_GAME_COMMAND));
+
+        assertTrue(simulated.getPieces().stream().anyMatch(p -> p.getPosition().equals(e4)),
+                "Simulated board should reflect the hypothetical move");
+        assertFalse(chessBoardRepository.getChessBoardService(GAME_ID).getPieces().stream().anyMatch(p -> p.getPosition().equals(e4)),
+                "Real board state must not be mutated by simulate()");
+    }
+
+    @Test
+    void simulate_with_empty_list_returns_current_state() {
+        chessBoardRepository.createNewGame();
+        chessBoardRepository.saveCommand(MOVE_GAME_COMMAND);
+
+        var simulated = chessBoardRepository.simulate(GAME_ID, List.of());
+
+        assertTrue(simulated.getPieces().stream().anyMatch(p -> p.getPosition().equals(e4)));
+    }
+
+    @Test
+    void simulate_throws_for_unknown_game() {
+        assertThrows(GameNotFoundException.class,
+                () -> chessBoardRepository.simulate(GAME_ID, List.of()));
+    }
 }
