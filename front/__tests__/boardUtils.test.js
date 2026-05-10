@@ -1,4 +1,4 @@
-import {parseRoute, parsePlayerColor, squareToCoords, oppositeColor} from '../utils/boardUtils';
+import {parseRoute, parsePlayerColor, squareToCoords, oppositeColor, isMovablePiece} from '../utils/boardUtils';
 
 describe('parseRoute', () => {
     test('/ returns home', () => {
@@ -104,5 +104,47 @@ describe('oppositeColor', () => {
 
     test('black returns white', () => {
         expect(oppositeColor('black')).toBe('white');
+    });
+});
+
+describe('isMovablePiece', () => {
+    test('white piece is movable by white player', () => {
+        expect(isMovablePiece('wP', 'white')).toBe(true);
+    });
+
+    test('black piece is movable by black player', () => {
+        expect(isMovablePiece('bN', 'black')).toBe(true);
+    });
+
+    test('white piece is not movable by black player', () => {
+        expect(isMovablePiece('wP', 'black')).toBe(false);
+    });
+
+    test('black piece is not movable by white player', () => {
+        expect(isMovablePiece('bN', 'white')).toBe(false);
+    });
+
+    test('neutral piece is movable by white player', () => {
+        expect(isMovablePiece('P', 'white')).toBe(true);
+    });
+
+    test('neutral piece is movable by black player', () => {
+        expect(isMovablePiece('N', 'black')).toBe(true);
+    });
+
+    test('neutral fused piece is movable by either player', () => {
+        expect(isMovablePiece('Fused_P_N', 'white')).toBe(true);
+        expect(isMovablePiece('Fused_P_N', 'black')).toBe(true);
+    });
+
+    test('white fused piece is movable only by white', () => {
+        expect(isMovablePiece('wFused_P_N', 'white')).toBe(true);
+        expect(isMovablePiece('wFused_P_N', 'black')).toBe(false);
+    });
+
+    test('empty square is not movable', () => {
+        expect(isMovablePiece(undefined, 'white')).toBe(false);
+        expect(isMovablePiece(null, 'black')).toBe(false);
+        expect(isMovablePiece('', 'white')).toBe(false);
     });
 });

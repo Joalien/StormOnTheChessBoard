@@ -38,3 +38,10 @@ export function squareToCoords(square, orientation, boardSize) {
 export function oppositeColor(color) {
     return color === "white" ? "black" : "white";
 }
+
+export function isMovablePiece(pieceCode, currentPlayerColor) {
+    if (!pieceCode) return false;
+    const colorChar = pieceCode[0];
+    if (colorChar !== 'w' && colorChar !== 'b') return true;
+    return colorChar === currentPlayerColor[0];
+}

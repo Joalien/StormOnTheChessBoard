@@ -14,7 +14,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import {useCardSelection} from "./hooks/useCardSelection";
 import {clusterSpotlights} from "./hooks/clusterPositions";
 import {createFusedPieceComponent} from "./component/pieces/FusedPiece";
-import {getRouteFromUrl, getPlayerColorFromUrl, squareToCoords as squareToCoordsUtil, oppositeColor} from "./utils/boardUtils";
+import {getRouteFromUrl, getPlayerColorFromUrl, squareToCoords as squareToCoordsUtil, oppositeColor, isMovablePiece} from "./utils/boardUtils";
 import {useGameActions} from "./hooks/useGameActions";
 import {resolveKeyAction} from "./utils/keyboardActions";
 import {parsePresenceMessage, parseMatchmakingMessage} from "./utils/wsHandlers";
@@ -724,8 +724,26 @@ export default function App() {
         myColor,
     });
 
-    function isOwnPiece(square) {
-        return isMyTurn && !!game[square] && game[square][0] === currentPlayerColor[0];
+    function isMovableByMe(square) {
+        return isMyTurn && isMovablePiece(game[square], currentPlayerColor);
+    }
+
+    function selectPieceAndEffect(square) {
+        let handled = false;
+        if (isMovableByMe(square)) {
+            setSelectedPiece(square);
+            selectPiece(square);
+            handled = true;
+        }
+        const matchingIndices = effects.reduce((acc, e, i) => {
+            if (e.cardEnglishName && e.positions && e.positions.includes(square)) acc.push(i);
+            return acc;
+        }, []);
+        if (matchingIndices.length > 0) {
+            selectEffectByIndices(matchingIndices);
+            handled = true;
+        }
+        return handled;
     }
 
     function onSquareClick(square) {
@@ -744,35 +762,15 @@ export default function App() {
                 movePiece(selectedPiece, square);
                 setSelectedPiece(null);
                 setLegalMoves([]);
-            } else if (isOwnPiece(square)) {
-                setSelectedPiece(square);
-                selectPiece(square);
-            } else {
+            } else if (!selectPieceAndEffect(square)) {
                 setSelectedPiece(null);
                 setLegalMoves([]);
             }
             return;
         }
 
-        // 4. Sélection de pièce
-        if (isOwnPiece(square)) {
-            setSelectedPiece(square);
-            selectPiece(square);
-            return;
-        }
-
-        // 5. Affichage d'un effet actif
-        const matchingIndices = effects.reduce((acc, e, i) => {
-            if (e.cardEnglishName && e.positions && e.positions.includes(square)) acc.push(i);
-            return acc;
-        }, []);
-        if (matchingIndices.length > 0) {
-            selectEffectByIndices(matchingIndices);
-            return;
-        }
-
-        // 6. Désélection
-        clearSelection();
+        // 4. Sélection (pièce + effet) ou désélection
+        if (!selectPieceAndEffect(square)) clearSelection();
     }
 
     function squareToCoords(square, orientation) {
