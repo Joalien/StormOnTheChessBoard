@@ -8,6 +8,9 @@ import fr.kubys.core.Position;
 import fr.kubys.piece.Pawn;
 import fr.kubys.piece.Piece;
 
+import java.util.Map;
+import java.util.Optional;
+
 public final class BoardEvaluator {
 
     public static final int CHECKMATE_SCORE = 10_000;
@@ -15,6 +18,11 @@ public final class BoardEvaluator {
     private static final int MATERIAL_MULTIPLIER = 10;
     private static final int MOBILITY_PER_MOVE = 1;
     private static final int PAWN_ADVANCE_PER_RANK = 2;
+
+    private static final Map<GameResult, Color> WINNERS = Map.of(
+            GameResult.WHITE_WINS, Color.WHITE,
+            GameResult.BLACK_WINS, Color.BLACK
+    );
 
     private BoardEvaluator() {}
 
@@ -29,30 +37,18 @@ public final class BoardEvaluator {
      * a small bonus; neutral pieces are ignored.
      */
     public static int evaluate(ChessBoardReadService board, Color perspective) {
-        GameResult result = board.getGameResult();
-        if (result == GameResult.WHITE_WINS) return perspective == Color.WHITE ? CHECKMATE_SCORE : -CHECKMATE_SCORE;
-        if (result == GameResult.BLACK_WINS) return perspective == Color.BLACK ? CHECKMATE_SCORE : -CHECKMATE_SCORE;
-
-        int score = 0;
-        score += materialBalance(board, perspective);
-        score += mobilityBalance(board, perspective);
-        score += positionalBalance(board, perspective);
-
-        Color currentTurn = board.getCurrentPlayer().getColor();
-        if (board.isCurrentPlayerInCheck() && currentTurn != perspective) score += CHECK_BONUS;
-        if (board.isCurrentPlayerInCheck() && currentTurn == perspective) score -= CHECK_BONUS;
-
-        return score;
+        return Optional.ofNullable(WINNERS.get(board.getGameResult()))
+                .map(winner -> winner == perspective ? CHECKMATE_SCORE : -CHECKMATE_SCORE)
+                .orElseGet(() -> materialBalance(board, perspective)
+                        + mobilityBalance(board, perspective)
+                        + positionalBalance(board, perspective)
+                        + checkBonus(board, perspective));
     }
 
     private static int materialBalance(ChessBoardReadService board, Color perspective) {
-        int score = 0;
-        for (Piece piece : board.getPieces()) {
-            int value = MaterialStrategy.pieceValue(piece) * MATERIAL_MULTIPLIER;
-            if (piece.getColor() == perspective) score += value;
-            else if (piece.getColor() == perspective.opposite()) score -= value;
-        }
-        return score;
+        return board.getPieces().stream()
+                .mapToInt(piece -> sideSign(piece, perspective) * MaterialStrategy.pieceValue(piece) * MATERIAL_MULTIPLIER)
+                .sum();
     }
 
     /**
@@ -61,9 +57,7 @@ public final class BoardEvaluator {
      * mobility, even if no other term changes.
      */
     private static int mobilityBalance(ChessBoardReadService board, Color perspective) {
-        int own = countLegalMoves(board, perspective);
-        int enemy = countLegalMoves(board, perspective.opposite());
-        return (own - enemy) * MOBILITY_PER_MOVE;
+        return (countLegalMoves(board, perspective) - countLegalMoves(board, perspective.opposite())) * MOBILITY_PER_MOVE;
     }
 
     private static int countLegalMoves(ChessBoardReadService board, Color color) {
@@ -74,25 +68,32 @@ public final class BoardEvaluator {
     }
 
     private static int positionalBalance(ChessBoardReadService board, Color perspective) {
-        int score = 0;
-        for (Piece piece : board.getPieces()) {
-            Color color = piece.getColor();
-            if (color != perspective && color != perspective.opposite()) continue;
-            int sign = (color == perspective) ? 1 : -1;
-            score += sign * pawnAdvancement(piece);
-            score += sign * centerProximity(piece);
-        }
-        return score;
+        return board.getPieces().stream()
+                .mapToInt(piece -> sideSign(piece, perspective) * (pawnAdvancement(piece) + centerProximity(piece)))
+                .sum();
+    }
+
+    private static int sideSign(Piece piece, Color perspective) {
+        Color color = piece.getColor();
+        if (color == perspective) return 1;
+        if (color == perspective.opposite()) return -1;
+        return 0;
+    }
+
+    private static int checkBonus(ChessBoardReadService board, Color perspective) {
+        if (!board.isCurrentPlayerInCheck()) return 0;
+        return board.getCurrentPlayer().getColor() == perspective ? -CHECK_BONUS : CHECK_BONUS;
     }
 
     private static int pawnAdvancement(Piece piece) {
-        if (!(piece instanceof Pawn)) return 0;
-        if (piece.getPosition() == null) return 0;
-        // White pawns start on row 2, black on row 7. Distance from that home rank measures
-        // how far the pawn has been pushed toward the opponent.
-        int pawnHome = piece.getColor() == Color.WHITE ? 2 : 7;
-        int pawnDistance = Math.abs(piece.getRow().getRowNumber() - pawnHome);
-        return pawnDistance * PAWN_ADVANCE_PER_RANK;
+        return Optional.of(piece)
+                .filter(Pawn.class::isInstance)
+                .map(Piece::getPosition)
+                .map(pos -> {
+                    int pawnHome = piece.getColor() == Color.WHITE ? 2 : 7;
+                    return Math.abs(pos.getRow().getRowNumber() - pawnHome) * PAWN_ADVANCE_PER_RANK;
+                })
+                .orElse(0);
     }
 
     /**
@@ -103,11 +104,15 @@ public final class BoardEvaluator {
      * displace pieces toward d/e files and rows 4-5 are rewarded smoothly.
      */
     private static int centerProximity(Piece piece) {
-        Position position = piece.getPosition();
-        if (position == null) return 0;
+        return Optional.ofNullable(piece.getPosition())
+                .map(BoardEvaluator::chebyshevToCenter)
+                .map(d -> (int) Math.round(4 - d))
+                .orElse(0);
+    }
+
+    private static double chebyshevToCenter(Position position) {
         double fileDist = Math.abs(position.getFile().getFileNumber() - 4.5);
         double rowDist = Math.abs(position.getRow().getRowNumber() - 4.5);
-        double chebyshev = Math.max(fileDist, rowDist); // 0.5 (centre) … 3.5 (corner)
-        return (int) Math.round(4 - chebyshev); // 4 (centre) … 1 (corner)
+        return Math.max(fileDist, rowDist); // 0.5 (centre) … 3.5 (corner)
     }
 }
