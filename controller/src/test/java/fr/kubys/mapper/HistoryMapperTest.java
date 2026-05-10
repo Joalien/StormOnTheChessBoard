@@ -55,6 +55,35 @@ class HistoryMapperTest {
     }
 
     @Test
+    void card_play_carries_card_metadata() {
+        Command cardCmd = fr.kubys.command.PlayCardWithImmutableParamCommand.<fr.kubys.card.params.PositionCardParam>builder()
+                .gameId(1)
+                .cardName("Attentat")
+                .param(java.util.Map.of("position", "e4"))
+                .build();
+
+        List<HistoryEntryDto> history = HistoryMapper.map(List.of(cardCmd));
+
+        assertEquals(1, history.size());
+        HistoryEntryDto entry = history.get(0);
+        assertEquals("BombingCard", entry.getCardEnglishName());
+        assertEquals("Attentat", entry.getCardName());
+        assertEquals("BEFORE_TURN", entry.getCardType());
+        assertEquals("e4", entry.getCardParams().get("position"));
+        assertNotNull(entry.getCardDescription());
+    }
+
+    @Test
+    void non_card_entries_have_null_card_metadata() {
+        List<HistoryEntryDto> history = HistoryMapper.map(List.of(
+                PlayMoveCommand.builder().gameId(1).from(e2).to(e4).build()
+        ));
+
+        assertNull(history.get(0).getCardEnglishName());
+        assertNull(history.get(0).getCardParams());
+    }
+
+    @Test
     void index_increments_monotonically() {
         Command start = StartGameCommand.builder().gameId(1).build();
         Command move1 = PlayMoveCommand.builder().gameId(1).from(e2).to(e4).build();
