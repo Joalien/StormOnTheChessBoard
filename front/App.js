@@ -10,6 +10,8 @@ import {WaitingScreen} from "./component/WaitingScreen";
 import {NotFoundScreen} from "./component/NotFoundScreen";
 import {VictoryPopup} from "./component/VictoryPopup";
 import {HistoryPanel} from "./component/HistoryPanel";
+import {OpponentCardAnimation} from "./component/OpponentCardAnimation";
+import {useOpponentCardAnimations} from "./hooks/useOpponentCardAnimations";
 import {toast, ToastContainer} from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 import {useCardSelection} from "./hooks/useCardSelection";
@@ -380,6 +382,10 @@ export default function App() {
     const [myColor, setMyColor] = useState(getPlayerColorFromUrl);
     const [legalMoves, setLegalMoves] = useState([]);
     const [history, setHistory] = useState([]);
+    const topPlayerRef = useRef(null);
+    const bottomPlayerRef = useRef(null);
+    const boardWrapperRef = useRef(null);
+    const activeEffectsPanelRef = useRef(null);
 
     const {
         selectedCard, setSelectedCard,
@@ -814,6 +820,13 @@ export default function App() {
     const bottomPlayer = bottomColor === 'white' ? whitePlayer : blackPlayer;
     const topPlayer = bottomColor === 'white' ? blackPlayer : whitePlayer;
 
+    const {animations: opponentCardAnimations, dismiss: dismissOpponentCardAnimation} = useOpponentCardAnimations({
+        history, effects, myColor, currentPlayerColor,
+        topPlayerRef, bottomPlayerRef, boardRef: boardWrapperRef,
+        activeEffectsPanelRef,
+        boardSize, boardOrientation: bottomColor,
+    });
+
     const promotionHighlight = {boxShadow: "rgba(248, 81, 73, 0.85) 0px 0px 24px 0px inset", cursor: "pointer"};
     const legalMoveDot = {background: "radial-gradient(circle, rgba(0,0,0,0.25) 25%, transparent 25%)"};
     const legalMoveCapture = {
@@ -860,6 +873,9 @@ export default function App() {
 
     return (
         <div style={{minHeight: '100vh', display: 'flex', flexDirection: 'column', background: 'linear-gradient(160deg, #0a0d16 0%, #111520 50%, #0d1117 100%)'}}>
+            {opponentCardAnimations.map(entry => (
+                <OpponentCardAnimation key={entry.id} entry={entry} onDone={dismissOpponentCardAnimation}/>
+            ))}
             <ToastContainer
                 position="top-right"
                 closeOnClick
@@ -969,19 +985,21 @@ export default function App() {
                     </span>
 
                     {/* Top player cards */}
-                    <Player
-                        player={topPlayer}
-                        showCard={showCard}
-                        hiddenCards={false}
-                        color={topColor}
-                        selectedCard={selectedCard}
-                        playableTypes={playableCardTypes(currentState, true)}
-                        time={topColor === 'white' ? whiteTime : blackTime}
-                        isActivePlayer={currentPlayerColor === topColor}
-                    />
+                    <div ref={topPlayerRef} style={{width: '100%'}}>
+                        <Player
+                            player={topPlayer}
+                            showCard={showCard}
+                            hiddenCards={false}
+                            color={topColor}
+                            selectedCard={selectedCard}
+                            playableTypes={playableCardTypes(currentState, true)}
+                            time={topColor === 'white' ? whiteTime : blackTime}
+                            isActivePlayer={currentPlayerColor === topColor}
+                        />
+                    </div>
 
                     {/* Board */}
-                    <div style={{position: 'relative', zIndex: selectedCard && selectedCard.isEffect ? 51 : undefined}} onClick={e => e.stopPropagation()}>
+                    <div ref={boardWrapperRef} style={{position: 'relative', zIndex: selectedCard && selectedCard.isEffect ? 51 : undefined}} onClick={e => e.stopPropagation()}>
                         <div style={{
                             borderRadius: '10px',
                             overflow: 'hidden',
@@ -1239,17 +1257,19 @@ export default function App() {
                     </div>
 
                     {/* Bottom player cards */}
-                    <Player
-                        player={bottomPlayer}
-                        showCard={showCard}
-                        hiddenCards={false}
-                        color={bottomColor}
-                        selectedCard={selectedCard}
-                        playableTypes={playableCardTypes(currentState, false)}
-                        time={bottomColor === 'white' ? whiteTime : blackTime}
-                        isActivePlayer={currentPlayerColor === bottomColor}
-                        large
-                    />
+                    <div ref={bottomPlayerRef} style={{width: '100%'}}>
+                        <Player
+                            player={bottomPlayer}
+                            showCard={showCard}
+                            hiddenCards={false}
+                            color={bottomColor}
+                            selectedCard={selectedCard}
+                            playableTypes={playableCardTypes(currentState, false)}
+                            time={bottomColor === 'white' ? whiteTime : blackTime}
+                            isActivePlayer={currentPlayerColor === bottomColor}
+                            large
+                        />
+                    </div>
                 </section>
 
                 {/* Right panel: Actions + Card details + Effects + Captured */}
@@ -1329,7 +1349,7 @@ export default function App() {
 
                     {/* Active effects (hidden when a hand card is selected) */}
                     {!(selectedCard && !selectedCard.isEffect) && effects.some(e => e.cardEnglishName) && (
-                        <div className="sotc-panel" style={{padding: '12px 16px', display: 'flex', flexDirection: 'column', gap: '8px'}}>
+                        <div ref={activeEffectsPanelRef} className="sotc-panel" style={{padding: '12px 16px', display: 'flex', flexDirection: 'column', gap: '8px'}}>
                             <span style={{fontSize: '11px', fontWeight: '700', color: '#484f58', textTransform: 'uppercase', letterSpacing: '0.8px'}}>
                                 Effets actifs
                             </span>
