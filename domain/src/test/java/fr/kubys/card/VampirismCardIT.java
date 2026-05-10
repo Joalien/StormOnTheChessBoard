@@ -188,6 +188,25 @@ class VampirismCardIT {
     }
 
     @Test
+    void capturing_a_pawn_on_promotion_rank_then_vampirising_promotes_immediately() {
+        // White knight on e6 captures the black pawn at d8. The knight is now on row 8
+        // (white's promotion rank). Vampirism transforms it into a pawn; the pawn lands
+        // on row 8 via chessBoard.add(), which triggers auto-promotion to a queen.
+        Knight knight = new Knight(Color.WHITE);
+        board.add(knight, e6);
+        board.add(new Pawn(Color.BLACK), d8);
+
+        board.move(knight, d8); // knight captures pawn on the promotion rank
+
+        card.playOn(board, new PieceCardParam(knight));
+
+        Piece resulting = board.at(d8).getPiece().orElseThrow();
+        assertInstanceOf(Queen.class, resulting,
+                "Vampirised pawn on the promotion rank must auto-promote to a queen");
+        assertEquals(Color.WHITE, resulting.getColor());
+    }
+
+    @Test
     void black_player_can_use_vampirism() {
         board.setTurn(Color.BLACK);
         Knight blackKnight = new Knight(Color.BLACK);
