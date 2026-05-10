@@ -60,6 +60,49 @@ class CardAwareStrategyTest {
     }
 
     @Test
+    void enemy_reaction_returns_empty_when_state_disallows() {
+        // BEGINNING_OF_THE_TURN doesn't allow ENEMY_TURN cards to be played reactively.
+        ChessBoardRepository repo = new ChessBoardRepositoryImpl();
+        Integer gameId = repo.createCustomGame(() -> {
+            ChessBoard board = ChessBoard.createEmpty();
+            board.add(new King(Color.WHITE), e1);
+            board.add(new King(Color.BLACK), e8);
+            board.setTurn(Color.WHITE);
+            return board;
+        });
+        ChessBoardReadService state = repo.getChessBoardService(gameId);
+        var strategy = new CardAwareStrategy(repo, new MaterialStrategy(new Random(0)));
+
+        // Game is in BEGINNING_OF_THE_TURN at this point — no reaction window.
+        List<Command> commands = strategy.decideEnemyReaction(gameId, state, Color.BLACK);
+
+        assertTrue(commands.isEmpty(), "No reaction expected outside of MOVE_WITHOUT_CARD_PLAYED / END_OF_THE_TURN windows");
+    }
+
+    @Test
+    void enemy_reaction_returns_empty_when_no_enemy_turn_cards_in_hand() {
+        ChessBoardRepository repo = new ChessBoardRepositoryImpl();
+        Integer gameId = repo.createCustomGame(() -> {
+            ChessBoard board = ChessBoard.createEmpty();
+            board.add(new King(Color.WHITE), e1);
+            board.add(new King(Color.BLACK), e8);
+            board.add(new Pawn(Color.WHITE), e2);
+            board.setTurn(Color.WHITE);
+            return board;
+        });
+        // Move so we transition to MOVE_WITHOUT_CARD_PLAYED (a valid reaction window)
+        repo.saveCommand(fr.kubys.command.PlayMoveCommand.builder().gameId(gameId).from(e2).to(e4).build());
+        ChessBoardReadService state = repo.getChessBoardService(gameId);
+        // Empty the AI's (black) hand so it has no ENEMY_TURN cards
+        state.getBlack().getCards().clear();
+
+        var strategy = new CardAwareStrategy(repo, new MaterialStrategy(new Random(0)));
+        List<Command> commands = strategy.decideEnemyReaction(gameId, state, Color.BLACK);
+
+        assertTrue(commands.isEmpty(), "No reaction expected when AI has no cards at all");
+    }
+
+    @Test
     void commands_can_be_committed_through_repository_without_throwing() {
         ChessBoardRepository repo = new ChessBoardRepositoryImpl();
         Integer gameId = repo.createCustomGame(() -> {

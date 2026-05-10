@@ -12,6 +12,7 @@ import fr.kubys.command.EndTurnCommand;
 import fr.kubys.command.PlayCardWithImmutableParamCommand;
 import fr.kubys.command.PlayMoveCommand;
 import fr.kubys.core.Color;
+import fr.kubys.player.Player;
 import fr.kubys.repository.ChessBoardRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -170,5 +171,46 @@ public class CardAwareStrategy implements AiStrategy {
     }
 
     private record TurnPlan(List<Command> commands, int score, String label) {
+    }
+
+    /**
+     * State names that allow opponent-side ENEMY_TURN reactions, mirroring the frontend's
+     * {@code playableCardTypes(state, isOpponent=true)} table:
+     * <ul>
+     *   <li>{@code MOVE_WITHOUT_CARD_PLAYED}: opponent just moved → {@code ENEMY_TURN_AFTER_MOVE} only</li>
+     *   <li>{@code END_OF_THE_TURN}: opponent moved + played a card → both ENEMY_TURN types</li>
+     * </ul>
+     */
+    private static final List<CardType> AFTER_OPPONENT_MOVE = List.of(CardType.ENEMY_TURN_AFTER_MOVE);
+    private static final List<CardType> AFTER_OPPONENT_CARD = List.of(CardType.ENEMY_TURN_AFTER_MOVE, CardType.ENEMY_TURN_AFTER_CARD);
+
+    @Override
+    public List<Command> decideEnemyReaction(Integer gameId, ChessBoardReadService boardState, Color aiColor) {
+        List<CardType> allowedTypes = allowedReactionTypes(boardState.getCurrentStateName());
+        if (allowedTypes.isEmpty()) return List.of();
+
+        Player aiPlayer = aiColor == Color.WHITE ? boardState.getWhite() : boardState.getBlack();
+        int turn = boardState.getTurnNumber();
+
+        Optional<ScoredCardPlay> best = allowedTypes.stream()
+                .map(type -> planner.bestPlayFor(gameId, boardState, aiPlayer, type, List::of))
+                .flatMap(Optional::stream)
+                .max(Comparator.comparingInt(ScoredCardPlay::score));
+
+        if (best.isEmpty()) {
+            log.trace("[AI Game {} turn {}] enemy reaction: no playable card", gameId, turn);
+            return List.of();
+        }
+        ScoredCardPlay play = best.get();
+        log.info("[AI Game {} turn {}] enemy reaction: {} {} score={}", gameId, turn, play.card().getName(), play.param(), play.score());
+        return List.of(toCommand(gameId, play));
+    }
+
+    private static List<CardType> allowedReactionTypes(String stateName) {
+        return switch (stateName) {
+            case "MOVE_WITHOUT_CARD_PLAYED" -> AFTER_OPPONENT_MOVE;
+            case "END_OF_THE_TURN" -> AFTER_OPPONENT_CARD;
+            default -> List.of();
+        };
     }
 }
