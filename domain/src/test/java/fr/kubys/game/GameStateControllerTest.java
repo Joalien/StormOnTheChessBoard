@@ -111,6 +111,22 @@ class GameStateControllerTest {
     }
 
     @Test
+    void should_shuffle_both_players_hands() {
+        var whiteBefore = new java.util.ArrayList<>(gameStateController.getWhite().getCards());
+        var blackBefore = new java.util.ArrayList<>(gameStateController.getBlack().getCards());
+
+        gameStateController.shuffleHand();
+
+        assertEquals(5, gameStateController.getWhite().getCards().size());
+        assertEquals(5, gameStateController.getBlack().getCards().size());
+        // At least one of the two hands must have changed (with overwhelming probability)
+        var whiteAfter = gameStateController.getWhite().getCards();
+        var blackAfter = gameStateController.getBlack().getCards();
+        assertTrue(!whiteBefore.equals(whiteAfter) || !blackBefore.equals(blackAfter),
+                "Shuffle should change at least one player's hand");
+    }
+
+    @Test
     void should_allow_move_into_check() {
         // Move king's pawn to expose king — this was forbidden before, now allowed
         assertDoesNotThrow(() -> gameStateController.tryToMove(f2, f3));

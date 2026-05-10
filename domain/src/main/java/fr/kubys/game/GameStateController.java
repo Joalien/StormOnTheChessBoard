@@ -244,7 +244,8 @@ public class GameStateController implements ChessBoardService {
     @Override
     public void shuffleHand() {
         assertGameHasAlreadyStarted();
-        deck.shuffleAndRedeal(getCurrentPlayer(), NUMBER_OF_CARDS_IN_HAND);
+        deck.shuffleAndRedeal(white, NUMBER_OF_CARDS_IN_HAND);
+        deck.shuffleAndRedeal(black, NUMBER_OF_CARDS_IN_HAND);
     }
 
     @Override
