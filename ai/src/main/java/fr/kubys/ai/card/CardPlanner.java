@@ -8,6 +8,8 @@ import fr.kubys.command.Command;
 import fr.kubys.command.PlayCardWithImmutableParamCommand;
 import fr.kubys.core.Color;
 import fr.kubys.repository.ChessBoardRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,6 +23,8 @@ import java.util.function.Supplier;
  * was invalid or no card had a generator).
  */
 public final class CardPlanner {
+
+    private static final Logger log = LoggerFactory.getLogger(CardPlanner.class);
 
     private final ChessBoardRepository repository;
     private final CardCandidateGenerators generators;
@@ -39,12 +43,19 @@ public final class CardPlanner {
         Color aiColor = currentBoard.getCurrentPlayer().getColor();
         int baseline = BoardEvaluator.evaluate(currentBoard, aiColor);
 
-        return currentBoard.getCurrentPlayer().getCards().stream()
+        Optional<ScoredCardPlay> best = currentBoard.getCurrentPlayer().getCards().stream()
                 .filter(card -> card.getType() == type)
                 .flatMap(card -> generators.candidatesFor(card, currentBoard).stream()
                         .map(param -> attemptScore(gameId, card, param, baseline, aiColor, committedCommandsBeforeHypothetical)))
                 .flatMap(Optional::stream)
                 .max((a, b) -> Integer.compare(a.score(), b.score()));
+
+        if (log.isTraceEnabled()) {
+            best.ifPresentOrElse(
+                    play -> log.trace("[AI Game {}] {} best card: {} {} score={}", gameId, type, play.card().getName(), play.param(), play.score()),
+                    () -> log.trace("[AI Game {}] {} no playable card found", gameId, type));
+        }
+        return best;
     }
 
     private Optional<ScoredCardPlay> attemptScore(
@@ -64,8 +75,10 @@ public final class CardPlanner {
                     .build());
             ChessBoardReadService simulated = repository.simulate(gameId, hypothetical);
             int score = BoardEvaluator.evaluate(simulated, perspective) - baseline;
+            log.trace("[AI Game {}]   candidate {} {} → score={}", gameId, card.getName(), param, score);
             return Optional.of(new ScoredCardPlay(card, param, score));
         } catch (RuntimeException invalidCandidate) {
+            log.trace("[AI Game {}]   candidate {} {} rejected: {}", gameId, card.getName(), param, invalidCandidate.getMessage());
             return Optional.empty();
         }
     }

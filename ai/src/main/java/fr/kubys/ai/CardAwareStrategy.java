@@ -53,11 +53,17 @@ public class CardAwareStrategy implements AiStrategy {
         Color aiColor = boardState.getCurrentPlayer().getColor();
         int baseline = BoardEvaluator.evaluate(boardState, aiColor);
 
+        log.trace("[AI Game {}] decideMove start: aiColor={} baseline={}", gameId, aiColor, baseline);
+
         List<TurnPlan> plans = new ArrayList<>();
         plans.addAll(moveAlonePlans(gameId, boardState, aiColor, baseline));
         plans.addAll(beforeThenMovePlans(gameId, boardState, aiColor, baseline));
         plans.addAll(moveThenAfterPlans(gameId, boardState, aiColor, baseline));
         plans.addAll(replaceTurnPlans(gameId, boardState, baseline));
+
+        if (log.isTraceEnabled()) {
+            plans.forEach(plan -> log.trace("[AI Game {}]   plan {} score={}", gameId, plan.label(), plan.score()));
+        }
 
         Optional<TurnPlan> best = plans.stream().max(Comparator.comparingInt(TurnPlan::score));
         if (best.isEmpty()) {
