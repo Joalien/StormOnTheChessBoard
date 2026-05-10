@@ -6,7 +6,7 @@ const COLOR_STYLES = {
     system: {dot: '#484f58', label: '#484f58'},
 };
 
-export function HistoryPanel({history}) {
+export function HistoryPanel({history, onCardEntryClick, selectedHistoryIndex}) {
     const scrollRef = useRef(null);
     const length = (history || []).length;
 
@@ -33,16 +33,35 @@ export function HistoryPanel({history}) {
             }}>
                 {history.map(entry => {
                     const style = COLOR_STYLES[entry.color] || COLOR_STYLES.system;
+                    const isCard = !!entry.cardEnglishName;
+                    const isSelected = selectedHistoryIndex === entry.index;
                     return (
-                        <div key={entry.index} style={{
-                            display: 'flex',
-                            alignItems: 'center',
-                            gap: '8px',
-                            fontSize: '11px',
-                            padding: '3px 6px',
-                            borderRadius: '4px',
-                            background: 'rgba(255,255,255,0.02)',
-                        }}>
+                        <div
+                            key={entry.index}
+                            onClick={isCard && onCardEntryClick ? () => onCardEntryClick(entry) : undefined}
+                            style={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: '8px',
+                                fontSize: '11px',
+                                padding: '3px 6px',
+                                borderRadius: '4px',
+                                background: isSelected
+                                    ? 'rgba(212,168,67,0.18)'
+                                    : isCard
+                                        ? 'rgba(167,139,250,0.06)'
+                                        : 'rgba(255,255,255,0.02)',
+                                cursor: isCard ? 'pointer' : 'default',
+                                border: isSelected ? '1px solid rgba(212,168,67,0.6)' : '1px solid transparent',
+                                transition: 'background 0.12s, border-color 0.12s',
+                            }}
+                            onMouseEnter={isCard ? e => {
+                                if (!isSelected) e.currentTarget.style.background = 'rgba(167,139,250,0.14)';
+                            } : undefined}
+                            onMouseLeave={isCard ? e => {
+                                if (!isSelected) e.currentTarget.style.background = 'rgba(167,139,250,0.06)';
+                            } : undefined}
+                        >
                             <span style={{
                                 width: '10px',
                                 height: '10px',

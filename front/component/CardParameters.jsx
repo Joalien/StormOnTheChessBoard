@@ -106,6 +106,7 @@ export function CardParameters({card, selectedParam, setSelectedParam, playCardC
     );
     const typeLabel = TYPE_LABELS[card.type] || card.type;
     const barricade = isBarricadeCard(card);
+    const isHistory = !!card.isHistory;
 
     return (
         <div className="sotc-panel" style={{padding: '20px', display: 'flex', flexDirection: 'column', gap: '16px'}}>
@@ -149,7 +150,7 @@ export function CardParameters({card, selectedParam, setSelectedParam, playCardC
             )}
 
             {/* Parameters */}
-            {isPlayable && paramKeys.length > 0 && (
+            {(isPlayable || isHistory) && paramKeys.length > 0 && (
                 <div>
                     <p style={{
                         fontSize: '10px',
@@ -159,28 +160,29 @@ export function CardParameters({card, selectedParam, setSelectedParam, playCardC
                         fontWeight: '700',
                         margin: '0 0 10px 2px',
                     }}>
-                        {barricade ? 'Clic droit sur 2 cases adjacentes par côté' : 'Clic droit sur les cases pour définir'}
+                        {isHistory ? 'Paramètres choisis' : barricade ? 'Clic droit sur 2 cases adjacentes par côté' : 'Clic droit sur les cases pour définir'}
                     </p>
                     {barricade ? (
                         <BarricadeParams card={card} selectedParam={selectedParam} setSelectedParam={setSelectedParam} barricadeEdges={barricadeEdges} setBarricadeEdges={setBarricadeEdges} />
                     ) : (
                         paramKeys.map((key, i) => {
                             const value = card.param[key];
-                            const isList = listParams.includes(key);
+                            const isList = listParams.includes(key) || Array.isArray(value);
                             const isSet = isList ? Array.isArray(value) && value.length > 0 : value !== null;
-                            const isActive = selectedParam === key;
+                            const isActive = !isHistory && selectedParam === key;
                             const isEnum = card.enumOptions && card.enumOptions[key];
+                            const canResetOnClick = !isHistory && !isList && isSet && !isEnum;
                             return (
                                 <div
                                     key={i}
                                     className={`param-row${isActive ? ' active' : ''}`}
                                     onClick={() => {
-                                        if (!isList && isSet && !isEnum) {
+                                        if (canResetOnClick) {
                                             card.param[key] = null;
                                             setSelectedParam(key);
                                         }
                                     }}
-                                    style={!isList && isSet && !isEnum ? {cursor: 'pointer'} : {cursor: 'default'}}
+                                    style={canResetOnClick ? {cursor: 'pointer'} : {cursor: 'default'}}
                                 >
                                     <div style={{
                                         width: '8px', height: '8px', borderRadius: '50%', flexShrink: 0,
@@ -191,7 +193,7 @@ export function CardParameters({card, selectedParam, setSelectedParam, playCardC
                                         <div style={{fontSize: '12px', fontWeight: '600', color: '#c9d1d9', marginBottom: '3px'}}>
                                             {PARAM_LABELS[key] || key}
                                         </div>
-                                        {isEnum ? (
+                                        {isEnum && !isHistory ? (
                                             <div style={{display: 'flex', gap: '6px', marginTop: '4px'}}>
                                                 {card.enumOptions[key].map(option => (
                                                     <button
@@ -258,9 +260,14 @@ export function CardParameters({card, selectedParam, setSelectedParam, playCardC
                     {allParamsSet ? '▶ Jouer la carte' : 'Définissez tous les paramètres'}
                 </button>
             )}
-            {!isPlayable && !card.isEffect && (
+            {!isPlayable && !card.isEffect && !isHistory && (
                 <p style={{fontSize: '11px', color: '#484f58', textAlign: 'center', margin: 0, fontStyle: 'italic'}}>
                     Cette carte ne peut pas être jouée pour le moment
+                </p>
+            )}
+            {isHistory && (
+                <p style={{fontSize: '11px', color: '#484f58', textAlign: 'center', margin: 0, fontStyle: 'italic'}}>
+                    Carte jouée — entrée d'historique
                 </p>
             )}
         </div>

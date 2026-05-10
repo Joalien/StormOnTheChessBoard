@@ -411,6 +411,22 @@ export default function App() {
         setSelectedPiece(null);
         setLegalMoves([]);
     }
+
+    function showHistoryCard(entry) {
+        setSelectedCard({
+            englishName: entry.cardEnglishName,
+            name: entry.cardName,
+            description: entry.cardDescription,
+            type: entry.cardType,
+            param: entry.cardParams || {},
+            isHistory: true,
+            historyIndex: entry.index,
+        });
+        setSelectedParam(null);
+        setBarricadeEdges([]);
+        setSelectedPiece(null);
+        setLegalMoves([]);
+    }
     const [windowWidth, setWindowWidth] = useState(typeof window !== 'undefined' ? window.innerWidth : 900);
     const [gameIds, setGameIds] = useState([]);
     const [expandedGameId, setExpandedGameId] = useState(null);
@@ -1299,7 +1315,7 @@ export default function App() {
                             playCardCallback={playCard}
                             barricadeEdges={barricadeEdges}
                             setBarricadeEdges={setBarricadeEdges}
-                            isPlayable={!selectedCard.isEffect && playableCardTypes(currentState, false).includes(selectedCard.type)}
+                            isPlayable={!selectedCard.isEffect && !selectedCard.isHistory && playableCardTypes(currentState, false).includes(selectedCard.type)}
                             onEnumSelect={onEnumSelect}
                         />
                     ) : (
@@ -1382,7 +1398,11 @@ export default function App() {
                             </div>
                         );
                     })()}
-                    <HistoryPanel history={history}/>
+                    <HistoryPanel
+                        history={history}
+                        onCardEntryClick={showHistoryCard}
+                        selectedHistoryIndex={selectedCard && selectedCard.isHistory ? selectedCard.historyIndex : null}
+                    />
                     {DEV_TOOLS_ENABLED && gameId && (
                         <DevCardSearch gameId={gameId} onReplaced={fetchGame}/>
                     )}

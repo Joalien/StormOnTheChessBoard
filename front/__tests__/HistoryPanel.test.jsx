@@ -1,5 +1,5 @@
 import React from 'react';
-import {render, screen} from '@testing-library/react';
+import {render, screen, fireEvent} from '@testing-library/react';
 import {HistoryPanel} from '../component/HistoryPanel';
 
 describe('HistoryPanel', () => {
@@ -41,5 +41,30 @@ describe('HistoryPanel', () => {
         render(<HistoryPanel history={history}/>);
         expect(screen.getByText('0')).toBeInTheDocument();
         expect(screen.getByText('5')).toBeInTheDocument();
+    });
+
+    test('clicking a card entry calls onCardEntryClick with the entry', () => {
+        const cardEntry = {
+            index: 1, color: 'black', action: 'Play card Attentat with parameters {position=e4}', instant: '2026-05-10T08:00:05Z',
+            cardEnglishName: 'BombingCard', cardName: 'Attentat', cardDescription: 'desc', cardType: 'BEFORE_TURN',
+            cardParams: {position: 'e4'},
+        };
+        const moveEntry = {index: 0, color: 'white', action: 'Move e2 to e4', instant: '2026-05-10T08:00:00Z'};
+        const onCardEntryClick = jest.fn();
+
+        render(<HistoryPanel history={[moveEntry, cardEntry]} onCardEntryClick={onCardEntryClick}/>);
+
+        fireEvent.click(screen.getByText(cardEntry.action));
+        expect(onCardEntryClick).toHaveBeenCalledWith(cardEntry);
+    });
+
+    test('clicking a non-card entry does nothing', () => {
+        const moveEntry = {index: 0, color: 'white', action: 'Move e2 to e4', instant: '2026-05-10T08:00:00Z'};
+        const onCardEntryClick = jest.fn();
+
+        render(<HistoryPanel history={[moveEntry]} onCardEntryClick={onCardEntryClick}/>);
+
+        fireEvent.click(screen.getByText(moveEntry.action));
+        expect(onCardEntryClick).not.toHaveBeenCalled();
     });
 });
