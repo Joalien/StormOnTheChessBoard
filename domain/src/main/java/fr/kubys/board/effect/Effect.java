@@ -1,6 +1,7 @@
 package fr.kubys.board.effect;
 
 import fr.kubys.board.ChessBoard;
+import fr.kubys.card.CardType;
 import fr.kubys.core.Position;
 import fr.kubys.piece.Piece;
 
@@ -24,6 +25,15 @@ public abstract class Effect {
     }
 
     public void afterRemovingPieceHook(ChessBoard chessBoard, Piece piece) {
+    }
+
+    /**
+     * Called after a card has been successfully applied to the board, in any of the
+     * card-play paths (BEFORE_TURN, REPLACE_TURN, AFTER_TURN, ENEMY_TURN). Effects can
+     * throw here to reject card plays that violate their invariants — e.g. Fringale
+     * rejects a REPLACE_TURN that did not capture anything when a capture was required.
+     */
+    public void afterCardPlayHook(ChessBoard chessBoard, CardType cardType) {
     }
 
     public boolean allowToMove(Piece piece, Position positionToMoveOn) {

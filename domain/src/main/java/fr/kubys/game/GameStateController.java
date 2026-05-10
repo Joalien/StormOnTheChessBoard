@@ -18,6 +18,7 @@ import fr.kubys.player.Player;
 
 import fr.kubys.card.CardRegistry;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -89,6 +90,8 @@ public class GameStateController implements ChessBoardService {
             if (!opponent.getCards().contains(card))
                 throw new CardNotFoundException("Le joueur %s n'a pas %s en main !".formatted(opponent, card));
             card.playOn(chessBoard, params);
+            new ArrayList<>(chessBoard.getEffects())
+                    .forEach(effect -> effect.afterCardPlayHook(chessBoard, card.getType()));
             opponent.getCards().remove(card);
             deck.discardAndDraw(card, opponent);
             return;
