@@ -141,12 +141,11 @@ public class CardAwareStrategy implements AiStrategy {
 
     private List<TurnPlan> replaceTurnPlans(Integer gameId, ChessBoardReadService board, int baseline) {
         return planner.bestPlayFor(gameId, board, CardType.REPLACE_TURN, List::of)
-                .map(play -> {
-                    Command cardCmd = toCommand(gameId, play);
-                    return scorePlan(gameId, List.of(cardCmd), board.getCurrentPlayer().getColor(), baseline,
-                            "replace-card %s".formatted(play.card().getName()));
-                })
-                .stream().flatMap(Optional::stream).toList();
+                .map(play -> scorePlan(gameId, List.of(toCommand(gameId, play)), board.getCurrentPlayer().getColor(), baseline,
+                        "replace-card %s".formatted(play.card().getName())))
+                .stream()
+                .flatMap(Optional::stream)
+                .toList();
     }
 
     private Optional<TurnPlan> scorePlan(Integer gameId, List<Command> commands, Color perspective, int baseline, String label) {

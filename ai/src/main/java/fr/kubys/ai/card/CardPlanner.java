@@ -12,6 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
@@ -48,7 +49,7 @@ public final class CardPlanner {
                 .flatMap(card -> generators.candidatesFor(card, currentBoard).stream()
                         .map(param -> attemptScore(gameId, card, param, baseline, aiColor, committedCommandsBeforeHypothetical)))
                 .flatMap(Optional::stream)
-                .max((a, b) -> Integer.compare(a.score(), b.score()));
+                .max(Comparator.comparingInt(ScoredCardPlay::score));
 
         if (log.isTraceEnabled()) {
             best.ifPresentOrElse(
