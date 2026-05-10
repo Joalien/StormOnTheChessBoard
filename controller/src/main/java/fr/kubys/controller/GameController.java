@@ -34,6 +34,7 @@ public class GameController {
     GameNotifier gameNotifier;
     AiGameService aiGameService;
     AiStrategy defaultStrategy;
+    String stockfishPathConfig;
 
     @Autowired
     public GameController(ChessBoardRepository chessBoardRepository, GameNotifier gameNotifier, AiGameService aiGameService,
@@ -41,17 +42,23 @@ public class GameController {
         this.chessBoardRepository = chessBoardRepository;
         this.gameNotifier = gameNotifier;
         this.aiGameService = aiGameService;
+        this.stockfishPathConfig = stockfishPath;
         this.defaultStrategy = createDefaultStrategy(stockfishPath);
         createInitialState(); // FIXME remove me later on
     }
 
     private AiStrategy createDefaultStrategy(String stockfishPath) {
+        log.info("Using CardAwareStrategy");
+        return new CardAwareStrategy(chessBoardRepository);
+    }
+
+    private AiStrategy createStockfishStrategy(String stockfishPath) {
         String resolvedPath = resolveStockfishPath(stockfishPath);
         if (resolvedPath != null) {
             log.info("Using Fairy-Stockfish at {} with MaterialStrategy fallback", resolvedPath);
             return new StockfishStrategy(resolvedPath, new MaterialStrategy());
         }
-        log.info("Stockfish not found, using MaterialStrategy");
+        log.info("Stockfish binary not found, falling back to MaterialStrategy");
         return new MaterialStrategy();
     }
 
@@ -60,6 +67,8 @@ public class GameController {
         return switch (name.toLowerCase()) {
             case "random" -> new RandomMoveStrategy();
             case "material" -> new MaterialStrategy();
+            case "cards" -> new CardAwareStrategy(chessBoardRepository);
+            case "stockfish" -> createStockfishStrategy(stockfishPathConfig);
             default -> defaultStrategy;
         };
     }
