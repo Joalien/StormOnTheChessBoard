@@ -28,4 +28,5 @@ public class ChessBoardDto {
     private List<String> capturedPieces;
     private boolean isInCheck;
     private String gameResult;
+    private List<HistoryEntryDto> history;
 }

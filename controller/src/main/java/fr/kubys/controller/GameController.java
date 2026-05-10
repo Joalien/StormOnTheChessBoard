@@ -6,6 +6,7 @@ import fr.kubys.command.*;
 import fr.kubys.core.Color;
 import fr.kubys.core.Position;
 import fr.kubys.dto.ChessBoardDto;
+import fr.kubys.mapper.HistoryMapper;
 import fr.kubys.piece.PromotionPiece;
 import fr.kubys.repository.ChessBoardRepository;
 import fr.kubys.repository.GamePresets;
@@ -148,7 +149,9 @@ public class GameController {
 
     @GetMapping("/{gameId}")
     public ChessBoardDto getGameById(@PathVariable Integer gameId) {
-        return mapToDto(gameId, chessBoardRepository.getChessBoardService(gameId));
+        ChessBoardDto dto = mapToDto(gameId, chessBoardRepository.getChessBoardService(gameId));
+        dto.setHistory(HistoryMapper.map(chessBoardRepository.getCommands(gameId)));
+        return dto;
     }
 
     @PostMapping("/{gameId}/card/{cardName}")

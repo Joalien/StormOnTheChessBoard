@@ -56,6 +56,12 @@ public class ChessBoardRepositoryImpl implements ChessBoardRepository {
     }
 
     @Override
+    public List<Command> getCommands(Integer gameId) {
+        if (!store.containsKey(gameId)) throw new GameNotFoundException(gameId);
+        return List.copyOf(store.get(gameId));
+    }
+
+    @Override
     public ChessBoardReadService simulate(Integer gameId, List<Command> hypothetical) {
         if (!store.containsKey(gameId)) throw new GameNotFoundException(gameId);
         Supplier<ChessBoard> factory = boardFactories.getOrDefault(gameId, GamePresets.INITIAL_STATE);

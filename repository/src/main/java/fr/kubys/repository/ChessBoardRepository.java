@@ -27,6 +27,13 @@ public interface ChessBoardRepository {
      */
     ChessBoardReadService simulate(Integer gameId, List<Command> hypothetical);
 
+    /**
+     * Returns the immutable command history for the supplied game in chronological order.
+     * Used by the API to surface a play-by-play history to the frontend for debugging and
+     * visualization.
+     */
+    List<Command> getCommands(Integer gameId);
+
     boolean gameExists(Integer gameId);
 
     Set<Integer> getGameIds();
