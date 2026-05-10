@@ -21,6 +21,6 @@ public class ShieldCard extends Card<NoCardParam> implements Effectable<ShieldEf
 
     @Override
     protected void doAction(ChessBoard chessBoard, NoCardParam param) {
-        chessBoard.addEffect(new ShieldEffect(chessBoard.getLastMovedPiece(), chessBoard.getTurnNumber()));
+        chessBoard.addEffect(new ShieldEffect(chessBoard.getLastMovedPiece()));
     }
 }

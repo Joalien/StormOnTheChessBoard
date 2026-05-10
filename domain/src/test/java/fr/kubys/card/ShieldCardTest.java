@@ -54,7 +54,7 @@ class ShieldCardTest {
         }
 
         @Test
-        void should_expire_shield_when_owner_moves_next_turn() {
+        void should_expire_shield_after_opponent_move() {
             Knight knight = new Knight(Color.WHITE);
             chessBoard.add(knight, b1);
             chessBoard.move(knight, c3);
@@ -62,19 +62,14 @@ class ShieldCardTest {
             shield.playOn(chessBoard, new NoCardParam());
             assertTrue(chessBoard.getEffects().stream().anyMatch(e -> e instanceof ShieldEffect));
 
-            // Simulate opponent's turn
+            // Opponent's single turn: as soon as their move is committed the shield expires.
             chessBoard.setTurn(Color.BLACK);
             Pawn enemyPawn = new Pawn(Color.BLACK);
             chessBoard.add(enemyPawn, a7);
             chessBoard.move(enemyPawn, a6);
 
-            // Now white's turn again - shield should expire when white moves
-            chessBoard.setTurn(Color.WHITE);
-            Pawn whitePawn = new Pawn(Color.WHITE);
-            chessBoard.add(whitePawn, a2);
-            chessBoard.move(whitePawn, a3);
-
-            assertFalse(chessBoard.getEffects().stream().anyMatch(e -> e instanceof ShieldEffect));
+            assertFalse(chessBoard.getEffects().stream().anyMatch(e -> e instanceof ShieldEffect),
+                    "Shield should be gone immediately after the opponent's move, without waiting for the owner to act");
         }
 
         @Test

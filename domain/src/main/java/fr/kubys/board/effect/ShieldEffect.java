@@ -8,12 +8,10 @@ import java.util.List;
 
 public class ShieldEffect extends Effect {
     private final Piece protectedPiece;
-    private final int createdOnTurn;
 
-    public ShieldEffect(Piece protectedPiece, int createdOnTurn) {
+    public ShieldEffect(Piece protectedPiece) {
         super("Bouclier");
         this.protectedPiece = protectedPiece;
-        this.createdOnTurn = createdOnTurn;
     }
 
     @Override
@@ -30,9 +28,17 @@ public class ShieldEffect extends Effect {
                 .orElse(false);
     }
 
+    /**
+     * The shield protects during the opponent's single upcoming turn (the card is played
+     * AFTER_TURN, so the next move belongs to the opponent). Once the opponent has actually
+     * moved — whether they captured something else, advanced a pawn, or did anything at all
+     * — the shield's job is over and the effect removes itself. We discriminate a real move
+     * from an incidental {@code add()} (which also fires this hook) by comparing against
+     * {@code lastMovedPiece}, the same convention used by {@link AstralTravelEffect}.
+     */
     @Override
-    public void beforeMoveHook(ChessBoard chessBoard, Piece piece) {
-        if (piece.getColor() == protectedPiece.getColor() && chessBoard.getTurnNumber() > createdOnTurn) {
+    public void afterMoveHook(ChessBoard chessBoard, Piece piece) {
+        if (piece == chessBoard.getLastMovedPiece() && piece.getColor() != protectedPiece.getColor()) {
             chessBoard.removeEffect(this);
         }
     }
