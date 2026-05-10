@@ -1,3 +1,4 @@
+# syntax=docker/dockerfile:1.4
 FROM maven:3.9-eclipse-temurin-21 AS build
 WORKDIR /app
 COPY pom.xml .
@@ -6,7 +7,13 @@ COPY repository repository
 COPY matchmaking matchmaking
 COPY ai ai
 COPY controller controller
-RUN mvn -N install && mvn -pl domain,repository,matchmaking,ai install -DskipTests && mvn -pl controller package -DskipTests
+# Persistent cache for ~/.m2 across builds: dependencies stay downloaded
+# even when source files change. Cuts a clean build's mvn step from
+# minutes (re-downloading every Spring/Lombok/etc. jar) to seconds.
+RUN --mount=type=cache,target=/root/.m2,sharing=locked \
+    mvn -B -N install \
+ && mvn -B -pl domain,repository,matchmaking,ai install -DskipTests \
+ && mvn -B -pl controller package -DskipTests
 
 FROM eclipse-temurin:21-jre
 WORKDIR /app

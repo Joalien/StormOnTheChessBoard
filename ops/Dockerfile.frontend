@@ -1,7 +1,11 @@
+# syntax=docker/dockerfile:1.4
 FROM node:20-slim AS build
 WORKDIR /app
 COPY front/package.json front/package-lock.json ./
-RUN npm ci --legacy-peer-deps
+# Persistent cache for ~/.npm so a fresh npm ci re-uses the local tarballs
+# instead of redownloading them from the registry.
+RUN --mount=type=cache,target=/root/.npm \
+    npm ci --legacy-peer-deps
 COPY front/ .
 RUN npx expo export:web
 

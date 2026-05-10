@@ -1,0 +1,37 @@
+# Build artefacts (regenerated inside the container)
+**/target/
+**/node_modules/
+**/web-build/
+**/dist/
+**/build/
+
+# Local dev caches and metadata
+**/.expo/
+**/.gradle/
+**/.idea/
+**/.vscode/
+**/.settings/
+**/.classpath
+**/.project
+.DS_Store
+
+# Git history and CI
+.git/
+.gitignore
+.github/
+
+# Tests we don't need at runtime / image build
+**/__tests__/
+**/__mocks__/
+**/coverage/
+**/jest.config.*
+
+# Local Claude Code / agents config
+.claude/
+.mcp.json
+
+# Maven and Node lockfiles are still needed
+# (do NOT exclude pom.xml / package-lock.json)
+
+# Logs
+**/*.log
