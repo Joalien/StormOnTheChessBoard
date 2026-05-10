@@ -124,6 +124,6 @@ class FenConverterTest {
         assertEquals('n', FenConverter.pieceToFenChar(new Knight(Color.WHITE)));
         assertEquals('p', FenConverter.pieceToFenChar(new Pawn(Color.WHITE)));
         assertEquals('n', FenConverter.pieceToFenChar(new Kangaroo(Color.WHITE)));
-        assertEquals('n', FenConverter.pieceToFenChar(new Crab(Color.WHITE)));
+        assertEquals('p', FenConverter.pieceToFenChar(new Crab(Color.WHITE)));
     }
 }

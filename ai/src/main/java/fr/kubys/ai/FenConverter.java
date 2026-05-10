@@ -73,7 +73,7 @@ public class FenConverter {
         if (piece instanceof Pawn) return 'p';
         if (piece instanceof FusedPiece) return 'q'; // approximate as queen
         if (piece instanceof Kangaroo) return 'n'; // jumps like a knight
-        if (piece instanceof Crab) return 'n'; // similar limited movement
+        if (piece instanceof Crab) return 'p'; // limited diagonal/forward steps, closer to a pawn
         return '?'; // truly unknown — treated as empty in the FEN
     }
 
