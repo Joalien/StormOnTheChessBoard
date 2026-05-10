@@ -8,8 +8,6 @@ import fr.kubys.core.Position;
 import fr.kubys.piece.Pawn;
 import fr.kubys.piece.Piece;
 
-import java.util.Set;
-
 public final class BoardEvaluator {
 
     public static final int CHECKMATE_SCORE = 10_000;
@@ -17,21 +15,18 @@ public final class BoardEvaluator {
     private static final int MATERIAL_MULTIPLIER = 10;
     private static final int MOBILITY_PER_MOVE = 1;
     private static final int PAWN_ADVANCE_PER_RANK = 2;
-    private static final int DEVELOPED_PIECE_BONUS = 5;
-    private static final int CENTER_OCCUPATION_BONUS = 3;
-
-    private static final Set<Position> CENTER_SQUARES = Set.of(Position.d4, Position.d5, Position.e4, Position.e5);
 
     private BoardEvaluator() {}
 
     /**
      * Evaluates the position from the perspective of the supplied color. Material is scaled by
-     * {@value #MATERIAL_MULTIPLIER} so a pawn weighs 10. Positional bonuses (mobility, pawn
-     * advancement, piece development, center control) sum to a few units in a typical opening
-     * — small enough that any real material trade dominates, but big enough that cards which
-     * push pawns or open lines (Charge, Cylindre, Skating, etc.) come out positive even when
-     * the material count is unchanged. Wins always dominate, opponent-in-check is a small
-     * bonus, neutral pieces are ignored.
+     * {@value #MATERIAL_MULTIPLIER} so a pawn weighs 10. Positional bonuses are designed to
+     * reward pieces that gain mobility or move closer to the centre, on a continuous
+     * gradient rather than a binary "developed/not developed" check. They sum to a few units
+     * in a typical opening — small enough that any real material trade dominates, but big
+     * enough that cards improving piece placement (Charge, Cylindre, Skating, …) score
+     * positively even when material is unchanged. Wins always dominate; opponent-in-check is
+     * a small bonus; neutral pieces are ignored.
      */
     public static int evaluate(ChessBoardReadService board, Color perspective) {
         GameResult result = board.getGameResult();
@@ -60,6 +55,11 @@ public final class BoardEvaluator {
         return score;
     }
 
+    /**
+     * Sums the legal-move count of each side. A piece that gains moves (because a card opened
+     * a line, removed a blocker, granted alternative movement, …) directly raises the side's
+     * mobility, even if no other term changes.
+     */
     private static int mobilityBalance(ChessBoardReadService board, Color perspective) {
         int own = countLegalMoves(board, perspective);
         int enemy = countLegalMoves(board, perspective.opposite());
@@ -80,8 +80,7 @@ public final class BoardEvaluator {
             if (color != perspective && color != perspective.opposite()) continue;
             int sign = (color == perspective) ? 1 : -1;
             score += sign * pawnAdvancement(piece);
-            score += sign * developmentBonus(piece);
-            score += sign * centerOccupation(piece);
+            score += sign * centerProximity(piece);
         }
         return score;
     }
@@ -96,15 +95,19 @@ public final class BoardEvaluator {
         return pawnDistance * PAWN_ADVANCE_PER_RANK;
     }
 
-    private static int developmentBonus(Piece piece) {
-        if (piece instanceof Pawn) return 0;
-        if (piece.isKing()) return 0;
-        if (piece.getPosition() == null) return 0;
-        return piece.getRow().getRowNumber() == piece.getColor().homeRow().getRowNumber() ? 0 : DEVELOPED_PIECE_BONUS;
-    }
-
-    private static int centerOccupation(Piece piece) {
-        if (piece.getPosition() == null) return 0;
-        return CENTER_SQUARES.contains(piece.getPosition()) ? CENTER_OCCUPATION_BONUS : 0;
+    /**
+     * Continuous gradient that rewards any piece moving toward the geometric centre of the
+     * board, not just the four central squares. Uses Chebyshev (king) distance to the centre
+     * point (4.5, 4.5): the four innermost squares score the highest, and each ring outward
+     * loses one point. Applied to every piece (including pawns and king) so cards that
+     * displace pieces toward d/e files and rows 4-5 are rewarded smoothly.
+     */
+    private static int centerProximity(Piece piece) {
+        Position position = piece.getPosition();
+        if (position == null) return 0;
+        double fileDist = Math.abs(position.getFile().getFileNumber() - 4.5);
+        double rowDist = Math.abs(position.getRow().getRowNumber() - 4.5);
+        double chebyshev = Math.max(fileDist, rowDist); // 0.5 (centre) … 3.5 (corner)
+        return (int) Math.round(4 - chebyshev); // 4 (centre) … 1 (corner)
     }
 }

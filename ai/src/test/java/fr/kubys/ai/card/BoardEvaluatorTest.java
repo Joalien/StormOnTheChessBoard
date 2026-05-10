@@ -142,6 +142,29 @@ class BoardEvaluatorTest {
     }
 
     @Test
+    void center_proximity_is_a_continuous_gradient() {
+        // Same material/mobility baseline; only the knight's square changes. Each step
+        // closer to the centre should improve the eval, not just landing on d4/d5/e4/e5.
+        int corner = scoreWithKnightAt(a1);
+        int outerRing = scoreWithKnightAt(b2);
+        int innerRing = scoreWithKnightAt(c3);
+        int center = scoreWithKnightAt(d4);
+
+        assertTrue(corner < outerRing, "a1=%d should be worse than b2=%d".formatted(corner, outerRing));
+        assertTrue(outerRing < innerRing, "b2=%d should be worse than c3=%d".formatted(outerRing, innerRing));
+        assertTrue(innerRing < center, "c3=%d should be worse than d4=%d".formatted(innerRing, center));
+    }
+
+    private static int scoreWithKnightAt(fr.kubys.core.Position square) {
+        ChessBoard board = ChessBoard.createEmpty();
+        board.add(new King(Color.WHITE), e1);
+        board.add(new King(Color.BLACK), e8);
+        board.add(new Knight(Color.WHITE), square);
+        board.setTurn(Color.WHITE);
+        return BoardEvaluator.evaluate(controller(board), Color.WHITE);
+    }
+
+    @Test
     void controlling_center_squares_is_positive() {
         ChessBoard offCenter = ChessBoard.createEmpty();
         offCenter.add(new King(Color.WHITE), e1);
