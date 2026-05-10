@@ -182,6 +182,11 @@ public class GameStateController implements ChessBoardService {
         return this.currentState.name();
     }
 
+    @Override
+    public int getTurnNumber() {
+        return chessBoard.getTurnNumber();
+    }
+
     StateEnum getCurrentState() {
         return this.currentState;
     }

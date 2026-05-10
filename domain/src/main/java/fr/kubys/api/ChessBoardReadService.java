@@ -35,4 +35,6 @@ public interface ChessBoardReadService {
     boolean isCurrentPlayerInCheck();
 
     GameResult getGameResult();
+
+    int getTurnNumber();
 }

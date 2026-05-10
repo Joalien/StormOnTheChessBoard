@@ -68,27 +68,28 @@ public class AiGameService {
         if (config == null) return false;
 
         ChessBoardReadService boardState = chessBoardRepository.getChessBoardService(gameId);
+        int turn = boardState.getTurnNumber();
         if (boardState.getCurrentPlayer().getColor() != config.aiColor()) return false;
         if (boardState.getGameResult() != GameResult.ONGOING) {
-            log.info("[AI Game {}] Game is over ({}), AI will not play", gameId, boardState.getGameResult());
+            log.info("[AI Game {} turn {}] Game is over ({}), AI will not play", gameId, turn, boardState.getGameResult());
             return false;
         }
 
-        log.info("[AI Game {}] AI ({}) is thinking...", gameId, config.aiColor());
+        log.info("[AI Game {} turn {}] AI ({}) is thinking...", gameId, turn, config.aiColor());
         List<Command> commands = config.strategy().decideMove(gameId, boardState);
 
         // Re-check after the (potentially long) think: if the user undid the end-turn
         // in the meantime, the state is no longer AI's and we must discard the move.
         ChessBoardReadService postState = chessBoardRepository.getChessBoardService(gameId);
         if (postState.getCurrentPlayer().getColor() != config.aiColor()) {
-            log.info("[AI Game {}] Turn changed during computation, discarding {} command(s)", gameId, commands.size());
+            log.info("[AI Game {} turn {}] Turn changed during computation, discarding {} command(s)", gameId, turn, commands.size());
             return false;
         }
 
         for (Command command : commands) {
             commandExecutor.execute(command);
         }
-        log.info("[AI Game {}] AI played {} command(s)", gameId, commands.size());
+        log.info("[AI Game {} turn {}] AI played {} command(s)", gameId, turn, commands.size());
         return true;
     }
 

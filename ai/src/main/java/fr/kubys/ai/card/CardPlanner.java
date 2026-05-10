@@ -43,24 +43,26 @@ public final class CardPlanner {
     ) {
         Color aiColor = currentBoard.getCurrentPlayer().getColor();
         int baseline = BoardEvaluator.evaluate(currentBoard, aiColor);
+        int turn = currentBoard.getTurnNumber();
 
         Optional<ScoredCardPlay> best = currentBoard.getCurrentPlayer().getCards().stream()
                 .filter(card -> card.getType() == type)
                 .flatMap(card -> generators.candidatesFor(card, currentBoard).stream()
-                        .map(param -> attemptScore(gameId, card, param, baseline, aiColor, committedCommandsBeforeHypothetical)))
+                        .map(param -> attemptScore(gameId, turn, card, param, baseline, aiColor, committedCommandsBeforeHypothetical)))
                 .flatMap(Optional::stream)
                 .max(Comparator.comparingInt(ScoredCardPlay::score));
 
         if (log.isTraceEnabled()) {
             best.ifPresentOrElse(
-                    play -> log.trace("[AI Game {}] {} best card: {} {} score={}", gameId, type, play.card().getName(), play.param(), play.score()),
-                    () -> log.trace("[AI Game {}] {} no playable card found", gameId, type));
+                    play -> log.trace("[AI Game {} turn {}] {} best card: {} {} score={}", gameId, turn, type, play.card().getName(), play.param(), play.score()),
+                    () -> log.trace("[AI Game {} turn {}] {} no playable card found", gameId, turn, type));
         }
         return best;
     }
 
     private Optional<ScoredCardPlay> attemptScore(
             Integer gameId,
+            int turn,
             Card<? extends CardParam> card,
             CardParam param,
             int baseline,
@@ -76,10 +78,10 @@ public final class CardPlanner {
                     .build());
             ChessBoardReadService simulated = repository.simulate(gameId, hypothetical);
             int score = BoardEvaluator.evaluate(simulated, perspective) - baseline;
-            log.trace("[AI Game {}]   candidate {} {} → score={}", gameId, card.getName(), param, score);
+            log.trace("[AI Game {} turn {}]   candidate {} {} → score={}", gameId, turn, card.getName(), param, score);
             return Optional.of(new ScoredCardPlay(card, param, score));
         } catch (RuntimeException invalidCandidate) {
-            log.trace("[AI Game {}]   candidate {} {} rejected: {}", gameId, card.getName(), param, invalidCandidate.getMessage());
+            log.trace("[AI Game {} turn {}]   candidate {} {} rejected: {}", gameId, turn, card.getName(), param, invalidCandidate.getMessage());
             return Optional.empty();
         }
     }

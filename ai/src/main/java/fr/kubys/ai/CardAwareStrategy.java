@@ -60,9 +60,10 @@ public class CardAwareStrategy implements AiStrategy {
     public List<Command> decideMove(Integer gameId, ChessBoardReadService boardState) {
         Color aiColor = boardState.getCurrentPlayer().getColor();
         int baseline = BoardEvaluator.evaluate(boardState, aiColor);
+        int turn = boardState.getTurnNumber();
 
-        log.trace("[AI Game {}] decideMove start: aiColor={} baseline={} moveStrategy={}",
-                gameId, aiColor, baseline, moveStrategy.getClass().getSimpleName());
+        log.trace("[AI Game {} turn {}] decideMove start: aiColor={} baseline={} moveStrategy={}",
+                gameId, turn, aiColor, baseline, moveStrategy.getClass().getSimpleName());
 
         List<TurnPlan> plans = new ArrayList<>();
         plans.addAll(moveAlonePlans(gameId, boardState, aiColor, baseline));
@@ -71,16 +72,16 @@ public class CardAwareStrategy implements AiStrategy {
         plans.addAll(replaceTurnPlans(gameId, boardState, baseline));
 
         if (log.isTraceEnabled()) {
-            plans.forEach(plan -> log.trace("[AI Game {}]   plan {} score={}", gameId, plan.label(), plan.score()));
+            plans.forEach(plan -> log.trace("[AI Game {} turn {}]   plan {} score={}", gameId, turn, plan.label(), plan.score()));
         }
 
         Optional<TurnPlan> best = plans.stream().max(Comparator.comparingInt(TurnPlan::score));
         if (best.isEmpty()) {
-            log.info("[AI Game {}] no candidate plan, passing", gameId);
+            log.info("[AI Game {} turn {}] no candidate plan, passing", gameId, turn);
             return List.of(EndTurnCommand.builder().gameId(gameId).build());
         }
         TurnPlan chosen = best.get();
-        log.info("[AI Game {}] {} score={}", gameId, chosen.label(), chosen.score());
+        log.info("[AI Game {} turn {}] {} score={}", gameId, turn, chosen.label(), chosen.score());
         List<Command> out = new ArrayList<>(chosen.commands());
         out.add(EndTurnCommand.builder().gameId(gameId).build());
         return out;
@@ -93,7 +94,7 @@ public class CardAwareStrategy implements AiStrategy {
                     .map(PlayMoveCommand.class::cast)
                     .findFirst();
         } catch (RuntimeException e) {
-            log.trace("[AI Game {}]   move strategy failed: {}", gameId, e.getMessage());
+            log.trace("[AI Game {} turn {}]   move strategy failed: {}", gameId, board.getTurnNumber(), e.getMessage());
             return Optional.empty();
         }
     }

@@ -34,13 +34,14 @@ public class StockfishStrategy implements AiStrategy {
         // and the post-call legality check catches illegal suggestions cleanly. Custom
         // pieces are mapped to their nearest standard equivalent in FenConverter (Kangaroo
         // and Crab → knight, FusedPiece → queen) so the FEN stays valid.
+        int turn = boardState.getTurnNumber();
         try {
             String fen = FenConverter.toFen(boardState);
-            log.info("[AI Game {}] Asking Fairy-Stockfish for position: {}", gameId, fen);
+            log.info("[AI Game {} turn {}] Asking Fairy-Stockfish for position: {}", gameId, turn, fen);
             String bestMove = queryStockfish(fen);
 
             if (bestMove == null) {
-                log.warn("[AI Game {}] Stockfish returned no move, using fallback", gameId);
+                log.warn("[AI Game {} turn {}] Stockfish returned no move, using fallback", gameId, turn);
                 return fallback.decideMove(gameId, boardState);
             }
 
@@ -52,17 +53,17 @@ public class StockfishStrategy implements AiStrategy {
             // case we fall back rather than committing an invalid command.
             Set<Position> legalMoves = boardState.getLegalMoves(from);
             if (!legalMoves.contains(to)) {
-                log.info("[AI Game {}] Stockfish move {}→{} not legal in our engine, using fallback", gameId, from, to);
+                log.info("[AI Game {} turn {}] Stockfish move {}→{} not legal in our engine, using fallback", gameId, turn, from, to);
                 return fallback.decideMove(gameId, boardState);
             }
 
-            log.info("[AI Game {}] Fairy-Stockfish plays {}→{}", gameId, from, to);
+            log.info("[AI Game {} turn {}] Fairy-Stockfish plays {}→{}", gameId, turn, from, to);
             return List.of(
                     PlayMoveCommand.builder().gameId(gameId).from(from).to(to).build(),
                     EndTurnCommand.builder().gameId(gameId).build()
             );
         } catch (Exception e) {
-            log.error("[AI Game {}] Stockfish error: {}, using fallback", gameId, e.getMessage());
+            log.error("[AI Game {} turn {}] Stockfish error: {}, using fallback", gameId, turn, e.getMessage());
             return fallback.decideMove(gameId, boardState);
         }
     }
