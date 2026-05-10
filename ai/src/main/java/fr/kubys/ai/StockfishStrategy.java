@@ -29,11 +29,11 @@ public class StockfishStrategy implements AiStrategy {
 
     @Override
     public List<Command> decideMove(Integer gameId, ChessBoardReadService boardState) {
-        if (!boardState.getEffects().isEmpty() || FenConverter.hasNonStandardPieces(boardState)) {
-            log.info("[AI Game {}] Non-standard position detected, using fallback strategy", gameId);
-            return fallback.decideMove(gameId, boardState);
-        }
-
+        // We always try Stockfish, even when card effects or non-standard pieces are on the
+        // board: an approximate Stockfish suggestion is far better than the dumb fallback,
+        // and the post-call legality check catches illegal suggestions cleanly. Custom
+        // pieces are mapped to their nearest standard equivalent in FenConverter (Kangaroo
+        // and Crab → knight, FusedPiece → queen) so the FEN stays valid.
         try {
             String fen = FenConverter.toFen(boardState);
             log.info("[AI Game {}] Asking Fairy-Stockfish for position: {}", gameId, fen);
@@ -47,10 +47,12 @@ public class StockfishStrategy implements AiStrategy {
             Position from = Position.valueOf(bestMove.substring(0, 2));
             Position to = Position.valueOf(bestMove.substring(2, 4));
 
-            // Validate that the move is legal in our engine
+            // Validate that the move is legal in our engine. Effects (Barricade, Bombing…)
+            // and non-standard pieces can make Stockfish's suggestion illegal here; in that
+            // case we fall back rather than committing an invalid command.
             Set<Position> legalMoves = boardState.getLegalMoves(from);
             if (!legalMoves.contains(to)) {
-                log.warn("[AI Game {}] Stockfish move {}→{} is illegal in our engine, using fallback", gameId, from, to);
+                log.info("[AI Game {}] Stockfish move {}→{} not legal in our engine, using fallback", gameId, from, to);
                 return fallback.decideMove(gameId, boardState);
             }
 

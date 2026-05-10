@@ -5,6 +5,7 @@ import fr.kubys.core.Color;
 import fr.kubys.game.ChessBoardServiceFactory;
 import fr.kubys.game.GameStateController;
 import fr.kubys.piece.*;
+import fr.kubys.piece.extra.Crab;
 import fr.kubys.piece.extra.Kangaroo;
 import org.junit.jupiter.api.Test;
 
@@ -98,28 +99,31 @@ class FenConverterTest {
     }
 
     @Test
-    void should_detect_non_standard_pieces() {
+    void kangaroo_is_approximated_as_knight() {
         ChessBoard board = ChessBoard.createEmpty();
         board.add(new King(Color.WHITE), e1);
         board.add(new King(Color.BLACK), e8);
+        board.add(new Kangaroo(Color.WHITE), d4);
         board.setTurn(Color.WHITE);
 
         var gsc = (GameStateController) ChessBoardServiceFactory.newChessBoardService(() -> board);
         gsc.startGame(1L);
 
+        // Kangaroo on d4 → 'N' (white knight) at d4 in the FEN
+        assertTrue(FenConverter.toFen(gsc).startsWith("4k3/8/8/8/3N4/8/8/4K3"));
+        // hasNonStandardPieces stays false because the approximation makes the FEN valid
         assertFalse(FenConverter.hasNonStandardPieces(gsc));
-
-        board.add(new Kangaroo(Color.WHITE), d4);
-        assertTrue(FenConverter.hasNonStandardPieces(gsc));
     }
 
     @Test
-    void pieceToFenChar_maps_all_standard_pieces() {
+    void pieceToFenChar_maps_all_pieces_including_custom_approximations() {
         assertEquals('k', FenConverter.pieceToFenChar(new King(Color.WHITE)));
         assertEquals('q', FenConverter.pieceToFenChar(new Queen(Color.WHITE)));
         assertEquals('r', FenConverter.pieceToFenChar(new Rock(Color.WHITE)));
         assertEquals('b', FenConverter.pieceToFenChar(new Bishop(Color.WHITE)));
         assertEquals('n', FenConverter.pieceToFenChar(new Knight(Color.WHITE)));
         assertEquals('p', FenConverter.pieceToFenChar(new Pawn(Color.WHITE)));
+        assertEquals('n', FenConverter.pieceToFenChar(new Kangaroo(Color.WHITE)));
+        assertEquals('n', FenConverter.pieceToFenChar(new Crab(Color.WHITE)));
     }
 }

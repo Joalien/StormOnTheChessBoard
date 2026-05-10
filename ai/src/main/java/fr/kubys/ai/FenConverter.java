@@ -4,7 +4,9 @@ import fr.kubys.api.ChessBoardReadService;
 import fr.kubys.core.Color;
 import fr.kubys.core.Position;
 import fr.kubys.piece.*;
+import fr.kubys.piece.extra.Crab;
 import fr.kubys.piece.extra.FusedPiece;
+import fr.kubys.piece.extra.Kangaroo;
 
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -70,7 +72,9 @@ public class FenConverter {
         if (piece instanceof Knight) return 'n';
         if (piece instanceof Pawn) return 'p';
         if (piece instanceof FusedPiece) return 'q'; // approximate as queen
-        return '?'; // non-standard piece (Kangaroo, Crab, etc.)
+        if (piece instanceof Kangaroo) return 'n'; // jumps like a knight
+        if (piece instanceof Crab) return 'n'; // similar limited movement
+        return '?'; // truly unknown — treated as empty in the FEN
     }
 
     private static String computeCastling(ChessBoardReadService boardState) {
