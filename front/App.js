@@ -1007,7 +1007,7 @@ export default function App() {
                         {/* Barricade selection overlay (interactive, when selecting edges) */}
                         {isBarricadeCard(selectedCard) && isSelectedCardPlayable() && barricadeEdges.length < 2 && (
                             <BarricadeSelectionOverlay
-                                orientation={currentPlayerColor}
+                                orientation={bottomColor}
                                 selectedEdges={barricadeEdges}
                                 onEdgeClick={onBarricadeEdgeClick}
                                 boardSize={boardSize}
@@ -1017,7 +1017,7 @@ export default function App() {
                         {isBarricadeCard(selectedCard) && barricadeEdges.length === 2 && (
                             <svg style={{position: 'absolute', top: 0, left: 0, width: boardSize, height: boardSize, pointerEvents: 'none', zIndex: 5}}>
                                 {barricadeEdges.map((edge, i) => {
-                                    const line = barricadeLines({positions: edge}, boardSize, currentPlayerColor)[0];
+                                    const line = barricadeLines({positions: edge}, boardSize, bottomColor)[0];
                                     return line && <line key={i} x1={line.x1} y1={line.y1} x2={line.x2} y2={line.y2} stroke="#3fb950" strokeWidth={6} strokeLinecap="round" />;
                                 })}
                             </svg>
@@ -1028,7 +1028,7 @@ export default function App() {
                             const clickable = !!effect.cardEnglishName;
                             return (
                                 <svg key={`barricade-${globalIdx}`} style={{position: 'absolute', top: 0, left: 0, width: boardSize, height: boardSize, pointerEvents: 'none', zIndex: 5}}>
-                                    {barricadeLines(effect, boardSize, currentPlayerColor).map((line, i) => (
+                                    {barricadeLines(effect, boardSize, bottomColor).map((line, i) => (
                                         <g key={i} onContextMenu={clickable ? (e) => { e.preventDefault(); e.stopPropagation(); selectEffectByIndices([globalIdx]); } : undefined} style={{pointerEvents: clickable ? 'auto' : 'none'}}>
                                             <line x1={line.x1} y1={line.y1} x2={line.x2} y2={line.y2} stroke="transparent" strokeWidth={16} strokeLinecap="round" />
                                             <line x1={line.x1} y1={line.y1} x2={line.x2} y2={line.y2} stroke="#BF360C" strokeWidth={8} strokeLinecap="round" />
@@ -1101,7 +1101,7 @@ export default function App() {
                             const effectConfig = Object.values(loadEffect(effectFileName))[0];
                             const sqSize = boardSize / 8;
                             return effect.positions.map((pos, pi) => {
-                                const {x, y} = squareToCoords(pos, currentPlayerColor);
+                                const {x, y} = squareToCoords(pos, bottomColor);
                                 const style = effectConfig.applyStyle(pos, !!game[pos]);
                                 return (
                                     <div key={`eff-${idx}-${pi}`} style={{
@@ -1119,7 +1119,7 @@ export default function App() {
                         {checkMateTargets.length > 0 && (
                             <svg style={{position: 'absolute', top: 0, left: 0, width: boardSize, height: boardSize, pointerEvents: 'none', zIndex: 6}}>
                                 {checkMateTargets.map(sq => {
-                                    const {x, y} = squareToCoords(sq, currentPlayerColor);
+                                    const {x, y} = squareToCoords(sq, bottomColor);
                                     return (
                                         <g key={`crown-${sq}`} transform={`translate(${x + 23}, ${y + 2})`}>
                                             <path
@@ -1135,7 +1135,7 @@ export default function App() {
                             </svg>
                         )}
                         {promotionSquare && (() => {
-                            const {x, y} = squareToCoords(promotionSquare, currentPlayerColor);
+                            const {x, y} = squareToCoords(promotionSquare, bottomColor);
                             const isWhitePiece = (game[promotionSquare] || '').startsWith('w');
                             const popupBelow = y < boardSize / 2;
                             const pieces = [
