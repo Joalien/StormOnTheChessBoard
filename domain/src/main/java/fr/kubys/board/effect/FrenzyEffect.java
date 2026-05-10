@@ -13,6 +13,15 @@ public class FrenzyEffect extends Effect {
 
     private final ChessBoard chessBoard;
     private boolean duringMove = false;
+    /**
+     * Re-entry guard for {@link #noCaptureAvailable()}. The capture probe calls
+     * {@link ChessBoard#canAttack}, which itself consults {@link #blocksPosition} —
+     * which would call back into the probe, causing infinite recursion. The flag
+     * suppresses our own block during a re-entrant probe so that other effects
+     * (Hideout, NonViolent, Ceasefire…) are still consulted and a piece they
+     * disable is correctly excluded from the "can capture?" answer.
+     */
+    private boolean evaluatingCaptures = false;
 
     public FrenzyEffect(ChessBoard chessBoard) {
         super("Fringale");
@@ -27,7 +36,8 @@ public class FrenzyEffect extends Effect {
     @Override
     public boolean blocksPosition(Position position) {
         if (duringMove) return false;
-        if (!anyCaptureAvailable()) return false;
+        if (evaluatingCaptures) return false;
+        if (noCaptureAvailable()) return false;
         // Block positions that do NOT have an enemy non-king piece
         return chessBoard.at(position).getPiece()
                 .filter(p -> !p.isKing())
@@ -43,7 +53,7 @@ public class FrenzyEffect extends Effect {
 
     @Override
     public void beforeMoveHook(ChessBoard chessBoard, Piece piece) {
-        if (!anyCaptureAvailable()) {
+        if (noCaptureAvailable()) {
             chessBoard.removeEffect(this);
             return;
         }
@@ -56,28 +66,23 @@ public class FrenzyEffect extends Effect {
     }
 
     /**
-     * Check if the current player can capture any enemy non-king piece.
-     * Uses raw piece movement rules (isPositionTheoreticallyReachable + path check)
-     * to avoid recursion through effects/blocksPosition.
+     * True iff the current player has no ally piece that can really capture an enemy
+     * non-king piece. Goes through {@link ChessBoard#canAttack}, so other effects such
+     * as Hideout (sleeping pieces), NonViolent and Ceasefire correctly remove
+     * unavailable attackers from consideration.
      */
-    private boolean anyCaptureAvailable() {
-        Color currentTurn = chessBoard.getCurrentTurn();
-        return chessBoard.allyPieces(currentTurn).stream()
-                .filter(p -> p.findPosition().isPresent())
-                .anyMatch(piece -> chessBoard.enemyPieces(currentTurn).stream()
-                        .filter(enemy -> !enemy.isKing())
-                        .filter(enemy -> enemy.findPosition().isPresent())
-                        .anyMatch(enemy -> canRawAttack(piece, enemy.getPosition())));
-    }
-
-    /**
-     * Check if a piece can reach a position using only raw movement rules,
-     * bypassing all effects to avoid infinite recursion.
-     */
-    private boolean canRawAttack(Piece piece, Position target) {
-        Color targetColor = chessBoard.at(target).getPiece().map(Piece::getColor).orElse(null);
-        if (!piece.isPositionTheoreticallyReachable(target.getFile(), target.getRow(), targetColor)) return false;
-        return piece.squaresOnThePath(target).stream()
-                .allMatch(pos -> chessBoard.at(pos).getPiece().isEmpty());
+    private boolean noCaptureAvailable() {
+        evaluatingCaptures = true;
+        try {
+            Color currentTurn = chessBoard.getCurrentTurn();
+            return chessBoard.allyPieces(currentTurn).stream()
+                    .filter(piece -> piece.findPosition().isPresent())
+                    .noneMatch(piece -> chessBoard.enemyPieces(currentTurn).stream()
+                            .filter(enemy -> !enemy.isKing())
+                            .filter(enemy -> enemy.findPosition().isPresent())
+                            .anyMatch(enemy -> chessBoard.canAttack(piece, enemy.getPosition())));
+        } finally {
+            evaluatingCaptures = false;
+        }
     }
 }
