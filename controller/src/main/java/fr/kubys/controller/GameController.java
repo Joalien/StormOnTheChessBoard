@@ -49,8 +49,8 @@ public class GameController {
     }
 
     private AiStrategy createDefaultStrategy(String stockfishPath) {
-        log.info("Using CardAwareStrategy");
-        return new CardAwareStrategy(chessBoardRepository);
+        log.info("Default AI: CardAware over Stockfish");
+        return new CardAwareStrategy(chessBoardRepository, createStockfishStrategy(stockfishPath));
     }
 
     private AiStrategy createStockfishStrategy(String stockfishPath) {
@@ -66,10 +66,12 @@ public class GameController {
     private AiStrategy resolveStrategy(String name) {
         if (name == null) return defaultStrategy;
         return switch (name.toLowerCase()) {
-            case "random" -> new RandomMoveStrategy();
-            case "material" -> new MaterialStrategy();
-            case "cards" -> new CardAwareStrategy(chessBoardRepository);
-            case "stockfish" -> createStockfishStrategy(stockfishPathConfig);
+            case "random" -> new CardAwareStrategy(chessBoardRepository, new RandomMoveStrategy());
+            case "material" -> new CardAwareStrategy(chessBoardRepository, new MaterialStrategy());
+            case "stockfish" -> new CardAwareStrategy(chessBoardRepository, createStockfishStrategy(stockfishPathConfig));
+            case "random-no-cards" -> new RandomMoveStrategy();
+            case "material-no-cards" -> new MaterialStrategy();
+            case "stockfish-no-cards" -> createStockfishStrategy(stockfishPathConfig);
             default -> defaultStrategy;
         };
     }

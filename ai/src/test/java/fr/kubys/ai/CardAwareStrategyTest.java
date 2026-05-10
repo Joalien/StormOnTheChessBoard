@@ -33,7 +33,7 @@ class CardAwareStrategyTest {
         });
         ChessBoardReadService state = repo.getChessBoardService(gameId);
 
-        var strategy = new CardAwareStrategy(repo, new Random(0));
+        var strategy = new CardAwareStrategy(repo, new MaterialStrategy(new Random(0)));
         List<Command> commands = strategy.decideMove(gameId, state);
 
         // Should play one move + endTurn
@@ -54,7 +54,7 @@ class CardAwareStrategyTest {
             return board;
         });
         ChessBoardReadService state = repo.getChessBoardService(gameId);
-        var strategy = new CardAwareStrategy(repo, new Random(0));
+        var strategy = new CardAwareStrategy(repo, new MaterialStrategy(new Random(0)));
 
         assertDoesNotThrow(() -> strategy.decideMove(gameId, state));
     }
@@ -71,7 +71,7 @@ class CardAwareStrategyTest {
             return board;
         });
         ChessBoardReadService state = repo.getChessBoardService(gameId);
-        var strategy = new CardAwareStrategy(repo, new Random(0));
+        var strategy = new CardAwareStrategy(repo, new MaterialStrategy(new Random(0)));
 
         List<Command> commands = strategy.decideMove(gameId, state);
 

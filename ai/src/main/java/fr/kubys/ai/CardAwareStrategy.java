@@ -20,31 +20,28 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
-import java.util.Random;
 
 /**
- * Decides AI turns by jointly considering moves and cards. The chess game's state machine
- * permits exactly four shapes of turn (plus end-turn): a move alone, a {@code BEFORE_TURN}
- * card followed by a move, a move followed by an {@code AFTER_TURN} card, or a
- * {@code REPLACE_TURN} card alone. This strategy enumerates each shape, simulates the
- * resulting board via {@link ChessBoardRepository#simulate}, scores it from the AI's
- * perspective with {@link BoardEvaluator}, and emits the highest-scoring sequence.
+ * Decides AI turns by jointly considering moves and cards. Move selection is delegated to a
+ * wrapped {@link AiStrategy} (e.g. Stockfish, Material), so card play stacks on top of any
+ * difficulty level. The chess game's state machine permits exactly four shapes of turn
+ * (plus end-turn): a move alone, a {@code BEFORE_TURN} card followed by a move, a move
+ * followed by an {@code AFTER_TURN} card, or a {@code REPLACE_TURN} card alone. This
+ * strategy enumerates each shape, simulates the resulting board via
+ * {@link ChessBoardRepository#simulate}, scores it from the AI's perspective with
+ * {@link BoardEvaluator}, and emits the highest-scoring sequence.
  */
 public class CardAwareStrategy implements AiStrategy {
 
     private static final Logger log = LoggerFactory.getLogger(CardAwareStrategy.class);
 
     private final ChessBoardRepository repository;
+    private final AiStrategy moveStrategy;
     private final CardPlanner planner;
-    private final Random random;
 
-    public CardAwareStrategy(ChessBoardRepository repository) {
-        this(repository, new Random());
-    }
-
-    public CardAwareStrategy(ChessBoardRepository repository, Random random) {
+    public CardAwareStrategy(ChessBoardRepository repository, AiStrategy moveStrategy) {
         this.repository = repository;
-        this.random = random;
+        this.moveStrategy = moveStrategy;
         this.planner = new CardPlanner(repository, new CardCandidateGenerators());
     }
 
@@ -53,7 +50,8 @@ public class CardAwareStrategy implements AiStrategy {
         Color aiColor = boardState.getCurrentPlayer().getColor();
         int baseline = BoardEvaluator.evaluate(boardState, aiColor);
 
-        log.trace("[AI Game {}] decideMove start: aiColor={} baseline={}", gameId, aiColor, baseline);
+        log.trace("[AI Game {}] decideMove start: aiColor={} baseline={} moveStrategy={}",
+                gameId, aiColor, baseline, moveStrategy.getClass().getSimpleName());
 
         List<TurnPlan> plans = new ArrayList<>();
         plans.addAll(moveAlonePlans(gameId, boardState, aiColor, baseline));
@@ -77,12 +75,22 @@ public class CardAwareStrategy implements AiStrategy {
         return out;
     }
 
+    private Optional<PlayMoveCommand> findMove(Integer gameId, ChessBoardReadService board) {
+        try {
+            return moveStrategy.decideMove(gameId, board).stream()
+                    .filter(PlayMoveCommand.class::isInstance)
+                    .map(PlayMoveCommand.class::cast)
+                    .findFirst();
+        } catch (RuntimeException e) {
+            log.trace("[AI Game {}]   move strategy failed: {}", gameId, e.getMessage());
+            return Optional.empty();
+        }
+    }
+
     private List<TurnPlan> moveAlonePlans(Integer gameId, ChessBoardReadService board, Color perspective, int baseline) {
-        return MaterialStrategy.bestMove(board, random)
-                .map(move -> {
-                    Command cmd = PlayMoveCommand.builder().gameId(gameId).from(move.from()).to(move.to()).build();
-                    return scorePlan(gameId, List.of(cmd), perspective, baseline, "move %s→%s".formatted(move.from(), move.to()));
-                })
+        return findMove(gameId, board)
+                .map(move -> scorePlan(gameId, List.of(move), perspective, baseline,
+                        "move %s→%s".formatted(move.getFrom(), move.getTo())))
                 .stream().flatMap(Optional::stream).toList();
     }
 
@@ -93,12 +101,9 @@ public class CardAwareStrategy implements AiStrategy {
         Command cardCmd = toCommand(gameId, play);
         try {
             ChessBoardReadService afterCard = repository.simulate(gameId, List.of(cardCmd));
-            return MaterialStrategy.bestMove(afterCard, random)
-                    .map(move -> {
-                        Command moveCmd = PlayMoveCommand.builder().gameId(gameId).from(move.from()).to(move.to()).build();
-                        return scorePlan(gameId, List.of(cardCmd, moveCmd), perspective, baseline,
-                                "before-card %s + move %s→%s".formatted(play.card().getName(), move.from(), move.to()));
-                    })
+            return findMove(gameId, afterCard)
+                    .map(move -> scorePlan(gameId, List.of(cardCmd, move), perspective, baseline,
+                            "before-card %s + move %s→%s".formatted(play.card().getName(), move.getFrom(), move.getTo())))
                     .stream().flatMap(Optional::stream).toList();
         } catch (RuntimeException e) {
             return List.of();
@@ -106,17 +111,16 @@ public class CardAwareStrategy implements AiStrategy {
     }
 
     private List<TurnPlan> moveThenAfterPlans(Integer gameId, ChessBoardReadService board, Color perspective, int baseline) {
-        Optional<MaterialStrategy.ScoredMove> bestMove = MaterialStrategy.bestMove(board, random);
-        if (bestMove.isEmpty()) return List.of();
-        var move = bestMove.get();
-        Command moveCmd = PlayMoveCommand.builder().gameId(gameId).from(move.from()).to(move.to()).build();
+        Optional<PlayMoveCommand> moveOpt = findMove(gameId, board);
+        if (moveOpt.isEmpty()) return List.of();
+        PlayMoveCommand move = moveOpt.get();
         try {
-            ChessBoardReadService afterMove = repository.simulate(gameId, List.of(moveCmd));
-            return planner.bestPlayFor(gameId, afterMove, CardType.AFTER_TURN, () -> List.of(moveCmd))
+            ChessBoardReadService afterMove = repository.simulate(gameId, List.of(move));
+            return planner.bestPlayFor(gameId, afterMove, CardType.AFTER_TURN, () -> List.of(move))
                     .map(play -> {
                         Command cardCmd = toCommand(gameId, play);
-                        return scorePlan(gameId, List.of(moveCmd, cardCmd), perspective, baseline,
-                                "move %s→%s + after-card %s".formatted(move.from(), move.to(), play.card().getName()));
+                        return scorePlan(gameId, List.of(move, cardCmd), perspective, baseline,
+                                "move %s→%s + after-card %s".formatted(move.getFrom(), move.getTo(), play.card().getName()));
                     })
                     .stream().flatMap(Optional::stream).toList();
         } catch (RuntimeException e) {
